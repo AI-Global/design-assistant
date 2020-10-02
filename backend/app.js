@@ -12,6 +12,8 @@ app.use(express.json());
 // Import Routes
 const questionsRoute = require("./routes/questions");
 app.use("/questions", questionsRoute);
+const responsesRoute = require("./routes/responses");
+app.use("/responses", responsesRoute);
 
 // Routes
 app.get('/', (req, res) => {
