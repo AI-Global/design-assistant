@@ -23,7 +23,7 @@ mongoose.connect(process.env.DB_CONNECTION , {useNewUrlParser: true, useCreateIn
     console.log("Connected to DB")
 });
 
-// Listen on port 5000
-app.listen(port, '0.0.0.0', () => {
+// Listen on port
+app.listen(port,  () => {
     console.log("Listening on port " + port);
 });
