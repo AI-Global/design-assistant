@@ -4,8 +4,7 @@ import { Button } from 'react-bootstrap';
 class Home extends Component {
 
     handleClick = () => {
-        console.log('HERE!', this.contextTypes);
-        // this.context.location.transitionTo('login');
+        console.log('Start measuring your AI Trust Index now!', this.contextTypes);
       };
 
     render() {
