@@ -1,7 +1,15 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { Button } from 'react-bootstrap';
 
-function Home() {
-    return(
+class Home extends Component {
+
+    handleClick = () => {
+        console.log('HERE!', this.contextTypes);
+        // this.context.location.transitionTo('login');
+      };
+
+    render() {
+        return(
         <div>
             <h1 className="section-header">Welcome</h1>
             <div style={{padding: "1em"}}>
@@ -20,27 +28,28 @@ function Home() {
                 <p>To‌ ‌learn‌ ‌more‌ ‌about‌ ‌the‌ ‌background‌ ‌of‌ ‌this‌ ‌project,‌ ‌check‌ ‌out‌ ‌our‌ ‌post‌ ‌about‌ ‌the‌ creation‌ ‌of‌ ‌the‌ ‌Design‌ ‌Assistant‌ ‌on‌ <a target="_blank" rel="noopener noreferrer" href="https://ai-global.org/2020/04/28/creating-a-responsible-ai-trust-index-a-unified-assessment-to-assure-the-responsible-design-development-and-deployment-of-ai/">ai-global.org</a>‌‌</p>
                 <p>For‌ ‌more‌ ‌information‌ ‌on‌ ‌how‌ ‌to‌ ‌use‌ ‌the‌ ‌Design‌ ‌Assistant,‌ ‌including‌ ‌FAQ’s,‌ ‌check‌ ‌out‌ our <a target="_blank" rel="noopener noreferrer" href="https://docs.google.com/presentation/d/1EDPhyRhIsiOrujLcHQv_fezXfgOz4Rl7a8lyOM_guoA/edit#slide=id.p1">Guide</a></p>
             </div>
-            <div class="row sv_main sv_bootstrapmaterial_css" style={{padding: "25px"}}>
-                <div class="col-sm-6">
-                    <div class="card h-100">
-                        <div class="card-header">Design assistant</div>
-                        <div class="card-body d-flex justify-content-center h-100">
+            <div className="row" style={{padding: "25px"}}>
+                <div className="col-sm-6">
+                    <div className="card h-100">
+                        <div className="card-header">Design assistant</div>
+                        <div className="card-body d-flex justify-content-center h-100">
                             <div>
-                                <input type="button" value="Start measuring your AI Trust Index now!" class="btn sv_start_btn btn-primary"/>
+                                <Button onClick={() => this.handleClick()}>Start measuring your AI Trust Index now!</Button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-6">
-                    <div class="card h-100">
-                        <div class="card-header">Continue existing survey</div>
-                        <div class="card-body d-flex justify-content-center h-100">
+                <div className="col-sm-6">
+                    <div className="card h-100">
+                        <div className="card-header">Continue existing survey</div>
+                        <div className="card-body d-flex justify-content-center h-100">
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+        </div>
     );
+    }
 }
 
 export default Home;
