@@ -11,7 +11,7 @@ const QuestionSchema = mongoose.Schema({
         type: String,
         required: true,
     }
-    // TODO: Add test of schema to model
+    // TODO: Add test of schema to mode
 });
 
 module.exports = mongoose.model("Questions", QuestionSchema);
