@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {Link} from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css"
 import "font-awesome/css/font-awesome.css"
-import { Tabs, Tab, Table, Button} from 'react-bootstrap'
+import { Tabs, Tab, Table, Button, Nav, Row, Col} from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheckCircle, faCircle  } from '@fortawesome/free-regular-svg-icons'
 
@@ -20,7 +20,7 @@ export default class Results extends Component {
                 </div>
                 <Tabs>
                     <Tab eventKey="score" title="Score">
-                    <div class="table-responsive mt-3">
+                        <div class="table-responsive mt-3">
                             <Table striped bordered hover responsive> 
                                 <thead>
                                     <tr>
@@ -115,47 +115,67 @@ export default class Results extends Component {
                     </Tab>
                     <Tab eventKey="report-card" title="Report Card">
                     <div class="table-responsive">
-                            <table role="table" class="table b-table report-card table-bordered">
-                                <thead role="rowgroup" class="">
-                                    <tr role="row" class="">
-                                        <th role="columnheader" scope="col" class="">
-                                            <div>
-                                                Question
-                                            </div>
-                                        </th>
-                                        <th role="columnheader" scope="col" class="">
-                                            <div>
-                                                Your Response
-                                            </div>
-                                        </th>
-                                        <th role="columnheader" scope="col" class="">
-                                            <div>
-                                                Recommendation
-                                            </div>
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody role="rowgroup">
-                                </tbody>
-                            </table>
-                            <Tabs>
-                                <Tab eventKey="accountability" title="Accountability">
-                                </Tab>
-                                <Tab eventKey="explainability" title="Explainability">
-                                    
-                                </Tab>
-                                <Tab eventKey="data-quality" title="Data quality and rights">
-                                    
-                                </Tab>
-                                <Tab eventKey="bias-fairness" title="Bias and fairness">
-                                    
-                                </Tab>
-                                <Tab eventKey="robustness" title="Robustness">
-                                    
-                                </Tab>
-                            </Tabs>
+                            <Tab.Container id="left-tabs-example" defaultActiveKey="first">
+                                <Tab.Content>
+                                    <Tab.Pane eventKey="accountability" >
+                                        <Table>
+                                            <thead role="rowgroup" >
+                                                <tr role="row" >
+                                                    <th role="columnheader" scope="col" >
+                                                        <div>
+                                                            Question
+                                                        </div>
+                                                    </th>
+                                                    <th role="columnheader" scope="col" >
+                                                        <div>
+                                                            Your Response
+                                                        </div>
+                                                    </th>
+                                                    <th role="columnheader" scope="col" >
+                                                        <div>
+                                                            Recommendation
+                                                        </div>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody role="rowgroup">
+                                            </tbody>
+                                        </Table>
+                                        </Tab.Pane>
+                                    <Tab.Pane eventKey="second">
+                                        hi
+                                    </Tab.Pane>
+                                </Tab.Content>
+                                <Nav variant="tabs" defaultActiveKey="accountability">
+                                    <Nav.Item>
+                                        <Nav.Link eventKey="accountability">
+                                            Accountability
+                                        </Nav.Link>
+                                    </Nav.Item>
+                                    <Nav.Item>
+                                        <Nav.Link eventKey="explainability">
+                                            Explainability
+                                        </Nav.Link>
+                                    </Nav.Item>
+                                    <Nav.Item>
+                                        <Nav.Link eventKey="data-quality">
+                                            Data quality and rights
+                                        </Nav.Link>
+                                    </Nav.Item>
+                                    <Nav.Item>
+                                        <Nav.Link eventKey="bias-fairness">
+                                            Bias and fairness
+                                        </Nav.Link>
+                                    </Nav.Item>
+                                    <Nav.Item>
+                                        <Nav.Link eventKey="robustness">
+                                            Robustness
+                                        </Nav.Link>
+                                    </Nav.Item>
+                                </Nav>
+                            </Tab.Container>
                         </div>
-                    </Tab>
+                    </Tab>                
                 </Tabs>
                 <p>
                     As‌ ‌AI‌ ‌continues‌ ‌to‌ ‌evolve‌ ‌so‌ ‌will‌ ‌the‌ ‌Design‌ ‌Assistant.‌ ‌
