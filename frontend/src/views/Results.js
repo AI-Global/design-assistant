@@ -5,6 +5,7 @@ import "font-awesome/css/font-awesome.css"
 import { Tabs, Tab, Table, Button, Nav, Row, Col} from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheckCircle, faCircle  } from '@fortawesome/free-regular-svg-icons'
+import "../css/theme.css"
 
 
 export default class Results extends Component {
@@ -15,9 +16,7 @@ export default class Results extends Component {
         var unselected = "#dee2e6";
         return (
             <main id="wb-cont" role="main" property="mainContentOfPage" class="container" style={{paddingBottom: "1rem"}}>
-                <div class="results">
-                    <h1 class="section-header">Results</h1>
-                </div>
+                <h1 className="section-header">Results</h1>
                 <Tabs>
                     <Tab eventKey="score" title="Score">
                         <div class="table-responsive mt-3">
