@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Question = require('../models/Questions');
+const Question = require('../models/question.model');
 
 // Get all questions
 router.get('/', async (req,res) => {
@@ -24,6 +24,7 @@ router.get('/:questionId', async (req,res) => {
 });
 
 // Add new question
+// TODO: Should be restricted to admin role
 router.post('/', async (req, res) => {
     const question = new Question({
         questionNumber: req.body.questionNumber,
