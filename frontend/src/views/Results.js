@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {Link} from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css"
 import "font-awesome/css/font-awesome.css"
-import { Tabs, Tab, Table, Button, Nav, Row, Col} from 'react-bootstrap'
+import { Tabs, Tab, Table, Button, Nav} from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheckCircle, faCircle  } from '@fortawesome/free-regular-svg-icons'
 import "../css/theme.css"
@@ -52,7 +52,7 @@ export default class Results extends Component {
                                             <FontAwesomeIcon icon={faCircle} size="lg" color={unselected}/>
                                         </td>
                                     </tr>
-                                    <tr class="">
+                                    <tr>
                                         <th scope="row">
                                             Explainability
                                         </th>
@@ -94,7 +94,7 @@ export default class Results extends Component {
                                             <FontAwesomeIcon icon={faCircle} size="lg" color={unselected}/>
                                         </td>
                                     </tr>
-                                    <tr class="">
+                                    <tr>
                                         <th scope="row">
                                             Robustness
                                         </th>
@@ -118,7 +118,7 @@ export default class Results extends Component {
                                 <Tab.Content>
                                     <Tab.Pane eventKey="accountability" >
                                         <Table>
-                                            <thead role="rowgroup" >
+                                            <thead>
                                                 <tr role="row" >
                                                     <th role="columnheader" scope="col" >
                                                         <div>
@@ -137,7 +137,7 @@ export default class Results extends Component {
                                                     </th>
                                                 </tr>
                                             </thead>
-                                            <tbody role="rowgroup">
+                                            <tbody>
                                             </tbody>
                                         </Table>
                                         </Tab.Pane>
