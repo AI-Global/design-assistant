@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Response = require('../models/Responses');
+const Response = require('../models/submission.model');
 
 // Get all responses
 router.get('/', async (req,res) => {
