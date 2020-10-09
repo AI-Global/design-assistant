@@ -1,15 +1,19 @@
 import * as Survey from "survey-react";
 import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
+import ProgressBar from 'react-bootstrap/ProgressBar';
 
 import './App.css';
 import './css/theme.css'
 import './css/survey.css'
-import "survey-react/survey.css";
 import "font-awesome/css/font-awesome.css"
 import "bootstrap/dist/css/bootstrap.min.css"
 
-const json = require ('./survey-enrf.json')
+Survey
+  .StylesManager
+  .applyTheme("bootstrapmaterial")
+
+const json = require('./survey-enrf.json')
 const model = new Survey.Model(json)
 
 class App extends Component {
@@ -24,10 +28,34 @@ class App extends Component {
     console.log(this.state.isSurveyStarted)
   }
 
+  currentPageNo() {
+    return model.currentPageNo + 1;
+  }
+
+  maxPageNo() {
+    return model.pageCount - 1;
+  }
+
+  perc() {
+    return (this.currentPageNo() / this.maxPageNo()) * 100
+  }
+
   render() {
     if (this.state.isSurveyStarted) {
       return (
-        <Survey.Survey model={model} onComplete={this.onComplete}/>
+        <div>
+          <div className="container-fluid">
+            <div className="row">
+              <div className="d-flex justify-content-center col">{this.perc().toFixed(0)}%</div>
+            </div>
+            <div className="row">
+              <div className="d-flex justify-content-center col mt-2">
+                <ProgressBar striped variant="custom" now={this.perc()} style={{ width: "60%" }} />
+              </div>
+            </div>
+          </div>
+          <Survey.Survey model={model} onComplete={this.onComplete} />
+        </div>
       );
     } else {
       return (

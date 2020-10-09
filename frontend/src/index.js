@@ -6,7 +6,7 @@ import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App isSurverStarted={false}/>
+    <App />
   </React.StrictMode>,
   document.getElementById('root')
 );
