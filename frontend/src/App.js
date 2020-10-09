@@ -42,10 +42,12 @@ class App extends Component {
 
   prevPage() {
     model.prevPage();
+    this.setState(this.state)   // force re-render to update buttons and % complete
   }
 
   nextPage() {
     model.nextPage();
+    this.setState(this.state)   // force re-render to update buttons and % complete
   }
 
   save() {
