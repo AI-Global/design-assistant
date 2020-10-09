@@ -15,11 +15,12 @@ const ResponseSchema = mongoose.Schema({
         unique: true
     },
 
-    // What are the different life cycles
-    lifecycle: {
-        type: Number,
-        enum: []
-    },
+    // Possible life cycles
+    lifecycle: [{
+        type: String,
+        enum: ['Plan and Design', 'Data and Model', 'Verify and Validate', 'Deploy', 'Operate and Monitor'],
+        required: true
+    }],
 
     // json file that gets output from survey.js
     submission: {

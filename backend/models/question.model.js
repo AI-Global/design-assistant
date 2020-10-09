@@ -16,15 +16,18 @@ const QuestionSchema = mongoose.Schema({
 
     // Free text or enum? Not enough info in spreadsheet
     domainApplicability: {
-        type: String
+        type: String,
+        enum: ['Health', 'Insurance', 'Banking', 'Media', 'Retail', 'Other']
     },
 
     // Free text or enum? Not enough info in spreadsheet
     regionalApplicability: {
         type: String,
+        enum: ['Africa', 'Antarctica', 'Asia', 'Europe', 'North America', 'South America', 'Oceania', 'Other']
     },
 
-    mo: Boolean,
+    // mandatory or optional
+    mandatory: Boolean,
 
     // Any more categories?
     questionType: {
@@ -36,38 +39,41 @@ const QuestionSchema = mongoose.Schema({
     // question text
     question: {
         type: String,
-        required: true,
+        required: true
     },
 
-    // Free text
-    responseIndicators: String,
+    prompt: {
+        type: String,
+        required: true
+    },
 
-    // possible response for question
+    // possible responses for question, could also be free text
     responses: [{
         type: String,
-        enum: []
+        ref: 'Response'
     }],
 
-    // ?
+    // how the responses will be surfaced
     responseType: {
-        type: Number,
+        type: String,
         required: true,
-        enum: [1, 2, 3, 4, 5]
+        enum: ['text field', 'slider', 'radio box']
     },
 
-    // What's the range
+    // -1 to 1
     pointsAvailable: {
         type: Number,
         required: true
     },
 
-    // What's the range
+    // Low = 1, Medium = 2, High = 3
     weighting: {
         type: Number,
-        required: true
+        required: true,
+        enum: [1, 2, 3]
     },
 
-    // Is this the reccommendation?
+    // The recommendation?
     reference: {
         type: String,
         required: true
@@ -75,15 +81,15 @@ const QuestionSchema = mongoose.Schema({
 
     // Which roles question should display for
     roles: [{
-        type: Number,
-        enum: [],
+        type: String,
+        enum: ['Product Owner / Business Owner', 'Risk Management', 'Legal Lead', 'IT Lead', 'Technical Manager', 'Software Engineer / Software Developer', 'Product Design', 'Data Scientist Lead', 'Machine Learning Engineer', 'Researcher', 'Non Government Organization Volunteer', 'Policy Analyst'],
         required: true
     }],
 
     // Question can belong to multiple lifecycles
     lifecycle: [{
-        type: Number,
-        enum: [],
+        type: String,
+        enum: ['Plan and Design', 'Data and Model', 'Verify and Validate', 'Deploy', 'Operate and Monitor'],
         required: true
     }],
 
