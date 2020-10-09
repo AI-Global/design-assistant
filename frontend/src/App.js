@@ -1,3 +1,9 @@
+import Modal from 'react-bootstrap/Modal'
+import ModalTitle from 'react-bootstrap/ModalTitle'
+import ModalBody from 'react-bootstrap/ModalBody'
+import ModalFooter from 'react-bootstrap/ModalFooter'
+import ModalHeader from 'react-bootstrap/ModalHeader'
+
 import * as Survey from "survey-react";
 import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
@@ -26,18 +32,35 @@ const model = new Survey.Model(json)
 var localizedStrs = Survey.surveyLocalization.locales[Survey.surveyLocalization.defaultLocale];
 localizedStrs.progressText = "";
 
+
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = { isSurveyStarted: false };
+    this.state = {
+      isSurveyStarted: false,
+      showModal: false
+    };
+
+    this.handleOpenModal = this.handleOpenModal.bind(this);
+    this.handleCloseModal = this.handleCloseModal.bind(this);
+  }
+
+  handleOpenModal() {
+    this.setState({ showModal: true });
+  }
+
+  handleCloseModal() {
+    this.setState({ showModal: false });
   }
 
   perc() {
     return model.getProgress();
   }
 
-  reset() {
-    console.log('RESET SURVEY');
+  resetSurvey() {
+    console.log('RESET')
+    this.handleCloseModal()
+    this.setState({ isSurveyStarted: false })
   }
 
   prevPage() {
@@ -63,9 +86,7 @@ class App extends Component {
   }
 
   startSurvey() {
-    console.log('Start');
     this.setState({ isSurveyStarted: true })
-    console.log(this.state.isSurveyStarted)
   }
 
   render() {
@@ -81,7 +102,7 @@ class App extends Component {
           <StickyContainer>
             <div className="row no-gutters">
               <div className="d-flex justify-content-start col">
-                <Button className="btn btn-primary mr-2" onClick={() => this.reset()}>Reset</Button>
+                <Button className="btn btn-primary mr-2" onClick={this.handleOpenModal}>Reset</Button>
               </div>
               <div className="d-flex justify-content-center col">
                 <Button className="btn btn-primary mr-2" onClick={() => this.prevPage()} disabled={model.isFirstPage}>Previous</Button>
@@ -93,6 +114,25 @@ class App extends Component {
               </div>
             </div>
           </StickyContainer>
+          <Modal
+            size="md"
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+            show={this.state.showModal}
+          >
+            <ModalHeader closeButton>
+              <ModalTitle id="contained-modal-title-vcenter">
+                Please Confirm
+              </ModalTitle>
+            </ModalHeader>
+            <ModalBody>
+              <p>Please confirm that you want to reset everything and start over.</p>
+            </ModalBody>
+            <ModalFooter>
+              <Button onClick={this.handleCloseModal}>No</Button>
+              <Button id="resetButton" onClick={() => this.resetSurvey()}>Yes</Button>
+            </ModalFooter>
+          </Modal>
         </div>
       );
     } else {
