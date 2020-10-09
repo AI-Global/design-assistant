@@ -6,7 +6,7 @@ import { Tabs, Tab, Table, Button, Nav } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheckCircle, faCircle } from '@fortawesome/free-regular-svg-icons'
 import "../css/theme.css"
-
+import "../css/survey.css"
 
 export default class Results extends Component {
 
@@ -15,11 +15,11 @@ export default class Results extends Component {
         var json = this.props.location.state 
         var unselected = "#dee2e6";
         return (
-            <main id="wb-cont" role="main" property="mainContentOfPage" class="container" style={{ paddingBottom: "1rem" }}>
+            <main id="wb-cont" role="main" property="mainContentOfPage" className="container" style={{ paddingBottom: "1rem" }}>
                 <h1 className="section-header">Results</h1>
                 <Tabs>
                     <Tab eventKey="score" title="Score">
-                        <div class="table-responsive mt-3">
+                        <div className="table-responsive mt-3">
                             <Table striped bordered hover responsive>
                                 <thead>
                                     <tr>
@@ -42,13 +42,13 @@ export default class Results extends Component {
                                         <th scope="row">
                                             Accountability
                                         </th>
-                                        <td class="text-center">
+                                        <td className="text-center">
                                             <FontAwesomeIcon icon={faCheckCircle} size="lg" />
                                         </td>
-                                        <td class="text-center">
+                                        <td className="text-center">
                                             <FontAwesomeIcon icon={faCircle} size="lg" color={unselected} />
                                         </td>
-                                        <td class="text-center">
+                                        <td className="text-center">
                                             <FontAwesomeIcon icon={faCircle} size="lg" color={unselected} />
                                         </td>
                                     </tr>
@@ -56,13 +56,13 @@ export default class Results extends Component {
                                         <th scope="row">
                                             Explainability
                                         </th>
-                                        <td class="text-center">
+                                        <td className="text-center">
                                             <FontAwesomeIcon icon={faCheckCircle} size="lg" />
                                         </td>
-                                        <td class="text-center">
+                                        <td className="text-center">
                                             <FontAwesomeIcon icon={faCircle} size="lg" color={unselected} />
                                         </td>
-                                        <td class="text-center">
+                                        <td className="text-center">
                                             <FontAwesomeIcon icon={faCircle} size="lg" color={unselected} />
                                         </td>
                                     </tr>
@@ -70,13 +70,13 @@ export default class Results extends Component {
                                         <th scope="row">
                                             Data quality and rights
                                         </th>
-                                        <td class="text-center">
+                                        <td className="text-center">
                                             <FontAwesomeIcon icon={faCheckCircle} size="lg" />
                                         </td>
-                                        <td class="text-center">
+                                        <td className="text-center">
                                             <FontAwesomeIcon icon={faCircle} size="lg" color={unselected} />
                                         </td>
-                                        <td class="text-center">
+                                        <td className="text-center">
                                             <FontAwesomeIcon icon={faCircle} size="lg" color={unselected} />
                                         </td>
                                     </tr>
@@ -84,13 +84,13 @@ export default class Results extends Component {
                                         <th scope="row">
                                             Bias and fairness
                                         </th>
-                                        <td class="text-center">
+                                        <td className="text-center">
                                             <FontAwesomeIcon icon={faCheckCircle} size="lg" />
                                         </td>
-                                        <td class="text-center">
+                                        <td className="text-center">
                                             <FontAwesomeIcon icon={faCircle} size="lg" color={unselected} />
                                         </td>
-                                        <td class="text-center">
+                                        <td className="text-center">
                                             <FontAwesomeIcon icon={faCircle} size="lg" color={unselected} />
                                         </td>
                                     </tr>
@@ -98,13 +98,13 @@ export default class Results extends Component {
                                         <th scope="row">
                                             Robustness
                                         </th>
-                                        <td class="text-center">
+                                        <td className="text-center">
                                             <FontAwesomeIcon icon={faCheckCircle} size="lg" />
                                         </td>
-                                        <td class="text-center">
+                                        <td className="text-center">
                                             <FontAwesomeIcon icon={faCircle} size="lg" color={unselected} />
                                         </td>
-                                        <td class="text-center">
+                                        <td className="text-center">
                                             <FontAwesomeIcon icon={faCircle} size="lg" color={unselected} />
                                         </td>
                                     </tr>
@@ -113,7 +113,7 @@ export default class Results extends Component {
                         </div>
                     </Tab>
                     <Tab eventKey="report-card" title="Report Card">
-                        <div class="table-responsive">
+                        <div className="table-responsive">
                             <Tab.Container id="left-tabs-example" defaultActiveKey="first">
                                 <Tab.Content>
                                     <Tab.Pane eventKey="accountability" >
