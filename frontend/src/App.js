@@ -58,7 +58,7 @@ class App extends Component {
   }
 
   resetSurvey() {
-    console.log('RESET')
+    model.clear()
     this.handleCloseModal()
     this.setState({ isSurveyStarted: false })
   }
