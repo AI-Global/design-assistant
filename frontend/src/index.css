@@ -12,3 +12,6 @@ code {
     monospace;
 }
 
+.sv_main .sv_container .sv_body .sv_progress div.sv_progress_bar > span {
+  display: none;
+}

@@ -1,7 +1,6 @@
 import * as Survey from "survey-react";
 import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
-import ProgressBar from 'react-bootstrap/ProgressBar';
 
 import './App.css';
 import './css/theme.css'
@@ -13,13 +12,27 @@ Survey
   .StylesManager
   .applyTheme("bootstrapmaterial")
 
+Survey
+  .defaultBootstrapMaterialCss
+  .progressBar = "progress-bar bg-custom progress-bar-striped";
+
 const json = require('./survey-enrf.json')
 const model = new Survey.Model(json)
+
+// remove licalization strings for progress bar
+// https://surveyjs.answerdesk.io/ticket/details/t2551/display-progress-bar-without-text
+// Asked by: MDE | Answered by: Andrew Telnov
+var localizedStrs = Survey.surveyLocalization.locales[Survey.surveyLocalization.defaultLocale];
+localizedStrs.progressText = "";
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = { isSurveyStarted: false };
+  }
+
+  perc() {
+    return model.getProgress()
   }
 
   startSurvey() {
@@ -28,30 +41,13 @@ class App extends Component {
     console.log(this.state.isSurveyStarted)
   }
 
-  currentPageNo() {
-    return model.currentPageNo + 1;
-  }
-
-  maxPageNo() {
-    return model.pageCount - 1;
-  }
-
-  perc() {
-    return (this.currentPageNo() / this.maxPageNo()) * 100
-  }
-
   render() {
     if (this.state.isSurveyStarted) {
       return (
         <div>
           <div className="container-fluid">
             <div className="row">
-              <div className="d-flex justify-content-center col">{this.perc().toFixed(0)}%</div>
-            </div>
-            <div className="row">
-              <div className="d-flex justify-content-center col mt-2">
-                <ProgressBar striped variant="custom" now={this.perc()} style={{ width: "60%" }} />
-              </div>
+              <div className="d-flex justify-content-center col">{ this.perc() }%</div>
             </div>
           </div>
           <Survey.Survey model={model} onComplete={this.onComplete} />
