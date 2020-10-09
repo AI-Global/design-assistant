@@ -1,6 +1,7 @@
 import * as Survey from "survey-react";
 import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
+import { StickyContainer } from "react-sticky";
 
 import './App.css';
 import './css/theme.css'
@@ -32,7 +33,31 @@ class App extends Component {
   }
 
   perc() {
-    return model.getProgress()
+    return model.getProgress();
+  }
+
+  reset() {
+    console.log('RESET SURVEY');
+  }
+
+  prevPage() {
+    model.prevPage();
+  }
+
+  nextPage() {
+    model.nextPage();
+  }
+
+  save() {
+    console.log('SAVE SURVEY');
+  }
+
+  finish() {
+    model.doComplete();
+  }
+
+  onComplete(survey, options) {
+    console.log("Survey results: " + JSON.stringify(survey.data));
   }
 
   startSurvey() {
@@ -47,10 +72,25 @@ class App extends Component {
         <div>
           <div className="container-fluid">
             <div className="row">
-              <div className="d-flex justify-content-center col">{ this.perc() }%</div>
+              <div className="d-flex justify-content-center col">{this.perc()}%</div>
             </div>
           </div>
           <Survey.Survey model={model} onComplete={this.onComplete} />
+          <StickyContainer>
+            <div className="row no-gutters">
+              <div className="d-flex justify-content-start col">
+                <Button className="btn btn-primary mr-2" onClick={() => this.reset()}>Reset</Button>
+              </div>
+              <div className="d-flex justify-content-center col">
+                <Button className="btn btn-primary mr-2" onClick={() => this.prevPage()} disabled={model.isFirstPage}>Previous</Button>
+                <Button className="btn btn-primary mr-2" onClick={() => this.nextPage()} disabled={model.isLastPage}>Next</Button>
+              </div>
+              <div className="d-flex justify-content-end col">
+                <Button className="btn btn-save mr-2" id="saveButton" onClick={() => this.save()}>Save</Button>
+                <Button className="bt btn-primary" onClick={() => this.finish()}>Finish</Button>
+              </div>
+            </div>
+          </StickyContainer>
         </div>
       );
     } else {

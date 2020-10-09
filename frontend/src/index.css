@@ -11,7 +11,3 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
-
-.sv_main .sv_container .sv_body .sv_progress div.sv_progress_bar > span {
-  display: none;
-}
