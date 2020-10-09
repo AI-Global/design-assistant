@@ -1,13 +1,11 @@
+import * as Survey from "survey-react";
+import { Button } from 'react-bootstrap';
+import React, { Component } from 'react';
 import Modal from 'react-bootstrap/Modal'
-import ModalTitle from 'react-bootstrap/ModalTitle'
 import ModalBody from 'react-bootstrap/ModalBody'
+import ModalTitle from 'react-bootstrap/ModalTitle'
 import ModalFooter from 'react-bootstrap/ModalFooter'
 import ModalHeader from 'react-bootstrap/ModalHeader'
-
-import * as Survey from "survey-react";
-import React, { Component } from 'react';
-import { Button } from 'react-bootstrap';
-import { StickyContainer } from "react-sticky";
 
 import './App.css';
 import './css/theme.css'
@@ -99,27 +97,28 @@ class App extends Component {
             </div>
           </div>
           <Survey.Survey model={model} onComplete={this.onComplete} />
-          <StickyContainer>
-            <div className="row no-gutters">
-              <div className="d-flex justify-content-start col">
-                <Button className="btn btn-primary mr-2" onClick={this.handleOpenModal}>Reset</Button>
-              </div>
-              <div className="d-flex justify-content-center col">
-                <Button className="btn btn-primary mr-2" onClick={() => this.prevPage()} disabled={model.isFirstPage}>Previous</Button>
-                <Button className="btn btn-primary mr-2" onClick={() => this.nextPage()} disabled={model.isLastPage}>Next</Button>
-              </div>
-              <div className="d-flex justify-content-end col">
-                <Button className="btn btn-save mr-2" id="saveButton" onClick={() => this.save()}>Save</Button>
-                <Button className="bt btn-primary" onClick={() => this.finish()}>Finish</Button>
+          <div id="navCon" className="container">
+            <div id="navCard" className="card">
+              <div className="row no-gutters">
+                <div className="d-flex justify-content-start col">
+                  <Button className="btn btn-primary mr-2" onClick={this.handleOpenModal}>Reset</Button>
+                </div>
+                <div className="d-flex justify-content-center col">
+                  <Button className="btn btn-primary mr-2" onClick={() => this.prevPage()} disabled={model.isFirstPage}>Prev</Button>
+                  <Button className="btn btn-primary mr-2" onClick={() => this.nextPage()} disabled={model.isLastPage}>Next</Button>
+                </div>
+                <div className="d-flex justify-content-end col">
+                  <Button className="btn btn-save mr-2" id="saveButton" onClick={() => this.save()}>Save</Button>
+                  <Button className="bt btn-primary" onClick={() => this.finish()}>Finish</Button>
+                </div>
               </div>
             </div>
-          </StickyContainer>
+          </div>
           <Modal
             size="md"
             aria-labelledby="contained-modal-title-vcenter"
             centered
-            show={this.state.showModal}
-          >
+            show={this.state.showModal}>
             <ModalHeader closeButton>
               <ModalTitle id="contained-modal-title-vcenter">
                 Please Confirm
