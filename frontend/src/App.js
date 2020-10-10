@@ -2,11 +2,11 @@ import * as Survey from "survey-react";
 import { Button } from 'react-bootstrap';
 import React, { Component } from 'react';
 import Modal from 'react-bootstrap/Modal'
+import { withRouter } from 'react-router-dom';
 import ModalBody from 'react-bootstrap/ModalBody'
 import ModalTitle from 'react-bootstrap/ModalTitle'
 import ModalFooter from 'react-bootstrap/ModalFooter'
 import ModalHeader from 'react-bootstrap/ModalHeader'
-
 import './App.css';
 import './css/theme.css'
 import './css/survey.css'
@@ -36,11 +36,16 @@ class App extends Component {
     super(props);
     this.state = {
       isSurveyStarted: false,
-      showModal: false
+      showModal: false,
+      questions: json
     };
 
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
+  }
+
+  nextPath(path) {
+    this.props.history.push(path, json);
   }
 
   handleOpenModal() {
@@ -77,6 +82,7 @@ class App extends Component {
 
   finish() {
     model.doComplete();
+    this.nextPath('/Results/');
   }
 
   onComplete(survey, options) {
@@ -84,6 +90,7 @@ class App extends Component {
   }
 
   startSurvey() {
+    model.clear()      // clear survey to fix restart bug
     this.setState({ isSurveyStarted: true })
   }
 
@@ -178,4 +185,4 @@ class App extends Component {
     }
   }
 }
-export default App;
+export default withRouter(App);

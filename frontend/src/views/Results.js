@@ -1,26 +1,26 @@
 import React, { Component } from 'react';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css"
 import "font-awesome/css/font-awesome.css"
-import { Tabs, Tab, Table, Button, Nav} from 'react-bootstrap'
+import { Tabs, Tab, Table, Button, Nav } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCheckCircle, faCircle  } from '@fortawesome/free-regular-svg-icons'
+import { faCheckCircle, faCircle } from '@fortawesome/free-regular-svg-icons'
 import "../css/theme.css"
-
+import "../css/survey.css"
 
 export default class Results extends Component {
 
 
-      
-    render(){
+    render() {
+        var json = this.props.location.state 
         var unselected = "#dee2e6";
         return (
-            <main id="wb-cont" role="main" property="mainContentOfPage" class="container" style={{paddingBottom: "1rem"}}>
+            <main id="wb-cont" role="main" property="mainContentOfPage" className="container" style={{ paddingBottom: "1rem" }}>
                 <h1 className="section-header">Results</h1>
                 <Tabs>
                     <Tab eventKey="score" title="Score">
-                        <div class="table-responsive mt-3">
-                            <Table striped bordered hover responsive> 
+                        <div className="table-responsive mt-3">
+                            <Table striped bordered hover responsive>
                                 <thead>
                                     <tr>
                                         <th>
@@ -42,78 +42,78 @@ export default class Results extends Component {
                                         <th scope="row">
                                             Accountability
                                         </th>
-                                        <td class="text-center">
+                                        <td className="text-center">
                                             <FontAwesomeIcon icon={faCheckCircle} size="lg" />
                                         </td>
-                                        <td class="text-center">
-                                            <FontAwesomeIcon icon={faCircle} size="lg" color={unselected}/>
+                                        <td className="text-center">
+                                            <FontAwesomeIcon icon={faCircle} size="lg" color={unselected} />
                                         </td>
-                                        <td class="text-center">
-                                            <FontAwesomeIcon icon={faCircle} size="lg" color={unselected}/>
+                                        <td className="text-center">
+                                            <FontAwesomeIcon icon={faCircle} size="lg" color={unselected} />
                                         </td>
                                     </tr>
                                     <tr>
                                         <th scope="row">
                                             Explainability
                                         </th>
-                                    <td class="text-center">
-                                        <FontAwesomeIcon icon={faCheckCircle} size="lg" />
-                                    </td>
-                                    <td class="text-center">
-                                        <FontAwesomeIcon icon={faCircle} size="lg" color={unselected}/>
-                                    </td>
-                                    <td class="text-center">
-                                        <FontAwesomeIcon icon={faCircle} size="lg" color={unselected}/>
-                                    </td>
+                                        <td className="text-center">
+                                            <FontAwesomeIcon icon={faCheckCircle} size="lg" />
+                                        </td>
+                                        <td className="text-center">
+                                            <FontAwesomeIcon icon={faCircle} size="lg" color={unselected} />
+                                        </td>
+                                        <td className="text-center">
+                                            <FontAwesomeIcon icon={faCircle} size="lg" color={unselected} />
+                                        </td>
                                     </tr>
                                     <tr>
                                         <th scope="row">
                                             Data quality and rights
                                         </th>
-                                        <td class="text-center">
+                                        <td className="text-center">
                                             <FontAwesomeIcon icon={faCheckCircle} size="lg" />
                                         </td>
-                                        <td class="text-center">
-                                            <FontAwesomeIcon icon={faCircle} size="lg" color={unselected}/>
+                                        <td className="text-center">
+                                            <FontAwesomeIcon icon={faCircle} size="lg" color={unselected} />
                                         </td>
-                                        <td class="text-center">
-                                            <FontAwesomeIcon icon={faCircle} size="lg" color={unselected}/>
+                                        <td className="text-center">
+                                            <FontAwesomeIcon icon={faCircle} size="lg" color={unselected} />
                                         </td>
                                     </tr>
                                     <tr>
                                         <th scope="row">
                                             Bias and fairness
                                         </th>
-                                        <td class="text-center">
+                                        <td className="text-center">
                                             <FontAwesomeIcon icon={faCheckCircle} size="lg" />
                                         </td>
-                                        <td class="text-center">
-                                            <FontAwesomeIcon icon={faCircle} size="lg" color={unselected}/>
+                                        <td className="text-center">
+                                            <FontAwesomeIcon icon={faCircle} size="lg" color={unselected} />
                                         </td>
-                                        <td class="text-center">
-                                            <FontAwesomeIcon icon={faCircle} size="lg" color={unselected}/>
+                                        <td className="text-center">
+                                            <FontAwesomeIcon icon={faCircle} size="lg" color={unselected} />
                                         </td>
                                     </tr>
                                     <tr>
                                         <th scope="row">
                                             Robustness
                                         </th>
-                                        <td class="text-center">
+                                        <td className="text-center">
                                             <FontAwesomeIcon icon={faCheckCircle} size="lg" />
                                         </td>
-                                        <td class="text-center">
-                                            <FontAwesomeIcon icon={faCircle} size="lg" color={unselected}/>
+                                        <td className="text-center">
+                                            <FontAwesomeIcon icon={faCircle} size="lg" color={unselected} />
                                         </td>
-                                        <td class="text-center">
-                                            <FontAwesomeIcon icon={faCircle} size="lg" color={unselected}/>
+                                        <td className="text-center">
+                                            <FontAwesomeIcon icon={faCircle} size="lg" color={unselected} />
                                         </td>
                                     </tr>
-                               </tbody>
+                                </tbody>
                             </Table>
                         </div>
                     </Tab>
                     <Tab eventKey="report-card" title="Report Card">
-                    <div class="table-responsive">
+                        <div className="table-responsive">
                             <Tab.Container id="left-tabs-example" defaultActiveKey="first">
                                 <Tab.Content>
                                     <Tab.Pane eventKey="accountability" >
@@ -140,7 +140,7 @@ export default class Results extends Component {
                                             <tbody>
                                             </tbody>
                                         </Table>
-                                        </Tab.Pane>
+                                    </Tab.Pane>
                                     <Tab.Pane eventKey="second">
                                         hi
                                     </Tab.Pane>
@@ -174,17 +174,17 @@ export default class Results extends Component {
                                 </Nav>
                             </Tab.Container>
                         </div>
-                    </Tab>                
+                    </Tab>
                 </Tabs>
                 <p>
                     As‌ ‌AI‌ ‌continues‌ ‌to‌ ‌evolve‌ ‌so‌ ‌will‌ ‌the‌ ‌Design‌ ‌Assistant.‌ ‌
-                    We‌ ‌are‌ ‌working‌ ‌now‌ ‌to‌ ‌add‌ questions‌ ‌that‌ ‌are‌ ‌more‌ ‌industry‌ ‌specific‌ ‌and‌ ‌tailored‌ ‌for‌ ‌your‌ ‌location.‌ 
-                    ‌To‌ ‌do‌ ‌this,‌ ‌we‌ can‌ ‌use‌ ‌your‌ ‌help!‌ ‌Share‌ ‌with‌ ‌us‌ ‌the‌ ‌results‌ ‌of‌ ‌your‌ ‌report.‌ 
+                    We‌ ‌are‌ ‌working‌ ‌now‌ ‌to‌ ‌add‌ questions‌ ‌that‌ ‌are‌ ‌more‌ ‌industry‌ ‌specific‌ ‌and‌ ‌tailored‌ ‌for‌ ‌your‌ ‌location.‌
+                    ‌To‌ ‌do‌ ‌this,‌ ‌we‌ can‌ ‌use‌ ‌your‌ ‌help!‌ ‌Share‌ ‌with‌ ‌us‌ ‌the‌ ‌results‌ ‌of‌ ‌your‌ ‌report.‌
                     ‌Let‌ ‌us‌ ‌know‌ ‌where‌ ‌you‌ ‌need‌ more‌ ‌clarification,‌ ‌and‌ ‌where‌ ‌more‌ ‌guidance‌ ‌might‌ ‌be‌ ‌needed.‌
-                     If‌ ‌you‌ ‌weren’t‌ ‌ready‌ ‌to‌ ‌answer‌ ‌all‌ ‌of‌ ‌the‌ ‌questions‌ ‌today,‌ ‌that’s‌ ‌ok,‌ ‌save‌ ‌your‌ ‌report,‌ ‌and‌ you‌ ‌can‌ ‌reload‌ ‌it‌ ‌the‌ ‌next‌ ‌time‌ ‌you‌ ‌return.‌
+                    If‌ ‌you‌ ‌weren’t‌ ‌ready‌ ‌to‌ ‌answer‌ ‌all‌ ‌of‌ ‌the‌ ‌questions‌ ‌today,‌ ‌that’s‌ ‌ok,‌ ‌save‌ ‌your‌ ‌report,‌ ‌and‌ you‌ ‌can‌ ‌reload‌ ‌it‌ ‌the‌ ‌next‌ ‌time‌ ‌you‌ ‌return.‌
                 </p>
                 <p>
-                    As‌ ‌an‌ ‌open‌ ‌source‌ ‌tool,‌ ‌we‌ ‌will‌ ‌continue‌ ‌to‌ ‌adjust‌ ‌quickly‌ ‌based‌ ‌on‌ ‌our‌ ‌communities‌ needs.‌ 
+                    As‌ ‌an‌ ‌open‌ ‌source‌ ‌tool,‌ ‌we‌ ‌will‌ ‌continue‌ ‌to‌ ‌adjust‌ ‌quickly‌ ‌based‌ ‌on‌ ‌our‌ ‌communities‌ needs.‌
                     ‌Please‌ ‌let‌ ‌us‌ ‌know‌ ‌if‌ ‌you‌ ‌find‌ ‌any‌ ‌issues‌ ‌and‌ ‌we‌ ‌will‌ ‌be‌ ‌happy‌ ‌to‌ ‌update!‌
                 </p>
                 <p>
