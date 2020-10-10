@@ -1,18 +1,19 @@
 import * as Survey from "survey-react";
 import { Button } from 'react-bootstrap';
 import React, { Component } from 'react';
-import Modal from 'react-bootstrap/Modal'
+import Modal from 'react-bootstrap/Modal';
 import { withRouter } from 'react-router-dom';
-import ModalBody from 'react-bootstrap/ModalBody'
-import ModalTitle from 'react-bootstrap/ModalTitle'
-import ModalFooter from 'react-bootstrap/ModalFooter'
-import ModalHeader from 'react-bootstrap/ModalHeader'
-import './App.css';
-import './css/theme.css'
-import './css/survey.css'
-import "font-awesome/css/font-awesome.css"
-import "bootstrap/dist/css/bootstrap.min.css"
+import ModalBody from 'react-bootstrap/ModalBody';
+import ModalTitle from 'react-bootstrap/ModalTitle';
+import ModalFooter from 'react-bootstrap/ModalFooter';
+import ModalHeader from 'react-bootstrap/ModalHeader';
 
+
+import './css/theme.css';
+import './css/survey.css';
+import "font-awesome/css/font-awesome.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import './App.css';
 Survey
   .StylesManager
   .applyTheme("bootstrapmaterial")
@@ -20,6 +21,13 @@ Survey
 Survey
   .defaultBootstrapMaterialCss
   .progressBar = "progress-bar bg-custom progress-bar-striped";
+
+Survey
+  .Serializer
+  .addProperty("page", {
+    name: "navigationTitle:string",
+    isLocalizable: true
+  });
 
 const json = require('./survey-enrf.json')
 const model = new Survey.Model(json)
@@ -99,11 +107,28 @@ class App extends Component {
       return (
         <div>
           <div className="container-fluid">
-            <div className="row">
-              <div className="d-flex justify-content-center col">{this.perc()}%</div>
+            <div className="navigationProgressDiv">
+              <ul className="navigationProgressBar">
+                <li>
+                  <span className="pageTitle">Accountability</span>
+                </li>
+                <li>
+                  <span className="pageTitle">Explainability and Interpretability</span>
+                </li>
+                <li>
+                  <span className="pageTitle">Data Quality</span>
+                </li>
+                <li>
+                  <span className="pageTitle">Bias and Fairness</span>
+                </li>
+                <li>
+                  <span className="pageTitle">Robustness</span>
+                </li>
+              </ul>
             </div>
+            <div className="d-flex justify-content-center col">{this.perc()}%</div>
           </div>
-          <Survey.Survey model={model} onComplete={this.onComplete} />
+          <Survey.Survey model={model} css={'./css/survey.css'} onComplete={this.onComplete} />
           <div id="navCon" className="container">
             <div id="navCard" className="card">
               <div className="row no-gutters">
