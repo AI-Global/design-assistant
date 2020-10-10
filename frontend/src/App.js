@@ -8,12 +8,12 @@ import ModalTitle from 'react-bootstrap/ModalTitle';
 import ModalFooter from 'react-bootstrap/ModalFooter';
 import ModalHeader from 'react-bootstrap/ModalHeader';
 
-
+import styles from './App.module.css';
 import './css/theme.css';
 import './css/survey.css';
 import "font-awesome/css/font-awesome.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import './App.css';
+
 Survey
   .StylesManager
   .applyTheme("bootstrapmaterial")
@@ -37,7 +37,6 @@ const model = new Survey.Model(json)
 // Asked by: MDE | Answered by: Andrew Telnov
 var localizedStrs = Survey.surveyLocalization.locales[Survey.surveyLocalization.defaultLocale];
 localizedStrs.progressText = "";
-
 
 class App extends Component {
   constructor(props) {
@@ -106,29 +105,44 @@ class App extends Component {
     if (this.state.isSurveyStarted) {
       return (
         <div>
-          <div className="container-fluid">
-            <div className="navigationProgressDiv">
-              <ul className="navigationProgressBar">
-                <li>
-                  <span className="pageTitle">Accountability</span>
-                </li>
-                <li>
-                  <span className="pageTitle">Explainability and Interpretability</span>
-                </li>
-                <li>
-                  <span className="pageTitle">Data Quality</span>
-                </li>
-                <li>
-                  <span className="pageTitle">Bias and Fairness</span>
-                </li>
-                <li>
-                  <span className="pageTitle">Robustness</span>
-                </li>
-              </ul>
+          <div className={styles.dimContainer}>
+            <div className={styles.dimCard}>
+              <div className="d-flex justify-content-left col" style={{ float: "left" }}>
+                <ul>
+                  <div className="d-flex justify-content-center col">
+                    <li className={styles.dimButton}>
+                      <p className={styles.dimTitle}>Accountability</p>
+                    </li>
+                  </div>
+                  <div className="d-flex justify-content-center col">
+                    <li className={styles.dimButton}>
+                      <p className={styles.dimTitle}>Bias and Fairness</p>
+                    </li>
+                  </div>
+                  <div className="d-flex justify-content-center col">
+                    <li className={styles.dimButton}>
+                      <p className={styles.dimTitle} style={{ top: "-1.5em" }}>Explainability and <br></br> Interpretability</p>
+                    </li>
+                  </div>
+                  <div className="d-flex justify-content-center col">
+                    <li className={styles.dimButton}>
+                      <p className={styles.dimTitle}>Robustness</p>
+                    </li>
+                  </div>
+                  <div className="d-flex justify-content-center col">
+                    <li className={styles.dimButton}>
+                      <p className={styles.dimTitle}>Bias and Fairness</p>
+                    </li>
+                  </div>
+                </ul>
+              </div>
             </div>
+          </div>
+
+          <div className="container">
             <div className="d-flex justify-content-center col">{this.perc()}%</div>
           </div>
-          <Survey.Survey model={model} css={'./css/survey.css'} onComplete={this.onComplete} />
+          <Survey.Survey model={model} onComplete={this.onComplete} />
           <div id="navCon" className="container">
             <div id="navCard" className="card">
               <div className="row no-gutters">
@@ -211,3 +225,4 @@ class App extends Component {
   }
 }
 export default withRouter(App);
+

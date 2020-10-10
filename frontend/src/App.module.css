@@ -1,0 +1,40 @@
+
+.dimContainer {
+  position: absolute;
+  width: 16em;
+  left:2em;
+  top: 20%;
+  z-index: 5;
+}
+
+.dimCard {
+  border-radius: 0.5rem;
+  width: inherit;
+  /* background-color: #f5f5f5; */
+  display: inline-block;
+  z-index: 5;
+  border: solid black;
+}
+
+.dimButton {
+  width: 24px;
+  height: 24px;
+  border: 3px solid #8dd9ca;
+  display: block;
+  margin-bottom: 2em;
+  margin-top: 2em;
+  border-radius: 50%;
+  background-color: #8dd9ca;
+  padding: 1em;
+  position: relative;
+  left: -3em;
+}
+
+.dimTitle {
+  width: max-content;
+  font-weight: 600;
+  top: -1em;
+  left: 3em;
+  position: relative;
+
+}

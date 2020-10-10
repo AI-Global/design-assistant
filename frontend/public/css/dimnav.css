@@ -1,3 +1,20 @@
+.btn-green {
+    background-color: #1ab394;
+    color: #fff;
+    border-radius: 3px;
+}
+.btn-green:focus,
+.btn-green:hover {
+    background-color: #18a689;
+    color: #fff;
+}
+.panel-footer {
+    padding: 0 15px;
+    border: none;
+    text-align: right;
+    background-color: #fff;
+}
+
 .navigationContainer {
     width: 100%;
     height: 110px;
@@ -81,4 +98,3 @@
     border-color: #1ab394;
     background-color: white;
 }
-
