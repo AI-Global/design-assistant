@@ -44,7 +44,8 @@ class App extends Component {
     this.state = {
       isSurveyStarted: false,
       showModal: false,
-      questions: json
+      questions: json,
+      A:2,
     };
 
     this.handleOpenModal = this.handleOpenModal.bind(this);
@@ -101,6 +102,10 @@ class App extends Component {
     this.setState({ isSurveyStarted: true })
   }
 
+  navDim(A) {
+    model.currentPage = model.pages[A]
+  }
+
   render() {
     if (this.state.isSurveyStarted) {
       return (
@@ -110,7 +115,7 @@ class App extends Component {
               <div className="d-flex justify-content-left col" style={{ float: "left" }}>
                 <ul>
                   <div className="d-flex justify-content-left col">
-                    <Button className={styles.dimButton}/>
+                    <Button className={styles.dimButton} onClick={()=> this.navDim(this.state.A)}/>
                       <p className={styles.dimTitle}>Accountability</p>
                   </div>
                   <div className="d-flex justify-content-left col">
