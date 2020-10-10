@@ -109,30 +109,26 @@ class App extends Component {
             <div className={styles.dimCard}>
               <div className="d-flex justify-content-left col" style={{ float: "left" }}>
                 <ul>
-                  <div className="d-flex justify-content-center col">
-                    <li className={styles.dimButton}>
+                  <div className="d-flex justify-content-left col">
+                    <Button className={styles.dimButton}/>
                       <p className={styles.dimTitle}>Accountability</p>
-                    </li>
                   </div>
-                  <div className="d-flex justify-content-center col">
-                    <li className={styles.dimButton}>
+                  <div className="d-flex justify-content-left col">
+                    <Button className={styles.dimButton}/>
                       <p className={styles.dimTitle}>Bias and Fairness</p>
-                    </li>
                   </div>
-                  <div className="d-flex justify-content-center col">
-                    <li className={styles.dimButton}>
-                      <p className={styles.dimTitle} style={{ top: "-1.5em" }}>Explainability and <br></br> Interpretability</p>
-                    </li>
+                  <div className="d-flex justify-content-left col">
+                    <Button className={styles.dimButton}/>
+                      <p className={styles.dimTitle} style={{ top: "2em" }}>Explainability and <br></br> Interpretability</p>
                   </div>
-                  <div className="d-flex justify-content-center col">
-                    <li className={styles.dimButton}>
-                      <p className={styles.dimTitle}>Robustness</p>
-                    </li>
+                  <div className="d-flex justify-content-left col">
+                    <Button className={styles.dimButton}/>
+
+                    <p className={styles.dimTitle}>Robustness</p>
                   </div>
-                  <div className="d-flex justify-content-center col">
-                    <li className={styles.dimButton}>
+                  <div className="d-flex justify-content-left col">
+                    <Button className={styles.dimButton}/>
                       <p className={styles.dimTitle}>Bias and Fairness</p>
-                    </li>
                   </div>
                 </ul>
               </div>
