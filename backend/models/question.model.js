@@ -82,14 +82,14 @@ const QuestionSchema = mongoose.Schema({
     // Which roles question should display for
     roles: [{
         type: String,
-        enum: ['Product Owner / Business Owner', 'Risk Management', 'Legal Lead', 'IT Lead', 'Technical Manager', 'Software Engineer / Software Developer', 'Product Design', 'Data Scientist Lead', 'Machine Learning Engineer', 'Researcher', 'Non Government Organization Volunteer', 'Policy Analyst'],
+        enum: ['Product Owner / Business Owner', 'Risk Management', 'Legal Lead', 'IT Lead', 'Technical Manager', 'Software Engineer / Software Developer', 'Product Design', 'Data Scientist Lead', 'Machine Learning Engineer', 'Researcher', 'Non Government Organization Volunteer', 'Policy Analyst', 'All'],
         required: true
     }],
 
     // Question can belong to multiple lifecycles
     lifecycle: [{
         type: String,
-        enum: ['Plan and Design', 'Data and Model', 'Verify and Validate', 'Deploy', 'Operate and Monitor'],
+        enum: ['Plan and Design', 'Data and Model', 'Verify and Validate', 'Deploy', 'Operate and Monitor', 'All'],
         required: true
     }],
 
