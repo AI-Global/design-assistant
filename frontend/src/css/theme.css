@@ -204,11 +204,31 @@ html {
     border-bottom: 0;
   }
 
-  .report-card-columns{
+  .report-card-headers{
     width: 33%;
     background-color: #d0e0e3;
   }
 
   .report-card-table{
     table-layout: fixed;
+    position: relative;
+    border-collapse: collapse;
+  }
+
+  .score-card-dheader{
+    background-color: #bfbfbf;
+    width: 25%;
+  }
+
+  .score-card-headers{
+    background-color: #d0e0e3;
+    width: 25%;
+  }
+
+  .score-card-dimensions{
+    background-color: #efefef;
+  }
+  
+  .dimension-chart{
+    height: 500px;
   }
