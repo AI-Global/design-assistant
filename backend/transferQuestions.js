@@ -81,8 +81,8 @@ function main(){
 				doc["questionType"] = questionType;
 				doc["question"] = question;
 				doc["prompt"] = qPrompt;
-				doc["responseType"] = (qPrompt !== "free text") ? "radio box" : "text field";
-				if(doc["responseType"] === "radio box"){
+				doc["responseType"] = (qPrompt !== "free text") ? "radiogroup" : "text";
+				if(doc["responseType"] === "radiogroup"){
 					multChoice = true;
 				}
 				doc["pointsAvailable"] = Number(pointsAvailable);

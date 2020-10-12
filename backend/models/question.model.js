@@ -1,6 +1,12 @@
 const mongoose = require('mongoose');
 
 const QuestionSchema = mongoose.Schema({
+    uuid: {
+        type: String,
+        required: true,
+        unique: true
+    },
+
     // numbered 1-n
     questionNumber: {
         type: Number,
@@ -11,19 +17,22 @@ const QuestionSchema = mongoose.Schema({
     // 5 possible dimensions
     trustIndexDimension: {
         type: String,
-        enum: ['NONE', 'Bias and Fairness', 'Accountability', 'Explainability and Interpretability', 'Robustness', 'Data Quality']
+        enum: [null, 'bias and fairness', 'accountability', 'explainability and interpretability', 'robustness', 'data quality']
     },
 
     // Free text or enum? Not enough info in spreadsheet
     domainApplicability: {
         type: String,
-        enum: ['NONE', 'Health', 'Insurance', 'Banking', 'Media', 'Retail', 'Other']
+        // SHOULD be activated, right now data isn't uniform, needs to be off
+        // enum: [null, 'Health', 'Insurance', 'Banking', 'Media', 'Retail', 'Other']
     },
 
     // Free text or enum? Not enough info in spreadsheet
     regionalApplicability: {
         type: String,
-        enum: ['NONE', 'Africa', 'Antarctica', 'Asia', 'Europe', 'North America', 'South America', 'Oceania', 'Other']
+
+        // SHOULD be activated, right now data isn't uniform, needs to be off
+        // enum: [null, 'Africa', 'Antarctica', 'Asia', 'Europe', 'North America', 'South America', 'Oceania', 'Other']
     },
 
     // mandatory or optional
@@ -32,8 +41,9 @@ const QuestionSchema = mongoose.Schema({
     // Any more categories?
     questionType: {
         type: String,
-        required: true,
-        enum: ['NONE', 'Tombstone', 'Risk', 'Mitigation']
+        // SHOULD BE TRUE, will activate when spreadsheet is complete
+        // required: true,
+        enum: [null, 'tombstone', 'risk', 'mitigation']
     },
 
     // question text
@@ -43,21 +53,26 @@ const QuestionSchema = mongoose.Schema({
     },
 
     prompt: {
-        type: String,
-        required: true
+        type: String
+        // SHOULD BE TRUE, will activate when spreadsheet is complete
+        // required: true,
     },
 
     // possible responses for question, could also be free text
     responses: [{
-        type: mongoose.Schema.ObjectId,
-        ref: 'Response'
+        responseNumber: {
+            type: Number,
+            required: true
+        },
+        indicator: String,
+        score: Number
     }],
 
     // how the responses will be surfaced
     responseType: {
         type: String,
         required: true,
-        enum: ['NONE', 'text field', 'slider', 'radio box']
+        enum: [null, 'text', 'comment', 'checkbox', 'radiogroup', 'dropdown']
     },
 
     // -1 to 1
@@ -70,26 +85,27 @@ const QuestionSchema = mongoose.Schema({
     weighting: {
         type: Number,
         required: true,
-        enum: [1, 2, 3]
+        enum: [0,1, 2, 3]
     },
 
     // The recommendation?
     reference: {
-        type: String,
-        required: true
+        type: String
+        // SHOULD BE TRUE, will activate when spreadsheet is complete
+        // required: true
     },
 
     // Which roles question should display for
     roles: [{
         type: String,
-        enum: ['NONE', 'Product Owner / Business Owner', 'Risk Management', 'Legal Lead', 'IT Lead', 'Technical Manager', 'Software Engineer / Software Developer', 'Product Design', 'Data Scientist Lead', 'Machine Learning Engineer', 'Researcher', 'Non Government Organization Volunteer', 'Policy Analyst', 'All'],
+        enum: [null, 'Product Owner / Business Owner', 'Risk Management', 'Legal Lead', 'IT Lead', 'Technical Manager', 'Software Engineer / Software Developer', 'Product Design', 'Data Scientist Lead', 'Machine Learning Engineer', 'Researcher', 'Non Government Organization Volunteer', 'Policy Analyst', 'All'],
         required: true
     }],
 
     // Question can belong to multiple lifecycles
     lifecycle: [{
         type: String,
-        enum: ['NONE', 'Plan and Design', 'Data and Model', 'Verify and Validate', 'Deploy', 'Operate and Monitor', 'All'],
+        enum: [null, 'Plan and Design', 'Data and Model', 'Verify and Validate', 'Deploy', 'Operate and Monitor', 'All'],
         required: true
     }],
 
