@@ -22,20 +22,19 @@ function formatQuestion(q) {
         question.recommendation.fr = "";
     }
 
-    if (question.type == "radiogroup") {
-        question.hasOther = true; // Hardcoded this to true unless they want it changed
-        question.choice = [];
-    } else if (question.type == "dropdown") {
+    if (question.type == "dropdown") {
         question.hasOther = true;
         question.choice = [];
         //question.choiceOrder = "asc"
         question.otherText = { "default": "Other", "fr": "" };
-    } else if (question.type == "checkbox") {
-        if(q.pointsAvailable > 0){
+    } else if (question.type == "radiogroup" || question.type == "checkbox") {
+        if (q.pointsAvailable > 0) {
             question.score = {};
             question.score.dimension = q.trustIndexDimension; // This should be a letter
-            question.score.max = pointsAvailable; // Double check if this is correct
-            question.score.choice = {}; // Loop add choices here "itemAA35A8": -1.5
+            if (question.type == "checkbox") {
+                question.score.max = pointsAvailable; // Double check if this is the correct parameter
+            }
+            question.score.choice = {}; // TODO: Loop add choices here "itemAA35A8": -1.5
         }
         question.choices = [];
         // Loop and add all choice 
