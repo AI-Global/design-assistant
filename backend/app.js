@@ -19,6 +19,9 @@ mongoose.connect(process.env.DB_CONNECTION , {useNewUrlParser: true, useCreateIn
     console.log("Connected to DB")
 });
 
+// need so that we don't use deprecated useFindAndModify method
+mongoose.set('useFindAndModify', false);
+
 // Import Routes
 const questionsRouter = require("./routes/questions");
 const responsesRouter = require("./routes/responses");

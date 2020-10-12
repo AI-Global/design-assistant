@@ -11,19 +11,19 @@ const QuestionSchema = mongoose.Schema({
     // 5 possible dimensions
     trustIndexDimension: {
         type: String,
-        enum: ['Bias and Fairness', 'Accountability', 'Explainability and Interpretability', 'Robustness', 'Data Quality']
+        enum: ['NONE', 'Bias and Fairness', 'Accountability', 'Explainability and Interpretability', 'Robustness', 'Data Quality']
     },
 
     // Free text or enum? Not enough info in spreadsheet
     domainApplicability: {
         type: String,
-        enum: ['Health', 'Insurance', 'Banking', 'Media', 'Retail', 'Other']
+        enum: ['NONE', 'Health', 'Insurance', 'Banking', 'Media', 'Retail', 'Other']
     },
 
     // Free text or enum? Not enough info in spreadsheet
     regionalApplicability: {
         type: String,
-        enum: ['Africa', 'Antarctica', 'Asia', 'Europe', 'North America', 'South America', 'Oceania', 'Other']
+        enum: ['NONE', 'Africa', 'Antarctica', 'Asia', 'Europe', 'North America', 'South America', 'Oceania', 'Other']
     },
 
     // mandatory or optional
@@ -33,7 +33,7 @@ const QuestionSchema = mongoose.Schema({
     questionType: {
         type: String,
         required: true,
-        enum: ['Tombstone', 'Risk', 'Mitigation']
+        enum: ['NONE', 'Tombstone', 'Risk', 'Mitigation']
     },
 
     // question text
@@ -49,7 +49,7 @@ const QuestionSchema = mongoose.Schema({
 
     // possible responses for question, could also be free text
     responses: [{
-        type: String,
+        type: mongoose.Schema.ObjectId,
         ref: 'Response'
     }],
 
@@ -57,7 +57,7 @@ const QuestionSchema = mongoose.Schema({
     responseType: {
         type: String,
         required: true,
-        enum: ['text field', 'slider', 'radio box']
+        enum: ['NONE', 'text field', 'slider', 'radio box']
     },
 
     // -1 to 1
@@ -82,14 +82,14 @@ const QuestionSchema = mongoose.Schema({
     // Which roles question should display for
     roles: [{
         type: String,
-        enum: ['Product Owner / Business Owner', 'Risk Management', 'Legal Lead', 'IT Lead', 'Technical Manager', 'Software Engineer / Software Developer', 'Product Design', 'Data Scientist Lead', 'Machine Learning Engineer', 'Researcher', 'Non Government Organization Volunteer', 'Policy Analyst', 'All'],
+        enum: ['NONE', 'Product Owner / Business Owner', 'Risk Management', 'Legal Lead', 'IT Lead', 'Technical Manager', 'Software Engineer / Software Developer', 'Product Design', 'Data Scientist Lead', 'Machine Learning Engineer', 'Researcher', 'Non Government Organization Volunteer', 'Policy Analyst', 'All'],
         required: true
     }],
 
     // Question can belong to multiple lifecycles
     lifecycle: [{
         type: String,
-        enum: ['Plan and Design', 'Data and Model', 'Verify and Validate', 'Deploy', 'Operate and Monitor', 'All'],
+        enum: ['NONE', 'Plan and Design', 'Data and Model', 'Verify and Validate', 'Deploy', 'Operate and Monitor', 'All'],
         required: true
     }],
 

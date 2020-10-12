@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const ResponseSchema = mongoose.Schema({
+const SubmissionSchema = mongoose.Schema({
 
     // user ID that owns this 
     userId: {
@@ -31,4 +31,4 @@ const ResponseSchema = mongoose.Schema({
     // TODO: Add test of schema to model
 });
 
-module.exports = mongoose.model("Response", ResponseSchema);
+module.exports = mongoose.model("Submission", SubmissionSchema);

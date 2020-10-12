@@ -31,7 +31,11 @@ function main(){
 	let reference;
 	let roles;
 	let lifecycle;
+
+	let counter = 0;
 	while(line = csv.next()){
+		counter += 1;
+		console.log(counter);
 		line = line.toString('ascii');
 		let values = line.split('\t');
 		if(!multChoice){
@@ -101,10 +105,9 @@ function main(){
 				if(!multChoice){
 					collection.push(doc);
 				}
-			//}
 			} else{
 				// answer
-				let response = {"_id":count, "indicator":values[10], "score":values[12]};
+				let response = {"responseNumber":count, "indicator":values[10], "score":values[12]};
 				responses[count++] = response;
 			}
 		}
