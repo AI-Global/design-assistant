@@ -3,12 +3,21 @@ const router = express.Router();
 const Question = require('../models/question.model');
 
 function formatQuestion(q) {
+    // This function takes a question from mongoDB as input and formats it for surveyJS to use
+
+    // All questions have a title, name, and type
     var question = {};
     question.title = {};
     question.title.default = q.question;
     question.title.fr = "";
-    question.name = q.questionNumber; //Change this to UUID
+    question.name = q.id;
     question.type = q.responseType;
+
+    if (q.alttext) {
+        question.alttext = {};
+        question.alttext.default = q.alttext;
+        question.alttext.fr = "";
+    }
 
     if (q.prompt) {
         question.description = {};
@@ -23,30 +32,35 @@ function formatQuestion(q) {
     }
 
     if (question.type == "dropdown") {
+        // TODO: Add choices for dropdown questions
         question.hasOther = true;
         question.choice = [];
-        //question.choiceOrder = "asc"
+        question.choiceOrder = "asc"
         question.otherText = { "default": "Other", "fr": "" };
-    } else if (question.type == "radiogroup" || question.type == "checkbox") {
-        if (q.pointsAvailable > 0) {
-            question.score = {};
-            question.score.dimension = q.trustIndexDimension; // This should be a letter
-            if (question.type == "checkbox") {
-                question.score.max = pointsAvailable; // Double check if this is the correct parameter
-            }
-            question.score.choice = {}; // TODO: Loop add choices here "itemAA35A8": -1.5
-        }
-        question.choices = [];
-        // Loop and add all choice 
-        var choice = {};
-        choice.value = "itemAA35A8";
-        choice.text = {};
-        choice.text.default = "All users equally";
-        choice.text.fr = "";
-        question.choices.push(choice);
-    }//else if (question.type == slider){
 
-    //}
+    } else if (question.type == "radiogroup" || question.type == "checkbox") {
+        if (q.pointsAvailable) {
+            question.score = {};
+            question.score.dimension = q.trustIndexDimension; // This should be mapped to a letter
+            question.score.max = q.pointsAvailable * q.weighting; 
+            
+            question.score.choices = {};
+            for(let c of q.responses){
+                question.score.choices[c.id] = c.score * q.weighting;
+            }
+        }
+
+        question.choices = [];
+        for(let c of q.responses){
+            var choice = {};
+            choice.value = c.id;
+            choice.text = {};
+            choice.text.default = c.indicator;
+            choice.text.fr = "";
+            question.choices.push(choice);
+        }
+        
+    }//TODO: else if (question.type == slider)
 
     return question;
 }
@@ -61,6 +75,7 @@ router.get('/', async (req, res) => {
         res.json({ message: err });
     }
 });
+
 
 // Get question by id TODO: probably should change this to get question by question number
 router.get('/:questionId', async (req, res) => {
