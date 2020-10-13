@@ -14,7 +14,7 @@ router.get('/populatedb', async (req, res) => {
             if (parsed_questions[i].responses) {
                 for (let j = 0; j < parsed_questions[i].responses.length; ++j) {
                     const q_response = {
-                        responseNumber: parsed_questions[i].responses[j].responseNumber || j,
+                        responseNumber: j,
                         indicator: parsed_questions[i].responses[j].indicator || null,
                         score: parsed_questions[i].responses[j].score || null
                     };
@@ -25,8 +25,7 @@ router.get('/populatedb', async (req, res) => {
             // let trustIndexDimensionString = parsed_questions[i].trustIndexDimension;
             // if trustIndexDimension
 
-            await Question.findOneAndUpdate({questionNumber: parsed_questions[i].questionNumber}, {
-                uuid: parsed_questions[i].uuid || parsed_questions[i].questionNumber,
+            await Question.findOneAndUpdate({questionNumber: i}, {
                 trustIndexDimension: ((typeof parsed_questions[i].trustIndexDimension === 'string') ? parsed_questions[i].trustIndexDimension.toLowerCase() : null),
                 domainApplicability: parsed_questions[i].domainApplicability || null,
                 regionalApplicability: parsed_questions[i].regionalApplicability || null,
