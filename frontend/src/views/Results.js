@@ -384,10 +384,8 @@ export default class Results extends Component {
     }
 
     render() {
-        console.log(this);
-        var json = this.props.location.state;
-        var surveyResults = {"QBAEDF":"AI Global Project","QA02D4":"This is the AI Global Project","QD85E8":"itemA96E95","Q836F4":"itemA47434","QA0F6A":["itemAA35A8"],"Q4435F":"itemAED0BB","Q71FC3":["itemA14629","itemAFDC95","itemADA33F","itemA74430","itemA4C27A"],"Q1C8CF":["itemA7DF83","itemA9CF08","itemA9E317","itemAB26CF","itemAC637B"],"Q56654":"itemAC210D","Q22F17":["itemA89E02","itemA83E75","itemAB015E","itemA1EC52","itemA433A7","itemA6A457","itemA30DB7","itemA1AE82","itemA7C3E5","itemAE6FAD","itemAA93BD","itemA76B32"],"Q1577E":["itemAD1BDC","itemA90EF1","itemA7CDEE","itemA44372","itemA01B9E","itemA2B090","itemAA34FF","itemAACFA1","itemA44302"],"QAF269":["itemA30473","itemA4FD04"],"Q4805F":["itemA24402"],"QD3651":"itemABBD06","QC9FE9":"itemA34F49","QC8371":"itemA960F9"}
-
+        var json = this.props.location.state.questions;
+        var surveyResults = this.props.location.state.responses;
         var pages = json["pages"];
         var allQuestions = [];
         pages.map(page => {
@@ -397,6 +395,9 @@ export default class Results extends Component {
         var projectTitle = surveyResults[(allQuestions[0].name)];
         var projectDescription = surveyResults[(allQuestions[1].name)];
         var questions = allQuestions.filter((question) => Object.keys(surveyResults).includes(question.name))
+    
+
+        var unselected = "#dee2e6";
         return (
             <main id="wb-cont" role="main" property="mainContentOfPage" className="container" style={{ paddingBottom: "1rem" }}>
                 { projectTitle && <h1>{projectTitle}</h1> }
