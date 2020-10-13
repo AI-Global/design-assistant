@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css"
 import "font-awesome/css/font-awesome.css"
 import { Tabs, Tab, Table, Button, Nav } from 'react-bootstrap'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCheckCircle, faCircle } from '@fortawesome/free-regular-svg-icons'
 import "../css/results.css"
 import { ResponsiveRadar } from "@nivo/radar";
-import exportReport from "./ExportReport";
+import exportReport from "../helper/ExportReport";
+import createReportCard from "./ReportCard";
+import displayDimensionScore from "./DimensionScore";
 
 const Dimensions = {
     Accountability: {label: "A", name: "Accountability"},
@@ -17,161 +17,7 @@ const Dimensions = {
     Robustness: {label: "R", name: "Robustness"},
 }
 
-const QuestionTypes = 
-{
-    checkbox: "checkbox",
-    radiogroup: "radiogroup"
-}
-
-var radarChartData = [];
-
 export default class Results extends Component {
-
-
-
-
-
-    DisplayQuestion(result, question){     
-        var choices = question?.choices?.filter((choice) => result.includes(choice?.value));     
-        return (
-            <tr key={question?.name}>
-                <td>
-                    {question?.title?.default.split("\n").map(function(item, idx) {
-                        return (
-                            <span key={idx}>
-                                {item}
-                                <br/>
-                            </span>
-                        )
-                    })}
-                </td>
-                <td>
-                    {choices.map(choice => {
-                        return (
-                            choice?.text?.default.split("\n").map(function(item, idx) {
-                                return (
-                                    <span key={idx}>
-                                        {item}
-                                        <br/>
-                                    </span>
-                                )
-                            })
-                        )
-                    })}
-                </td>
-                <td>
-                    {question?.recommendation?.default.split("\n").map(function(item, idx) {
-                        return (
-                            <span key={idx}>
-                                {item}
-                                <br/>
-                            </span>
-                        )
-                    })}
-                </td>
-            </tr>
-        )
-    }
-
-    CreateReportCard(dimension, results, questions){
-        return (
-            <div className="report-card mt-3">
-                <Table id={"report-card-"+ dimension} bordered responsive className="report-card-table">
-                    <thead>
-                        <tr role="row">
-                            <th role="columnheader" scope="col" className="report-card-headers">
-                                <div>
-                                    Question
-                                </div>
-                            </th>
-                            <th role="columnheader" scope="col" className="report-card-headers">
-                                <div>
-                                    Your Response
-                                </div>
-                            </th>
-                            <th role="columnheader" scope="col" className="report-card-headers">
-                                <div>
-                                    Recommendation
-                                </div>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {questions.map(question => {
-                            return this.DisplayQuestion(results[question?.name], question)
-                        })}
-                    </tbody>
-                </Table>
-            </div>
-        );
-    }   
-
-    CalculateDimensionScore(dimensionName, results, questions){
-        var dimensionScore = 0;
-        var maxDimensionScore = 0;
-        questions.map(question => {
-            var selectedChoices = results[question.name];
-            var scores = question.score;
-            if(question.type === QuestionTypes.checkbox){
-                maxDimensionScore += scores.max;
-                if(selectedChoices !== undefined){
-                    var questionScore = 0
-                    selectedChoices.map(choice => {
-                        questionScore += scores?.choices[choice] ?? 0;
-                        return dimensionScore;
-                    })
-                    if(questionScore > scores.max){
-                        questionScore = scores.max;
-                    }
-                    dimensionScore += questionScore;
-                }
-                return dimensionScore;
-            }
-            else if(question.type === QuestionTypes.radiogroup){
-                var maxScore = 0;
-                Object.entries(scores.choices).map(choice => {
-                    if(selectedChoices !== undefined){
-                        if(choice[0] === selectedChoices){
-                            dimensionScore += choice[1];
-                        }
-                    }
-                    if(choice[1] > maxScore){
-                        maxScore = choice[1];
-                    }
-                    return dimensionScore;
-                });
-                maxDimensionScore += maxScore;
-            }
-            return dimensionScore;
-        });
-        var percentageScore = (dimensionScore/maxDimensionScore)*100;
-        radarChartData.push({"dimension": dimensionName, "score": percentageScore});
-        return (
-            <tr key={dimensionName}>
-                <th scope="row" className="score-card-dimensions">{dimensionName}</th>
-                <td className="text-center">
-                    {(percentageScore < 50) 
-                        ? <FontAwesomeIcon icon={faCheckCircle} size="lg" />
-                        : <FontAwesomeIcon icon={faCircle} size="lg" color="#dee2e6" />
-                    }
-                    
-                </td>
-                <td className="text-center">
-                    {(percentageScore >= 50 && percentageScore <= 75)
-                        ? <FontAwesomeIcon icon={faCheckCircle} size="lg" />
-                        : <FontAwesomeIcon icon={faCircle} size="lg" color="#dee2e6" />
-                    }       
-                </td>
-                <td className="text-center">
-                    {(percentageScore > 75)
-                        ? <FontAwesomeIcon icon={faCheckCircle} size="lg" />
-                        : <FontAwesomeIcon icon={faCircle} size="lg" color="#dee2e6" />
-                    }
-                </td>
-            </tr>
-        )
-    }
-
     render() {
         var json = this.props.location.state.questions;
         var surveyResults = this.props.location.state.responses;
@@ -184,9 +30,7 @@ export default class Results extends Component {
         var projectTitle = surveyResults[(allQuestions[0].name)];
         var projectDescription = surveyResults[(allQuestions[1].name)];
         var questions = allQuestions.filter((question) => Object.keys(surveyResults).includes(question.name))
-    
-
-        var unselected = "#dee2e6";
+        var radarChartData = [];
         return (
             <main id="wb-cont" role="main" property="mainContentOfPage" className="container" style={{ paddingBottom: "1rem" }}>
                 { projectTitle && <h1>{projectTitle}</h1> }
@@ -216,61 +60,37 @@ export default class Results extends Component {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {this.CalculateDimensionScore(Dimensions.Accountability.name, surveyResults, allQuestions.filter(x => x.score?.dimension === Dimensions.Accountability.label))}
-                                    {this.CalculateDimensionScore(Dimensions.Explainability.name, surveyResults, allQuestions.filter(x => x.score?.dimension === Dimensions.Explainability.label ))}
-                                    {this.CalculateDimensionScore(Dimensions.Data.name, surveyResults, allQuestions.filter(x => x.score?.dimension === Dimensions.Data.label ))}
-                                    {this.CalculateDimensionScore(Dimensions.Bias.name, surveyResults, allQuestions.filter(x => x.score?.dimension === Dimensions.Bias.label ))}
-                                    {this.CalculateDimensionScore(Dimensions.Robustness.name, surveyResults, allQuestions.filter(x => x.score?.dimension === Dimensions.Robustness.label ))}
+                                    {Object.keys(Dimensions).map((dimension, idx) => {
+                                        return (
+                                            displayDimensionScore(radarChartData, Dimensions[dimension]?.name, surveyResults, allQuestions.filter(x => x.score?.dimension === Dimensions[dimension]?.label))
+                                        )
+                                    })}
                                 </tbody>
                             </Table>
                         </div>
                     </Tab>
                     <Tab eventKey="report-card" title="Report Card">
                         <div>
-                            <Tab.Container id="left-tabs-example" defaultActiveKey="accountability">
+                            <Tab.Container id="left-tabs-example" defaultActiveKey={Object.values(Dimensions)[0]?.label}>
                                 <Tab.Content>
-                                    <Tab.Pane eventKey="accountability" >
-                                        {this.CreateReportCard(Dimensions.Accountability.label, surveyResults, questions.filter(x => x.score?.dimension === Dimensions.Accountability.label ))}
-                                    </Tab.Pane>
-                                    <Tab.Pane eventKey="explainability">
-                                        {this.CreateReportCard(Dimensions.Explainability.label, surveyResults, questions.filter(x => x.score?.dimension === Dimensions.Explainability.label ))}                               
-                                    </Tab.Pane>
-                                    <Tab.Pane eventKey="data-quality">     
-                                        {this.CreateReportCard(Dimensions.Data.label, surveyResults, questions.filter(x => x.score?.dimension === Dimensions.Data.label ))}                              
-                                    </Tab.Pane>
-                                    <Tab.Pane eventKey="bias-fairness">
-                                        {this.CreateReportCard(Dimensions.Bias.label, surveyResults, questions.filter(x => x.score?.dimension === Dimensions.Bias.label ))}                                 
-                                    </Tab.Pane>            
-                                    <Tab.Pane eventKey="robustness">
-                                        {this.CreateReportCard(Dimensions.Robustness.label, surveyResults, questions.filter(x => x.score?.dimension === Dimensions.Robustness.label ))}                                   
-                                    </Tab.Pane>                                                                 
+                                    {Object.keys(Dimensions).map((dimension, idx) => {
+                                        return(
+                                            <Tab.Pane key={idx} eventKey={Dimensions[dimension]?.label}>
+                                                {createReportCard(Dimensions[dimension]?.label, surveyResults, questions.filter(x => x.score?.dimension === Dimensions[dimension]?.label ))}
+                                            </Tab.Pane>  
+                                        );
+                                    })}                                                          
                                 </Tab.Content>
                                 <Nav variant="tabs" className="report-card-nav" defaultActiveKey="accountability">
-                                    <Nav.Item>
-                                        <Nav.Link eventKey="accountability">
-                                            Accountability
-                                        </Nav.Link>
-                                    </Nav.Item>
-                                    <Nav.Item>
-                                        <Nav.Link eventKey="explainability">
-                                            Explainability
-                                        </Nav.Link>
-                                    </Nav.Item>
-                                    <Nav.Item>
-                                        <Nav.Link eventKey="data-quality">
-                                            Data quality and rights
-                                        </Nav.Link>
-                                    </Nav.Item>
-                                    <Nav.Item>
-                                        <Nav.Link eventKey="bias-fairness">
-                                            Bias and fairness
-                                        </Nav.Link>
-                                    </Nav.Item>
-                                    <Nav.Item>
-                                        <Nav.Link eventKey="robustness">
-                                            Robustness
-                                        </Nav.Link>
-                                    </Nav.Item>
+                                    {Object.keys(Dimensions).map((dimension, idx) => {
+                                        return(
+                                            <Nav.Item key={idx} >
+                                                <Nav.Link eventKey={Dimensions[dimension]?.label}>
+                                                    {Dimensions[dimension]?.name}
+                                                </Nav.Link>
+                                            </Nav.Item>
+                                        );
+                                    })}                                  
                                 </Nav>
                             </Tab.Container>
                         </div>
