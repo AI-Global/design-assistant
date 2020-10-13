@@ -52,6 +52,10 @@ const QuestionSchema = mongoose.Schema({
         required: true
     },
 
+    alt_text: {
+        type: String
+    },
+
     prompt: {
         type: String
         // SHOULD BE TRUE, will activate when spreadsheet is complete

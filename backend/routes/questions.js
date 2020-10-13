@@ -33,6 +33,7 @@ router.get('/populatedb', async (req, res) => {
                 mandatory: parsed_questions[i].mandatory || true,
                 questionType: ((parsed_questions[i].questionType) ? (parsed_questions[i].questionType.toLowerCase().trim()) : null),
                 question: parsed_questions[i].question || null,
+                alt_text: parsed_questions[i].alt_text || null,
                 prompt: parsed_questions[i].prompt || null,
                 responses: q_responses,
                 responseType: parsed_questions[i].responseType || null,
