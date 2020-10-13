@@ -45,7 +45,11 @@ class App extends Component {
       isSurveyStarted: false,
       showModal: false,
       questions: json,
-      A:2,
+      A: 1,
+      B: 9,
+      EI: 19,
+      R: 25,
+      D: 28,
     };
 
     this.handleOpenModal = this.handleOpenModal.bind(this);
@@ -53,7 +57,10 @@ class App extends Component {
   }
 
   nextPath(path) {
-    this.props.history.push(path, json);
+    this.props.history.push({
+      pathname: path,
+      state: {questions: json, responses: model.data}
+    })
   }
 
   handleOpenModal() {
@@ -104,46 +111,46 @@ class App extends Component {
 
   navDim(A) {
     model.currentPage = model.pages[A]
+    this.setState(this.state)
   }
 
   render() {
     if (this.state.isSurveyStarted) {
       return (
         <div>
+          <div style={{ height: "3em" }} />
           <div className={styles.dimContainer}>
-            <div className={styles.dimCard}>
-              <div className="d-flex justify-content-left col" style={{ float: "left" }}>
-                <ul>
-                  <div className="d-flex justify-content-left col">
-                    <Button className={styles.dimButton} onClick={()=> this.navDim(this.state.A)}/>
-                      <p className={styles.dimTitle}>Accountability</p>
-                  </div>
-                  <div className="d-flex justify-content-left col">
-                    <Button className={styles.dimButton}/>
-                      <p className={styles.dimTitle}>Bias and Fairness</p>
-                  </div>
-                  <div className="d-flex justify-content-left col">
-                    <Button className={styles.dimButton}/>
-                      <p className={styles.dimTitle} style={{ top: "2em" }}>Explainability and <br></br> Interpretability</p>
-                  </div>
-                  <div className="d-flex justify-content-left col">
-                    <Button className={styles.dimButton}/>
-
-                    <p className={styles.dimTitle}>Robustness</p>
-                  </div>
-                  <div className="d-flex justify-content-left col">
-                    <Button className={styles.dimButton}/>
-                      <p className={styles.dimTitle}>Bias and Fairness</p>
-                  </div>
-                </ul>
-              </div>
+            <div className={styles.dimProgressbarDiv}>
+              <ul className={styles.dimProgressbar}>
+                <li>
+                  <Button className={styles.dimButton} onClick={() => this.navDim(this.state.A)} />
+                  <p className={styles.dimTitle}>Accountability</p>
+                </li>
+                <li>
+                  <Button className={styles.dimButton} onClick={() => this.navDim(this.state.B)} />
+                  <p className={styles.dimTitle}>Bias and Fairness</p>
+                </li>
+                <li>
+                  <Button className={styles.dimButton} onClick={() => this.navDim(this.state.EI)} />
+                  <p className={styles.dimTitle}>Explainability and Interpretability</p>
+                </li>
+                <li>
+                  <Button className={styles.dimButton} onClick={() => this.navDim(this.state.R)} />
+                  <p className={styles.dimTitle}>Robustness</p>
+                </li>
+                <li>
+                  <Button className={styles.dimButton} onClick={() => this.navDim(this.state.D)} />
+                  <p className={styles.dimTitle}>Data Quality</p>
+                </li>
+              </ul>
             </div>
           </div>
-
+          <div style={{ height: "3em" }} />
+          <Survey.Survey model={model} onComplete={this.onComplete} />
           <div className="container">
             <div className="d-flex justify-content-center col">{this.perc()}%</div>
           </div>
-          <Survey.Survey model={model} onComplete={this.onComplete} />
+          <div style={{ height: "3em" }} />
           <div id="navCon" className="container">
             <div id="navCard" className="card">
               <div className="row no-gutters">

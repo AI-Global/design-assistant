@@ -12,7 +12,13 @@ export default class Results extends Component {
 
 
     render() {
-        var json = this.props.location.state 
+        var json = this.props.location.state.questions
+        var response = this.props.location.state.responses
+
+        console.log(json)
+        console.log(response)
+    
+
         var unselected = "#dee2e6";
         return (
             <main id="wb-cont" role="main" property="mainContentOfPage" className="container" style={{ paddingBottom: "1rem" }}>

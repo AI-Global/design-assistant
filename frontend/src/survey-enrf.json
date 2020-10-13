@@ -10316,7 +10316,7 @@
         }
     ],
     "showQuestionNumbers": "false",
-    "showProgressBar": "top",
+    "showProgressBar": "bottom",
     "firstPageIsStarted": "false",
     "showNavigationButtons": "false"
 }
