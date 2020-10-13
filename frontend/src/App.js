@@ -1,17 +1,18 @@
 import * as Survey from "survey-react";
 import { Button } from 'react-bootstrap';
 import React, { Component } from 'react';
-import Modal from 'react-bootstrap/Modal'
+import Modal from 'react-bootstrap/Modal';
 import { withRouter } from 'react-router-dom';
-import ModalBody from 'react-bootstrap/ModalBody'
-import ModalTitle from 'react-bootstrap/ModalTitle'
-import ModalFooter from 'react-bootstrap/ModalFooter'
-import ModalHeader from 'react-bootstrap/ModalHeader'
-import './App.css';
-import './css/theme.css'
-import './css/survey.css'
-import "font-awesome/css/font-awesome.css"
-import "bootstrap/dist/css/bootstrap.min.css"
+import ModalBody from 'react-bootstrap/ModalBody';
+import ModalTitle from 'react-bootstrap/ModalTitle';
+import ModalFooter from 'react-bootstrap/ModalFooter';
+import ModalHeader from 'react-bootstrap/ModalHeader';
+
+import styles from './App.module.css';
+import './css/theme.css';
+import './css/survey.css';
+import "font-awesome/css/font-awesome.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 Survey
   .StylesManager
@@ -20,6 +21,13 @@ Survey
 Survey
   .defaultBootstrapMaterialCss
   .progressBar = "progress-bar bg-custom progress-bar-striped";
+
+Survey
+  .Serializer
+  .addProperty("page", {
+    name: "navigationTitle:string",
+    isLocalizable: true
+  });
 
 const json = require('./survey-enrf.json')
 const model = new Survey.Model(json)
@@ -30,14 +38,18 @@ const model = new Survey.Model(json)
 var localizedStrs = Survey.surveyLocalization.locales[Survey.surveyLocalization.defaultLocale];
 localizedStrs.progressText = "";
 
-
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       isSurveyStarted: false,
       showModal: false,
-      questions: json
+      questions: json,
+      A: 1,
+      B: 9,
+      EI: 19,
+      R: 25,
+      D: 28,
     };
 
     this.handleOpenModal = this.handleOpenModal.bind(this);
@@ -45,7 +57,10 @@ class App extends Component {
   }
 
   nextPath(path) {
-    this.props.history.push(path, json);
+    this.props.history.push({
+      pathname: path,
+      state: {questions: json, responses: model.data}
+    })
   }
 
   handleOpenModal() {
@@ -94,16 +109,48 @@ class App extends Component {
     this.setState({ isSurveyStarted: true })
   }
 
+  navDim(A) {
+    model.currentPage = model.pages[A]
+    this.setState(this.state)
+  }
+
   render() {
     if (this.state.isSurveyStarted) {
       return (
         <div>
-          <div className="container-fluid">
-            <div className="row">
-              <div className="d-flex justify-content-center col">{this.perc()}%</div>
+          <div style={{ height: "3em" }} />
+          <div className={styles.dimContainer}>
+            <div className={styles.dimProgressbarDiv}>
+              <ul className={styles.dimProgressbar}>
+                <li>
+                  <Button className={styles.dimButton} onClick={() => this.navDim(this.state.A)} />
+                  <p className={styles.dimTitle}>Accountability</p>
+                </li>
+                <li>
+                  <Button className={styles.dimButton} onClick={() => this.navDim(this.state.B)} />
+                  <p className={styles.dimTitle}>Bias and Fairness</p>
+                </li>
+                <li>
+                  <Button className={styles.dimButton} onClick={() => this.navDim(this.state.EI)} />
+                  <p className={styles.dimTitle}>Explainability and Interpretability</p>
+                </li>
+                <li>
+                  <Button className={styles.dimButton} onClick={() => this.navDim(this.state.R)} />
+                  <p className={styles.dimTitle}>Robustness</p>
+                </li>
+                <li>
+                  <Button className={styles.dimButton} onClick={() => this.navDim(this.state.D)} />
+                  <p className={styles.dimTitle}>Data Quality</p>
+                </li>
+              </ul>
             </div>
           </div>
+          <div style={{ height: "3em" }} />
           <Survey.Survey model={model} onComplete={this.onComplete} />
+          <div className="container">
+            <div className="d-flex justify-content-center col">{this.perc()}%</div>
+          </div>
+          <div style={{ height: "3em" }} />
           <div id="navCon" className="container">
             <div id="navCard" className="card">
               <div className="row no-gutters">
@@ -186,3 +233,4 @@ class App extends Component {
   }
 }
 export default withRouter(App);
+
