@@ -1,13 +1,7 @@
 const mongoose = require('mongoose');
 
 const QuestionSchema = mongoose.Schema({
-    uuid: {
-        type: String,
-        required: true,
-        unique: true
-    },
-
-    // numbered 1-n
+    // numbered 0 to n-1
     questionNumber: {
         type: Number,
         required: true,
@@ -50,6 +44,10 @@ const QuestionSchema = mongoose.Schema({
     question: {
         type: String,
         required: true
+    },
+
+    alt_text: {
+        type: String
     },
 
     prompt: {
