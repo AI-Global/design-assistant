@@ -6,8 +6,8 @@ import { Tabs, Tab, Table, Button, Nav } from 'react-bootstrap'
 import "../css/results.css"
 import { ResponsiveRadar } from "@nivo/radar";
 import exportReport from "../helper/ExportReport";
-import createReportCard from "./ReportCard";
-import displayDimensionScore from "./DimensionScore";
+import ReportCard from "./ReportCard";
+import DimensionScore from "./DimensionScore";
 
 const Dimensions = {
     Accountability: {label: "A", name: "Accountability"},
@@ -17,6 +17,10 @@ const Dimensions = {
     Robustness: {label: "R", name: "Robustness"},
 }
 
+/**
+ * Class processes the answers to the survey and
+ * renders the results to the user in various different ways.
+ */
 export default class Results extends Component {
     render() {
         var json = this.props.location.state.questions;
@@ -33,12 +37,10 @@ export default class Results extends Component {
         var radarChartData = [];
         return (
             <main id="wb-cont" role="main" property="mainContentOfPage" className="container" style={{ paddingBottom: "1rem" }}>
-                { projectTitle && <h1>{projectTitle}</h1> }
-                { projectDescription && <p>{projectDescription}</p> }
                 <h1 className="section-header">
                     Results
                 </h1>
-                <button id="saveButton" type="button" className="btn btn-save mr-2 btn btn-primary export-button" onClick={exportReport}>Export</button>
+                <button id="saveButton" type="button" className="btn btn-save mr-2 btn btn-primary export-button" onClick={() => exportReport(projectTitle, projectDescription)}>Export</button>
                 <Tabs defaultActiveKey="score">
                     <Tab eventKey="score" title="Score">
                         <div className="table-responsive mt-3">
@@ -62,7 +64,8 @@ export default class Results extends Component {
                                 <tbody>
                                     {Object.keys(Dimensions).map((dimension, idx) => {
                                         return (
-                                            displayDimensionScore(radarChartData, Dimensions[dimension]?.name, surveyResults, allQuestions.filter(x => x.score?.dimension === Dimensions[dimension]?.label))
+                                            <DimensionScore key={idx} radarChartData={radarChartData} dimensionName={Dimensions[dimension]?.name}
+                                            results={surveyResults} questions={allQuestions.filter(x => x.score?.dimension === Dimensions[dimension]?.label)} />
                                         )
                                     })}
                                 </tbody>
@@ -76,7 +79,7 @@ export default class Results extends Component {
                                     {Object.keys(Dimensions).map((dimension, idx) => {
                                         return(
                                             <Tab.Pane key={idx} eventKey={Dimensions[dimension]?.label}>
-                                                {createReportCard(Dimensions[dimension]?.label, surveyResults, questions.filter(x => x.score?.dimension === Dimensions[dimension]?.label ))}
+                                                <ReportCard dimension={Dimensions[dimension]?.label} results={surveyResults} questions={questions.filter(x => x.score?.dimension === Dimensions[dimension]?.label)} />
                                             </Tab.Pane>  
                                         );
                                     })}                                                          
