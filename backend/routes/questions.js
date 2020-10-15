@@ -2,12 +2,13 @@ const express = require('express');
 const router = express.Router();
 const Question = require('../models/question.model');
 
+// Mapping of dimensions to Labels and Names
 const Dimensions = {
-    "accountability": {lable:"A", name:"Accountability"},
-    "explainability and interpretability": {lable:"EI", name:"Explainability and Interpretability"},
-    "data quality": {lable:"D", name:"Data Quality"},
-    "bias and fairness": {lable:"B", name:"Bias and Fairness"},
-    "robustness": {lable:"R", name:"Robustness"},
+    "accountability": { label: "A", name: "Accountability", page: "accountability" },
+    "explainability and interpretability": { label: "EI", name: "Explainability and Interpretability", page: "explainabilityInterpretability" },
+    "data quality": { label: "D", name: "Data Quality", page: "dataQuality" },
+    "bias and fairness": { label: "B", name: "Bias and Fairness", page: "biasFairness" },
+    "robustness": { label: "R", name: "Robustness", page: "robustness" },
 }
 
 function formatQuestion(q) {
@@ -21,13 +22,15 @@ function formatQuestion(q) {
     question.name = q.id;
     question.type = q.responseType;
 
+    // The rest of these properties are dependant on the question
     if (q.alttext) {
         question.alttext = {};
         question.alttext.default = q.alttext;
         question.alttext.fr = "";
     }
 
-    if (q.prompt) {
+    // Not sure how they determine which prompts they want displayed
+    if (q.prompt == "select all that have been completed" || q.prompt == "select all that apply") {
         question.description = {};
         question.description.default = q.prompt;
         question.description.fr = "";
@@ -49,15 +52,17 @@ function formatQuestion(q) {
     } else if (question.type == "radiogroup" || question.type == "checkbox") {
         if (q.pointsAvailable) {
             question.score = {};
-            question.score.dimension = Dimensions[q.trustIndexDimension].lable; 
+            question.score.dimension = Dimensions[q.trustIndexDimension].label;
             question.score.max = q.pointsAvailable * q.weighting;
 
+            // Add score to the choices
             question.score.choices = {};
             for (let c of q.responses) {
                 question.score.choices[c.id] = c.score * q.weighting;
             }
         }
 
+        // Add choices to question
         question.choices = [];
         for (let c of q.responses) {
             var choice = {};
@@ -73,6 +78,25 @@ function formatQuestion(q) {
     return question;
 }
 
+function createPage(questions, pageName, pageTitle) {
+    // Helper function for createPages
+    // function takes in a list of question plus title and creates a page for it
+    var page = {};
+    if (pageTitle == "Project Details") {
+        page.navigationTitle = "Details";
+    }
+    page.name = pageName;
+    page.title = {};
+    page.title.default = pageTitle;
+    page.title.fr = "";
+    // Map MongoDB questions to surveyJS format
+    page.elements = questions.map(function (q) {
+        return formatQuestion(q)
+    });
+
+    return page
+}
+
 function createPages(q) {
     // This function takes in a list of questions from mongoDB and formats them into pages for surveyJS
     page = {}
@@ -84,33 +108,63 @@ function createPages(q) {
 
     page.pages = [];
 
-    // Create Project Details Page
-    var projectDetails = {};
-    projectDetails.name = "projectDetails1";
-    projectDetails.navigationTitle = "Details";
-    projectDetails.title = {};
-    projectDetails.title.default = "Project Details";
-    projectDetails.title.fr = "";
-    projectDetails.elements = []
+    // separate the questions by dimension
+    var A = [];
+    var EI = [];
+    var D = [];
+    var B = [];
+    var R = [];
+    var tombstone = []
 
     for (let question of q) {
-        if (question.questionType == "tombstone") {
-            projectDetails.elements.push(formatQuestion(question));
+        if (question.trustIndexDimension == "accountability") {
+            A.push(question);
+        } else if (question.trustIndexDimension == "explainability and interpretability") {
+            EI.push(question);
+        } else if (question.trustIndexDimension == "data quality") {
+            D.push(question);
+        } else if (question.trustIndexDimension == "bias and fairness") {
+            B.push(question);
+        } else if (question.trustIndexDimension == "robustness") {
+            R.push(question);
+        } else if (question.questionType == "tombstone") {
+            tombstone.push(question);
         }
     }
 
-    page.pages.push(projectDetails)
+    // Create project details page
+    projectDetails = createPage(tombstone, "projectDetails1", "Project Details");
+    page.pages.push(projectDetails);
 
-    // Categorize the rest of the questions
-    questions = []
-    for (let question of q) {
-        if (trustIndexDimension) {
-            if (questions.some(q => q.title === question)){
+    // Create pages for the dimensions
+    var pageCount = 1;
+    var questions = [];
 
+    // Loop through each dimension in this order
+    for (let dimension of [A,B,EI,R,D]) {
+        // Create pages of 2 questions 
+        for (let question of dimension) {
+            questions.push(question)        
+            if (questions.length == 2) {
+                
+                var dimPage = createPage(questions, Dimensions[question.trustIndexDimension].page + pageCount, Dimensions[question.trustIndexDimension].name);
+                page.pages.push(dimPage);
+                pageCount++;
+                questions = [];
             }
-            projectDetails.elements.push(formatQuestion(questions));
         }
+        
+        // Deal with odd number of pages
+        if (questions.length > 0) {
+            var dimPage = createPage(questions, Dimensions[questions[0].trustIndexDimension].page + pageCount, Dimensions[questions[0].trustIndexDimension].name);
+            page.pages.push(dimPage);
+        }
+
+        // reset Params for next dimension
+        questions = [];
+        pageCount = 1;
     }
+    
     return page
 
 }
@@ -119,8 +173,7 @@ function createPages(q) {
 router.get('/', async (req, res) => {
     try {
         const questions = await Question.find();
-        createPages(questions);
-        res.json(questions);
+        res.json(createPages(questions));
         console.log("Incoming questions request");
     } catch (err) {
         res.json({ message: err });
@@ -128,7 +181,7 @@ router.get('/', async (req, res) => {
 });
 
 
-// Get question by id TODO: probably should change this to get question by question number
+// Get question by id
 router.get('/:questionId', async (req, res) => {
     try {
         const question = await Question.findOne({ questionNumber: req.params.questionId });
