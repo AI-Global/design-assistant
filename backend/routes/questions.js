@@ -100,13 +100,11 @@ function createPage(questions, pageName, pageTitle) {
 function createPages(q) {
     // This function takes in a list of questions from mongoDB and formats them into pages for surveyJS
     page = {}
-    // TODO: Confirm these parameters are correct
+    page.pages = [];
     page.showQuestionNumbers = false;
     page.showProgressBar = "top";
     page.firstPageIsStarted = false;
     page.showNavigationButtons = false;
-
-    page.pages = [];
 
     // separate the questions by dimension
     var A = [];
