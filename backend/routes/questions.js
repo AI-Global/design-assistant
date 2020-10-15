@@ -144,7 +144,6 @@ function createPages(q) {
         for (let question of dimension) {
             questions.push(question)        
             if (questions.length == 2) {
-                
                 var dimPage = createPage(questions, Dimensions[question.trustIndexDimension].page + pageCount, Dimensions[question.trustIndexDimension].name);
                 page.pages.push(dimPage);
                 pageCount++;
@@ -182,7 +181,7 @@ router.get('/', async (req, res) => {
 // Get question by id
 router.get('/:questionId', async (req, res) => {
     try {
-        const question = await Question.findOne({ questionNumber: req.params.questionId });
+        const question = await Question.findOne({ _id: req.params.questionId });
         console.log(question);
         res.json(formatQuestion(question));
     } catch (err) {
