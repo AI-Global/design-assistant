@@ -7,9 +7,10 @@ const { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } = require('constants');
 
 function main(){
 	var fpath = prompt("Enter path to TSV: ");
-	const csv = new lineByLine(fpath);
-	
-	csv.next();
+	const tsv = new lineByLine(fpath);
+	tsv.next(); // skip header lines
+
+
 	let qNums = [];
 	let collection = [];
 	let line;
@@ -21,6 +22,7 @@ function main(){
 	let domainApplicability;
 	let regionalApplicability;
 	let mandatory;
+	let group;
 	let questionType;
 	let question;
 	let qPrompt;
@@ -31,9 +33,10 @@ function main(){
 	let reference;
 	let roles;
 	let lifecycle;
+	let altText;
 
 	let counter = 0;
-	while(line = csv.next()){
+	while(line = tsv.next()){
 		counter += 1;
 		console.log(counter);
 		line = line.toString('ascii');
@@ -50,12 +53,12 @@ function main(){
 				count = SSL_OP_SSLEAY_080_CLIENT_DH_BUG;
 			}
 			if(!multChoice){
-				//if(!qNums.includes(values[1])){
 				questionNumber = values[1];
 				trustIndexDimension = values[2];
 				domainApplicability = values[3];
 				regionalApplicability = values[4];
 				mandatory = values[5];
+				group = values[6];
 				questionType = values[7];
 				question = values[8];
 				qPrompt = values[10];
@@ -66,6 +69,7 @@ function main(){
 				reference = values[15];
 				roles = "All";
 				lifecycle = "All";
+				altText = values[16];
 				
 				doc = {"questionNumber":Number(questionNumber)};
 				if(trustIndexDimension && trustIndexDimension != 'N/A'){
@@ -81,12 +85,26 @@ function main(){
 				doc["questionType"] = questionType;
 				doc["question"] = question;
 				doc["prompt"] = qPrompt;
-				doc["responseType"] = (qPrompt !== "free text") ? "radiogroup" : "text";
-				if(doc["responseType"] === "radiogroup"){
-					multChoice = true;
-				}
+
+
+				// determine the type of response for the question
+				// NOTE: comment type questions are indeteminable from text
+				if(qPrompt === "free text"){
+					// comment or text
+						if(question === "Project Description") doc["responseType"] = "comment"; // special case
+						else doc["responseType"] = "text";
+				} else if (group  === 'Group'){
+						doc["responseType"] = 'checkbox';
+						multChoice = true;
+				} else if (group === 'not group'){
+						doc["responseType"] = 'radiogroup';
+						multChoice = true;
+				} else if (qPrompt.substring(0,2) === 'CV'){
+						doc["responseType"] = "dropdown";
+				} 
 				doc["pointsAvailable"] = Number(pointsAvailable);
 
+				// parse the weighting of the question
 				switch(weighting){
 					case("high"):
 						doc["weighting"] = 3;
@@ -97,11 +115,26 @@ function main(){
 					case("low"):
 						doc["weighting"] = 1;
 						break;
+					default:
+						doc["weighting"] = 0;
 				}
 				
 				doc["reference"] = reference;
 				doc["roles"] = roles;
 				doc["lifecycle"] = lifecycle;
+				
+				if(altText) doc["alt_text"] = altText;
+
+				if(doc["responseType"] === "dropdown"){
+					if(question === "Industry"){
+						//
+						doc["responses"] = getDropdownChoices("./industryChoices.json");
+					} else if (question === "Country"){
+						//
+						doc["responses"] = getDropdownChoices("./countryChoices.json");
+					}
+				}
+				
 				if(!multChoice){
 					collection.push(doc);
 				}
@@ -117,5 +150,20 @@ function main(){
 		if(error) throw error;
 		console.log("Created questionsJSON.json");
 	})
+}
+
+function getDropdownChoices(jsonPath){
+	let data = fs.readFileSync(jsonPath, "utf-8");
+	let pData = JSON.parse(data);
+	let choices = [];
+	let i = 0;
+	console.log("industry");
+	while(pData[i]){
+		let value = Number(pData[i]["value"]);
+		let text = pData[i]["text"]["default"];
+		choices.push({"responseNumber":value, "indicator":text});
+		i++;
+	}
+	return choices;
 }
 main();
