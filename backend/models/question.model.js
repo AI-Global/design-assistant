@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const QuestionSchema = mongoose.Schema({
-    // numbered 1-n
+    // numbered 0 to n-1
     questionNumber: {
         type: Number,
         required: true,
@@ -11,79 +11,99 @@ const QuestionSchema = mongoose.Schema({
     // 5 possible dimensions
     trustIndexDimension: {
         type: String,
-        enum: ['Bias and Fairness', 'Accountability', 'Explainability and Interpretability', 'Robustness', 'Data Quality']
+        enum: [null, 'bias and fairness', 'accountability', 'explainability and interpretability', 'robustness', 'data quality']
     },
 
     // Free text or enum? Not enough info in spreadsheet
     domainApplicability: {
-        type: String
+        type: String,
+        // SHOULD be activated, right now data isn't uniform, needs to be off
+        // enum: [null, 'Health', 'Insurance', 'Banking', 'Media', 'Retail', 'Other']
     },
 
     // Free text or enum? Not enough info in spreadsheet
     regionalApplicability: {
         type: String,
+
+        // SHOULD be activated, right now data isn't uniform, needs to be off
+        // enum: [null, 'Africa', 'Antarctica', 'Asia', 'Europe', 'North America', 'South America', 'Oceania', 'Other']
     },
 
-    mo: Boolean,
+    // mandatory or optional
+    mandatory: Boolean,
 
     // Any more categories?
     questionType: {
         type: String,
-        required: true,
-        enum: ['Tombstone', 'Risk', 'Mitigation']
+        // SHOULD BE TRUE, will activate when spreadsheet is complete
+        // required: true,
+        enum: [null, 'tombstone', 'risk', 'mitigation']
     },
 
     // question text
     question: {
         type: String,
-        required: true,
+        required: true
     },
 
-    // Free text
-    responseIndicators: String,
+    alt_text: {
+        type: String
+    },
 
-    // possible response for question
+    prompt: {
+        type: String
+        // SHOULD BE TRUE, will activate when spreadsheet is complete
+        // required: true,
+    },
+
+    // possible responses for question, could also be free text
     responses: [{
-        type: String,
-        enum: []
+        responseNumber: {
+            type: Number,
+            required: true
+        },
+        indicator: String,
+        score: Number
     }],
 
-    // ?
+    // how the responses will be surfaced
     responseType: {
-        type: Number,
+        type: String,
         required: true,
-        enum: [1, 2, 3, 4, 5]
+        enum: [null, 'text', 'comment', 'checkbox', 'radiogroup', 'dropdown']
     },
 
-    // What's the range
+    // -1 to 1
     pointsAvailable: {
         type: Number,
         required: true
     },
 
-    // What's the range
+    // Low = 1, Medium = 2, High = 3
     weighting: {
         type: Number,
-        required: true
+        required: true,
+        enum: [0,1, 2, 3]
     },
 
-    // Is this the reccommendation?
+    // The recommendation?
     reference: {
-        type: String,
-        required: true
+        type: String
+        // SHOULD BE TRUE, will activate when spreadsheet is complete
+        // required: true
     },
 
     // Which roles question should display for
     roles: [{
-        type: Number,
-        enum: [],
+        type: String,
+        enum: [null, 'Product Owner / Business Owner', 'Risk Management', 'Legal Lead', 'IT Lead', 'Technical Manager', 'Software Engineer / Software Developer', 'Product Design', 'Data Scientist Lead', 'Machine Learning Engineer', 'Researcher', 'Non Government Organization Volunteer', 'Policy Analyst', 'All'],
         required: true
     }],
 
     // Question can belong to multiple lifecycles
     lifecycle: [{
-        type: Number,
-        enum: [],
+        type: String,
+        enum: [null, 'Plan and Design', 'Data and Model', 'Verify and Validate', 'Deploy', 'Operate and Monitor', 'All'],
         required: true
     }],
 
