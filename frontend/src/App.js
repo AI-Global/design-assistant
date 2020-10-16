@@ -53,12 +53,13 @@ class App extends Component {
     this.handleCloseModal = this.handleCloseModal.bind(this);
   }
 
+  // Request questions JSON from backend 
   componentDidMount() {
     axios.get('http://localhost:9000/questions')
       .then(res => {
         const json = res.data;
         const model = new Survey.Model(json);
-        console.log()
+        // Set json and model
         this.setState({ json });
         this.setState({ model });
       })

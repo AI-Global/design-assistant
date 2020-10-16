@@ -91,7 +91,7 @@ function createPage(questions, pageName, pageTitle) {
     page.title.fr = "";
     // Map MongoDB questions to surveyJS format
     page.elements = questions.map(function (q) {
-        return formatQuestion(q)
+        return formatQuestion(q);
     });
 
     return page
@@ -99,21 +99,21 @@ function createPage(questions, pageName, pageTitle) {
 
 function createPages(q) {
     // This function takes in a list of questions from mongoDB and formats them into pages for surveyJS
-    page = {}
+    page = {};
     page.pages = [];
-    page.showQuestionNumbers = false;
-    page.showProgressBar = "top";
-    page.firstPageIsStarted = false;
-    page.showNavigationButtons = false;
+    page.showQuestionNumbers = "false";
+    page.showProgressBar = "bottom";
+    page.firstPageIsStarted = "false";
+    page.showNavigationButtons = "false";
 
-    // separate the questions by dimension
+    
     var A = [];
     var EI = [];
     var D = [];
     var B = [];
     var R = [];
-    var tombstone = []
-
+    var tombstone = [];
+    // separate the questions by dimension
     for (let question of q) {
         if (question.trustIndexDimension == "accountability") {
             A.push(question);
@@ -139,10 +139,10 @@ function createPages(q) {
     var questions = [];
 
     // Loop through each dimension in this order
-    for (let dimension of [A,B,EI,R,D]) {
+    for (let dimension of []) {//A,B,EI,R,D
         // Create pages of 2 questions 
         for (let question of dimension) {
-            questions.push(question)        
+            questions.push(question);
             if (questions.length == 2) {
                 var dimPage = createPage(questions, Dimensions[question.trustIndexDimension].page + pageCount, Dimensions[question.trustIndexDimension].name);
                 page.pages.push(dimPage);
@@ -150,7 +150,7 @@ function createPages(q) {
                 questions = [];
             }
         }
-        
+
         // Deal with odd number of pages
         if (questions.length > 0) {
             var dimPage = createPage(questions, Dimensions[questions[0].trustIndexDimension].page + pageCount, Dimensions[questions[0].trustIndexDimension].name);
@@ -161,8 +161,8 @@ function createPages(q) {
         questions = [];
         pageCount = 1;
     }
-    
-    return page
+
+    return page;
 
 }
 
