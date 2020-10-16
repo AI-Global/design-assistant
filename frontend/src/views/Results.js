@@ -19,7 +19,7 @@ const Dimensions = {
 }
 
 /**
- * Class processes the answers to the survey and
+ * Component processes the answers to the survey and
  * renders the results to the user in various different ways.
  */
 export default class Results extends Component {

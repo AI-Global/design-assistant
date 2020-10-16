@@ -2,6 +2,11 @@ import React, { Component } from 'react';
 import {Table} from 'react-bootstrap'
 import axios from 'axios';
 
+/**
+ * Component renders a Table that displays
+ * the trusted AI providers that are stored in 
+ * the database. 
+ */
 export default class TrustedAIProviders extends Component{
     constructor(props){
         super(props);

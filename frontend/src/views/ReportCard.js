@@ -2,18 +2,15 @@ import React, { Component } from 'react';
 import {Table} from 'react-bootstrap'
 
 /**
- * Class renders a HTML Table of a report card.
+ * Component renders a Table for the report card.
  * Table provides a list of the questions answered, the user's responses
  * and the recommendations provided by AI Global for a specific dimension.
  */
 export default class ReportCard extends Component{
     /**
-     * Function creates the HTML for a row of the report card table which
+     * Function creates the  row of the report card table which
      * provides the question, the response to the question,
      * and the recommendation from AI Global.
-     * @param result 
-     * @param question 
-     * @returns HTML row to be displayed in the report card table.
      */
     displayQuestion(result, question){     
         var choices = question?.choices?.filter((choice) => result.includes(choice?.value));     

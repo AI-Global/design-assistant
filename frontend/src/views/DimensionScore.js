@@ -10,16 +10,13 @@ const QuestionTypes =
 }
 
 /**
- * Class renders a HTML Table row for a dimension which 
+ * Component renders a HTML Table row for a dimension which 
  * calculates the score of the questions answered for
  * a specific dimension and displays it in a HTML table row.
  */
 export default class DimensionScore extends Component {
     /**
      * Function calculates the score and max score of a question.
-     * @param question 
-     * @param selectedChoices 
-     * @returns object containing the user score and the max score of a given question.
      */
     calculateQuestionScore(question, selectedChoices){
         var scores = question.score;
