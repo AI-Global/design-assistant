@@ -8,6 +8,7 @@ import { ResponsiveRadar } from "@nivo/radar";
 import exportReport from "../helper/ExportReport";
 import ReportCard from "./ReportCard";
 import DimensionScore from "./DimensionScore";
+import TrustedAIProviders from './TrustedAIProviders';
 
 const Dimensions = {
     Accountability: {label: "A", name: "Accountability"},
@@ -73,30 +74,33 @@ export default class Results extends Component {
                         </div>
                     </Tab>
                     <Tab eventKey="report-card" title="Report Card">
-                        <div>
-                            <Tab.Container id="left-tabs-example" defaultActiveKey={Object.values(Dimensions)[0]?.label}>
-                                <Tab.Content>
-                                    {Object.keys(Dimensions).map((dimension, idx) => {
-                                        return(
-                                            <Tab.Pane key={idx} eventKey={Dimensions[dimension]?.label}>
-                                                <ReportCard dimension={Dimensions[dimension]?.label} results={surveyResults} questions={questions.filter(x => x.score?.dimension === Dimensions[dimension]?.label)} />
-                                            </Tab.Pane>  
-                                        );
-                                    })}                                                          
-                                </Tab.Content>
-                                <Nav variant="tabs" className="report-card-nav" defaultActiveKey="accountability">
-                                    {Object.keys(Dimensions).map((dimension, idx) => {
-                                        return(
-                                            <Nav.Item key={idx} >
-                                                <Nav.Link eventKey={Dimensions[dimension]?.label}>
-                                                    {Dimensions[dimension]?.name}
-                                                </Nav.Link>
-                                            </Nav.Item>
-                                        );
-                                    })}                                  
-                                </Nav>
-                            </Tab.Container>
-                        </div>
+                        <Tab.Container id="left-tabs-example" defaultActiveKey={Object.values(Dimensions)[0]?.label}>
+                            <Tab.Content>
+                                {Object.keys(Dimensions).map((dimension, idx) => {
+                                    return(
+                                        <Tab.Pane key={idx} eventKey={Dimensions[dimension]?.label}>
+                                            <ReportCard dimension={Dimensions[dimension]?.label} results={surveyResults} questions={questions.filter(x => x.score?.dimension === Dimensions[dimension]?.label)} />
+                                        </Tab.Pane>  
+                                    );
+                                })}                                                          
+                            </Tab.Content>
+                            <Nav variant="tabs" className="report-card-nav" defaultActiveKey="accountability">
+                                {Object.keys(Dimensions).map((dimension, idx) => {
+                                    return(
+                                        <Nav.Item key={idx} >
+                                            <Nav.Link eventKey={Dimensions[dimension]?.label}>
+                                                {Dimensions[dimension]?.name}
+                                            </Nav.Link>
+                                        </Nav.Item>
+                                    );
+                                })}                                  
+                            </Nav>
+                        </Tab.Container>
+                    </Tab>
+                    <Tab eventKey="ai-providers" title="Trusted AI Providers">
+                        <Tab.Container id="left-tabs-example" defaultActiveKey={Object.values(Dimensions)[0]?.label}>
+                                <TrustedAIProviders/>
+                        </Tab.Container>                        
                     </Tab>
                 </Tabs>
                 <div className="dimension-chart">

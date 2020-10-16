@@ -67,19 +67,13 @@ export default class ReportCard extends Component{
                     <thead>
                         <tr role="row">
                             <th role="columnheader" scope="col" className="report-card-headers">
-                                <div>
                                     Question
-                                </div>
                             </th>
                             <th role="columnheader" scope="col" className="report-card-headers">
-                                <div>
                                     Your Response
-                                </div>
                             </th>
                             <th role="columnheader" scope="col" className="report-card-headers">
-                                <div>
                                     Recommendation
-                                </div>
                             </th>
                         </tr>
                     </thead>
