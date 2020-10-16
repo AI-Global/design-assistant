@@ -11,9 +11,6 @@ const Dimensions = {
 
 /**
  * Function adds the Header and Logo from the survey to the PDF.
- * @param doc 
- * @param y 
- * @returns updated version of y.
  */
 function addHeader(doc, y){
     const title = "Responsible AI Design Report Card";
@@ -29,11 +26,6 @@ function addHeader(doc, y){
 
 /**
  * Function adds the Title and Description of the project surveyed to the PDF.
- * @param title 
- * @param description 
- * @param doc 
- * @param y 
- * @returns updated version of y.
  */
 function addTitleDescription(title, description, doc, y){
   doc.setFontSize(16);
@@ -54,9 +46,6 @@ function addTitleDescription(title, description, doc, y){
 
 /**
  * Function adds the About section from the results of the survey to the PDF.
- * @param doc 
- * @param y 
- * @returns updated version of y.
  */
 function addAbout(doc, y) {
     const title = "About the Design Assistant";
@@ -151,11 +140,9 @@ function addAbout(doc, y) {
 
 /**
  * Function adds the dimension score from the results of the survey to the PDF.
- * @param doc 
- * @param y 
- * @returns updated version of y.
  */
 function addScore(doc, y) {
+    // Base64 FontAwesomes icons.
     const checkCircle = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAoAAAAKABXX67owAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAHfSURBVDiNldTPb01REAfwT5s+RFpEYtPyamXVVztBJMSGjd/8AVLpRizaf0HKwk4sxY/uRMRKEQn9E7T8B3hLBO1rRDyLMzf39r17b/Wb3Jw7c2a+Z87MmRlQjxGcxgRGQ/cFH/EaPzfw78M45rGGbsW3hsdolhEMlOimcRdbQ17CIj6FvA8ncDDkNdzA/bpIbxcieoFWjW0rbDL7uSrD6TD4g5m603swGz5dTPVu7pfnczOkGWbCt6Mn5/Py628G2wv/C8HxMFOMyKOty2kvDuEbboU8WYh6GK6E4v0mSA/je4Fod+iXQndpUHr88O4/SY9IzbFTuukFfI29xVhbg9Z3VIYJ3MGWHtKjeIUdEen5kDN8jnV0qCSiXXiLPTggpeo3jkkFGgnSc3hTda1BtON/b6w/5Gk5iyc4iZdBuoozFaQZRxsu6y/eEJ7Ku+pvrCtxSBWWw+4i1c+tgWcF8l/SjKhC33ODR8obpIHn0ng8XkNK3iAPisrxOKmspRsY24B0NnxXpem3DtfkQ2h2A6Je0mwIXa0ympPndEHKWxUm5dfv4mZxs2zQT+EetoW8bP2gb0pFzArdwXWF4VOHplTQLO9lX0cqVF9OqyIuYhinIrqxIGzjg9TKK1WO/wBzvo3rvEdWdAAAAABJRU5ErkJggg==";
     const circle = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABcAAAAXCAYAAADgKtSgAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAqAAAAKgBefSzxgAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAGoSURBVEiJrdXLThRBFAbgj3bYsVEYXCgTFmoyE4kujRslPII+A8o7kIkP5EPoxstGNIrXCRth4Q1BlkrGRVVlKk332M7wJ53qU1XnP1V1qv4z49+4htu4iLP4ic94jFcN/E9gFhvYwXDMt4P7aFWRzFT09fAQ3Wgf4wkG+IpFXMJNnIlz3uFObGuxhsO4qkNsYr5m7gL6+BXnH0T/SvQy4hdYGreKDB1sZQG65QmzeJsRzzUkTpjLAmwr5WDD6CiarriMjtER3csH0q3YnJA4oR95Bqnjeuz4IyRpGszjd+RbKXArDjzF9ynJf+B5/F8thJcHH6YkTvgY2wsFzkVj/5TI0+4XCmEr1D+W/0U7tt8K7EXjyimRJ549guql29Ku82iIxcgzxNXUme55f0ryB0r3nCCbQ+GFdSYkXsZR5FnPB1pG2rJlMm15Gf3fqND3rqBqKUDTHSxnxJWqmLCWBTgSclCX5LZwxukoTuh5VSXqCpWoF+1jPMMnfMF5XMYNo0q0jbt4X7fqHC1BNgfG19CBkLzGNbSMFaH6LwnVfx+7eITX4xz/ApJjdwVAbpi0AAAAAElFTkSuQmCC";
     const title = "Results Overview";
@@ -165,11 +152,9 @@ function addScore(doc, y) {
     doc.setDrawColor(0, 0, 0);
     doc.line(10, y, 200, y);  // Horizontal line.
     y += doc.getTextDimensions(title).h + 1; // Padding between title.
-    // Base64 FontAwesomes icons.
     // Add table to pdf. 
     doc.autoTable( {
         startY: y,
-
         html: '#score',
         didParseCell: (data) => {
           // Style cells.
@@ -212,9 +197,6 @@ function addScore(doc, y) {
 
 /**
  * Function adds the report card from the results of the survey to the PDF.
- * @param doc 
- * @param y 
- * @returns updated version of y.
  */
 function addReportCard(doc, y) {
     const title = "Detailed Report";
@@ -224,7 +206,6 @@ function addReportCard(doc, y) {
     doc.setDrawColor(0, 0, 0);
     doc.line(10, y, 200, y);  // Horizontal line.
     y += doc.getTextDimensions(title).h + 2; // Padding between title.
-    // Base64 FontAwesomes icons.
     // Add table to pdf. 
     for (let name in Dimensions){
         doc.setFontSize(14);
@@ -232,20 +213,23 @@ function addReportCard(doc, y) {
         y += doc.getTextDimensions(name).h;
         doc.autoTable( {
             startY: y,
-
             html: '#report-card-' + Dimensions[name].label,
+            tableWidth: 'auto',
+            columnWidth: 'wrap',
             columnStyles: {
-                0: {cellWidth: 60},
-                1: {cellWidth: 60},
-                2: {cellWidth: 60},
+                0: {cellWidth: 58},
+                1: {cellWidth: 58},
+                2: {cellWidth: 'auto'},
             },
             didParseCell: (data) => {
             // Style cells.
             data.cell.styles.textColor = "#000000";
             if (data.section === "head") {
                 data.cell.styles.fillColor = "#D0E0E3";
-            }
-            },
+            } 
+            else if(data.section == "body"){
+                data.cell.styles.fillColor = "#FFFFFF";
+            }},
             didDrawCell: (data) => {
                 // Draw cell border.
                 doc.setDrawColor(222, 226, 230);
@@ -254,6 +238,7 @@ function addReportCard(doc, y) {
                 doc.line(data.cell.x + data.column.width, data.cell.y, data.cell.x + data.column.width, data.cell.y + data.row.height);
                 doc.line(data.cell.x, data.cell.y + data.row.height, data.cell.x + data.column.width, data.cell.y + data.row.height);
             },
+            // eslint-disable-next-line
             didDrawPage: (data) => {
             // Reset y position.
                 doc.pageNumber++;
@@ -272,6 +257,7 @@ function addReportCard(doc, y) {
  */
 export function exportReport(title, description){
     const doc = new jsPDF();
+    // eslint-disable-next-line
     var y = 35;
     y = addHeader(doc, y);
     if(title !== undefined || description !== undefined){

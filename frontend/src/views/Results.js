@@ -23,9 +23,17 @@ const Dimensions = {
  * renders the results to the user in various different ways.
  */
 export default class Results extends Component {
+
     render() {
-        var json = this.props.location.state.questions;
-        var surveyResults = this.props.location.state.responses;
+        var json = this?.props?.location?.state?.questions;
+        var surveyResults = this?.props?.location?.state?.responses;
+        console.log(json);
+        if(json === undefined || surveyResults === undefined){
+            this.props.history.push({
+                pathname: '/'
+              })
+            return null;
+        }
         var pages = json["pages"];
         var allQuestions = [];
         pages.map(page => {
