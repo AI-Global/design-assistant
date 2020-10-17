@@ -1,13 +1,13 @@
 
+
 # Responsible‌ ‌Design‌ ‌Assistant‌ API documentation
 
 ## Questions Management
 
 ### GET /questions
 
-Returns a list of all survey questions in the database.
+Returns an object with a list of all survey questions in the database.
 Questions are formatted as a list of surveyJS pages with 2 questions per page.
-
 
 #### example
 
@@ -96,4 +96,36 @@ response:
         }
     ]
 }
+```
+
+## Trusted AI Providers Management
+
+### GET /trustedAIProviders
+
+Returns a list of all trusted AI providers in the database.
+
+#### example
+
+request:
+```
+GET /trustedAIProviders
+```
+
+response:
+```json
+[
+    {
+        "_id": "5f8960b47756296b5c6fb29f",
+        "resource": "AI for K-12 Education Resources",
+        "description": "A GitHub directory of K-12 educational AI materials",
+        "source": "https://github.com/touretzkyds/ai4k12/wiki"
+    },
+    {
+        "_id": "5f8960b47756296b5c6fb2a0",
+        "resource": "The A-Z of AI",
+        "description": "A guide that offers bit-sized explanations to help understand AI",
+        "source": "https://atozofai.withgoogle.com/intl/en-GB/"
+    },
+    ...
+]
 ```
