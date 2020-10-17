@@ -12,10 +12,10 @@ import ModalHeader from 'react-bootstrap/ModalHeader';
 import styles from './App.module.css';
 import './css/theme.css';
 import './css/survey.css';
-import "font-awesome/css/font-awesome.css";
-import "bootstrap/dist/css/bootstrap.min.css";
+
 import $ from "jquery";
 import 'bootstrap';
+import '@fortawesome/free-solid-svg-icons/faInfoCircle'
 
 Survey
   .StylesManager
