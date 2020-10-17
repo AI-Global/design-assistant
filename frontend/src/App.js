@@ -14,6 +14,8 @@ import './css/theme.css';
 import './css/survey.css';
 import "font-awesome/css/font-awesome.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import $ from "jquery";
+import 'bootstrap';
 
 Survey
   .StylesManager
@@ -37,6 +39,18 @@ Survey
 const json = require('./survey-enrf.json')
 const model = new Survey.Model(json)
 const converter = new showdown.Converter();
+
+model
+  .onAfterRenderPage
+  .add(function(model, options) {
+    const node = options.htmlElement.querySelector("h4");
+    if (node) {
+      node.classList.add('section-header');
+    }
+    $('[data-toggle="tooltip"').tooltip({
+      boundary: 'viewport'
+    });
+  });
 
 model
   .onAfterRenderQuestion

@@ -169,11 +169,11 @@ html {
     border-top-right-radius: 3px;
   }
   
-  .list-inline > li {
-    display: inline-block;
-    padding-right: 5px;
-    padding-left: 5px;
-  }
+.list-inline > li {
+  display: inline-block;
+  padding-right: 5px;
+  padding-left: 5px;
+}
 
 #navCon{
   position: fixed;
@@ -194,3 +194,8 @@ html {
   border-top: 1px solid #ddd;
 
 }
+
+.fa,
+.fas {
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900; }
