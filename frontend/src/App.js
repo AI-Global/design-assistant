@@ -1,6 +1,7 @@
 import * as Survey from "survey-react";
 import { Button } from 'react-bootstrap';
 import React, { Component } from 'react';
+import showdown from 'showdown';
 import Modal from 'react-bootstrap/Modal';
 import { withRouter } from 'react-router-dom';
 import ModalBody from 'react-bootstrap/ModalBody';
@@ -29,8 +30,40 @@ Survey
     isLocalizable: true
   });
 
+Survey
+  .Serializer
+  .addProperty("question", "alttext:text");
+
 const json = require('./survey-enrf.json')
 const model = new Survey.Model(json)
+const converter = new showdown.Converter();
+
+model
+  .onAfterRenderQuestion
+  .add(function (model, options) {
+    let title = options.htmlElement.querySelector("h5");
+    if (title) {
+
+      // add tooltip for question
+      let altTextHTML = "";
+      if (options.question.alttext && options.question.alttext.hasOwnProperty("default")) {
+        let altText = converter.makeHtml(options.question.alttext.default.replace(/"/g, "&quot;"));
+        altText = `<div class="text-justify">${altText}</div>`.replace(/"/g, "&quot;");
+        altTextHTML = `<i class="fas fa-info-circle ml-2" data-toggle="tooltip" data-html="true" title="${altText}"></i>`;
+      }
+
+      title.outerHTML =
+        '<label for="' +
+        options.question.inputId +
+        '" class="' +
+        title.className +
+        '"><span class="field-name">' +
+        title.innerText +
+        "</span>" +
+        altTextHTML +
+        "</label>";
+    }
+  });
 
 // remove licalization strings for progress bar
 // https://surveyjs.answerdesk.io/ticket/details/t2551/display-progress-bar-without-text
@@ -59,7 +92,7 @@ class App extends Component {
   nextPath(path) {
     this.props.history.push({
       pathname: path,
-      state: {questions: json, responses: model.data}
+      state: { questions: json, responses: model.data }
     })
   }
 
@@ -118,8 +151,7 @@ class App extends Component {
     if (this.state.isSurveyStarted) {
       return (
         <div>
-          <div style={{ height: "3em" }} />
-          <div className={styles.dimContainer}>
+          {/* <div className={styles.dimContainer}>
             <div className={styles.dimProgressbarDiv}>
               <ul className={styles.dimProgressbar}>
                 <li>
@@ -144,12 +176,11 @@ class App extends Component {
                 </li>
               </ul>
             </div>
-          </div>
-          <div style={{ height: "3em" }} />
-          <Survey.Survey model={model} onComplete={this.onComplete} />
+          </div> */}
           <div className="container">
             <div className="d-flex justify-content-center col">{this.perc()}%</div>
           </div>
+          <Survey.Survey model={model} onComplete={this.onComplete} />
           <div style={{ height: "3em" }} />
           <div id="navCon" className="container">
             <div id="navCard" className="card">
