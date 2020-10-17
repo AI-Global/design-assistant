@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import "bootstrap/dist/css/bootstrap.min.css"
-import "font-awesome/css/font-awesome.css"
-import { Tabs, Tab, Table, Button, Nav } from 'react-bootstrap'
-import "../css/results.css"
+import "bootstrap/dist/css/bootstrap.min.css";
+import "font-awesome/css/font-awesome.css";
+import { Tabs, Tab, Table, Button, Nav } from 'react-bootstrap';
+import "../css/results.css";
 import { ResponsiveRadar } from "@nivo/radar";
 import exportReport from "../helper/ExportReport";
 import ReportCard from "./ReportCard";

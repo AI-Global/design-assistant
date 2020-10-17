@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const TrustedAIProviders = require('../models/trustedAIProviders.model');
+const TrustedAIProviders = require('../models/trustedAIProvider.model');
 
 
 // Get all Trusted AI Providers

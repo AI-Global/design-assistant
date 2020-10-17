@@ -2,19 +2,21 @@ const mongoose = require('mongoose');
 
 const TrustedAIProviderSchema = mongoose.Schema({
 
-    // name of the trusted AI resource
+    // name of the trusted AI provider
     resource: {
         type: String
     },
 
-    // description of the trusted AI resource
+    // description of the trusted AI provider
     description: {
         type: String
     },
 
-    // Download link or URL to the trusted AI resource
+    // Download link or URL to the trusted AI provider
     source: {
-        type: String
+        type: String,
+        required: true,
+        unique: true
     }
 });
 
