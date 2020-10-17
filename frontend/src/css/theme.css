@@ -198,6 +198,7 @@ html {
   border: none;
   border-top: 1px solid #ddd;
 }
+
 .dimensionNav {
   position: absolute;
   left: 3em;
@@ -206,10 +207,28 @@ html {
   max-width: 18em;
   min-width: 18em;
 }
+
 .questionFilter {
   margin-top: 5em;
   position: relative;
   z-index: 5;
   max-width: 18em;
   min-width: 18em;
-} 
+  min-height: 18em;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+.filterDrop{
+  width: 40%;
+  display: inline-block;
+}
+
+.filterDrop .btn {
+  width: 100%;
+}
+
+.cardBody {
+  text-align: center;
+  height: 12em;
+}

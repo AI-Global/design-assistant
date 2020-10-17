@@ -217,18 +217,17 @@ class App extends Component {
                   Filters
               </Accordion.Toggle>
                 <Accordion.Collapse eventKey='9'>
-                  <Card.Body>
-                    <DropdownButton title="Role" style={{display: 'inline'}}>
+                  <Card.Body className="cardBody">
+                    <DropdownButton title="Role" className="filterDrop" style={{"margin-right":"1em"}}>
                       <Dropdown.Item>Role 1</Dropdown.Item>
                       <Dropdown.Item>Role 2</Dropdown.Item>
                       <Dropdown.Item>Role 3</Dropdown.Item>
                     </DropdownButton>
-                    <DropdownButton title="Life Cycle" style={{display: 'inline;'}}>
+                    <DropdownButton title="Cycle" className="filterDrop">
                       <Dropdown.Item>Life Cycle 1</Dropdown.Item>
                       <Dropdown.Item>Life Cycle 2</Dropdown.Item>
                       <Dropdown.Item>Life Cycle 3</Dropdown.Item>
                     </DropdownButton>
-
                   </Card.Body>
                 </Accordion.Collapse>
               </Card>
