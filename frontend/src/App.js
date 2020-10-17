@@ -3,7 +3,6 @@ import $ from "jquery";
 import './css/theme.css';
 import './css/survey.css';
 import showdown from 'showdown';
-import styles from './App.module.css';
 import * as Survey from "survey-react";
 import Card from 'react-bootstrap/Card';
 import { Button } from 'react-bootstrap';
@@ -15,6 +14,8 @@ import ModalBody from 'react-bootstrap/ModalBody';
 import ModalTitle from 'react-bootstrap/ModalTitle';
 import ModalFooter from 'react-bootstrap/ModalFooter';
 import ModalHeader from 'react-bootstrap/ModalHeader';
+import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
 
 // set up survey styles and properties for rendering html
 Survey
@@ -209,14 +210,26 @@ class App extends Component {
                     </Accordion.Collapse>
                   </Card>)
               })}
-          </Accordion>
-          <Accordion className="questionFilter">
+            </Accordion>
+            <Accordion className="questionFilter">
               <Card>
                 <Accordion.Toggle as={Card.Header} eventKey='9'>
                   Filters
               </Accordion.Toggle>
                 <Accordion.Collapse eventKey='9'>
-                  <Card.Body>Filter</Card.Body>
+                  <Card.Body>
+                    <DropdownButton title="Role" style={{display: 'inline'}}>
+                      <Dropdown.Item>Role 1</Dropdown.Item>
+                      <Dropdown.Item>Role 2</Dropdown.Item>
+                      <Dropdown.Item>Role 3</Dropdown.Item>
+                    </DropdownButton>
+                    <DropdownButton title="Life Cycle" style={{display: 'inline;'}}>
+                      <Dropdown.Item>Life Cycle 1</Dropdown.Item>
+                      <Dropdown.Item>Life Cycle 2</Dropdown.Item>
+                      <Dropdown.Item>Life Cycle 3</Dropdown.Item>
+                    </DropdownButton>
+
+                  </Card.Body>
                 </Accordion.Collapse>
               </Card>
             </Accordion>
