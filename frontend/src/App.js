@@ -38,15 +38,14 @@ Survey
   .Serializer
   .addProperty("question", "alttext:text");
 
-const dimArray = ['Accountabililty', 'Bias and Fairness', 'Explainability and Interpretability', 'Robustness', 'Data Quality']
-const converter = new showdown.Converter();
-
-
 // remove localization strings for progress bar
 // https://surveyjs.answerdesk.io/ticket/details/t2551/display-progress-bar-without-text
 // Asked by: MDE | Answered by: Andrew Telnov
 var localizedStrs = Survey.surveyLocalization.locales[Survey.surveyLocalization.defaultLocale];
 localizedStrs.progressText = "";
+
+// array of dimension names used to create navigation cards
+const dimArray = ['Accountabililty', 'Bias and Fairness', 'Explainability and Interpretability', 'Robustness', 'Data Quality']
 
 class App extends Component {
   constructor(props) {
@@ -70,10 +69,11 @@ class App extends Component {
       .then(res => {
         const json = res.data;
         const model = new Survey.Model(json);
+        const converter = new showdown.Converter();
+
         // Set json and model
         this.setState({ json });
         this.setState({ model });
-
 
         // add tooltip
         model
@@ -93,7 +93,6 @@ class App extends Component {
           .add(function (model, options) {
             let title = options.htmlElement.querySelector("h5");
             if (title) {
-
               // add tooltip for question if alttext has default value
               let altTextHTML = "";
               if (options.question.alttext && options.question.alttext.hasOwnProperty("default")) {
@@ -101,7 +100,6 @@ class App extends Component {
                 altText = `<div class="text-justify">${altText}</div>`.replace(/"/g, "&quot;");
                 altTextHTML = `<i class="fas fa-info-circle ml-2" data-toggle="tooltip" data-html="true" title="${altText}"></i>`;
               }
-
               title.outerHTML =
                 '<label for="' +
                 options.question.inputId +
@@ -112,7 +110,6 @@ class App extends Component {
                 "</span>" +
                 altTextHTML +
                 "</label>";
-
               // add tooltip for answers if alttext has default value
               options.htmlElement.querySelectorAll("input").forEach((element) => {
                 if (options.question.alttext && options.question.alttext.hasOwnProperty(element.value)) {
@@ -129,7 +126,6 @@ class App extends Component {
           });
       })
   }
-
 
   nextPath(path) {
     this.props.history.push({
