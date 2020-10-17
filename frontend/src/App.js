@@ -1,7 +1,12 @@
+import 'bootstrap';
+import $ from "jquery";
+import './css/theme.css';
+import './css/survey.css';
+import showdown from 'showdown';
+import styles from './App.module.css';
 import * as Survey from "survey-react";
 import { Button } from 'react-bootstrap';
 import React, { Component } from 'react';
-import showdown from 'showdown';
 import Modal from 'react-bootstrap/Modal';
 import { withRouter } from 'react-router-dom';
 import ModalBody from 'react-bootstrap/ModalBody';
@@ -9,14 +14,7 @@ import ModalTitle from 'react-bootstrap/ModalTitle';
 import ModalFooter from 'react-bootstrap/ModalFooter';
 import ModalHeader from 'react-bootstrap/ModalHeader';
 
-import styles from './App.module.css';
-import './css/theme.css';
-import './css/survey.css';
-
-import $ from "jquery";
-import 'bootstrap';
-import '@fortawesome/free-solid-svg-icons/faInfoCircle'
-
+// set up survey styles and properties for rendering html
 Survey
   .StylesManager
   .applyTheme("bootstrapmaterial")
@@ -36,10 +34,12 @@ Survey
   .Serializer
   .addProperty("question", "alttext:text");
 
-const json = require('./survey-enrf.json')
+
+const json = require('./survey-enrf.json') // TODO: connect with backend to get surveyJSON from DB // 
 const model = new Survey.Model(json)
 const converter = new showdown.Converter();
 
+// add tooltip
 model
   .onAfterRenderPage
   .add(function(model, options) {
@@ -52,13 +52,14 @@ model
     });
   });
 
+//change labels to 'h5' to bold them
 model
   .onAfterRenderQuestion
   .add(function (model, options) {
     let title = options.htmlElement.querySelector("h5");
     if (title) {
 
-      // add tooltip for question
+      // add tooltip for question if alttext has default value
       let altTextHTML = "";
       if (options.question.alttext && options.question.alttext.hasOwnProperty("default")) {
         let altText = converter.makeHtml(options.question.alttext.default.replace(/"/g, "&quot;"));
@@ -76,10 +77,24 @@ model
         "</span>" +
         altTextHTML +
         "</label>";
+
+
+      // add tooltip for answers if alttext has default value
+      options.htmlElement.querySelectorAll("input").forEach((element) => {
+        if (options.question.alttext && options.question.alttext.hasOwnProperty(element.value)) {
+          const div = element.closest("div");
+          div.classList.add("d-flex");
+          const i = document.createElement("span");
+          let altText = converter.makeHtml(options.question.alttext[element.value].default.replace(/"/g, "&quot;"));
+          altText = `<div class="text-justify">${altText}</div>`.replace(/"/g, "&quot;");
+          i.innerHTML = `<i class="fas fa-info-circle ml-2" data-toggle="tooltip" data-html="true" title="${altText}"></i>`;
+          div.appendChild(i);
+        }
+      });
     }
   });
 
-// remove licalization strings for progress bar
+// remove localization strings for progress bar
 // https://surveyjs.answerdesk.io/ticket/details/t2551/display-progress-bar-without-text
 // Asked by: MDE | Answered by: Andrew Telnov
 var localizedStrs = Survey.surveyLocalization.locales[Survey.surveyLocalization.defaultLocale];
