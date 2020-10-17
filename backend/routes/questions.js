@@ -43,12 +43,20 @@ function formatQuestion(q) {
     }
 
     if (question.type == "dropdown") {
-        // TODO: Add choices for dropdown questions
         question.hasOther = true;
         question.choice = [];
         question.choiceOrder = "asc"
         question.otherText = { "default": "Other", "fr": "" };
-
+        question.choices = [];
+        for (let c of q.responses) {
+            var choice = {};
+            choice.value = c.responseNumber;
+            choice.text = {};
+            choice.text.default = c.indicator;
+            choice.text.fr = "";
+            question.choices.push(choice);
+        }
+        
     } else if (question.type == "radiogroup" || question.type == "checkbox") {
         if (q.pointsAvailable) {
             question.score = {};
