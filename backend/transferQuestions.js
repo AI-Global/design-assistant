@@ -101,7 +101,10 @@ function main(){
 						multChoice = true;
 				} else if (qPrompt.substring(0,2) === 'CV'){
 						doc["responseType"] = "dropdown";
-				} 
+				} else {
+                    doc["responseType"] = "checkbox";
+                    multChoice = true;
+                }
 				doc["pointsAvailable"] = Number(pointsAvailable);
 
 				// parse the weighting of the question
