@@ -7,6 +7,7 @@ import ModalBody from 'react-bootstrap/ModalBody';
 import ModalTitle from 'react-bootstrap/ModalTitle';
 import ModalFooter from 'react-bootstrap/ModalFooter';
 import ModalHeader from 'react-bootstrap/ModalHeader';
+import axios from 'axios'
 
 import styles from './App.module.css';
 import './css/theme.css';
@@ -29,9 +30,6 @@ Survey
     isLocalizable: true
   });
 
-const json = require('./survey-enrf.json')
-const model = new Survey.Model(json)
-
 // remove licalization strings for progress bar
 // https://surveyjs.answerdesk.io/ticket/details/t2551/display-progress-bar-without-text
 // Asked by: MDE | Answered by: Andrew Telnov
@@ -44,7 +42,6 @@ class App extends Component {
     this.state = {
       isSurveyStarted: false,
       showModal: false,
-      questions: json,
       A: 1,
       B: 9,
       EI: 19,
@@ -56,10 +53,22 @@ class App extends Component {
     this.handleCloseModal = this.handleCloseModal.bind(this);
   }
 
+  // Request questions JSON from backend 
+  componentDidMount() {
+    axios.get('http://localhost:9000/questions')
+      .then(res => {
+        const json = res.data;
+        const model = new Survey.Model(json);
+        // Set json and model
+        this.setState({ json });
+        this.setState({ model });
+      })
+  }
+
   nextPath(path) {
     this.props.history.push({
       pathname: path,
-      state: {questions: json, responses: model.data}
+      state: {questions: this.state.json, responses: this.state.model.data}
     })
   }
 
@@ -72,22 +81,22 @@ class App extends Component {
   }
 
   perc() {
-    return model.getProgress();
+    return this.state.model.getProgress();
   }
 
   resetSurvey() {
-    model.clear()
+    this.state.model.clear()
     this.handleCloseModal()
     this.setState({ isSurveyStarted: false })
   }
 
   prevPage() {
-    model.prevPage();
+    this.state.model.prevPage();
     this.setState(this.state)   // force re-render to update buttons and % complete
   }
 
   nextPage() {
-    model.nextPage();
+    this.state.model.nextPage();
     this.setState(this.state)   // force re-render to update buttons and % complete
   }
 
@@ -96,7 +105,7 @@ class App extends Component {
   }
 
   finish() {
-    model.doComplete();
+    this.state.model.doComplete();
     this.nextPath('/Results/');
   }
 
@@ -105,12 +114,12 @@ class App extends Component {
   }
 
   startSurvey() {
-    model.clear()      // clear survey to fix restart bug
+    this.state.model.clear()      // clear survey to fix restart bug
     this.setState({ isSurveyStarted: true })
   }
 
   navDim(A) {
-    model.currentPage = model.pages[A]
+    this.state.model.currentPage = this.state.model.pages[A]
     this.setState(this.state)
   }
 
@@ -146,7 +155,7 @@ class App extends Component {
             </div>
           </div>
           <div style={{ height: "3em" }} />
-          <Survey.Survey model={model} onComplete={this.onComplete} />
+          <Survey.Survey model={this.state.model} onComplete={this.onComplete} />
           <div className="container">
             <div className="d-flex justify-content-center col">{this.perc()}%</div>
           </div>
@@ -158,8 +167,8 @@ class App extends Component {
                   <Button className="btn btn-primary mr-2" onClick={this.handleOpenModal}>Reset</Button>
                 </div>
                 <div className="d-flex justify-content-center col">
-                  <Button className="btn btn-primary mr-2" onClick={() => this.prevPage()} disabled={model.isFirstPage}>Prev</Button>
-                  <Button className="btn btn-primary mr-2" onClick={() => this.nextPage()} disabled={model.isLastPage}>Next</Button>
+                  <Button className="btn btn-primary mr-2" onClick={() => this.prevPage()} disabled={this.state.model.isFirstPage}>Prev</Button>
+                  <Button className="btn btn-primary mr-2" onClick={() => this.nextPage()} disabled={this.state.model.isLastPage}>Next</Button>
                 </div>
                 <div className="d-flex justify-content-end col">
                   <Button className="btn btn-save mr-2" id="saveButton" onClick={() => this.save()}>Save</Button>
