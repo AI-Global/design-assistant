@@ -30,7 +30,7 @@ function formatQuestion(q) {
     }
 
     // Not sure how they determine which prompts they want displayed
-    if (q.prompt == "select all that have been completed" || q.prompt == "select all that apply") {
+    if (q.prompt == "select all that have been completed:" || q.prompt == "select all that apply:") {
         question.description = {};
         question.description.default = q.prompt;
         question.description.fr = "";
@@ -139,7 +139,7 @@ function createPages(q) {
     var questions = [];
 
     // Loop through each dimension in this order
-    for (let dimension of []) {//A,B,EI,R,D
+    for (let dimension of [A,B,EI,R,D]) {
         // Create pages of 2 questions 
         for (let question of dimension) {
             questions.push(question);
