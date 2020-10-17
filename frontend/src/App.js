@@ -2,6 +2,7 @@ import 'bootstrap';
 import $ from "jquery";
 import './css/theme.css';
 import './css/survey.css';
+import axios from 'axios';
 import showdown from 'showdown';
 import * as Survey from "survey-react";
 import Card from 'react-bootstrap/Card';
@@ -16,7 +17,6 @@ import ModalFooter from 'react-bootstrap/ModalFooter';
 import ModalHeader from 'react-bootstrap/ModalHeader';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
-import axios from 'axios'
 
 // set up survey styles and properties for rendering html
 Survey
@@ -38,64 +38,9 @@ Survey
   .Serializer
   .addProperty("question", "alttext:text");
 
-// const json = require('./survey-enrf.json') // TODO: connect with backend to get surveyJSON from DB // 
-const model = new Survey.Model(json)
 const dimArray = ['Accountabililty', 'Bias and Fairness', 'Explainability and Interpretability', 'Robustness', 'Data Quality']
 const converter = new showdown.Converter();
 
-// add tooltip
-model
-  .onAfterRenderPage
-  .add(function (model, options) {
-    const node = options.htmlElement.querySelector("h4");
-    if (node) {
-      node.classList.add('section-header');
-    }
-    $('[data-toggle="tooltip"').tooltip({
-      boundary: 'viewport'
-    });
-  });
-
-//change labels to 'h5' to bold them
-model
-  .onAfterRenderQuestion
-  .add(function (model, options) {
-    let title = options.htmlElement.querySelector("h5");
-    if (title) {
-
-      // add tooltip for question if alttext has default value
-      let altTextHTML = "";
-      if (options.question.alttext && options.question.alttext.hasOwnProperty("default")) {
-        let altText = converter.makeHtml(options.question.alttext.default.replace(/"/g, "&quot;"));
-        altText = `<div class="text-justify">${altText}</div>`.replace(/"/g, "&quot;");
-        altTextHTML = `<i class="fas fa-info-circle ml-2" data-toggle="tooltip" data-html="true" title="${altText}"></i>`;
-      }
-
-      title.outerHTML =
-        '<label for="' +
-        options.question.inputId +
-        '" class="' +
-        title.className +
-        '"><span class="field-name">' +
-        title.innerText +
-        "</span>" +
-        altTextHTML +
-        "</label>";
-
-      // add tooltip for answers if alttext has default value
-      options.htmlElement.querySelectorAll("input").forEach((element) => {
-        if (options.question.alttext && options.question.alttext.hasOwnProperty(element.value)) {
-          const div = element.closest("div");
-          div.classList.add("d-flex");
-          const i = document.createElement("span");
-          let altText = converter.makeHtml(options.question.alttext[element.value].default.replace(/"/g, "&quot;"));
-          altText = `<div class="text-justify">${altText}</div>`.replace(/"/g, "&quot;");
-          i.innerHTML = `<i class="fas fa-info-circle ml-2" data-toggle="tooltip" data-html="true" title="${altText}"></i>`;
-          div.appendChild(i);
-        }
-      });
-    }
-  });
 
 // remove localization strings for progress bar
 // https://surveyjs.answerdesk.io/ticket/details/t2551/display-progress-bar-without-text
@@ -128,13 +73,68 @@ class App extends Component {
         // Set json and model
         this.setState({ json });
         this.setState({ model });
+
+
+        // add tooltip
+        model
+          .onAfterRenderPage
+          .add(function (model, options) {
+            const node = options.htmlElement.querySelector("h4");
+            if (node) {
+              node.classList.add('section-header');
+            }
+            $('[data-toggle="tooltip"').tooltip({
+              boundary: 'viewport'
+            });
+          });
+        //change labels to 'h5' to bold them
+        model
+          .onAfterRenderQuestion
+          .add(function (model, options) {
+            let title = options.htmlElement.querySelector("h5");
+            if (title) {
+
+              // add tooltip for question if alttext has default value
+              let altTextHTML = "";
+              if (options.question.alttext && options.question.alttext.hasOwnProperty("default")) {
+                let altText = converter.makeHtml(options.question.alttext.default.replace(/"/g, "&quot;"));
+                altText = `<div class="text-justify">${altText}</div>`.replace(/"/g, "&quot;");
+                altTextHTML = `<i class="fas fa-info-circle ml-2" data-toggle="tooltip" data-html="true" title="${altText}"></i>`;
+              }
+
+              title.outerHTML =
+                '<label for="' +
+                options.question.inputId +
+                '" class="' +
+                title.className +
+                '"><span class="field-name">' +
+                title.innerText +
+                "</span>" +
+                altTextHTML +
+                "</label>";
+
+              // add tooltip for answers if alttext has default value
+              options.htmlElement.querySelectorAll("input").forEach((element) => {
+                if (options.question.alttext && options.question.alttext.hasOwnProperty(element.value)) {
+                  const div = element.closest("div");
+                  div.classList.add("d-flex");
+                  const i = document.createElement("span");
+                  let altText = converter.makeHtml(options.question.alttext[element.value].default.replace(/"/g, "&quot;"));
+                  altText = `<div class="text-justify">${altText}</div>`.replace(/"/g, "&quot;");
+                  i.innerHTML = `<i class="fas fa-info-circle ml-2" data-toggle="tooltip" data-html="true" title="${altText}"></i>`;
+                  div.appendChild(i);
+                }
+              });
+            }
+          });
       })
   }
+
 
   nextPath(path) {
     this.props.history.push({
       pathname: path,
-      state: {questions: this.state.json, responses: this.state.model.data}
+      state: { questions: this.state.json, responses: this.state.model.data }
     })
   }
 
@@ -147,7 +147,7 @@ class App extends Component {
   }
 
   percent() {
-    return model.getProgress();
+    return this.state.model.getProgress();
   }
 
   resetSurvey() {
@@ -180,26 +180,26 @@ class App extends Component {
   }
 
   startSurvey() {
-    model.clear()             // clear survey to fix restart bug
+    this.state.model.clear()             // clear survey to fix restart bug
     this.setState({ isSurveyStarted: true })
   }
 
   navDim(dimension) {
     switch (dimension) {
       case 0:
-        model.currentPage = model.pages[this.state.A]
+        this.state.model.currentPage = this.state.model.pages[this.state.A]
         break;
       case 1:
-        model.currentPage = model.pages[this.state.B]
+        this.state.model.currentPage = this.state.model.pages[this.state.B]
         break;
       case 2:
-        model.currentPage = model.pages[this.state.E]
+        this.state.model.currentPage = this.state.model.pages[this.state.E]
         break;
       case 3:
-        model.currentPage = model.pages[this.state.R]
+        this.state.model.currentPage = this.state.model.pages[this.state.R]
         break;
       case 4:
-        model.currentPage = model.pages[this.state.D]
+        this.state.model.currentPage = this.state.model.pages[this.state.D]
         break;
     }
     this.setState(this.state)
@@ -230,7 +230,7 @@ class App extends Component {
               </Accordion.Toggle>
                 <Accordion.Collapse eventKey='9'>
                   <Card.Body className="cardBody">
-                    <DropdownButton title="Role" className="filterDrop" style={{"margin-right":"1em"}}>
+                    <DropdownButton title="Role" className="filterDrop" style={{ "margin-right": "1em" }}>
                       <Dropdown.Item>Role 1</Dropdown.Item>
                       <Dropdown.Item>Role 2</Dropdown.Item>
                       <Dropdown.Item>Role 3</Dropdown.Item>
@@ -248,7 +248,7 @@ class App extends Component {
           <div className="container">
             <div className="d-flex justify-content-center col">{this.percent()}%</div>
           </div>
-          <Survey.Survey model={model} onComplete={this.onComplete} />
+          <Survey.Survey model={this.state.model} onComplete={this.onComplete} />
           <div id="navCon" className="container">
             <div id="navCard" className="card">
               <div className="row no-gutters">
