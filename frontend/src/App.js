@@ -16,6 +16,7 @@ import ModalFooter from 'react-bootstrap/ModalFooter';
 import ModalHeader from 'react-bootstrap/ModalHeader';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
+import axios from 'axios'
 
 // set up survey styles and properties for rendering html
 Survey
@@ -37,7 +38,7 @@ Survey
   .Serializer
   .addProperty("question", "alttext:text");
 
-const json = require('./survey-enrf.json') // TODO: connect with backend to get surveyJSON from DB // 
+// const json = require('./survey-enrf.json') // TODO: connect with backend to get surveyJSON from DB // 
 const model = new Survey.Model(json)
 const dimArray = ['Accountabililty', 'Bias and Fairness', 'Explainability and Interpretability', 'Robustness', 'Data Quality']
 const converter = new showdown.Converter();
@@ -108,7 +109,6 @@ class App extends Component {
     this.state = {
       isSurveyStarted: false,
       showModal: false,
-      questions: json,
       A: 1,
       B: 9,
       E: 19,
@@ -119,10 +119,22 @@ class App extends Component {
     this.handleCloseModal = this.handleCloseModal.bind(this);
   }
 
+  // Request questions JSON from backend 
+  componentDidMount() {
+    axios.get('http://localhost:9000/questions')
+      .then(res => {
+        const json = res.data;
+        const model = new Survey.Model(json);
+        // Set json and model
+        this.setState({ json });
+        this.setState({ model });
+      })
+  }
+
   nextPath(path) {
     this.props.history.push({
       pathname: path,
-      state: { questions: json, responses: model.data }
+      state: {questions: this.state.json, responses: this.state.model.data}
     })
   }
 
@@ -139,18 +151,18 @@ class App extends Component {
   }
 
   resetSurvey() {
-    model.clear()
+    this.state.model.clear()
     this.handleCloseModal()
     this.setState({ isSurveyStarted: false })
   }
 
   prevPage() {
-    model.prevPage();
+    this.state.model.prevPage();
     this.setState(this.state)   // force re-render to update buttons and % complete
   }
 
   nextPage() {
-    model.nextPage();
+    this.state.model.nextPage();
     this.setState(this.state)   // force re-render to update buttons and % complete
   }
 
@@ -159,7 +171,7 @@ class App extends Component {
   }
 
   finish() {
-    model.doComplete();
+    this.state.model.doComplete();
     this.nextPath('/Results/');
   }
 
@@ -244,8 +256,8 @@ class App extends Component {
                   <Button className="btn btn-primary mr-2" onClick={this.handleOpenModal}>Reset</Button>
                 </div>
                 <div className="d-flex justify-content-center col">
-                  <Button className="btn btn-primary mr-2" onClick={() => this.prevPage()} disabled={model.isFirstPage}>Prev</Button>
-                  <Button className="btn btn-primary mr-2" onClick={() => this.nextPage()} disabled={model.isLastPage}>Next</Button>
+                  <Button className="btn btn-primary mr-2" onClick={() => this.prevPage()} disabled={this.state.model.isFirstPage}>Prev</Button>
+                  <Button className="btn btn-primary mr-2" onClick={() => this.nextPage()} disabled={this.state.model.isLastPage}>Next</Button>
                 </div>
                 <div className="d-flex justify-content-end col">
                   <Button className="btn btn-save mr-2" id="saveButton" onClick={() => this.save()}>Save</Button>

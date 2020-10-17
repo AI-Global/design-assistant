@@ -30,7 +30,7 @@ function formatQuestion(q) {
     }
 
     // Not sure how they determine which prompts they want displayed
-    if (q.prompt == "select all that have been completed" || q.prompt == "select all that apply") {
+    if (q.prompt == "select all that have been completed:" || q.prompt == "select all that apply:") {
         question.description = {};
         question.description.default = q.prompt;
         question.description.fr = "";
@@ -43,12 +43,20 @@ function formatQuestion(q) {
     }
 
     if (question.type == "dropdown") {
-        // TODO: Add choices for dropdown questions
         question.hasOther = true;
         question.choice = [];
         question.choiceOrder = "asc"
         question.otherText = { "default": "Other", "fr": "" };
-
+        question.choices = [];
+        for (let c of q.responses) {
+            var choice = {};
+            choice.value = c.responseNumber;
+            choice.text = {};
+            choice.text.default = c.indicator;
+            choice.text.fr = "";
+            question.choices.push(choice);
+        }
+        
     } else if (question.type == "radiogroup" || question.type == "checkbox") {
         if (q.pointsAvailable) {
             question.score = {};
@@ -91,7 +99,7 @@ function createPage(questions, pageName, pageTitle) {
     page.title.fr = "";
     // Map MongoDB questions to surveyJS format
     page.elements = questions.map(function (q) {
-        return formatQuestion(q)
+        return formatQuestion(q);
     });
 
     return page
@@ -99,21 +107,21 @@ function createPage(questions, pageName, pageTitle) {
 
 function createPages(q) {
     // This function takes in a list of questions from mongoDB and formats them into pages for surveyJS
-    page = {}
+    page = {};
     page.pages = [];
-    page.showQuestionNumbers = false;
-    page.showProgressBar = "top";
-    page.firstPageIsStarted = false;
-    page.showNavigationButtons = false;
+    page.showQuestionNumbers = "false";
+    page.showProgressBar = "bottom";
+    page.firstPageIsStarted = "false";
+    page.showNavigationButtons = "false";
 
-    // separate the questions by dimension
+
     var A = [];
     var EI = [];
     var D = [];
     var B = [];
     var R = [];
-    var tombstone = []
-
+    var tombstone = [];
+    // separate the questions by dimension
     for (let question of q) {
         if (question.trustIndexDimension == "accountability") {
             A.push(question);
@@ -139,18 +147,21 @@ function createPages(q) {
     var questions = [];
 
     // Loop through each dimension in this order
-    for (let dimension of [A,B,EI,R,D]) {
+    for (let dimension of [A, B, EI, R, D]) {
         // Create pages of 2 questions 
         for (let question of dimension) {
-            questions.push(question)        
-            if (questions.length == 2) {
+            questions.push(question);
+            questions.push({responseType:"comment", id:"other"+question.id, question:"Other:", alttext:"If possible, support the feedback with specific recommendations \/ suggestions to improve the tool. Feedback can include:\n - Refinement to existing questions, like suggestions on how questions can be simplified or clarified further\n - Additions of new questions for specific scenarios that may be missed\n - Feedback on whether the listed AI risk domains are fulsome and complete\n - What types of response indicators should be included for your context?"});
+            if (questions.length == 4) {
                 var dimPage = createPage(questions, Dimensions[question.trustIndexDimension].page + pageCount, Dimensions[question.trustIndexDimension].name);
                 page.pages.push(dimPage);
                 pageCount++;
                 questions = [];
             }
+
+            
         }
-        
+
         // Deal with odd number of pages
         if (questions.length > 0) {
             var dimPage = createPage(questions, Dimensions[questions[0].trustIndexDimension].page + pageCount, Dimensions[questions[0].trustIndexDimension].name);
@@ -161,8 +172,8 @@ function createPages(q) {
         questions = [];
         pageCount = 1;
     }
-    
-    return page
+
+    return page;
 
 }
 
