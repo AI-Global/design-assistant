@@ -44,7 +44,12 @@ html {
       width: 75vw; 
     }
   }
-  
+  @media screen and (max-width: 1800px) {
+  .dimensionNav {
+    display: none;
+  }
+}
+
   .copyright-footer {
     position: relative; 
     bottom: 0px; 
@@ -141,17 +146,8 @@ html {
     .tooltip .tooltip-inner {
       max-width: 600px;
     }
-    .dimensionNav {
-      position: absolute;
-      left: 3em;
-      top: 12em;
-      z-index: 5;
-      max-width: 18em;
-      min-width: 18em;
-    } 
-
   }
-  
+
   .field-name {
     font-weight: 700 !important;
   }
@@ -202,3 +198,18 @@ html {
   border: none;
   border-top: 1px solid #ddd;
 }
+.dimensionNav {
+  position: absolute;
+  left: 3em;
+  top: 12em;
+  z-index: 5;
+  max-width: 18em;
+  min-width: 18em;
+}
+.questionFilter {
+  margin-top: 5em;
+  position: relative;
+  z-index: 5;
+  max-width: 18em;
+  min-width: 18em;
+} 

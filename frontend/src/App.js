@@ -188,10 +188,7 @@ class App extends Component {
       case 4:
         model.currentPage = model.pages[this.state.D]
         break;
-
     }
-
-
     this.setState(this.state)
   }
 
@@ -199,19 +196,31 @@ class App extends Component {
     if (this.state.isSurveyStarted) {
       return (
         <div>
-          <Accordion className="dimensionNav">
-            {dimArray.map((dimension, index) => {
-              return (
-                <Card key={index}>
-                  <Accordion.Toggle as={Card.Header} eventKey={index + 1}>
-                    {dimension}
-                  </Accordion.Toggle>
-                  <Accordion.Collapse eventKey={index + 1}>
-                    <Card.Body><Button onClick={() => this.navDim(index)}>{dimension}</Button></Card.Body>
-                  </Accordion.Collapse>
-                </Card>)
-            })}
+          <div className="dimensionNav">
+            <Accordion>
+              {dimArray.map((dimension, index) => {
+                return (
+                  <Card key={index}>
+                    <Accordion.Toggle as={Card.Header} eventKey={index + 1}>
+                      {dimension}
+                    </Accordion.Toggle>
+                    <Accordion.Collapse eventKey={index + 1}>
+                      <Card.Body><Button onClick={() => this.navDim(index)}>{dimension}</Button></Card.Body>
+                    </Accordion.Collapse>
+                  </Card>)
+              })}
           </Accordion>
+          <Accordion className="questionFilter">
+              <Card>
+                <Accordion.Toggle as={Card.Header} eventKey='9'>
+                  Filters
+              </Accordion.Toggle>
+                <Accordion.Collapse eventKey='9'>
+                  <Card.Body>Filter</Card.Body>
+                </Accordion.Collapse>
+              </Card>
+            </Accordion>
+          </div>
           <div className="container">
             <div className="d-flex justify-content-center col">{this.percent()}%</div>
           </div>
