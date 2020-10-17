@@ -43,12 +43,20 @@ function formatQuestion(q) {
     }
 
     if (question.type == "dropdown") {
-        // TODO: Add choices for dropdown questions
         question.hasOther = true;
         question.choice = [];
         question.choiceOrder = "asc"
         question.otherText = { "default": "Other", "fr": "" };
-
+        question.choices = [];
+        for (let c of q.responses) {
+            var choice = {};
+            choice.value = c.responseNumber;
+            choice.text = {};
+            choice.text.default = c.indicator;
+            choice.text.fr = "";
+            question.choices.push(choice);
+        }
+        
     } else if (question.type == "radiogroup" || question.type == "checkbox") {
         if (q.pointsAvailable) {
             question.score = {};
@@ -106,7 +114,7 @@ function createPages(q) {
     page.firstPageIsStarted = "false";
     page.showNavigationButtons = "false";
 
-    
+
     var A = [];
     var EI = [];
     var D = [];
@@ -139,16 +147,19 @@ function createPages(q) {
     var questions = [];
 
     // Loop through each dimension in this order
-    for (let dimension of [A,B,EI,R,D]) {
+    for (let dimension of [A, B, EI, R, D]) {
         // Create pages of 2 questions 
         for (let question of dimension) {
             questions.push(question);
-            if (questions.length == 2) {
+            questions.push({responseType:"comment", id:"other"+question.id, question:"Other:", alttext:"If possible, support the feedback with specific recommendations \/ suggestions to improve the tool. Feedback can include:\n - Refinement to existing questions, like suggestions on how questions can be simplified or clarified further\n - Additions of new questions for specific scenarios that may be missed\n - Feedback on whether the listed AI risk domains are fulsome and complete\n - What types of response indicators should be included for your context?"});
+            if (questions.length == 4) {
                 var dimPage = createPage(questions, Dimensions[question.trustIndexDimension].page + pageCount, Dimensions[question.trustIndexDimension].name);
                 page.pages.push(dimPage);
                 pageCount++;
                 questions = [];
             }
+
+            
         }
 
         // Deal with odd number of pages
