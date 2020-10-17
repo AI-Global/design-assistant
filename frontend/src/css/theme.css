@@ -140,7 +140,16 @@ html {
   @media screen and (min-width: 600px) {
     .tooltip .tooltip-inner {
       max-width: 600px;
+    }
+    .dimensionNav {
+      position: absolute;
+      left: 3em;
+      top: 12em;
+      z-index: 5;
+      max-width: 18em;
+      min-width: 18em;
     } 
+
   }
   
   .field-name {
@@ -176,7 +185,7 @@ html {
 }
 
 #navCon{
-  position: fixed;
+  position: sticky;
   left:0;
   right:0;
   bottom: 1em;
@@ -192,10 +201,4 @@ html {
   background-color: #f5f5f5;
   border: none;
   border-top: 1px solid #ddd;
-
 }
-
-.fa,
-.fas {
-  font-family: 'Font Awesome 5 Free';
-  font-weight: 900; }

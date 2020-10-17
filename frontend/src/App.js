@@ -5,10 +5,12 @@ import './css/survey.css';
 import showdown from 'showdown';
 import styles from './App.module.css';
 import * as Survey from "survey-react";
+import Card from 'react-bootstrap/Card';
 import { Button } from 'react-bootstrap';
 import React, { Component } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { withRouter } from 'react-router-dom';
+import Accordion from 'react-bootstrap/Accordion';
 import ModalBody from 'react-bootstrap/ModalBody';
 import ModalTitle from 'react-bootstrap/ModalTitle';
 import ModalFooter from 'react-bootstrap/ModalFooter';
@@ -34,15 +36,15 @@ Survey
   .Serializer
   .addProperty("question", "alttext:text");
 
-
 const json = require('./survey-enrf.json') // TODO: connect with backend to get surveyJSON from DB // 
 const model = new Survey.Model(json)
+const dimArray = ['Accountabililty', 'Bias and Fairness', 'Explainability and Interpretability', 'Robustness', 'Data Quality']
 const converter = new showdown.Converter();
 
 // add tooltip
 model
   .onAfterRenderPage
-  .add(function(model, options) {
+  .add(function (model, options) {
     const node = options.htmlElement.querySelector("h4");
     if (node) {
       node.classList.add('section-header');
@@ -78,7 +80,6 @@ model
         altTextHTML +
         "</label>";
 
-
       // add tooltip for answers if alttext has default value
       options.htmlElement.querySelectorAll("input").forEach((element) => {
         if (options.question.alttext && options.question.alttext.hasOwnProperty(element.value)) {
@@ -109,11 +110,10 @@ class App extends Component {
       questions: json,
       A: 1,
       B: 9,
-      EI: 19,
+      E: 19,
       R: 25,
       D: 28,
     };
-
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
   }
@@ -133,7 +133,7 @@ class App extends Component {
     this.setState({ showModal: false });
   }
 
-  perc() {
+  percent() {
     return model.getProgress();
   }
 
@@ -167,12 +167,31 @@ class App extends Component {
   }
 
   startSurvey() {
-    model.clear()      // clear survey to fix restart bug
+    model.clear()             // clear survey to fix restart bug
     this.setState({ isSurveyStarted: true })
   }
 
-  navDim(A) {
-    model.currentPage = model.pages[A]
+  navDim(dimension) {
+    switch (dimension) {
+      case 0:
+        model.currentPage = model.pages[this.state.A]
+        break;
+      case 1:
+        model.currentPage = model.pages[this.state.B]
+        break;
+      case 2:
+        model.currentPage = model.pages[this.state.E]
+        break;
+      case 3:
+        model.currentPage = model.pages[this.state.R]
+        break;
+      case 4:
+        model.currentPage = model.pages[this.state.D]
+        break;
+
+    }
+
+
     this.setState(this.state)
   }
 
@@ -180,37 +199,23 @@ class App extends Component {
     if (this.state.isSurveyStarted) {
       return (
         <div>
-          {/* <div className={styles.dimContainer}>
-            <div className={styles.dimProgressbarDiv}>
-              <ul className={styles.dimProgressbar}>
-                <li>
-                  <Button className={styles.dimButton} onClick={() => this.navDim(this.state.A)} />
-                  <p className={styles.dimTitle}>Accountability</p>
-                </li>
-                <li>
-                  <Button className={styles.dimButton} onClick={() => this.navDim(this.state.B)} />
-                  <p className={styles.dimTitle}>Bias and Fairness</p>
-                </li>
-                <li>
-                  <Button className={styles.dimButton} onClick={() => this.navDim(this.state.EI)} />
-                  <p className={styles.dimTitle}>Explainability and Interpretability</p>
-                </li>
-                <li>
-                  <Button className={styles.dimButton} onClick={() => this.navDim(this.state.R)} />
-                  <p className={styles.dimTitle}>Robustness</p>
-                </li>
-                <li>
-                  <Button className={styles.dimButton} onClick={() => this.navDim(this.state.D)} />
-                  <p className={styles.dimTitle}>Data Quality</p>
-                </li>
-              </ul>
-            </div>
-          </div> */}
+          <Accordion className="dimensionNav">
+            {dimArray.map((dimension, index) => {
+              return (
+                <Card key={index}>
+                  <Accordion.Toggle as={Card.Header} eventKey={index + 1}>
+                    {dimension}
+                  </Accordion.Toggle>
+                  <Accordion.Collapse eventKey={index + 1}>
+                    <Card.Body><Button onClick={() => this.navDim(index)}>{dimension}</Button></Card.Body>
+                  </Accordion.Collapse>
+                </Card>)
+            })}
+          </Accordion>
           <div className="container">
-            <div className="d-flex justify-content-center col">{this.perc()}%</div>
+            <div className="d-flex justify-content-center col">{this.percent()}%</div>
           </div>
           <Survey.Survey model={model} onComplete={this.onComplete} />
-          <div style={{ height: "3em" }} />
           <div id="navCon" className="container">
             <div id="navCard" className="card">
               <div className="row no-gutters">
@@ -293,4 +298,3 @@ class App extends Component {
   }
 }
 export default withRouter(App);
-
