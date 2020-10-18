@@ -1,0 +1,234 @@
+html {
+    background-color: #252525;
+  }
+  
+  .banner {
+    padding-top: .5rem;
+  }
+  .banner .company-logo {
+    max-width: 191px;
+  }
+  .banner img {
+    width: 100%;
+    display: block; 
+    margin-left: auto; 
+    margin-right: auto;
+  }
+  .banner .logo {
+    max-width: 515.297px;
+    margin-bottom: -3.124px;
+  }
+  .banner .logo-border {
+    max-width: 540.703px;
+  }
+  @media screen and (max-width: 1150px) {
+    .banner {
+      -ms-flex-direction: column !important;
+      -webkit-box-orient: vertical !important;
+      -webkit-box-direction: normal !important;
+      flex-direction: column !important;
+    }
+    .banner div {
+      -webkit-box-flex: 0;
+      flex: 0 0 100%;
+      max-width: 100%;
+    }
+    .banner .company-logo {
+      width: 27vw;
+    }
+    .banner .logo {
+      width: 70vw;
+      margin-bottom: -.55vw
+    }
+    .banner .logo-border {
+      width: 75vw; 
+    }
+  }
+  @media screen and (max-width: 1800px) {
+  .dimensionNav {
+    display: none;
+  }
+}
+
+  .copyright-footer {
+    position: relative; 
+    bottom: 0px; 
+    width: 100%; 
+    background-color: #252525;
+  }
+  
+  .copyright {
+    font-size: 12px;
+    height: 100%; 
+    width: 100%; 
+    color: #777;
+  }
+  
+  .panel-body {
+    padding: 15px;
+  }
+  .panel-body .sv_row:first-of-type {
+    padding-top: 1em;
+  }
+  .panel-body > div > .sv_row {
+    padding-left: 1em;
+    padding-right: 1em;
+  }
+  
+  .panel-footer {
+    padding: 10px 15px;
+    background-color: #f5f5f5;
+    border-top: 1px solid #ddd;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+  }
+  
+  .panel-footer .sv_start_btn {
+    left: 50%;
+    margin-left: -50px;
+    position: relative;
+  }
+  
+  .section-header {
+    border-bottom: 1px solid #21737c;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: rgb(44, 153, 164);
+    margin-bottom: 1em;
+    margin-top: 1em;
+    padding-bottom: 0.2em;
+  }
+  .section-header p {
+    margin-bottom: 0 !important;
+  }
+  
+  main h1, main .h1 {
+    font-size: 1.9em !important;
+    font-weight: 600 !important;
+    line-height: 1.1 !important;
+  }
+  main h2, main .h2 {
+    font-size: 1.8em !important;
+  }
+  main h1, main h2, main .h1, main .h2 {
+    margin-top: 23px !important;
+    margin-bottom: 11.5px !important;
+  }
+  
+  .info-tooltip {
+    color: #007bff;
+  }
+  
+  .bs-tooltip-top .arrow:before {
+    border-top-color: #fff !important;
+  }
+  .tooltip .tooltip-inner {
+    color: #000 !important;
+    background-color: #fff !important;
+    box-shadow: 1px 3px 10px rgba(77,77,77,0.75);
+    transition: box-shadow .2s ease-in-out;
+  }
+  .tooltip .tooltip-inner p {
+    margin: 0 !important;
+  }
+  .tooltip.show  {
+    opacity: 1 !important;
+  }
+  .tooltip.show ul {
+    margin-bottom: 0px;
+  }
+  @media screen and (min-width: 400px) {
+    .tooltip .tooltip-inner {
+      max-width: 400px;
+    }
+  }
+  @media screen and (min-width: 600px) {
+    .tooltip .tooltip-inner {
+      max-width: 600px;
+    }
+  }
+
+  .field-name {
+    font-weight: 700 !important;
+  }
+  
+  .radio p,
+  .checkbox p {
+    display: inline;
+  }
+  
+  .checkbox,
+  .checkbox-inline,
+  .radio,
+  .radio-inline,
+  :not(#wb-srch) form,
+  form .btn:not(.btn-call-to-action) {
+    font-size: 16px;
+    line-height: 23px;
+  }
+  
+  .panel-heading {
+    padding: 10px 15px;
+    border-bottom: 1px solid transparent;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+  }
+  
+.list-inline > li {
+  display: inline-block;
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+#navCon{
+  position: sticky;
+  left:0;
+  right:0;
+  bottom: 1em;
+  z-index: 5;
+}
+
+#navCard{
+  padding-left: 1em;
+  padding-right: 1em;
+  padding-bottom: 0.5em;
+  padding-top: 0.5em;
+  border-radius: 0.25rem;
+  background-color: #f5f5f5;
+  border: none;
+  border-top: 1px solid #ddd;
+}
+
+.dimensionNav {
+  position: absolute;
+  left: 3em;
+  top: 12em;
+  z-index: 5;
+  max-width: 18em;
+  min-width: 18em;
+}
+
+.questionFilter {
+  margin-top: 5em;
+  position: relative;
+  z-index: 5;
+  max-width: 18em;
+  min-width: 18em;
+  min-height: 18em;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+.filterDrop{
+  width: 40%;
+  display: inline-block;
+}
+
+.filterDrop .btn {
+  width: 100%;
+}
+
+.cardBody {
+  text-align: center;
+  height: 12em;
+}
