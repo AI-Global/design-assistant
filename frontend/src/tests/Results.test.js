@@ -1,8 +1,7 @@
 import React from 'react';
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import Results from '../views/Results'
 import { BrowserRouter as Router } from 'react-router-dom';
-import ReportCard from '../views/ReportCard';
 
 
 const mockElements = [{
@@ -61,30 +60,30 @@ test('Results successfully renders', () => {
             responses: mockResponses
         }
     }
-    const {queryByText} = render(<Router><Results location={mockLocation}/></Router>)
-    expect(queryByText("Results")).toBeTruthy();
+    render(<Router><Results location={mockLocation}/></Router>)
+    expect(screen.queryByText("Results")).toBeTruthy();
 });
 
-test('Results successfully renders with no data', () => {
+test('Results renders with no data', () => {
     const mockPages = [{elements: []}];
     const mockLocation = {
         state: {
             questions: {"pages": mockPages},
             responses: {}
     }}
-    const {queryByText} = render(<Router><Results location={mockLocation}/></Router>)
-    expect(queryByText("Results")).toBeTruthy();
+    render(<Router><Results location={mockLocation}/></Router>)
+    expect(screen.queryByText("Results")).toBeTruthy();
 
 });
 
-test('Results successfully redirects home if survey incomplete', () => {
+test('Results redirects home if survey incomplete', () => {
     const mockPush = jest.fn((obj) => {
         return true;
     });
     const mockHistory = {
         push: mockPush
     }
-    const {queryByText} = render(<Router><Results history={mockHistory}/></Router>)
+    render(<Router><Results history={mockHistory}/></Router>)
     expect(mockHistory.push).toHaveBeenCalledTimes(1);
 });
 
@@ -95,30 +94,30 @@ test('Results start again button does not error out', () => {
             questions: {"pages": mockPages},
             responses: {}
     }}
-    const {getByText} = render(<Router><Results location={mockLocation}/></Router>)
-    fireEvent.click(getByText("Start Again"));
+    render(<Router><Results location={mockLocation}/></Router>)
+    fireEvent.click(screen.getByText("Start Again"));
 });
 
-test('Results switches to Report Card Tab successfully', () => {
+test('Results switches to Report Card Tab', () => {
     const mockPages = [{elements: []}];
     const mockLocation = {
         state: {
             questions: {"pages": mockPages},
             responses: {}
     }}
-    const {queryAllByText,getByText} = render(<Router><Results location={mockLocation}/></Router>)
-    fireEvent.click(getByText("Report Card"));
-    expect(queryAllByText("Recommendation")).toBeTruthy();
+    render(<Router><Results location={mockLocation}/></Router>)
+    fireEvent.click(screen.getByText("Report Card"));
+    expect(screen.queryAllByText("Recommendation")).toBeTruthy();
 })
 
-test('Results switches to Trusted AI Providers Tab successfully', () => {
+test('Results switches to Trusted AI Providers Tab', () => {
     const mockPages = [{elements: []}];
     const mockLocation = {
         state: {
             questions: {"pages": mockPages},
             responses: {}
     }}
-    const {queryAllByText,getByText} = render(<Router><Results location={mockLocation}/></Router>)
-    fireEvent.click(getByText("Trusted AI Providers"));
-    expect(queryAllByText).toBeTruthy();
+    render(<Router><Results location={mockLocation}/></Router>)
+    fireEvent.click(screen.getByText("Trusted AI Providers"));
+    expect(screen.queryAllByText).toBeTruthy();
 })

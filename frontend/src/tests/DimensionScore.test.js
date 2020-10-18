@@ -1,5 +1,5 @@
 import React from 'react';
-import { queryByText, render } from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
 import DimensionScore from '../views/DimensionScore'
 import {Table} from 'react-bootstrap';
 
@@ -17,57 +17,56 @@ const mockQuestions = [{
     }
 }]
 
-test('Dimension Score successfully renders', () => {
+test('Dimension Score renders', () => {
     var radarChartData = [];
-    var questions = [];
     var mockResults = {"Q1": "1"};
     var dimensionName = "R";
-    const {queryByText} = render(<Table><thead></thead><tbody><DimensionScore radarChartData={radarChartData} questions={mockQuestions}
+    render(<Table><thead></thead><tbody><DimensionScore radarChartData={radarChartData} questions={mockQuestions}
          results={mockResults} dimensionName={dimensionName}/></tbody></Table>);
-    expect(queryByText("R")).toBeTruthy();
+    expect(screen.queryByText("R")).toBeTruthy();
 });
 
-test('Dimension Score successfully renders with no data', () => {
+test('Dimension Score renders with no data', () => {
     var radarChartData = [];
     var mockResults = {};
     var dimensionName = "R";
-    const {queryByText} = render(<Table><thead></thead><tbody><DimensionScore radarChartData={radarChartData} questions={[]}
+    render(<Table><thead></thead><tbody><DimensionScore radarChartData={radarChartData} questions={[]}
          results={mockResults} dimensionName={dimensionName}/></tbody></Table>);
-    expect(queryByText("R")).toBeTruthy();
+    expect(screen.queryByText("R")).toBeTruthy();
 })
 
 // dimension score == 25%
-test('Dimension Score successfully marks "Needs to improve"', () => {
+test('Dimension Score marks "Needs to improve"', () => {
     var radarChartData = [];
     var mockResults = {"Q1": "1"};
     var dimensionName = "R";
-    const {getByTitle} = render(<Table><thead></thead><tbody><DimensionScore radarChartData={radarChartData} questions={mockQuestions}
+    render(<Table><thead></thead><tbody><DimensionScore radarChartData={radarChartData} questions={mockQuestions}
         results={mockResults} dimensionName={dimensionName}/></tbody></Table>);
-    expect(getByTitle("improve true")).toBeTruthy();
-    expect(getByTitle("acceptable false")).toBeTruthy();
-    expect(getByTitle("proficient false")).toBeTruthy();
+    expect(screen.getByLabelText("improve true")).toBeTruthy();
+    expect(screen.getByLabelText("acceptable false")).toBeTruthy();
+    expect(screen.getByLabelText("proficient false")).toBeTruthy();
 });
 
 // dimension score == 50%
-test('Dimension Score successfully marks "Acceptable"', () => {
+test('Dimension Score marks "Acceptable"', () => {
     var radarChartData = [];
     var mockResults = {"Q1": "2"};
     var dimensionName = "R";
-    const {getByTitle} = render(<Table><thead></thead><tbody><DimensionScore radarChartData={radarChartData} questions={mockQuestions}
+    render(<Table><thead></thead><tbody><DimensionScore radarChartData={radarChartData} questions={mockQuestions}
         results={mockResults} dimensionName={dimensionName}/></tbody></Table>);
-    expect(getByTitle("improve false")).toBeTruthy();
-    expect(getByTitle("acceptable true")).toBeTruthy();
-    expect(getByTitle("proficient false")).toBeTruthy();
+    expect(screen.getByLabelText("improve false")).toBeTruthy();
+    expect(screen.getByLabelText("acceptable true")).toBeTruthy();
+    expect(screen.getByLabelText("proficient false")).toBeTruthy();
 });
 
 // dimension score == 100%
-test('Dimension Score successfully marks "Proficient"', () => {
+test('Dimension Score marks "Proficient"', () => {
     var radarChartData = [];
     var mockResults = {"Q1": "4"};
     var dimensionName = "R";
-    const {getByTitle} = render(<Table><thead></thead><tbody><DimensionScore radarChartData={radarChartData} questions={mockQuestions}
+    render(<Table><thead></thead><tbody><DimensionScore radarChartData={radarChartData} questions={mockQuestions}
         results={mockResults} dimensionName={dimensionName}/></tbody></Table>);
-    expect(getByTitle("improve false")).toBeTruthy();
-    expect(getByTitle("acceptable false")).toBeTruthy();
-    expect(getByTitle("proficient true")).toBeTruthy();
+    expect(screen.getByLabelText("improve false")).toBeTruthy();
+    expect(screen.getByLabelText("acceptable false")).toBeTruthy();
+    expect(screen.getByLabelText("proficient true")).toBeTruthy();
 });

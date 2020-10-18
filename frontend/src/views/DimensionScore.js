@@ -75,21 +75,21 @@ export default class DimensionScore extends Component {
                 <th scope="row" className="score-card-dimensions">{dimensionName}</th>
                 <td className="text-center">
                     {(percentageScore < 50) 
-                        ? <FontAwesomeIcon icon={faCheckCircle} size="lg" title="improve true"/>
-                        : <FontAwesomeIcon icon={faCircle} size="lg" color="#dee2e6" title="improve false"/>
+                        ? <FontAwesomeIcon icon={faCheckCircle} size="lg" aria-label="improve true"/>
+                        : <FontAwesomeIcon icon={faCircle} size="lg" color="#dee2e6" aria-label="improve false"/>
                     }
                     
                 </td>
                 <td className="text-center">
                     {(percentageScore >= 50 && percentageScore <= 75)
-                        ? <FontAwesomeIcon icon={faCheckCircle} size="lg" title="acceptable true"/>
-                        : <FontAwesomeIcon icon={faCircle} size="lg" color="#dee2e6" title="acceptable false"/>
+                        ? <FontAwesomeIcon icon={faCheckCircle} size="lg" aria-label="acceptable true"/>
+                        : <FontAwesomeIcon icon={faCircle} size="lg" color="#dee2e6" aria-label="acceptable false"/>
                     }       
                 </td>
                 <td className="text-center">
                     {(percentageScore > 75)
-                        ? <FontAwesomeIcon icon={faCheckCircle} size="lg" title="proficient true"/>
-                        : <FontAwesomeIcon icon={faCircle} size="lg" color="#dee2e6" title="proficient false"/>
+                        ? <FontAwesomeIcon icon={faCheckCircle} size="lg" aria-label="proficient true"/>
+                        : <FontAwesomeIcon icon={faCircle} size="lg" color="#dee2e6" aria-label="proficient false"/>
                     }
                 </td>
             </tr>

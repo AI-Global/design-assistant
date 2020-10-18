@@ -1,9 +1,7 @@
 import React from 'react';
-import {toBeInTheDocument,toHaveStyle} from '@testing-library/jest-dom';
-import {render } from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
 import ReportCard from '../views/ReportCard';
 
-expect.extend({ toBeInTheDocument, toHaveStyle });
 const mockQuestions = [{
     "type": "radiogroup",
     "name": "Q1",
@@ -34,20 +32,20 @@ const mockQuestions = [{
     ]
 }];
 
-test('Report Card successfully renders', () => {
+test('Report Card renders', () => {
     var mockResults = {"Q1":"1"};
     var dimensionName = "R";
-    const {queryByText} = render(<ReportCard questions={mockQuestions}
+    render(<ReportCard questions={mockQuestions}
          results={mockResults} dimensionName={dimensionName}/>);
-    expect(queryByText(mockQuestions[0]["title"]["default"])).toBeTruthy();
+    expect(screen.queryByText(mockQuestions[0]["title"]["default"])).toBeTruthy();
 });
 
-test('Report Card successfully renders with no data', () => {
+test('Report Card renders with no data', () => {
     var mockResults = {};
     var dimensionName = "R";
-    const {queryByText} = render(<ReportCard questions={[]}
+    render(<ReportCard questions={[]}
          results={mockResults} dimensionName={dimensionName}/>);
-    expect(queryByText("Question")).toBeTruthy();
+    expect(screen.queryByText("Question")).toBeTruthy();
 })
 
 
