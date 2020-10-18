@@ -25,9 +25,11 @@ mongoose.set('useFindAndModify', false);
 // Import Routes
 const questionsRouter = require("./routes/questions");
 const responsesRouter = require("./routes/responses");
+const trustedAIProvidersRouter = require("./routes/trustedAIProviders")
 
 app.use("/questions", questionsRouter);
 app.use("/responses", responsesRouter);
+app.use("/trustedAIProviders", trustedAIProvidersRouter);
 
 // Listen on port
 app.listen(port, '0.0.0.0',  () => {
