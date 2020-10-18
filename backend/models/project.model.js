@@ -14,11 +14,12 @@ const ProjectSchema = mongoose.Schema({
         unique: true
     },
 
-    // What are the different life cycles
-    lifecycle: {
-        type: Number,
-        enum: []
-    },
+    // possible life cycles
+    lifecycle: [{
+        type: String,
+        enum: ['Plan and Design', 'Data and Model', 'Verify and Validate', 'Deploy', 'Operate and Monitor'],
+        required: true
+    }],
 });
 
 

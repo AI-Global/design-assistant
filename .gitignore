@@ -1,0 +1,3 @@
+node_modules/
+/backend/questions.tsv
+/backend/questionsJSON.json

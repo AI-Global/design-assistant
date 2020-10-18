@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const ResponseSchema = mongoose.Schema({
+const SubmissionSchema = mongoose.Schema({
 
     // user ID that owns this 
     userId: {
@@ -15,11 +15,12 @@ const ResponseSchema = mongoose.Schema({
         unique: true
     },
 
-    // What are the different life cycles
-    lifecycle: {
-        type: Number,
-        enum: []
-    },
+    // Possible life cycles
+    lifecycle: [{
+        type: String,
+        enum: ['Plan and Design', 'Data and Model', 'Verify and Validate', 'Deploy', 'Operate and Monitor'],
+        required: true
+    }],
 
     // json file that gets output from survey.js
     submission: {
@@ -30,4 +31,4 @@ const ResponseSchema = mongoose.Schema({
     // TODO: Add test of schema to model
 });
 
-module.exports = mongoose.model("Response", ResponseSchema);
+module.exports = mongoose.model("Submission", SubmissionSchema);
