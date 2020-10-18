@@ -64,3 +64,36 @@ test('Question Page finish button submits the survey', async () => {
     expect(screen.getByText(emptyQuestionData)).toBeTruthy();
     fireEvent.click(screen.getByText("Finish"))
 });
+
+test('Questions Page can open accoridon to navigate dimenstions', async () => {
+    axios.get.mockResolvedValue(mockResponse);
+    await render(<Router><App/></Router>);
+    fireEvent.click(screen.getByText(startSurveyButton));
+
+    fireEvent.click(screen.getByText("Accountabililty"));
+    fireEvent.click(screen.getByText("Nav to Accountabililty"));
+
+    fireEvent.click(screen.getByText("Bias and Fairness"));
+    fireEvent.click(screen.getByText("Nav to Bias and Fairness"));
+
+    fireEvent.click(screen.getByText("Explainability and Interpretability"));
+    fireEvent.click(screen.getByText("Nav to Explainability and Interpretability"));
+
+    fireEvent.click(screen.getByText("Robustness"));
+    fireEvent.click(screen.getByText("Nav to Robustness"));
+
+    fireEvent.click(screen.getByText("Data Quality"));
+    fireEvent.click(screen.getByText("Nav to Data Quality"));
+});
+
+test('Questions Page can open accoridon to filter select roles', async () => {
+    axios.get.mockResolvedValue(mockResponse);
+    await render(<Router><App/></Router>);
+    fireEvent.click(screen.getByText(startSurveyButton));
+
+    fireEvent.click(screen.getByText("Filters"));
+    expect(screen.getByText("Role")).toBeTruthy();
+    expect(screen.getByText("Cycle")).toBeTruthy();
+
+
+});
