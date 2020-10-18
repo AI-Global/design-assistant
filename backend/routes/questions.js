@@ -180,14 +180,11 @@ function createPages(q) {
 }
 
 // Get all questions. Assemble SurveyJS JSON here
-router.get('/', async (req, res) => {
-    try {
-        const questions = await Question.find();
-        res.json(createPages(questions));
-        console.log("Incoming questions request");
-    } catch (err) {
-        res.json({ message: err });
-    }
+router.get('/', (req, res) => {
+    Question.find()
+    .then((questions) => res.status(200).send(createPages(questions)))
+    .catch((err) => res.status(400).send(err));
+
 });
 
 
