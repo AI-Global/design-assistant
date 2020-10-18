@@ -101,6 +101,7 @@ function main(){
 						multChoice = true;
 				} else if (qPrompt.substring(0,2) === 'CV'){
 						doc["responseType"] = "dropdown";
+
 				} else {
                     doc["responseType"] = "checkbox";
                     multChoice = true;
@@ -121,12 +122,15 @@ function main(){
 					default:
 						doc["weighting"] = 0;
 				}
-				
+				reference = reference.replace(/'/g, "\\u0027").replace(/"/g, "\\u0022");
 				doc["reference"] = reference;
 				doc["roles"] = roles;
 				doc["lifecycle"] = lifecycle;
 				
-				if(altText) doc["alt_text"] = altText;
+				if(altText){
+					altText = altText.replace(/'/g, "\\u0027").replace(/"/g, "\\u0022");
+					doc["alt_text"] = altText;
+				} 
 
 				if(doc["responseType"] === "dropdown"){
 					if(question === "Industry"){
