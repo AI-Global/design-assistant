@@ -110,7 +110,7 @@ function createPages(q) {
     page = {};
     page.pages = [];
     page.showQuestionNumbers = "false";
-    page.showProgressBar = "bottom";
+    page.showProgressBar = "top";
     page.firstPageIsStarted = "false";
     page.showNavigationButtons = "false";
 

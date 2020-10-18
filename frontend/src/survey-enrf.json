@@ -8957,7 +8957,7 @@
                     },
                     "alttext": {
                         "itemA1B141": {
-                            "default": "Alt text: Google Responsible AI Practices - Training-serving skew\u2014the difference between performance during training and performance during serving\u2014is a persistent challenge. During training, try to identify potential skews and work to address them, including by adjusting your training data or objective function. During evaluation, continue to try to get evaluation data that is as representative as possible of the deployed setting.",
+                            "default": "Google Responsible AI Practices - Training-serving skew\u2014the difference between performance during training and performance during serving\u2014is a persistent challenge. During training, try to identify potential skews and work to address them, including by adjusting your training data or objective function. During evaluation, continue to try to get evaluation data that is as representative as possible of the deployed setting.",
                             "fr": ""
                         }
                     },
@@ -10316,7 +10316,7 @@
         }
     ],
     "showQuestionNumbers": "false",
-    "showProgressBar": "bottom",
+    "showProgressBar": "top",
     "firstPageIsStarted": "false",
     "showNavigationButtons": "false"
 }
