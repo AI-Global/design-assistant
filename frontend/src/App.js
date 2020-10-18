@@ -1,20 +1,24 @@
+import 'bootstrap';
+import $ from "jquery";
+import './css/theme.css';
+import './css/survey.css';
+import axios from 'axios';
+import showdown from 'showdown';
 import * as Survey from "survey-react";
+import Card from 'react-bootstrap/Card';
 import { Button } from 'react-bootstrap';
 import React, { Component } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { withRouter } from 'react-router-dom';
+import Accordion from 'react-bootstrap/Accordion';
 import ModalBody from 'react-bootstrap/ModalBody';
 import ModalTitle from 'react-bootstrap/ModalTitle';
 import ModalFooter from 'react-bootstrap/ModalFooter';
 import ModalHeader from 'react-bootstrap/ModalHeader';
-import axios from 'axios'
+import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
 
-import styles from './App.module.css';
-import './css/theme.css';
-import './css/survey.css';
-import "font-awesome/css/font-awesome.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-
+// set up survey styles and properties for rendering html
 Survey
   .StylesManager
   .applyTheme("bootstrapmaterial")
@@ -30,11 +34,18 @@ Survey
     isLocalizable: true
   });
 
-// remove licalization strings for progress bar
+Survey
+  .Serializer
+  .addProperty("question", "alttext:text");
+
+// remove localization strings for progress bar
 // https://surveyjs.answerdesk.io/ticket/details/t2551/display-progress-bar-without-text
 // Asked by: MDE | Answered by: Andrew Telnov
 var localizedStrs = Survey.surveyLocalization.locales[Survey.surveyLocalization.defaultLocale];
 localizedStrs.progressText = "";
+
+// array of dimension names used to create navigation cards
+const dimArray = ['Accountabililty', 'Bias and Fairness', 'Explainability and Interpretability', 'Robustness', 'Data Quality']
 
 class App extends Component {
   constructor(props) {
@@ -44,11 +55,10 @@ class App extends Component {
       showModal: false,
       A: 1,
       B: 9,
-      EI: 19,
+      E: 19,
       R: 25,
       D: 28,
     };
-
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
   }
@@ -59,16 +69,68 @@ class App extends Component {
       .then(res => {
         const json = res.data;
         const model = new Survey.Model(json);
+        const converter = new showdown.Converter();
+
         // Set json and model
         this.setState({ json });
         this.setState({ model });
+
+        // add tooltip
+        model
+          .onAfterRenderPage
+          .add(function (model, options) {
+            const node = options.htmlElement.querySelector("h4");
+            if (node) {
+              node.classList.add('section-header');
+            }
+            $('[data-toggle="tooltip"').tooltip({
+              boundary: 'viewport'
+            });
+          });
+        //change labels to 'h5' to bold them
+        model
+          .onAfterRenderQuestion
+          .add(function (model, options) {
+            let title = options.htmlElement.querySelector("h5");
+            if (title) {
+              // add tooltip for question if alttext has default value
+              let altTextHTML = "";
+              if (options.question.alttext && options.question.alttext.hasOwnProperty("default")) {
+                let altText = converter.makeHtml(options.question.alttext.default.replace(/"/g, "&quot;"));
+                altText = `<div class="text-justify">${altText}</div>`.replace(/"/g, "&quot;");
+                altTextHTML = `<i class="fas fa-info-circle ml-2" data-toggle="tooltip" data-html="true" title="${altText}"></i>`;
+              }
+              title.outerHTML =
+                '<label for="' +
+                options.question.inputId +
+                '" class="' +
+                title.className +
+                '"><span class="field-name">' +
+                title.innerText +
+                "</span>" +
+                altTextHTML +
+                "</label>";
+              // add tooltip for answers if alttext has default value
+              options.htmlElement.querySelectorAll("input").forEach((element) => {
+                if (options.question.alttext && options.question.alttext.hasOwnProperty(element.value)) {
+                  const div = element.closest("div");
+                  div.classList.add("d-flex");
+                  const i = document.createElement("span");
+                  let altText = converter.makeHtml(options.question.alttext[element.value].default.replace(/"/g, "&quot;"));
+                  altText = `<div class="text-justify">${altText}</div>`.replace(/"/g, "&quot;");
+                  i.innerHTML = `<i class="fas fa-info-circle ml-2" data-toggle="tooltip" data-html="true" title="${altText}"></i>`;
+                  div.appendChild(i);
+                }
+              });
+            }
+          });
       })
   }
 
   nextPath(path) {
     this.props.history.push({
       pathname: path,
-      state: {questions: this.state.json, responses: this.state.model.data}
+      state: { questions: this.state.json, responses: this.state.model.data }
     })
   }
 
@@ -80,7 +142,7 @@ class App extends Component {
     this.setState({ showModal: false });
   }
 
-  perc() {
+  percent() {
     return this.state.model.getProgress();
   }
 
@@ -114,12 +176,28 @@ class App extends Component {
   }
 
   startSurvey() {
-    this.state.model.clear()      // clear survey to fix restart bug
+    this.state.model.clear()             // clear survey to fix restart bug
     this.setState({ isSurveyStarted: true })
   }
 
-  navDim(A) {
-    this.state.model.currentPage = this.state.model.pages[A]
+  navDim(dimension) {
+    switch (dimension) {
+      case 0:
+        this.state.model.currentPage = this.state.model.pages[this.state.A]
+        break;
+      case 1:
+        this.state.model.currentPage = this.state.model.pages[this.state.B]
+        break;
+      case 2:
+        this.state.model.currentPage = this.state.model.pages[this.state.E]
+        break;
+      case 3:
+        this.state.model.currentPage = this.state.model.pages[this.state.R]
+        break;
+      case 4:
+        this.state.model.currentPage = this.state.model.pages[this.state.D]
+        break;
+    }
     this.setState(this.state)
   }
 
@@ -127,39 +205,46 @@ class App extends Component {
     if (this.state.isSurveyStarted) {
       return (
         <div>
-          <div style={{ height: "3em" }} />
-          <div className={styles.dimContainer}>
-            <div className={styles.dimProgressbarDiv}>
-              <ul className={styles.dimProgressbar}>
-                <li>
-                  <Button className={styles.dimButton} onClick={() => this.navDim(this.state.A)} />
-                  <p className={styles.dimTitle}>Accountability</p>
-                </li>
-                <li>
-                  <Button className={styles.dimButton} onClick={() => this.navDim(this.state.B)} />
-                  <p className={styles.dimTitle}>Bias and Fairness</p>
-                </li>
-                <li>
-                  <Button className={styles.dimButton} onClick={() => this.navDim(this.state.EI)} />
-                  <p className={styles.dimTitle}>Explainability and Interpretability</p>
-                </li>
-                <li>
-                  <Button className={styles.dimButton} onClick={() => this.navDim(this.state.R)} />
-                  <p className={styles.dimTitle}>Robustness</p>
-                </li>
-                <li>
-                  <Button className={styles.dimButton} onClick={() => this.navDim(this.state.D)} />
-                  <p className={styles.dimTitle}>Data Quality</p>
-                </li>
-              </ul>
-            </div>
+          <div className="dimensionNav">
+            <Accordion>
+              {dimArray.map((dimension, index) => {
+                return (
+                  <Card key={index}>
+                    <Accordion.Toggle as={Card.Header} eventKey={index + 1}>
+                      {dimension}
+                    </Accordion.Toggle>
+                    <Accordion.Collapse eventKey={index + 1}>
+                      <Card.Body><Button onClick={() => this.navDim(index)}>{dimension}</Button></Card.Body>
+                    </Accordion.Collapse>
+                  </Card>)
+              })}
+            </Accordion>
+            <Accordion className="questionFilter">
+              <Card>
+                <Accordion.Toggle as={Card.Header} eventKey='9'>
+                  Filters
+              </Accordion.Toggle>
+                <Accordion.Collapse eventKey='9'>
+                  <Card.Body className="cardBody">
+                    <DropdownButton title="Role" className="filterDrop" style={{ "margin-right": "1em" }}>
+                      <Dropdown.Item>Role 1</Dropdown.Item>
+                      <Dropdown.Item>Role 2</Dropdown.Item>
+                      <Dropdown.Item>Role 3</Dropdown.Item>
+                    </DropdownButton>
+                    <DropdownButton title="Cycle" className="filterDrop">
+                      <Dropdown.Item>Life Cycle 1</Dropdown.Item>
+                      <Dropdown.Item>Life Cycle 2</Dropdown.Item>
+                      <Dropdown.Item>Life Cycle 3</Dropdown.Item>
+                    </DropdownButton>
+                  </Card.Body>
+                </Accordion.Collapse>
+              </Card>
+            </Accordion>
           </div>
-          <div style={{ height: "3em" }} />
-          <Survey.Survey model={this.state.model} onComplete={this.onComplete} />
           <div className="container">
-            <div className="d-flex justify-content-center col">{this.perc()}%</div>
+            <div className="d-flex justify-content-center col">{this.percent()}%</div>
           </div>
-          <div style={{ height: "3em" }} />
+          <Survey.Survey model={this.state.model} onComplete={this.onComplete} />
           <div id="navCon" className="container">
             <div id="navCard" className="card">
               <div className="row no-gutters">
@@ -242,4 +327,3 @@ class App extends Component {
   }
 }
 export default withRouter(App);
-
