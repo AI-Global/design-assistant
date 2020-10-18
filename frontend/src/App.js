@@ -282,7 +282,7 @@ class App extends Component {
           </Modal>
         </div>
       );
-    } else {
+    } else if (this.state.model) {
       return (
         <div>
           <h1 className="section-header">Welcome</h1>
@@ -323,6 +323,9 @@ class App extends Component {
           </div>
         </div>
       );
+    }
+    else {
+      return null;
     }
   }
 }
