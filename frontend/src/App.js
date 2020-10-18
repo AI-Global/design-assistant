@@ -214,7 +214,7 @@ class App extends Component {
                       {dimension}
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey={index + 1}>
-                      <Card.Body><Button onClick={() => this.navDim(index)}>{dimension}</Button></Card.Body>
+                      <Card.Body><Button aria-label={dimension} onClick={() => this.navDim(index)}>Nav to {dimension}</Button></Card.Body>
                     </Accordion.Collapse>
                   </Card>)
               })}
@@ -226,7 +226,7 @@ class App extends Component {
               </Accordion.Toggle>
                 <Accordion.Collapse eventKey='9'>
                   <Card.Body className="cardBody">
-                    <DropdownButton title="Role" className="filterDrop" style={{ "margin-right": "1em" }}>
+                    <DropdownButton title="Role" className="filterDrop" style={{ "marginRight": "1em" }}>
                       <Dropdown.Item>Role 1</Dropdown.Item>
                       <Dropdown.Item>Role 2</Dropdown.Item>
                       <Dropdown.Item>Role 3</Dropdown.Item>
