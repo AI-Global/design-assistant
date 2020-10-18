@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Table} from 'react-bootstrap'
+import {Table} from 'react-bootstrap';
 
 /**
  * Component renders a Table for the report card.

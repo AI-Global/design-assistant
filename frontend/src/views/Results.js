@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import "bootstrap/dist/css/bootstrap.min.css"
-import "font-awesome/css/font-awesome.css"
-import { Tabs, Tab, Table, Button, Nav } from 'react-bootstrap'
-import "../css/results.css"
+import "bootstrap/dist/css/bootstrap.min.css";
+import "font-awesome/css/font-awesome.css";
+import { Tabs, Tab, Table, Button, Nav } from 'react-bootstrap';
+import "../css/results.css";
 import { ResponsiveRadar } from "@nivo/radar";
 import exportReport from "../helper/ExportReport";
 import ReportCard from "./ReportCard";
@@ -27,7 +27,6 @@ export default class Results extends Component {
     render() {
         var json = this?.props?.location?.state?.questions;
         var surveyResults = this?.props?.location?.state?.responses;
-        console.log(json);
         if(json === undefined || surveyResults === undefined){
             this.props.history.push({
                 pathname: '/'
@@ -40,8 +39,8 @@ export default class Results extends Component {
             allQuestions = allQuestions.concat(page?.elements);
             return allQuestions
         });
-        var projectTitle = surveyResults[(allQuestions[0].name)];
-        var projectDescription = surveyResults[(allQuestions[1].name)];
+        var projectTitle = surveyResults[(allQuestions[0]?.name)];
+        var projectDescription = surveyResults[(allQuestions[1]?.name)];
         var questions = allQuestions.filter((question) => Object.keys(surveyResults).includes(question.name))
         var radarChartData = [];
         return (
@@ -49,7 +48,7 @@ export default class Results extends Component {
                 <h1 className="section-header">
                     Results
                 </h1>
-                <button id="saveButton" type="button" className="btn btn-save mr-2 btn btn-primary export-button" onClick={() => exportReport(projectTitle, projectDescription)}>Export</button>
+                <button id="exportButton" type="button" className="btn btn-save mr-2 btn btn-primary export-button" onClick={() => exportReport(projectTitle, projectDescription)}>Export</button>
                 <Tabs defaultActiveKey="score">
                     <Tab eventKey="score" title="Score">
                         <div className="table-responsive mt-3">
@@ -146,7 +145,7 @@ export default class Results extends Component {
                     Since‌ ‌we‌ ‌want‌ ‌you‌ ‌to‌ ‌use‌ ‌the‌ ‌Design‌ ‌Assistant‌ ‌early‌ ‌and‌ ‌often,‌ ‌you‌ ‌can‌ ‌click‌ ‌the‌ ‌button‌ below‌ ‌to‌ ‌start‌ ‌over‌ ‌again!‌
                 </p>
                 <Link to='/'>
-                    <Button>Start Again</Button>
+                    <Button id="restartButton">Start Again</Button>
                 </Link>
             </main>
         );

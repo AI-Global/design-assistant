@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCheckCircle, faCircle } from '@fortawesome/free-regular-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheckCircle, faCircle } from '@fortawesome/free-regular-svg-icons';
 
 
 const QuestionTypes = 
@@ -75,21 +75,21 @@ export default class DimensionScore extends Component {
                 <th scope="row" className="score-card-dimensions">{dimensionName}</th>
                 <td className="text-center">
                     {(percentageScore < 50) 
-                        ? <FontAwesomeIcon icon={faCheckCircle} size="lg" />
-                        : <FontAwesomeIcon icon={faCircle} size="lg" color="#dee2e6" />
+                        ? <FontAwesomeIcon icon={faCheckCircle} size="lg" title="improve true"/>
+                        : <FontAwesomeIcon icon={faCircle} size="lg" color="#dee2e6" title="improve false"/>
                     }
                     
                 </td>
                 <td className="text-center">
                     {(percentageScore >= 50 && percentageScore <= 75)
-                        ? <FontAwesomeIcon icon={faCheckCircle} size="lg" />
-                        : <FontAwesomeIcon icon={faCircle} size="lg" color="#dee2e6" />
+                        ? <FontAwesomeIcon icon={faCheckCircle} size="lg" title="acceptable true"/>
+                        : <FontAwesomeIcon icon={faCircle} size="lg" color="#dee2e6" title="acceptable false"/>
                     }       
                 </td>
                 <td className="text-center">
                     {(percentageScore > 75)
-                        ? <FontAwesomeIcon icon={faCheckCircle} size="lg" />
-                        : <FontAwesomeIcon icon={faCircle} size="lg" color="#dee2e6" />
+                        ? <FontAwesomeIcon icon={faCheckCircle} size="lg" title="proficient true"/>
+                        : <FontAwesomeIcon icon={faCircle} size="lg" color="#dee2e6" title="proficient false"/>
                     }
                 </td>
             </tr>

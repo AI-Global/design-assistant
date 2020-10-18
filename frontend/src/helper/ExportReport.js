@@ -227,7 +227,7 @@ function addReportCard(doc, y) {
             if (data.section === "head") {
                 data.cell.styles.fillColor = "#D0E0E3";
             } 
-            else if(data.section == "body"){
+            else if(data.section === "body"){
                 data.cell.styles.fillColor = "#FFFFFF";
             }},
             didDrawCell: (data) => {
