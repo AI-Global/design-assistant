@@ -181,24 +181,25 @@ class App extends Component {
   }
 
   navDim(dimension) {
+    const survey = this.state.model
     switch (dimension) {
       case 0:
-        this.state.model.currentPage = this.state.model.pages[this.state.A]
+        survey.currentPage = survey.pages[this.state.A]
         break;
       case 1:
-        this.state.model.currentPage = this.state.model.pages[this.state.B]
+        survey.currentPage = survey.pages[this.state.B]
         break;
       case 2:
-        this.state.model.currentPage = this.state.model.pages[this.state.E]
+        survey.currentPage = survey.pages[this.state.E]
         break;
       case 3:
-        this.state.model.currentPage = this.state.model.pages[this.state.R]
+        survey.currentPage = survey.pages[this.state.R]
         break;
       case 4:
-        this.state.model.currentPage = this.state.model.pages[this.state.D]
+        survey.currentPage = survey.pages[this.state.D]
         break;
       default:
-        this.state.model.currentPage = this.state.model.pages[0]
+        survey.currentPage = survey.pages[0]
     }
     this.setState(this.state)
   }
