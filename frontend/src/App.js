@@ -197,6 +197,8 @@ class App extends Component {
       case 4:
         this.state.model.currentPage = this.state.model.pages[this.state.D]
         break;
+      default:
+        this.state.model.currentPage = this.state.model.pages[0]
     }
     this.setState(this.state)
   }
@@ -241,7 +243,7 @@ class App extends Component {
               </Card>
             </Accordion>
           </div>
-          <div className="container">
+          <div className="container" style={{"paddingTop":"2em"}}>
             <div className="d-flex justify-content-center col">{this.percent()}%</div>
           </div>
           <Survey.Survey model={this.state.model} onComplete={this.onComplete} />
