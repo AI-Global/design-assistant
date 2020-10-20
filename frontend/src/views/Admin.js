@@ -14,11 +14,14 @@ export default class Results extends Component {
                             <Table id="questions" bordered hover responsive className="question-table">
                                 <thead>
                                     <tr>
-                                        <th className="score-card-dheader">
+                                        <th className="score-card-headers">
                                             No.
                                         </th>
                                         <th className="score-card-headers">
                                             Question
+                                        </th>
+                                        <th className="score-card-headers">
+                                            Type
                                         </th>
                                         <th className="score-card-headers">
                                             Responses
@@ -41,6 +44,28 @@ export default class Results extends Component {
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>Here is a question.</td>
+                                        <td>Radio</td>
+                                        <td>No, Yes, Maybe</td>
+                                        <td>Help alt-text</td>
+                                        <td>Accountability</td>
+                                        <td>All</td>
+                                        <td>3</td>
+                                        <td>2</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>Here is another question.</td>
+                                        <td>Slider</td>
+                                        <td>N/A</td>
+                                        <td>N/A</td>
+                                        <td>Bias and Fairness</td>
+                                        <td>All</td>
+                                        <td>1</td>
+                                        <td>1</td>
+                                    </tr>
                                 </tbody>
                             </Table>
                         </div>

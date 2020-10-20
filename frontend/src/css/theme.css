@@ -236,3 +236,8 @@ form .btn:not(.btn-call-to-action) {
     height: 12em;
   }
 }
+
+.table-bordered thead td, .table-bordered thead th {
+  border-bottom-width: 2px;
+  width: max-content;
+}
