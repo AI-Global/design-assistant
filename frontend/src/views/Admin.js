@@ -76,9 +76,41 @@ export default class Results extends Component {
                                 <thead>
                                     <tr>
 
+                                    <th className="score-card-headers">
+                                            No.
+                                        </th>
+                                        <th className="score-card-headers">
+                                            User Name
+                                        </th>
+                                        <th className="score-card-headers">
+                                            User Email
+                                        </th>
+                                        <th className="score-card-headers">
+                                            User Type
+                                        </th>
+                                        <th className="score-card-headers">
+                                            User Role
+                                        </th>
+                                        <th className="score-card-headers">
+                                            User Submissions
+                                        </th>
+                                        <th className="score-card-headers">
+                                            User Score
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
+
+                                    <tr>
+                                        <td>1</td>
+                                        <td>Michael</td>
+                                        <td>michaeljackson@pop.com</td>
+                                        <td>Registered</td>
+                                        <td>1</td>
+                                        <td> <input type='button' value='View Responses'/></td>
+                                        <td>95</td>
+                            
+                                    </tr>
 
                                 </tbody>
                             </Table>
