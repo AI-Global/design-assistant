@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Tabs, Tab, Table, } from 'react-bootstrap';
+import App from '../App';
+import { Link } from 'react-router-dom';
 
 export default class Results extends Component {
     render() {
@@ -107,7 +109,11 @@ export default class Results extends Component {
                                         <td>michaeljackson@pop.com</td>
                                         <td>Registered</td>
                                         <td>1</td>
-                                        <td> <input type='button' value='View Responses'/></td>
+                                        <td> 
+                                            <Link to ='/Results'>
+                                            <input type='button' value='View Responses'/>
+                                            </Link>
+                                        </td>
                                         <td>95</td>
                             
                                     </tr>
