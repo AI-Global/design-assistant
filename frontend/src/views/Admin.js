@@ -1,9 +1,42 @@
 import React, { Component } from 'react';
 import { Tabs, Tab, Table, } from 'react-bootstrap';
-import App from '../App';
+// import App from '../App';
+import axios from 'axios';
+
 import { Link } from 'react-router-dom';
 
 export default class Results extends Component {
+    // Request questions JSON from backend 
+    constructor(props) {
+        super(props);
+        this.state = {
+            questions: []
+        }
+    }
+
+    componentDidMount() {
+        axios.get('http://localhost:9000/questions')
+            .then(res => {
+                var json = res.data;
+                // replace double escaped characters so showdown correctly renders markdown frontslashes and newlines
+                var stringified = JSON.stringify(json);
+                stringified = stringified.replace(/\\\\n/g, "\\n");
+                stringified = stringified.replace(/\\\//g, "/");
+                json = JSON.parse(stringified);
+                var questions = [];
+                for (var i = 0; i < json.pages.length; i++) {
+                    // console.log(pages[i]);
+                    for (var j = 0; j < json.pages[i].elements.length; j++) {
+                        if (json.pages[i].elements[j].title.default !== 'Other:') {
+                            //console.log(json.pages[i].elements[j].title.default) //pages[i].elements[j].type, pages[i].elements[j].choices);
+                            questions.push(json.pages[i].elements[j].title.default)
+                        }
+                    }
+                }
+                this.setState({ questions })
+            })
+    }
+
     render() {
         return (
             <main id="wb-cont" role="main" property="mainContentOfPage" className="container" style={{ paddingBottom: "1rem" }}>
@@ -17,58 +50,19 @@ export default class Results extends Component {
                                 <thead>
                                     <tr>
                                         <th className="score-card-headers">
-                                            No.
-                                        </th>
-                                        <th className="score-card-headers">
                                             Question
-                                        </th>
-                                        <th className="score-card-headers">
-                                            Type
-                                        </th>
-                                        <th className="score-card-headers">
-                                            Responses
-                                        </th>
-                                        <th className="score-card-headers">
-                                            Help Text
-                                        </th>
-                                        <th className="score-card-headers">
-                                            Domain
-                                        </th>
-                                        <th className="score-card-headers">
-                                            Role
-                                        </th>
-                                        <th className="score-card-headers">
-                                            Points
-                                        </th>
-                                        <th className="score-card-headers">
-                                            Weighting
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Here is a question.</td>
-                                        <td>Radio</td>
-                                        <td>No, Yes, Maybe</td>
-                                        <td>Help alt-text</td>
-                                        <td>Accountability</td>
-                                        <td>All</td>
-                                        <td>3</td>
-                                        <td>2</td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>Here is another question.</td>
-                                        <td>Slider</td>
-                                        <td>N/A</td>
-                                        <td>N/A</td>
-                                        <td>Bias and Fairness</td>
-                                        <td>All</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                    </tr>
-                                </tbody>
+                                {this.state.questions.map((question, index) => {
+                                    return (
+                                        <tbody key={index}>
+                                            <tr>
+                                                <td>{question}</td>
+                                            </tr>
+                                        </tbody>
+                                    )
+                                })}
                             </Table>
                         </div>
                     </Tab>
@@ -78,7 +72,7 @@ export default class Results extends Component {
                                 <thead>
                                     <tr>
 
-                                    <th className="score-card-headers">
+                                        <th className="score-card-headers">
                                             No.
                                         </th>
                                         <th className="score-card-headers">
@@ -109,13 +103,13 @@ export default class Results extends Component {
                                         <td>michaeljackson@pop.com</td>
                                         <td>Registered</td>
                                         <td>1</td>
-                                        <td> 
-                                            <Link to ='/Results'>
-                                            <input type='button' value='View Responses'/>
+                                        <td>
+                                            <Link to='/Results'>
+                                                <input type='button' value='View Responses' />
                                             </Link>
                                         </td>
                                         <td>95</td>
-                            
+
                                     </tr>
 
                                 </tbody>
