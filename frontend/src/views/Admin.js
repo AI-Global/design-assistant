@@ -1,7 +1,9 @@
-import React, { Component } from 'react';
-import { Tabs, Tab, Table, } from 'react-bootstrap';
 // import App from '../App';
 import axios from 'axios';
+import React, { Component } from 'react';
+import { Button } from 'react-bootstrap';
+import { Tabs, Tab, Table, } from 'react-bootstrap';
+
 
 import { Link } from 'react-router-dom';
 
@@ -25,7 +27,7 @@ export default class Results extends Component {
                 json = JSON.parse(stringified);
                 var questions = [];
                 for (var i = 0; i < json.pages.length; i++) {
-                    // console.log(pages[i]);
+                    console.log(json.pages[i]);
                     for (var j = 0; j < json.pages[i].elements.length; j++) {
                         if (json.pages[i].elements[j].title.default !== 'Other:') {
                             //console.log(json.pages[i].elements[j].title.default) //pages[i].elements[j].type, pages[i].elements[j].choices);
@@ -49,16 +51,19 @@ export default class Results extends Component {
                             <Table id="questions" bordered hover responsive className="question-table">
                                 <thead>
                                     <tr>
-                                        <th className="score-card-headers">
-                                            Question
-                                        </th>
+                                    <th className="score-card-headers">No.</th>
+                                        <th className="score-card-headers">Question</th>
+                                        <th className="score-card-headers">Edit</th>
                                     </tr>
                                 </thead>
+                                {/* loop through local state questions to populate table */}
                                 {this.state.questions.map((question, index) => {
                                     return (
                                         <tbody key={index}>
                                             <tr>
+                                                <td>{index + 1}</td>
                                                 <td>{question}</td>
+                                                <td><Button>Edit</Button></td>
                                             </tr>
                                         </tbody>
                                     )
@@ -71,7 +76,6 @@ export default class Results extends Component {
                             <Table id="users" bordered hover responsive className="user-table">
                                 <thead>
                                     <tr>
-
                                         <th className="score-card-headers">
                                             No.
                                         </th>
