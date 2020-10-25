@@ -1,42 +1,135 @@
-// import App from '../App';
-import axios from 'axios';
-import React, { Component } from 'react';
-import { Button } from 'react-bootstrap';
-import { Tabs, Tab, Table, } from 'react-bootstrap';
-
-
 import { Link } from 'react-router-dom';
+import React, { Component } from 'react';
+
+import { Button } from 'react-bootstrap';
+import { Tabs, Tab, } from 'react-bootstrap';
+
+import Table from '@material-ui/core/Table';
+import TableRow from '@material-ui/core/TableRow';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableContainer from '@material-ui/core/TableContainer';
+
+import Box from '@material-ui/core/Box';
+import Paper from '@material-ui/core/Paper';
+import Collapse from '@material-ui/core/Collapse';
+import IconButton from '@material-ui/core/IconButton';
+import { makeStyles } from '@material-ui/core/styles';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+
+//TODO: replace this with backend API to get JSON from mongoDB
+const questionsJSON = require('../questionsJSON.json')
+console.log(questionsJSON)
+const useRowStyles = makeStyles({
+    root: {
+        '& > *': {
+            borderBottom: 'unset',
+            fontSize: '16px',
+        },
+    },
+});
+
+function editQuestion(question) {
+    console.log(question)
+}
+
+function Row(props) {
+    const { question, index } = props;
+    const [open, setOpen] = React.useState(false);
+    const classes = useRowStyles();
+
+    return (
+        <React.Fragment>
+            <TableRow className={classes.root}>
+                <TableCell>
+                    <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
+                        {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                    </IconButton>
+                </TableCell>
+                <TableCell >{index + 1}</TableCell>
+                <TableCell component="th" scope="row">
+                    {question.question}
+                </TableCell>
+                <TableCell align="right">{question.trustIndexDimension ? question.trustIndexDimension : 'Details'}</TableCell>
+                <TableCell><Button onClick={() => editQuestion(question)}>Edit</Button></TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+                    <Collapse in={open} timeout="auto" unmountOnExit>
+                        <Box paddingLeft={7} paddingRight={11}>
+                            {/* sub-table to show question responses and response scores - do not render if free text response */}
+                            {(question.responseType === "text" || question.responseType === "comment") ? <Box /> :
+                                <Table size="small" aria-label="responses">
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell>Responses - {question.responseType}</TableCell>
+                                            <TableCell align="right">Score</TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {question.responses.map((response, index) => (
+                                            <TableRow key={index}>
+                                                <TableCell>{response.indicator}</TableCell>
+                                                <TableCell align="right">{response.score}</TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>}
+                            {/* sub-table to show meta-data for question - apply N/A to any fields missing */}
+                            <Table size="small" aria-label="metadata">
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>Role</TableCell>
+                                        <TableCell>Domain</TableCell>
+                                        <TableCell>Region</TableCell>
+                                        <TableCell>Life-Cycle</TableCell>
+                                        <TableCell align="right">Points</TableCell>
+                                        <TableCell align="right">Weighting</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    <TableRow>
+                                        <TableCell>{question.roles}</TableCell>
+                                        <TableCell>{question.domainApplicability ? question.domainApplicability : 'N/A'}</TableCell>
+                                        <TableCell>{question.regionalApplicability ? question.regionalApplicability : 'N/A'}</TableCell>
+                                        <TableCell>{question.lifecylce ? question.lifecylce : 'N/A'}</TableCell>
+                                        <TableCell align="right">{question.pointsAvailable}</TableCell>
+                                        <TableCell align="right">{question.weighting}</TableCell>
+                                    </TableRow>
+                                </TableBody>
+                            </Table>
+                            {/* sub-table to display alt-test (tootip pop up text) - do not render if question does not have it, just make empty Box DOM */}
+                            {(question.alt_text === "\r") ? <Box /> :
+                                <Table size="small" aria-label="alttext">
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell>Helper Text</TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        <TableRow>
+                                            <TableCell>{question.alt_text}</TableCell>
+                                        </TableRow>
+                                    </TableBody>
+                                </Table>}
+                        </Box>
+                    </Collapse>
+                </TableCell>
+            </TableRow>
+        </React.Fragment>
+    )
+}
 
 export default class Results extends Component {
     // Request questions JSON from backend 
     constructor(props) {
         super(props);
         this.state = {
+            json: [],
             questions: []
         }
-    }
-
-    componentDidMount() {
-        axios.get('http://localhost:9000/questions')
-            .then(res => {
-                var json = res.data;
-                // replace double escaped characters so showdown correctly renders markdown frontslashes and newlines
-                var stringified = JSON.stringify(json);
-                stringified = stringified.replace(/\\\\n/g, "\\n");
-                stringified = stringified.replace(/\\\//g, "/");
-                json = JSON.parse(stringified);
-                var questions = [];
-                for (var i = 0; i < json.pages.length; i++) {
-                    console.log(json.pages[i]);
-                    for (var j = 0; j < json.pages[i].elements.length; j++) {
-                        if (json.pages[i].elements[j].title.default !== 'Other:') {
-                            //console.log(json.pages[i].elements[j].title.default) //pages[i].elements[j].type, pages[i].elements[j].choices);
-                            questions.push(json.pages[i].elements[j].title.default)
-                        }
-                    }
-                }
-                this.setState({ questions })
-            })
     }
 
     render() {
@@ -47,33 +140,28 @@ export default class Results extends Component {
                 </h1>
                 <Tabs defaultActiveKey="surveyManagement">
                     <Tab eventKey="surveyManagement" title="Survey Management">
-                        <div className="table-responsive mt-3">
-                            <Table id="questions" bordered hover responsive className="question-table">
-                                <thead>
-                                    <tr>
-                                    <th className="score-card-headers">No.</th>
-                                        <th className="score-card-headers">Question</th>
-                                        <th className="score-card-headers">Edit</th>
-                                    </tr>
-                                </thead>
-                                {/* loop through local state questions to populate table */}
-                                {this.state.questions.map((question, index) => {
-                                    return (
-                                        <tbody key={index}>
-                                            <tr>
-                                                <td>{index + 1}</td>
-                                                <td>{question}</td>
-                                                <td><Button>Edit</Button></td>
-                                            </tr>
-                                        </tbody>
-                                    )
-                                })}
+                        <TableContainer component={Paper}>
+                            <Table aria-label="collapsible table">
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell />
+                                        <TableCell>No.</TableCell>
+                                        <TableCell>Question</TableCell>
+                                        <TableCell align="right">Dimension</TableCell>
+                                        <TableCell />
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {questionsJSON.map((question, index) => (
+                                        <Row key={question.questionNumber} question={question} index={index} />
+                                    ))}
+                                </TableBody>
                             </Table>
-                        </div>
+                        </TableContainer>
                     </Tab>
                     <Tab eventKey="userManagement" title="Users">
                         <div className="table-responsive mt-3">
-                            <Table id="users" bordered hover responsive className="user-table">
+                            <Table id="users" bordered="true" hover="true" responsive="true" className="user-table">
                                 <thead>
                                     <tr>
                                         <th className="score-card-headers">
@@ -100,7 +188,6 @@ export default class Results extends Component {
                                     </tr>
                                 </thead>
                                 <tbody>
-
                                     <tr>
                                         <td>1</td>
                                         <td>Michael</td>
@@ -113,16 +200,14 @@ export default class Results extends Component {
                                             </Link>
                                         </td>
                                         <td>95</td>
-
                                     </tr>
-
                                 </tbody>
                             </Table>
                         </div>
                     </Tab>
                     <Tab eventKey="analytics" title="Analytics">
                         <div className="table-responsive mt-3">
-                            <Table id="analytics" bordered hover responsive className="analytics-table">
+                            <Table id="analytics" bordered="true" hover="true" responsive="true" className="analytics-table">
                             </Table>
                         </div>
                     </Tab>
