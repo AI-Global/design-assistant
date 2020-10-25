@@ -18,16 +18,16 @@ export default class Login extends Component {
         const handleShow = () => this.setState({showLoginModal: true});
       
         return (
-            <>
-            <Button variant="primary" onClick={handleShow}>
-                Launch static backdrop modal
-            </Button>
+            <div>
+                <Button variant="primary" onClick={handleShow}>
+                    Launch static backdrop modal
+                </Button>
 
-            <Modal show={showLogin}
-                onHide={handleClose}
-                backdrop="static"
-                keyboard={false}
-                dialogClassName="modal-login modal-dialog-centered">
+                <Modal show={showLogin}
+                    onHide={handleClose}
+                    backdrop="static"
+                    keyboard={false}
+                    dialogClassName="modal-login modal-dialog-centered">
                     <Modal.Header closeButton>
                         <Modal.Title>
                             Log In
@@ -52,7 +52,7 @@ export default class Login extends Component {
                             <input type="submit" className="btn btn-primary btn-block btn-lg" value="Login" />
 
                             <div className="create-account">
-                                <p className="disabled">Not a member yet?</p>
+                                <p className="disabled">Not a member yet?&nbsp;</p>
                                 <Signup/>   
                             </div>
                         </Form>
@@ -60,8 +60,8 @@ export default class Login extends Component {
                     <Modal.Footer>
                         <a href="#">Continue without an account</a>
                     </Modal.Footer>
-            </Modal>
-            </>
+                </Modal>
+            </div>
         )
     }
 }
