@@ -16,6 +16,7 @@ export default class Signup extends Component {
     }
 
     handleSignupSubmit(event){
+        event.preventDefault();
         let form = event.target.elements;
         let name = form.signupName.value;
         let email = form.signupEmail.value;
