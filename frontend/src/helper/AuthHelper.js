@@ -8,11 +8,7 @@ export function expireAuthToken(){
 }
 
 export function getLoggedInUser(){
-    console.log(sessionStorage.getItem(key));
     let authToken = localStorage.getItem(key) ?? sessionStorage.getItem(key);
-    if(!authToken){
-        return
-    }
     return axios.get('http://localhost:9000/users/user', {
         headers: {
             "x-auth-token": authToken

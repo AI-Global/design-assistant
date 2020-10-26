@@ -1,5 +1,5 @@
 import React,{ Component } from 'react';
-import { Modal, Button, Form} from 'react-bootstrap';
+import { Modal, Form} from 'react-bootstrap';
 import "../css/signup.css";
 import axios from 'axios';
 
@@ -41,6 +41,7 @@ export default class Signup extends Component {
                 }
                 else{
                     sessionStorage.setItem('authToken', result["token"])
+                    window.location.reload();
                 }
             });
         }
@@ -52,7 +53,7 @@ export default class Signup extends Component {
         const handleSignupShow = () => this.setState({showSignupModal: true});
         return(
             <div style={{display: "inline-block"}}>
-                <a href="#" onClick={handleSignupShow}>Create your account</a>
+                <a href="#/" onClick={handleSignupShow}>Create your account</a>
                 <Modal show={showSignup}
                 onHide={handleSignupClose}
                 backdrop="static"
@@ -65,7 +66,7 @@ export default class Signup extends Component {
 
                     </Modal.Header>
                     <Modal.Body>
-                        <Form onSubmit={this.handleSignupSubmit}>
+                        <Form onSubmit={(e) => this.handleSignupSubmit(e)}>
                             <p className="description">
                                 {RegistrationDescription}
                             </p>

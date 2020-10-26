@@ -53,7 +53,6 @@ router.post('/create', async (req,res) => {
 });
 
 router.post('/auth', async(req, res) => {
-    console.log("test");
     let errors = [];
     const { username, password } = req.body;
     if(!username || !password) {
@@ -69,8 +68,9 @@ router.post('/auth', async(req, res) => {
                 { expiresIn: sessionTimeout },
                 (err, token) => {
                     if(err) return res.status(400).json({msg: "Authorization token could not be created"})
+                    if(err) throw err;
                     res.json({
-                        token: token,
+                        token,
                         user: {
                             id: user.id,
                             name: user.name,
@@ -79,8 +79,8 @@ router.post('/auth', async(req, res) => {
                         }
                     })
                 }
-            )
-        })
+            );
+        });
 });
 
 router.get('/user', auth, (req, res) => {

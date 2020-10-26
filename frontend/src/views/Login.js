@@ -1,9 +1,8 @@
-import React,{ Component, useState } from 'react';
-import { Modal, Form, Button, Checkbox } from 'react-bootstrap';
+import React,{ Component } from 'react';
+import { Modal, Form, Button } from 'react-bootstrap';
 import "../css/login.css";
 import Signup from "./Signup";
 import axios from 'axios';
-import { event } from 'jquery';
 import { getLoggedInUser, expireAuthToken } from '../helper/AuthHelper';
 
 
@@ -19,16 +18,15 @@ export default class Login extends Component {
     componentDidMount() {
         getLoggedInUser().then( user => {
             this.setState({ user: user });
-            console.log(user);
         });
     }
 
     handleSubmit(event){
+        event.preventDefault();
         let form = event.target.elements;
         let username = form.loginUsername.value;
         let password = form.loginPassword.value;
         let remember = form.loginRemember.checked;
-        console.log("Attempting to Log In with username:" + username + " and password:" + password );
         axios.post('http://localhost:9000/users/auth', {
             username: username,
             password: password
@@ -43,6 +41,7 @@ export default class Login extends Component {
                         localStorage.setItem('authToken', result["token"]);
                     }
                     else{
+                        console.log(result["token"]);
                         sessionStorage.setItem('authToken', result["token"]);
                     }
                     this.setState({user: result["user"]});
@@ -60,11 +59,11 @@ export default class Login extends Component {
     renderUser(){
         const handleShow = () => this.setState({showLoginModal: true});
         let user = this.state.user;
-        console.log(user);
         if(user){
             return (
-                <div>
-                    <Button variant="primary" onClick={() =>  this.handleLogOut()} className="user-status">
+                <div className="user-status">
+                    Logged in as: {user.name} &nbsp;
+                    <Button variant="primary" onClick={() =>  this.handleLogOut()}>
                         Log out
                     </Button>
                 </div>
@@ -120,7 +119,7 @@ export default class Login extends Component {
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
-                        <a href="#" onClick={handleClose}>Continue without an account</a>
+                        <a href="#/" onClick={handleClose}>Continue without an account</a>
                     </Modal.Footer>
                 </Modal>
             </div>
