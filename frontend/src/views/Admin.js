@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import React, { Component } from 'react';
 
 import { Button } from 'react-bootstrap';
+import Modal from 'react-bootstrap/Modal';
 import { Tabs, Tab, } from 'react-bootstrap';
 
 import Table from '@material-ui/core/Table';
@@ -21,7 +22,7 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 
 //TODO: replace this with backend API to get JSON from mongoDB
 const questionsJSON = require('../questionsJSON.json')
-console.log(questionsJSON)
+// console.log(questionsJSON)
 const useRowStyles = makeStyles({
     root: {
         '& > *': {
@@ -31,17 +32,45 @@ const useRowStyles = makeStyles({
     },
 });
 
-function editQuestion(question) {
-    console.log(question)
-}
+function QuestionModal(props) {
+    return (
+      <Modal
+        {...props}                                                                     
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Edit Question
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+            <p>{props.question.question}</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={props.onHide}>Close</Button>
+          <Button>Save</Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  }
 
 function Row(props) {
+
     const { question, index } = props;
     const [open, setOpen] = React.useState(false);
+    const [modalShow, setModalShow] = React.useState(false);
+
     const classes = useRowStyles();
 
     return (
         <React.Fragment>
+        <QuestionModal
+        show={modalShow}
+        onHide={() => setModalShow(false)}
+        question={question}
+        />
             <TableRow className={classes.root}>
                 <TableCell>
                     <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
@@ -53,12 +82,12 @@ function Row(props) {
                     {question.question}
                 </TableCell>
                 <TableCell align="right">{question.trustIndexDimension ? question.trustIndexDimension : 'Details'}</TableCell>
-                <TableCell><Button onClick={() => editQuestion(question)}>Edit</Button></TableCell>
+                <TableCell><Button onClick={() => setModalShow(true)}>Edit</Button></TableCell>
             </TableRow>
             <TableRow>
                 <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
-                        <Box paddingLeft={7} paddingRight={11}>
+                        <Box paddingLeft={14} paddingRight={11} paddingBottom={4}>
                             {/* sub-table to show question responses and response scores - do not render if free text response */}
                             {(question.responseType === "text" || question.responseType === "comment") ? <Box /> :
                                 <Table size="small" aria-label="responses">
@@ -213,7 +242,6 @@ export default class Results extends Component {
                     </Tab>
                 </Tabs>
             </main>
-
         )
     }
 }
