@@ -1,60 +1,98 @@
 import React,{ Component } from 'react';
-import { Row, Col, Button, Form, Tab} from 'react-bootstrap';
-import { useHistory } from 'react-router';
+import { Modal, Button, Form} from 'react-bootstrap';
+import "../css/signup.css";
+import axios from 'axios';
 
 const RegistrationDescription = `You can create an account for the Responsible AI Design Assistant! 
 After creating your account, an email verfication will be sent to you.`
 
 export default class Signup extends Component {
+    
+    constructor(props){
+        super(props);
+        this.state = {
+            showSignupModal: false
+        }
+    }
 
+    handleSubmit(event){
+        let form = event.target.elements;
+        let name = form.signupName.value;
+        let email = form.signupEmail.value;
+        let username = form.signupUsername.value;
+        let password = form.signupPassword.value;
+        let passwordConfirmation = form.signupPasswordConfirmation.value;
+        if(password!==passwordConfirmation){
+            console.log(password);
+            console.log(passwordConfirmation);
+            console.log("Passwords not matching");
+        }
+        axios.post('http://localhost:9000/users/createUser/', {
+            name: name,
+            email: email,
+            username: username,
+            password: password,
+            passwordConfirmation: passwordConfirmation
+        }).then(response => {
+            const result = response.data;
+            if(result.errors){
+                console.log(result.errors);
+            }
+            else{
+                
+            }
+        });
+    }
+
+    passwordMatching(event){
+        event.target.setCustomValidity("Passwords not matching");
+    }
+    
     render(){
+        const showSignup = this.state.showSignupModal;
+        const handleClose = () => this.setState({showSignupModal: false});
+        const handleShow = () => this.setState({showSignupModal: true});
         return(
-            <main id="wb-cont" role="main" property="mainContentOfPage" className="container" style={{ paddingBottom: "1rem" }}>
-                <h1 className="section-header">
-                    User Registration
-                </h1>
-                <Row tyle={{ marginTop: '4rem' }}>
-                    <Col style={{
-                        backgroundColor: '#fff',
-                        padding: '26px',   
-                        minWidth:'700px'  
-                    }}>
-                        <Form>
-                            <p>
+            <div style={{display: "inline-block"}}>
+                <a href="#" onClick={handleShow}>Create your account</a>
+                <Modal show={showSignup}
+                onHide={handleClose}
+                backdrop="static"
+                keyboard={false}
+                dialogClassName="modal-signup modal-dialog-centered">
+                    <Modal.Header closeButton>
+                        <Modal.Title>
+                            User Registration
+                        </Modal.Title>
+
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Form onSubmit={this.handleSubmit}>
+                            <p className="description">
                                 {RegistrationDescription}
                             </p>
-                            <Form.Group controlId="formName">
-                                <Form.Label>Name</Form.Label>
-                                <Form.Control type="text" placeholder="Name"/>
+                            <Form.Group controlId="signupName">
+                                <Form.Control type="text" placeholder="Name" required="required" />
                             </Form.Group>
-                            <Form.Group controlId="formEmail">
-                                <Form.Label>Email address</Form.Label>
-                                <Form.Control type="email" placeholder="Email" />
-                                <Form.Text className="text-muted">
-                                    We'll never share your email with anyone else.
-                                </Form.Text>
+                            <Form.Group controlId="signupEmail">
+                                <Form.Control type="email" placeholder="Email" required="required"/>
                             </Form.Group>                  
-                            <Form.Group controlId="formUsername">
-                                <Form.Label>Username</Form.Label>
-                                <Form.Control type="text" placeholder = "Username"/>
+                            <Form.Group controlId="signupUsername">
+                                <Form.Control type="text" placeholder = "Username" required="required"/>
                             </Form.Group>
-                            <Form.Group controlId="formPassword">
-                                <Form.Label>Password</Form.Label>
-                                <Form.Control type="password" placeholder="Password" />
+                            <Form.Group controlId="signupPassword">
+                                <Form.Control type="password" placeholder="Password" required="required"/>
                             </Form.Group>
-                            <Form.Group controlId="formPasswordConfirmation">
-                                <Form.Label>Confirm Your Password</Form.Label>
-                                <Form.Control type="password" placeholder="Confirm Your Password" />
+                            <Form.Group controlId="signupPasswordConfirmation">
+                                <Form.Control type="password" placeholder="Confirm Your Password" required="required" onInvalid={this.passwordMatching}/>
                             </Form.Group>
-                            <Button variant="primary" type="submit">
-                                Submit
-                            </Button>
+                            <input type="submit" className="btn btn-primary btn-block btn-lg" value="Create My Account" />
 
 
                         </Form>
-                    </Col>
-                </Row>
-            </main>
+                    </Modal.Body>
+                </Modal>
+            </div>
         )
     }
 }
