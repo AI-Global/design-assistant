@@ -15,7 +15,7 @@ export default class Signup extends Component {
         }
     }
 
-    handleSubmit(event){
+    handleSignupSubmit(event){
         let form = event.target.elements;
         let name = form.signupName.value;
         let email = form.signupEmail.value;
@@ -27,36 +27,34 @@ export default class Signup extends Component {
             console.log(passwordConfirmation);
             console.log("Passwords not matching");
         }
-        axios.post('http://localhost:9000/users/createUser/', {
-            name: name,
-            email: email,
-            username: username,
-            password: password,
-            passwordConfirmation: passwordConfirmation
-        }).then(response => {
-            const result = response.data;
-            if(result.errors){
-                console.log(result.errors);
-            }
-            else{
-                
-            }
-        });
-    }
-
-    passwordMatching(event){
-        event.target.setCustomValidity("Passwords not matching");
+        else{
+            axios.post('http://localhost:9000/users/create/', {
+                name: name,
+                email: email,
+                username: username,
+                password: password,
+                passwordConfirmation: passwordConfirmation
+            }).then(response => {
+                const result = response.data;
+                if(result.errors){
+                    console.log(result.errors);
+                }
+                else{
+                    sessionStorage.setItem('authToken', result["token"])
+                }
+            });
+        }
     }
     
     render(){
         const showSignup = this.state.showSignupModal;
-        const handleClose = () => this.setState({showSignupModal: false});
-        const handleShow = () => this.setState({showSignupModal: true});
+        const handleSignupClose = () => this.setState({showSignupModal: false});
+        const handleSignupShow = () => this.setState({showSignupModal: true});
         return(
             <div style={{display: "inline-block"}}>
-                <a href="#" onClick={handleShow}>Create your account</a>
+                <a href="#" onClick={handleSignupShow}>Create your account</a>
                 <Modal show={showSignup}
-                onHide={handleClose}
+                onHide={handleSignupClose}
                 backdrop="static"
                 keyboard={false}
                 dialogClassName="modal-signup modal-dialog-centered">
@@ -67,7 +65,7 @@ export default class Signup extends Component {
 
                     </Modal.Header>
                     <Modal.Body>
-                        <Form onSubmit={this.handleSubmit}>
+                        <Form onSubmit={this.handleSignupSubmit}>
                             <p className="description">
                                 {RegistrationDescription}
                             </p>
@@ -84,7 +82,7 @@ export default class Signup extends Component {
                                 <Form.Control type="password" placeholder="Password" required="required"/>
                             </Form.Group>
                             <Form.Group controlId="signupPasswordConfirmation">
-                                <Form.Control type="password" placeholder="Confirm Your Password" required="required" onInvalid={this.passwordMatching}/>
+                                <Form.Control type="password" placeholder="Confirm Your Password" required="required"/>
                             </Form.Group>
                             <input type="submit" className="btn btn-primary btn-block btn-lg" value="Create My Account" />
 

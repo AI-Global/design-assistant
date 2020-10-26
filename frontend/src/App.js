@@ -17,6 +17,7 @@ import ModalFooter from 'react-bootstrap/ModalFooter';
 import ModalHeader from 'react-bootstrap/ModalHeader';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
+import Login from './views/Login';
 
 // set up survey styles and properties for rendering html
 Survey
@@ -58,6 +59,7 @@ class App extends Component {
       E: 19,
       R: 25,
       D: 28,
+      authToken: localStorage.getItem("authToken")
     };
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
@@ -336,6 +338,7 @@ class App extends Component {
               </div>
             </div>
           </div>
+            <Login/>
         </div>
       );
     }
