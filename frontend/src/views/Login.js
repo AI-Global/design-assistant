@@ -11,7 +11,10 @@ export default class Login extends Component {
         super(props);
         this.state = {
             showLoginModal: false,
+            username: {isInvalid: false, message: ""},
+            password: {isInvalid: false, message: ""},
             user: undefined
+            
         }
     }
 
@@ -22,6 +25,8 @@ export default class Login extends Component {
     }
 
     handleSubmit(event){
+        this.setState({username: {isInvalid: false, message: ""},
+            password: {isInvalid: false, message: ""}});
         event.preventDefault();
         let form = event.target.elements;
         let username = form.loginUsername.value;
@@ -37,16 +42,19 @@ export default class Login extends Component {
                     console.log(result.errors);
                 }
                 else{
+                    expireAuthToken();
                     if(remember){
                         localStorage.setItem('authToken', result["token"]);
                     }
                     else{
-                        console.log(result["token"]);
                         sessionStorage.setItem('authToken', result["token"]);
                     }
                     this.setState({user: result["user"]});
                     this.setState({showLoginModal: false});
                 }
+            }).catch(err => {
+                let result = err.response.data;
+                this.setState(result);
             });
     }
 
@@ -100,11 +108,17 @@ export default class Login extends Component {
                         <Form onSubmit={(e) => this.handleSubmit(e)}>
                             <Form.Group controlId="loginUsername">
                                 <i className="fa fa-user"></i>
-                                <Form.Control type="text" placeholder="Username" required="required"/>
+                                <Form.Control type="text" placeholder="Username" required="required" isInvalid={this.state.username.isInvalid}/>
+                                <Form.Control.Feedback type="invalid">
+                                    {this.state.username.message}
+                                </Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group controlId="loginPassword">
                                 <i className="fa fa-lock"></i>
-                                <Form.Control type="password" placeholder="Password" required="required"/>
+                                <Form.Control type="password" placeholder="Password" required="required" isInvalid={this.state.password.isInvalid} autocomplete="current-password"/>
+                                <Form.Control.Feedback type="invalid">
+                                    {this.state.password.message}
+                                </Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group controlId="loginRemember">
                                 <Form.Check type="checkbox" label="Remember Me" />
