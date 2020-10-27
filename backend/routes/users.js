@@ -7,7 +7,7 @@ require('dotenv').config();
 const auth = require('../middleware/auth');
 
 const jwtSecret = process.env.JWT_SECRET;
-const sessionTimeout = process.env.SESSION_TIMEOUT | 0;
+const sessionTimeout = process.env.SESSION_TIMEOUT;
 
 router.post('/create', async (req,res) => {
     let errors = [];
