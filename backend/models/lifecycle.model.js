@@ -8,7 +8,7 @@ const LifecycleSchema = mongoose.Schema({
     },
     name: {
         type: String,
-        enum: [null, 'Plan and Design', 'Data and Model', 'Verify and Validate', 'Deploy', 'Operate and Monitor'],
+        // enum: [null, 'Plan and Design', 'Data and Model', 'Verify and Validate', 'Deploy', 'Operate and Monitor'],
         required: true
     }
 

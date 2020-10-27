@@ -1,0 +1,17 @@
+[
+    {
+        "name": "Plan and Design"
+    },
+    {
+        "name": "Data and Model"
+    },
+    {
+        "name": "Verify and Validate"
+    },
+    {
+        "name": "Deploy"
+    },
+    {
+        "name": "Operate and Monitor"
+    }
+]

@@ -1,4 +1,9 @@
 const mongoose = require('mongoose');
+const Dimension = require('./dimension.model').schema;
+const Domain = require('./domain.model').schema;
+const Region = require('./region.model').schema;
+const Role = require('./role.model').schema;
+const Lifecycle = require('./lifecycle.model').schema;
 
 const QuestionSchema = mongoose.Schema({
     uuid: {
@@ -15,30 +20,9 @@ const QuestionSchema = mongoose.Schema({
     },
 
     // 5 possible dimensions
-    trustIndexDimension: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Dimension'
-
-        // type: String,
-        // enum: [null, 'bias and fairness', 'accountability', 'explainability and interpretability', 'robustness', 'data quality']
-    },
-    domainApplicability: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Domain'
-
-        // type: String,
-        // SHOULD be activated, right now data isn't uniform, needs to be off
-        // enum: [null, 'Health', 'Insurance', 'Banking', 'Media', 'Retail', 'Other']
-    },
-    regionalApplicability: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Region'
-
-        // type: String,
-
-        // SHOULD be activated, right now data isn't uniform, needs to be off
-        // enum: [null, 'Africa', 'Antarctica', 'Asia', 'Europe', 'North America', 'South America', 'Oceania', 'Other']
-    },
+    trustIndexDimension: Dimension,
+    domainApplicability: Domain,
+    regionalApplicability: Region,
 
     // mandatory or optional
     mandatory: Boolean,
@@ -98,16 +82,10 @@ const QuestionSchema = mongoose.Schema({
     },
 
     // Which roles question should display for
-    roles: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Role'
-    }],
+    roles: [Role],
 
     // Question can belong to multiple lifecycles
-    lifecycle: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Lifecycle'
-    }],
+    lifecycle: Lifecycle,
 
     // Which Question and Response determine whether this question should be displayed
     parent: {

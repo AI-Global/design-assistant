@@ -1,8 +1,9 @@
 const fs = require('fs');
 const Question = require('../models/question.model');
+const TrustIndexDimension = require('../models/dimension.model');
 
 function populateDB() {
-    let json_temp = fs.readFileSync("./questionsJSON.json", "utf-8");
+    let json_temp = fs.readFileSync("json/questionsJSON.json", "utf-8");
     let parsed_questions = JSON.parse(json_temp);
     for (let i = 0; i < parsed_questions.length; ++i) {
         let q_responses = [];
@@ -16,6 +17,15 @@ function populateDB() {
                 q_responses.push(q_response);
             }
         }
+
+        // need to create new models for trustIndexDimension, domainApplicability, regionalApplicability
+        // roles, and lifecycle
+
+        // We are iterating over a json file with all of the data for each question, blank or not
+        // We want to load in the information directly into the field if it's a field
+        // If not we want to look for model with same name. For example
+
+
 
         // let trustIndexDimensionString = parsed_questions[i].trustIndexDimension;
         // if trustIndexDimension

@@ -1,0 +1,22 @@
+[
+    {
+        "name": "Accountability",
+        "label": "A"
+    },
+    {
+        "name": "Explainability and Interpretability",
+        "label": "EI"
+    },
+    {
+        "name": "Data Quality",
+        "label": "D"
+    },
+    {
+        "name": "Bias and Fairness",
+        "label": "B"
+    },
+    {
+        "name": "Robustness",
+        "label": "R"
+    }
+]

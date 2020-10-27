@@ -1,13 +1,100 @@
 const express = require('express');
 const router = express.Router();
 const Question = require('../models/question.model');
+const Dimension = require('../models/dimension.model');
+const Domain = require('../models/domain.model');
+const LifeCycle = require('../models/lifecycle.model');
+const Region = require('../models/region.model');
+const Role = require('../models/role.model');
 const fs = require('fs');
 const { create } = require('../models/question.model');
+// const lak = require('../populateDBScripts/json/trustIndexDimensions.json')
+
+router.get('/populateroles', async (req, res) => {
+    try {
+        let json_temp = fs.readFileSync(__dirname + "/../populateDBScripts/json/roles.json", "utf-8");
+        let parsed_roles = JSON.parse(json_temp);
+
+        for (let i = 0; i < parsed_roles.length; ++i) {
+            await Role.findOneAndUpdate({roleID: i}, {
+                name: parsed_roles[i].name
+            }, {upsert:true, runValidators: true});
+        }
+        res.json(parsed_roles);
+    } catch(err) {
+        console.log(err);
+    }
+});
+
+router.get('/populateregions', async (req, res) => {
+    try {
+        let json_temp = fs.readFileSync(__dirname + "/../populateDBScripts/json/regions.json", "utf-8");
+        let parsed_regions = JSON.parse(json_temp);
+
+        for (let i = 0; i < parsed_regions.length; ++i) {
+            await Region.findOneAndUpdate({regionID: i}, {
+                name: parsed_regions[i].name
+            }, {upsert:true, runValidators: true});
+        }
+        res.json(parsed_regions);
+    } catch(err) {
+        console.log(err);
+    }
+});
+
+router.get('/populatelifecycles', async (req, res) => {
+    try {
+        let json_temp = fs.readFileSync(__dirname + "/../populateDBScripts/json/lifecycles.json", "utf-8");
+        let parsed_lifecycles = JSON.parse(json_temp);
+
+        for (let i = 0; i < parsed_lifecycles.length; ++i) {
+            await LifeCycle.findOneAndUpdate({lifecycleID: i}, {
+                name: parsed_lifecycles[i].name
+            }, {upsert:true, runValidators: true});
+        }
+        res.json(parsed_lifecycles);
+    } catch(err) {
+        console.log(err);
+    }
+});
+
+router.get('/populatedomains', async (req, res) => {
+    try {
+        let json_temp = fs.readFileSync(__dirname + "/../populateDBScripts/json/domains.json", "utf-8");
+        let parsed_domains = JSON.parse(json_temp);
+
+        for (let i = 0; i < parsed_domains.length; ++i) {
+            await Domain.findOneAndUpdate({domainID: i}, {
+                name: parsed_domains[i].name
+            }, {upsert:true, runValidators: true});
+        }
+        res.json(parsed_domains);
+    } catch(err) {
+        console.log(err);
+    }
+});
+
+router.get('/populatedimensions', async (req, res) => {
+    try {
+        let json_temp = fs.readFileSync(__dirname + "/../populateDBScripts/json/trustIndexDimensions.json", "utf-8");
+        let parsed_dimensions = JSON.parse(json_temp);
+
+        for (let i = 0; i < parsed_dimensions.length; ++i) {
+            await Dimension.findOneAndUpdate({dimensionID: i}, {
+                name: parsed_dimensions[i].name,
+                label: parsed_dimensions[i].label
+            }, {upsert:true, runValidators: true});
+        }
+        res.json(parsed_dimensions);
+    } catch(err) {
+        console.log(err);
+    }
+});
 
 // not going to be an endpoint in production
-router.get('/populatedb', async (req, res) => {
+router.get('/populatequestions', async (req, res) => {
     try {
-        let json_temp = fs.readFileSync("./questionsJSON.json", "utf-8");
+        let json_temp = fs.readFileSync(__dirname + "/../populateDBScripts/json/questionsJSON.json", "utf-8");
         let parsed_questions = JSON.parse(json_temp);
         for (let i = 0; i < parsed_questions.length; ++i) {
             let q_responses = [];
@@ -25,10 +112,34 @@ router.get('/populatedb', async (req, res) => {
             // let trustIndexDimensionString = parsed_questions[i].trustIndexDimension;
             // if trustIndexDimension
 
+            let trustIndexDimensionObj = Dimension.findOne({name: parsed_questions[i].trustIndexDimension}, function(err, obj) {
+                console.log(obj);
+            });
+
+            let domainObj = Domain.findOne({name: parsed_questions[i].domainApplicability}, function(err, obj) {
+                console.log(obj);
+            });
+
+            let regionObj = Region.findOne({name: parsed_questions[i].regionalApplicability}, function(err, obj) {
+                console.log(obj);
+            });
+
+            let roleObjs = [];
+            for (let j = 0; j < parsed_questions[i].roles.length; ++j) {
+                let roleObj = Role.findOne({name: parsed_questions[i].roles[j]}, function(err, obj) {
+                    console.log(obj);
+                })
+                roleObjs.push(roleObj);
+            }
+
+            let lifecycleObj = LifeCycle.findOne({name: parsed_questions[i].lifecycle}, function(err, obj) {
+                console.log(obj);
+            });
+
             await Question.findOneAndUpdate({questionNumber: i}, {
-                trustIndexDimension: ((typeof parsed_questions[i].trustIndexDimension === 'string') ? parsed_questions[i].trustIndexDimension.toLowerCase() : null),
-                domainApplicability: parsed_questions[i].domainApplicability || null,
-                regionalApplicability: parsed_questions[i].regionalApplicability || null,
+                trustIndexDimension: trustIndexDimensionObj,
+                domainApplicability: domainObj,
+                regionalApplicability: regionObj,
                 mandatory: parsed_questions[i].mandatory || true,
                 questionType: ((parsed_questions[i].questionType) ? (parsed_questions[i].questionType.toLowerCase().trim()) : null),
                 question: parsed_questions[i].question || "",
@@ -39,10 +150,33 @@ router.get('/populatedb', async (req, res) => {
                 pointsAvailable: parsed_questions[i].pointsAvailable || 0,
                 weighting: parsed_questions[i].weighting || 0,
                 reference: parsed_questions[i].reference || null,
-                roles: parsed_questions[i].roles || null,
-                lifecycle: parsed_questions[i].lifecycle || null,
+                roles: roleObjs,
+                lifecycle: lifecycleObj,
                 parent: parsed_questions[i].parent || null
             }, {upsert:true, runValidators: true});
+
+
+
+            // TODO: Add uuid
+
+            // await Question.findOneAndUpdate({questionNumber: i}, {
+            //     trustIndexDimension: ((typeof parsed_questions[i].trustIndexDimension === 'string') ? parsed_questions[i].trustIndexDimension.toLowerCase() : null),
+            //     domainApplicability: parsed_questions[i].domainApplicability || null,
+            //     regionalApplicability: parsed_questions[i].regionalApplicability || null,
+            //     mandatory: parsed_questions[i].mandatory || true,
+            //     questionType: ((parsed_questions[i].questionType) ? (parsed_questions[i].questionType.toLowerCase().trim()) : null),
+            //     question: parsed_questions[i].question || "",
+            //     alt_text: parsed_questions[i].alt_text || null,
+            //     prompt: parsed_questions[i].prompt || null,
+            //     responses: q_responses,
+            //     responseType: parsed_questions[i].responseType || null,
+            //     pointsAvailable: parsed_questions[i].pointsAvailable || 0,
+            //     weighting: parsed_questions[i].weighting || 0,
+            //     reference: parsed_questions[i].reference || null,
+            //     roles: parsed_questions[i].roles || null,
+            //     lifecycle: parsed_questions[i].lifecycle || null,
+            //     parent: parsed_questions[i].parent || null
+            // }, {upsert:true, runValidators: true});
         }
 
         res.json(parsed_questions);
