@@ -189,16 +189,12 @@ router.get('/', (req, res) => {
 
 
 // Get question by id
-router.get('/:questionId', async (req, res) => {
-    try {
-        const question = await Question.findOne({ _id: req.params.questionId });
-        console.log(question);
-        res.json(formatQuestion(question));
-    } catch (err) {
-        res.json({ message: err });
-    }
-});
+router.get('/:questionId', (req, res) => {
+    Question.findOne({ _id: req.params.questionId })
+    .then((question) => res.status(200).send(formatQuestion(question)))
+    .catch((err) => res.status(400).send(err));
 
+});
 
 
 // Add new question
@@ -215,6 +211,16 @@ router.post('/', async (req, res) => {
     } catch (err) {
         res.json({ message: err });
     }
+
+});
+
+router.delete('/', async (req, res) => {
+
+    return ""
+});
+
+router.put('/', async (req, res) => {
+    return ""
 
 });
 
