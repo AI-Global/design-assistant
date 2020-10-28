@@ -14,7 +14,6 @@ export function getLoggedInUser(){
             "x-auth-token": authToken
         }
     }).catch(err => {
-        console.log("Login Expired. Please Sign In");
         localStorage.removeItem(key);
         sessionStorage.removeItem(key);
     })
@@ -36,7 +35,6 @@ export function isLoggedIn(){
             "x-auth-token": authToken
         }
     }).catch(err => {
-        console.log("Login Expired. Please Sign In");
         localStorage.removeItem(key);
         sessionStorage.removeItem(key);
         return false;

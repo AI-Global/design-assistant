@@ -59,7 +59,6 @@ export default class Login extends Component {
     }
 
     handleLogOut(){
-        console.log("Logged Out");
         expireAuthToken();
         this.setState({user: undefined});
     }
@@ -70,7 +69,7 @@ export default class Login extends Component {
         if(user){
             return (
                 <div className="user-status">
-                    Logged in as: {user.name} &nbsp;
+                    Logged in as: {user.username} &nbsp;
                     <Button variant="primary" onClick={() =>  this.handleLogOut()}>
                         Log out
                     </Button>

@@ -17,10 +17,9 @@ owasp.config({
 
 router.post('/create', async (req,res) => {
     let errors = [];
-    const {name, username, email, password, passwordConfirmation} = req.body;
+    const {username, email, password, passwordConfirmation} = req.body;
 
     let result = owasp.test(password);
-    console.log(result);
     if(result.strong == false){
         return res.status(400).json({password: {isInvalid: true, message: result.errors.join('\n')}})
     }
@@ -30,7 +29,7 @@ router.post('/create', async (req,res) => {
         return res.status(400).json({passwordConfirmation: { isInvalid: true  , message: "Those passwords didn't match. Try again." }});
 
     // create new user, send to db
-    let user = new User({name, email, username, password});
+    let user = new User({email, username, password});
     await user.save()
         .then(user => {
             jwt.sign(
@@ -44,7 +43,6 @@ router.post('/create', async (req,res) => {
                         token,
                         user: {
                             id: user.id,
-                            name: user.name,
                             username: user.username,
                             email: user.email,
                         }
@@ -88,7 +86,6 @@ router.post('/auth', async(req, res) => {
                         token,
                         user: {
                             id: user.id,
-                            name: user.name,
                             username: user.username,
                             email: user.email,
                         }

@@ -13,7 +13,6 @@ export default class Signup extends Component {
         super(props);
         this.state = {
             showSignupModal: false,
-            name: {isInvalid: false, message: ""},
             email: {isInvalid: false, message: ""},
             username: {isInvalid: false, message: ""},
             password: {isInvalid: false, message: ""},
@@ -22,14 +21,12 @@ export default class Signup extends Component {
     }
 
     handleSignupSubmit(event){
-        this.setState({name: {isInvalid: false, message: ""}, 
-            email: {isInvalid: false, message: ""},
+        this.setState({email: {isInvalid: false, message: ""},
             username: {isInvalid: false, message: ""},
             password: {isInvalid: false, message: ""},
             passwordConfirmation: {isInvalid: false, message: ""}});
         event.preventDefault();
         let form = event.target.elements;
-        let name = form.signupName.value;
         let email = form.signupEmail.value;
         let username = form.signupUsername.value;
         let password = form.signupPassword.value;
@@ -39,7 +36,6 @@ export default class Signup extends Component {
         }
         else{
             axios.post('http://localhost:9000/users/create/', {
-                name: name,
                 email: email,
                 username: username,
                 password: password,
@@ -51,7 +47,6 @@ export default class Signup extends Component {
                 }
                 else{
                     expireAuthToken();
-                    console.log(result["token"]);
                     sessionStorage.setItem('authToken', result["token"])
                     window.location.reload();
                 }
@@ -85,12 +80,6 @@ export default class Signup extends Component {
                             <p className="description">
                                 {RegistrationDescription}
                             </p>
-                            <Form.Group controlId="signupName">
-                                <Form.Control type="text" placeholder="Name" required="required" isInvalid={this.state.name.isInvalid} autoComplete="name"/>
-                                <Form.Control.Feedback type="invalid">
-                                    {this.state.name.message}
-                                </Form.Control.Feedback>                            
-                            </Form.Group>
                             <Form.Group controlId="signupEmail">
                                 <Form.Control type="email" placeholder="Email" required="required" isInvalid={this.state.email.isInvalid} autoComplete="email"/>
                                 <Form.Control.Feedback type="invalid">
