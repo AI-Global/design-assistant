@@ -157,9 +157,9 @@ router.get('/populatequestions', async (req, res) => {
 
 
             await Question.findOneAndUpdate({questionNumber: i}, {
-                trustIndexDimension: trustIndexDimensionObj ? trustIndexDimensionObj._id : null,
-                domainApplicability: domainObj ? domainObj._id : null,
-                regionalApplicability: regionObj ? regionObj._id : null,
+                trustIndexDimension: trustIndexDimensionObj ? trustIndexDimensionObj.dimensionID: null,
+                domainApplicability: domainObj ? domainObj.domainID : null,
+                regionalApplicability: regionObj ? regionObj.regionID : null,
                 mandatory: parsed_questions[i].mandatory || true,
                 questionType: ((parsed_questions[i].questionType) ? (parsed_questions[i].questionType.toLowerCase().trim()) : null),
                 question: parsed_questions[i].question || "",
@@ -170,8 +170,8 @@ router.get('/populatequestions', async (req, res) => {
                 pointsAvailable: parsed_questions[i].pointsAvailable || 0,
                 weighting: parsed_questions[i].weighting || 0,
                 reference: parsed_questions[i].reference || null,
-                roles: roleObj._id,
-                lifecycle: lifecycleObj._id,
+                roles: roleObj.roleID,
+                lifecycle: lifecycleObj.lifecycleID,
                 parent: parsed_questions[i].parent ? parsed_questions[i].parent : null
             }, {upsert:true, runValidators: true}); 
 

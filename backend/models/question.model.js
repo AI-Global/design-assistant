@@ -16,9 +16,9 @@ const QuestionSchema = mongoose.Schema({
     },
 
     // 5 possible dimensions
-    trustIndexDimension: mongoose.SchemaTypes.ObjectId,
-    domainApplicability: mongoose.SchemaTypes.ObjectId,
-    regionalApplicability: mongoose.SchemaTypes.ObjectId,
+    trustIndexDimension: Number,
+    domainApplicability: Number,
+    regionalApplicability: Number,
 
     // mandatory or optional
     mandatory: Boolean,
@@ -78,10 +78,10 @@ const QuestionSchema = mongoose.Schema({
     },
 
     // Which roles question should display for
-    roles: [mongoose.SchemaTypes.ObjectId],
+    roles: [Number],
 
     // Question can belong to multiple lifecycles
-    lifecycle: mongoose.SchemaTypes.ObjectId,
+    lifecycle: Number,
 
     // Which Question and Response determine whether this question should be displayed
     parent: {
