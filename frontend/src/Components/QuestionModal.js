@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { Button, Form } from 'react-bootstrap';
 import { Row, Col } from 'react-bootstrap';
@@ -6,7 +6,7 @@ import { Row, Col } from 'react-bootstrap';
 
 export default function QuestionModal(props) {
     var numResponse = props.question.responses.length
-    console.log(numResponse)
+    // console.log(numResponse)
     return (
         <Modal
             {...props}
