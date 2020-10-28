@@ -111,6 +111,9 @@ router.get('/populatequestions', async (req, res) => {
             }
             console.log(parsed_questions[i])
 
+            let prompt = parsed_questions[i].prompt.toLowerCase();
+            console.log(prompt)
+
             // let trustIndexDimensionString = parsed_questions[i].trustIndexDimension;
             // if trustIndexDimension
 
@@ -154,22 +157,22 @@ router.get('/populatequestions', async (req, res) => {
 
 
             await Question.findOneAndUpdate({questionNumber: i}, {
-                trustIndexDimension: trustIndexDimensionObj,
-                domainApplicability: domainObj,
-                regionalApplicability: regionObj,
+                trustIndexDimension: trustIndexDimensionObj ? trustIndexDimensionObj._id : null,
+                domainApplicability: domainObj ? domainObj._id : null,
+                regionalApplicability: regionObj ? regionObj._id : null,
                 mandatory: parsed_questions[i].mandatory || true,
                 questionType: ((parsed_questions[i].questionType) ? (parsed_questions[i].questionType.toLowerCase().trim()) : null),
                 question: parsed_questions[i].question || "",
                 alt_text: parsed_questions[i].alt_text || null,
-                prompt: parsed_questions[i].prompt || null,
+                prompt: (prompt === "select all that apply:" || prompt === "select all that have been completed:") ?  prompt : null,
                 responses: q_responses,
                 responseType: parsed_questions[i].responseType || null,
                 pointsAvailable: parsed_questions[i].pointsAvailable || 0,
                 weighting: parsed_questions[i].weighting || 0,
                 reference: parsed_questions[i].reference || null,
-                roles: roleObj,
-                lifecycle: lifecycleObj,
-                parent: parsed_questions[i].parent || null
+                roles: roleObj._id,
+                lifecycle: lifecycleObj._id,
+                parent: parsed_questions[i].parent ? parsed_questions[i].parent : null
             }, {upsert:true, runValidators: true}); 
 
             

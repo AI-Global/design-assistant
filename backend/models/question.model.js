@@ -1,9 +1,5 @@
 const mongoose = require('mongoose');
-const Dimension = require('./dimension.model').schema;
-const Domain = require('./domain.model').schema;
-const Region = require('./region.model').schema;
-const Role = require('./role.model').schema;
-const Lifecycle = require('./lifecycle.model').schema;
+const { schema } = require('./dimension.model');
 
 const QuestionSchema = mongoose.Schema({
     uuid: {
@@ -20,9 +16,9 @@ const QuestionSchema = mongoose.Schema({
     },
 
     // 5 possible dimensions
-    trustIndexDimension: Dimension,
-    domainApplicability: Domain,
-    regionalApplicability: Region,
+    trustIndexDimension: mongoose.SchemaTypes.ObjectId,
+    domainApplicability: mongoose.SchemaTypes.ObjectId,
+    regionalApplicability: mongoose.SchemaTypes.ObjectId,
 
     // mandatory or optional
     mandatory: Boolean,
@@ -82,19 +78,20 @@ const QuestionSchema = mongoose.Schema({
     },
 
     // Which roles question should display for
-    roles: [Role],
+    roles: [mongoose.SchemaTypes.ObjectId],
 
     // Question can belong to multiple lifecycles
-    lifecycle: Lifecycle,
+    lifecycle: mongoose.SchemaTypes.ObjectId,
 
     // Which Question and Response determine whether this question should be displayed
     parent: {
         questionNumber: {
-            type: Number,
+            type: Number
         },
         responseNumber: {
-            type: Number,
-        }
+            type: Number
+        },
+        
     }
 
     // TODO: Add test of schema to model
