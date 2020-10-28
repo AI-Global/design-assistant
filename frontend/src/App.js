@@ -18,6 +18,7 @@ import ModalHeader from 'react-bootstrap/ModalHeader';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Login from './views/Login';
+require('dotenv').config();
 
 // set up survey styles and properties for rendering html
 Survey
@@ -67,7 +68,8 @@ class App extends Component {
 
   // Request questions JSON from backend 
   componentDidMount() {
-    axios.get('http://localhost:9000/questions')
+    var endPoint = '/questions';
+    axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
       .then(res => {
         var json = res.data;
         // replace double escaped characters so showdown correctly renders markdown frontslashes and newlines

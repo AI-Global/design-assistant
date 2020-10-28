@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {Table} from 'react-bootstrap'
 import axios from 'axios';
+require('dotenv').config()
 
 /**
  * Component renders a Table that displays
@@ -16,7 +17,8 @@ export default class TrustedAIProviders extends Component{
     }
 
     componentDidMount() {
-        axios.get('http://localhost:9000/trustedAIProviders')
+        var endPoint = '/trustedAIProviders';
+        axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
             .then(response => {
                 const providers = response.data;
                 this.setState({ providers });
