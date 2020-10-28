@@ -5,17 +5,24 @@ const jwt = require("jsonwebtoken");
 const { json } = require('express');
 require('dotenv').config();
 const auth = require('../middleware/auth');
+const owasp = require('owasp-password-strength-test');
 
 const jwtSecret = process.env.JWT_SECRET;
 const sessionTimeout = process.env.SESSION_TIMEOUT;
+
+owasp.config({
+    minLength: 8,
+    minOptionalTestsToPass: 4,
+})
 
 router.post('/create', async (req,res) => {
     let errors = [];
     const {name, username, email, password, passwordConfirmation} = req.body;
 
-    // verification for empty fields
-    if (!name || !email || !password || !passwordConfirmation || !username) {
-        return res.status(400).json({ message: 'Please fill in all the required fields' });
+    let result = owasp.test(password);
+    console.log(result);
+    if(result.strong == false){
+        return res.status(400).json({password: {isInvalid: true, message: result.errors.join('\n')}})
     }
 
     // validation for password verification

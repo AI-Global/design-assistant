@@ -105,7 +105,7 @@ export default class Signup extends Component {
                             </Form.Group>
                             <Form.Group controlId="signupPassword">
                                 <Form.Control type="password" placeholder="Password" required="required" isInvalid={this.state.password.isInvalid} autoComplete="current-password"/>
-                                <Form.Control.Feedback type="invalid">
+                                <Form.Control.Feedback type="invalid" className="password-errors">
                                     {this.state.password.message}
                                 </Form.Control.Feedback>
                             </Form.Group>
