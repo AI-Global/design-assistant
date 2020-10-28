@@ -29,7 +29,7 @@ const QuestionSchema = mongoose.Schema({
 
     questionType: {
         type: String,
-        enum: [null, 'Tombstone', 'Risk', 'Mitigation']
+        enum: [null, 'tombstone', 'risk', 'mitigation']
     },
 
     // question text
@@ -91,11 +91,9 @@ const QuestionSchema = mongoose.Schema({
     parent: {
         questionNumber: {
             type: Number,
-            required: true
         },
         responseNumber: {
             type: Number,
-            required: true
         }
     }
 

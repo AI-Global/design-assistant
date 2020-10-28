@@ -98,6 +98,7 @@ router.get('/populatequestions', async (req, res) => {
         let parsed_questions = JSON.parse(json_temp);
         for (let i = 0; i < parsed_questions.length; ++i) {
             let q_responses = [];
+            
             if (parsed_questions[i].responses) {
                 for (let j = 0; j < parsed_questions[i].responses.length; ++j) {
                     const q_response = {
@@ -108,33 +109,49 @@ router.get('/populatequestions', async (req, res) => {
                     q_responses.push(q_response);
                 }
             }
+            console.log(parsed_questions[i])
 
             // let trustIndexDimensionString = parsed_questions[i].trustIndexDimension;
             // if trustIndexDimension
 
-            let trustIndexDimensionObj = Dimension.findOne({name: parsed_questions[i].trustIndexDimension}, function(err, obj) {
-                console.log(obj);
+            let trustIndexDimensionObj;
+            let domainObj;
+            let regionObj;
+            let lifecycleObj;
+            let roleObj;
+
+            await Dimension.findOne({name: parsed_questions[i].trustIndexDimension}, function(err, obj) {
+                trustIndexDimensionObj = obj; 
             });
 
-            let domainObj = Domain.findOne({name: parsed_questions[i].domainApplicability}, function(err, obj) {
-                console.log(obj);
+            await Domain.findOne({name: parsed_questions[i].domainApplicability}, function(err, obj) {
+                domainObj = obj;
             });
 
-            let regionObj = Region.findOne({name: parsed_questions[i].regionalApplicability}, function(err, obj) {
-                console.log(obj);
+            await Region.findOne({name: parsed_questions[i].regionalApplicability}, function(err, obj) {
+                regiobObj = obj;
             });
+                
+            await Role.findOne({name: parsed_questions[i].roles}, function(err, obj) {
+                roleObj = obj;
+            })
 
-            let roleObjs = [];
-            for (let j = 0; j < parsed_questions[i].roles.length; ++j) {
-                let roleObj = Role.findOne({name: parsed_questions[i].roles[j]}, function(err, obj) {
-                    console.log(obj);
-                })
-                roleObjs.push(roleObj);
+            if(!roleObj){
+                await Role.findOne({name: "All"}, function(err, obj){
+                    roleObj = obj;
+                });
             }
 
-            let lifecycleObj = LifeCycle.findOne({name: parsed_questions[i].lifecycle}, function(err, obj) {
-                console.log(obj);
+            await LifeCycle.findOne({name: parsed_questions[i].lifecycle}, function(err, obj) {
+                lifecycleObj = obj;
             });
+
+            if(!lifecycleObj){
+                await LifeCycle.findOne({name: "All"}, function(err, obj){
+                    lifecycleObj = obj;
+                });
+            }
+
 
             await Question.findOneAndUpdate({questionNumber: i}, {
                 trustIndexDimension: trustIndexDimensionObj,
@@ -150,12 +167,12 @@ router.get('/populatequestions', async (req, res) => {
                 pointsAvailable: parsed_questions[i].pointsAvailable || 0,
                 weighting: parsed_questions[i].weighting || 0,
                 reference: parsed_questions[i].reference || null,
-                roles: roleObjs,
+                roles: roleObj,
                 lifecycle: lifecycleObj,
                 parent: parsed_questions[i].parent || null
-            }, {upsert:true, runValidators: true});
+            }, {upsert:true, runValidators: true}); 
 
-
+            
 
             // TODO: Add uuid
 
