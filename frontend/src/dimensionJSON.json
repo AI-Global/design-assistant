@@ -1,0 +1,41 @@
+[{
+  "_id": {
+    "$oid": "5f9899e7d17b20d5d4cf0015"
+  },
+  "dimensionID": 0,
+  "__v": 0,
+  "label": "A",
+  "name": "Accountability"
+},{
+  "_id": {
+    "$oid": "5f9899e8d17b20d5d4cf003e"
+  },
+  "dimensionID": 1,
+  "__v": 0,
+  "label": "EI",
+  "name": "Explainability and Interpretability"
+},{
+  "_id": {
+    "$oid": "5f9899e8d17b20d5d4cf007f"
+  },
+  "dimensionID": 2,
+  "__v": 0,
+  "label": "D",
+  "name": "Data Quality"
+},{
+  "_id": {
+    "$oid": "5f9899e8d17b20d5d4cf00be"
+  },
+  "dimensionID": 3,
+  "__v": 0,
+  "label": "B",
+  "name": "Bias and Fairness"
+},{
+  "_id": {
+    "$oid": "5f9899e8d17b20d5d4cf00cf"
+  },
+  "dimensionID": 4,
+  "__v": 0,
+  "label": "R",
+  "name": "Robustness"
+}]

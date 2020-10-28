@@ -1,18 +1,18 @@
 import React from 'react';
-import Box from '@material-ui/core/Box';
-import Table from '@material-ui/core/Table';
+// import Box from '@material-ui/core/Box';
+// import Table from '@material-ui/core/Table';
 import { Button } from 'react-bootstrap';
-import Collapse from '@material-ui/core/Collapse';
-import TableRow from '@material-ui/core/TableRow';
-import TableBody from '@material-ui/core/TableBody';
+// import Collapse from '@material-ui/core/Collapse';
+// import TableRow from '@material-ui/core/TableRow';
+// import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
+// import TableHead from '@material-ui/core/TableHead';
 import { makeStyles } from '@material-ui/core/styles';
-import IconButton from '@material-ui/core/IconButton';
+// import IconButton from '@material-ui/core/IconButton';
 import QuestionModal from './QuestionModal';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import Card from 'react-bootstrap/Card';
+// import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+// import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+// import Card from 'react-bootstrap/Card';
 
 const useRowStyles = makeStyles({
     tablecell: {
@@ -21,10 +21,11 @@ const useRowStyles = makeStyles({
 });
 
 export default function QuestionRow(props) {
-    const { question } = props;
-    const [open, setOpen] = React.useState(false);
+    // const [open, setOpen] = React.useState(false);
+    const { question, index } = props;
     const [modalShow, setModalShow] = React.useState(false);
     const classes = useRowStyles();
+    const dimensionJSON = require('../dimensionJSON.json')
 
     return (
         <React.Fragment>
@@ -38,11 +39,11 @@ export default function QuestionRow(props) {
                     {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                 </IconButton> */}
             </TableCell>
-            <TableCell className={classes.tablecell}>{question.questionNumber}</TableCell>
+            <TableCell className={classes.tablecell}>{index}</TableCell>
             <TableCell className={classes.tablecell} component="th" scope="row">
                 {question.question}
             </TableCell>
-            <TableCell className={classes.tablecell} align="right">{question.trustIndexDimension ? question.trustIndexDimension : 'Details'}</TableCell>
+            <TableCell className={classes.tablecell} align="right">{(question.trustIndexDimension !== null) ? dimensionJSON[question.trustIndexDimension].name : 'Details'}</TableCell>
             <TableCell className={classes.tabecell}><Button onClick={() => setModalShow(true)}>Edit</Button></TableCell>
 
             {/* <TableRow>

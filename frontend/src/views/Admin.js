@@ -5,12 +5,11 @@ import Table from '@material-ui/core/Table';
 
 import QuestionTable from '../Components/QuestionTable'
 
-//TODO: replace this with backend API to get JSON from mongoDB
+//TODO: replace this with backend API to get JSONs from mongoDB
 const questionsJSON = require('../questionsJSON.json')
 // console.log(questionsJSON)
 
 export default class Results extends Component {
-    // Request questions JSON from backend 
     constructor(props) {
         super(props);
         this.state = {
@@ -78,6 +77,13 @@ export default class Results extends Component {
                     <Tab eventKey="analytics" title="Analytics">
                         <div className="table-responsive mt-3">
                             <Table id="analytics" bordered="true" hover="true" responsive="true" className="analytics-table">
+                                <thead>
+                                    <tr>
+                                        <th className="score-card-headers">
+                                            Analytics
+                                        </th>
+                                    </tr>
+                                </thead>
                             </Table>
                         </div>
                     </Tab>

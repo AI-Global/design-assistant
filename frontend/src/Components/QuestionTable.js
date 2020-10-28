@@ -33,7 +33,6 @@ export default class QuestionTable extends Component {
         super(props)
         this.state = {
             questions: this.props.questions,
-            // items: getItems(10)
         }
         this.onDragEnd = this.onDragEnd.bind(this)
     }
@@ -53,6 +52,8 @@ export default class QuestionTable extends Component {
         this.setState({
             questions
         })
+        console.log("Source:", result.source.index)
+        console.log("Parent:", result.destination.index-1)
     }
 
     render() {
@@ -75,7 +76,7 @@ export default class QuestionTable extends Component {
                     <TableBody component={DroppableComponent(this.onDragEnd)}>
                         {this.state.questions.map((question, index) => (
                             <TableRow component={DraggableComponent(question._id.$oid, index)} key={question._id.$oid}>
-                                <QuestionRow question={question} index={index}/>
+                                <QuestionRow question={question} index={index} />
                             </TableRow>
                         ))}
                     </TableBody>
