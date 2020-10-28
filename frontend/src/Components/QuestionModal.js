@@ -1,16 +1,19 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { Button, Form } from 'react-bootstrap';
 import { Row, Col } from 'react-bootstrap';
+import '../css/theme.css';
 
 
 export default function QuestionModal(props) {
     var numResponse = props.question.responses.length
-    console.log(numResponse)
+    var questionType = props.question.responseType
+
+    const dimensions = ["Accountability", "Bias and Fairness", "Explainability and Interpretability", "Robustness", "Data Quality"]
+    // console.log(numResponse)
     return (
         <Modal
             {...props}
-            size="lg"
             aria-labelledby="contained-modal-title-vcenter"
             centered
             dialogClassName="modal-60w"
@@ -20,36 +23,27 @@ export default function QuestionModal(props) {
                     Edit Question
                 </Modal.Title>
             </Modal.Header>
+
             <Modal.Body>
                 <Form>
                     <Row>
                         <Col xs={12} md={1} />
-                        <Col xs={12} md={10}>
-                            <Form.Group controlId="formQuestion">
-                                <Form.Label>Question</Form.Label>
-                                <Form.Control as="textarea" placeholder="Question" defaultValue={props.question.question} />
-                            </Form.Group>
-                        </Col>
-                        <Col xs={12} md={1} />
-                    </Row>
-                    <Row>
-                        <Col xs={12} md={1} />
-                        <Col xs={12} md={1}>
+                        {/* <Col xs={12} md={1}>
                             <Form.Group controlId="formNumber">
                                 <Form.Label>No.</Form.Label>
                                 <Form.Control type="number" placeholder="No." defaultValue={props.question.questionNumber} />
                             </Form.Group>
-                        </Col>
+                        </Col> */}
                         <Col xs={10} md={2}>
                             <Form.Group controlId="formDimension">
                                 <Form.Label>Dimension</Form.Label>
-                                <Form.Control as="select">
-                                    <option>Accountability</option>
-                                    <option>Bias and Fairness</option>
-                                    <option>Explainability and Interpretability</option>
-                                    <option>Robustness</option>
-                                    <option>Data Quality</option>
+                                <Form.Control  as="select">
+                                    <option value="0">Choose...</option>
+                                    {dimensions.map((dimension, index) =>
+                                        <option key={index+1} value={index+1}>{dimension}</option>
+                                    )}
                                 </Form.Control>
+
                             </Form.Group>
                         </Col>
                         <Col xs={10} md={2}>
@@ -77,6 +71,17 @@ export default function QuestionModal(props) {
                             <Form.Control type="number" placeholder="Weighting" defaultValue={props.question ? props.question.weighting : "PWeighting"}></Form.Control>
                         </Col>
                     </Row>
+                    <Row>
+                        <Col xs={12} md={1} />
+                        <Col xs={12} md={10}>
+                            <Form.Group controlId="formQuestion">
+                                <Form.Label>Question</Form.Label>
+                                <Form.Control as="textarea" placeholder="Question" defaultValue={props.question.question} />
+                            </Form.Group>
+                        </Col>
+                        <Col xs={12} md={1} />
+                    </Row>
+
                     <Row>
                         <Col xs={6} md={1} />
                         <Col xs={6} md={9}>
