@@ -6,7 +6,7 @@ import Table from '@material-ui/core/Table';
 import QuestionTable from '../Components/QuestionTable'
 
 //TODO: replace this with backend API to get JSONs from mongoDB
-const questionsJSON = require('../questionsJSON.json')
+const questionsJSON = require('../tempJSON/questionsJSON.json')
 // console.log(questionsJSON)
 
 export default class Results extends Component {

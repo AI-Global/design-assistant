@@ -25,7 +25,7 @@ export default function QuestionRow(props) {
     const { question, index } = props;
     const [modalShow, setModalShow] = React.useState(false);
     const classes = useRowStyles();
-    const dimensionJSON = require('../dimensionJSON.json')
+    const dimensionJSON = require('../tempJSON/dimensionJSON.json')
 
     return (
         <React.Fragment>
