@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+require('dotenv').config();
 const key = "authToken";
 
 export function expireAuthToken(){
@@ -9,7 +9,8 @@ export function expireAuthToken(){
 
 export function getLoggedInUser(){
     let authToken = localStorage.getItem(key) ?? sessionStorage.getItem(key);
-    return axios.get('http://localhost:9000/users/user', {
+    var endPoint = '/users/user';
+    return axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint, {
         headers: {
             "x-auth-token": authToken
         }
@@ -31,7 +32,8 @@ export function isLoggedIn(){
     if(!authToken){
         return false
     }
-    return axios.get('http://localhost:9000/users/isLoggedIn', {
+    var endPoint = '/users/isLoggedIn';
+    return axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint, {
         headers: {
             "x-auth-token": authToken
         }

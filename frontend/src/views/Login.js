@@ -4,7 +4,7 @@ import "../css/login.css";
 import Signup from "./Signup";
 import axios from 'axios';
 import { getLoggedInUser, expireAuthToken } from '../helper/AuthHelper';
-
+require('dotenv').config();
 
 export default class Login extends Component {
     constructor(props){
@@ -27,7 +27,8 @@ export default class Login extends Component {
         let username = form.loginUsername.value;
         let password = form.loginPassword.value;
         let remember = form.loginRemember.checked;
-        axios.post('http://localhost:9000/users/auth', {
+        var endPoint = '/users/auth';
+        axios.post(process.env.REACT_APP_SERVER_ADDR + endPoint, {
             username: username,
             password: password
         })
