@@ -16,10 +16,18 @@ export default class Signup extends Component {
             email: {isInvalid: false, message: ""},
             username: {isInvalid: false, message: ""},
             password: {isInvalid: false, message: ""},
-            passwordConfirmation: {isInvalid: false, message: ""}
+            passwordConfirmation: {isInvalid: false, message: ""},
+            emailInput: "",
+            usernameInput: "",
+            emailAsUsername: true
         }
     }
 
+    /**
+     * Upon submission of the signup form, function
+     * sends form values to the backend to be validated
+     * and added to the DB.
+     */
     handleSignupSubmit(event){
         this.setState({email: {isInvalid: false, message: ""},
             username: {isInvalid: false, message: ""},
@@ -57,6 +65,29 @@ export default class Signup extends Component {
         }
     }
 
+    /**
+     * Updates the username input to match 
+     * if user has toggled to sign in with email.
+     */
+    handleEmailInput(event){
+        let email = event.target.value;
+        this.setState({emailInput: email})
+        if(this.state.emailAsUsername){
+            this.setState({usernameInput: email});
+        }
+    }   
+
+    toggleUsernameAsEmail(event){
+        let toggle = event.target.checked;
+        this.setState({emailAsUsername: toggle})
+        if(toggle){
+            this.setState({usernameInput: this.state.emailInput})
+        }
+        else{
+            this.setState({usernameInput: ""});
+        }
+    }
+
     render(){
         const showSignup = this.state.showSignupModal;
         const handleSignupClose = () => this.setState({showSignupModal: false});
@@ -81,13 +112,16 @@ export default class Signup extends Component {
                                 {RegistrationDescription}
                             </p>
                             <Form.Group controlId="signupEmail">
-                                <Form.Control type="email" placeholder="Email" required="required" isInvalid={this.state.email.isInvalid} autoComplete="email"/>
+                                <Form.Control type="email" placeholder="Email" required="required" isInvalid={this.state.email.isInvalid} onChange={(e) => this.handleEmailInput(e)} autoComplete="email"/>
                                 <Form.Control.Feedback type="invalid">
                                     {this.state.email.message}
                                 </Form.Control.Feedback>
                             </Form.Group>                  
+                            <Form.Group controlId="signupUsernameAsEmail">
+                                <Form.Check type="checkbox" label="Sign in using email instead of username" defaultChecked={this.state.emailAsUsername} onChange={(e) => this.toggleUsernameAsEmail(e)} />
+                            </Form.Group>             
                             <Form.Group controlId="signupUsername">
-                                <Form.Control type="text" placeholder = "Username" required="required" isInvalid={this.state.username.isInvalid} autoComplete="username"/>
+                                <Form.Control type="text" placeholder = "Username" required="required" isInvalid={this.state.username.isInvalid} autoComplete="username" readOnly={this.state.emailAsUsername} value={this.state.usernameInput}/>
                                 <Form.Control.Feedback type="invalid">
                                     {this.state.username.message}
                                 </Form.Control.Feedback>

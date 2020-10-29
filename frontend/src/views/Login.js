@@ -24,6 +24,11 @@ export default class Login extends Component {
         });
     }
 
+    /**
+     * Upon submission of login form, function sends form 
+     * values to the backend to be validated against the database 
+     * and sends back authorization token and user information
+     */
     handleSubmit(event){
         this.setState({username: {isInvalid: false, message: ""},
             password: {isInvalid: false, message: ""}});
@@ -58,11 +63,19 @@ export default class Login extends Component {
             });
     }
 
+    /**
+     * Expires the authorization tokens upon
+     * log out button being clicked
+     */
     handleLogOut(){
         expireAuthToken();
         this.setState({user: undefined});
     }
 
+    /**
+     * Renders user information if there 
+     * is a user logged in.
+     */
     renderUser(){
         const handleShow = () => this.setState({showLoginModal: true});
         let user = this.state.user;
