@@ -40,9 +40,13 @@ export default function QuestionModal(props) {
         setResponses([...newResponse])
     }
 
-    function click(a, index, score) {
-        responses[index] = {"responseNumber": index, "indicator": a, "score": score}
-        console.log(a)
+    function editIndicator(indicator, index, score) {
+        responses[index] = { "responseNumber": index, "indicator": indicator, "score": score }
+        setResponses([...responses])
+    }
+
+    function editScore(score, index, indicator) {
+        responses[index] = { "responseNumber": index, "indicator": indicator, "score": score }
         setResponses([...responses])
     }
 
@@ -62,7 +66,7 @@ export default function QuestionModal(props) {
             <Modal.Body>
                 <Form>
                     <Row>
-                        <Col xs={4} md={2}>
+                        <Col xs={4} md={3}>
                             <Form.Group controlId="formDimension">
                                 <Form.Label>Dimension</Form.Label>
                                 <Form.Control defaultValue={props.question.trustIndexDimension} as="select">
@@ -125,7 +129,7 @@ export default function QuestionModal(props) {
                                                         </IconButton>
                                                     </InputGroup.Text>
                                                 </InputGroup.Prepend>
-                                                <Form.Control type="text"  placeholder="Response" value={response.indicator} style={{ height: "inherit" }} onChange={(event) => click(event.target.value, index, response.score)}/>
+                                                <Form.Control type="text" placeholder="Response" value={response.indicator} style={{ height: "inherit" }} ref={{}} onChange={(event) => editIndicator(event.target.value, index, response.score)} />
                                             </InputGroup>
                                         </div>
                                     )}
@@ -133,12 +137,12 @@ export default function QuestionModal(props) {
                             </Col>
                             <Col xs={1} md={1}>
                                 <Form.Group controlId="formScore">
-                                    <Form.Label style={{ paddingBottom: "4px" }}>
+                                     <Form.Label style={{ paddingBottom: "4px" }}> {/*  */}
                                         Score
                                     </Form.Label>
                                     {responses.map((response, index) =>
                                         <div key={index} style={{ paddingBottom: "15px" }}>
-                                            <Form.Control type="text" placeholder="--" defaultValue={response.score} style={{ height: "39.5px" }}></Form.Control>
+                                            <Form.Control type="number" placeholder="--" defaultValue={response.score} style={{ height: "39.5px" }} onChange={(event) => editScore(event.target.value, index, response.indicator)} ></Form.Control>
                                         </div>
                                     )}
                                 </Form.Group>
