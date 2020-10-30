@@ -34,12 +34,16 @@ export default function QuestionModal(props) {
     }
 
     function removeResponse(index) {
-        console.log(responses, index)
         delete responses[index]
         const newResponse = responses.filter(function (i) { return i; })
-        console.log(newResponse)
         setResponses(newResponse)
         setResponses([...newResponse])
+    }
+
+    function click(a, index, score) {
+        responses[index] = {"responseNumber": index, "indicator": a, "score": score}
+        console.log(a)
+        setResponses([...responses])
     }
 
     return (
@@ -121,7 +125,7 @@ export default function QuestionModal(props) {
                                                         </IconButton>
                                                     </InputGroup.Text>
                                                 </InputGroup.Prepend>
-                                                <Form.Control style={{ height: "inherit" }} value={response.indicator} onChange={() => { setResponses(response) }} />
+                                                <Form.Control type="text"  placeholder="Response" value={response.indicator} style={{ height: "inherit" }} onChange={(event) => click(event.target.value, index, response.score)}/>
                                             </InputGroup>
                                         </div>
                                     )}
@@ -129,10 +133,12 @@ export default function QuestionModal(props) {
                             </Col>
                             <Col xs={1} md={1}>
                                 <Form.Group controlId="formScore">
-                                    <Form.Label style={{ paddingBottom: "4px" }}>Score</Form.Label>
+                                    <Form.Label style={{ paddingBottom: "4px" }}>
+                                        Score
+                                    </Form.Label>
                                     {responses.map((response, index) =>
                                         <div key={index} style={{ paddingBottom: "15px" }}>
-                                            <Form.Control type="text" defaultValue={response.score} style={{ height: "39.5px" }}></Form.Control>
+                                            <Form.Control type="text" placeholder="--" defaultValue={response.score} style={{ height: "39.5px" }}></Form.Control>
                                         </div>
                                     )}
                                 </Form.Group>
@@ -192,7 +198,7 @@ export default function QuestionModal(props) {
                         </Col>
                     </Row>
                 </Form>
-                <div id="modal-footer-border"/>
+                <div id="modal-footer-border" />
                 <div id="modal-footer" alt_text="footer">
                     <Button id="resetButton">Delete</Button>
                     <Button id="saveButton">Save</Button>
