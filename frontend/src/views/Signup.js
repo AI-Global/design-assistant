@@ -2,6 +2,7 @@ import React,{ Component } from 'react';
 import { Modal, Form} from 'react-bootstrap';
 import "../css/signup.css";
 import axios from 'axios';
+require('dotenv').config();
 
 const RegistrationDescription = `You can create an account for the Responsible AI Design Assistant! 
 After creating your account, an email verfication will be sent to you.`
@@ -29,7 +30,8 @@ export default class Signup extends Component {
             console.log("Passwords not matching");
         }
         else{
-            axios.post('http://localhost:9000/users/create/', {
+            var endPoint = '/users/create/';
+            axios.post(process.env.REACT_APP_SERVER_ADDR + endPoint, {
                 name: name,
                 email: email,
                 username: username,
