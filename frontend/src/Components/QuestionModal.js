@@ -1,10 +1,12 @@
 import '../css/theme.css';
-import React from 'react';
+import React, { useState } from 'react';
 import Add from '@material-ui/icons/Add';
 import Modal from 'react-bootstrap/Modal';
+import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
 import { Button, Form, Row, Col } from 'react-bootstrap';
-
+import { green, red } from '@material-ui/core/colors';
+import InputGroup from 'react-bootstrap/InputGroup'
 
 export default function QuestionModal(props) {
     const responseType = ["text", "comment", "dropdown", "radiogroup", "checkbox", "slider"]
@@ -16,18 +18,29 @@ export default function QuestionModal(props) {
     const regionJSON = require('../tempJSON/regionJSON.json')
     const rolesJSON = require('../tempJSON/rolesJSON.json')
 
+    const [questionType, setType] = useState(props.question.responseType)
+    const [questionRole, setRole] = useState(rolesJSON[props.question.roles].name)
+    const [questionLifecycle, setLifecycle] = useState(lifecycleJSON[props.question.lifecycle].name)
+    const [responses, setResponses] = useState(props.question.responses)
+    // const [questionDomain, setDomain] = useState(domainJSON[props.question.domainApplicability].name)
+    // const [questionRegion setRegion] = useState(regionJSON[props.question.regionalApplicability].name)
 
-    const [questionType, setType] = React.useState(props.question.responseType)
-    const [questionRole, setRole] = React.useState(rolesJSON[props.question.roles].name)
-    const [questionLifecycle, setLifecycle] = React.useState(lifecycleJSON[props.question.lifecycle].name)
-    const [responses, setResponses] = React.useState(props.question.responses)
-    // const [questionDomain, setDomain] = React.useState(domainJSON[props.question.domainApplicability].name)
-    // const [questionRegion setRegion] = React.useState(regionJSON[props.question.regionalApplicability].name)
+    function addResponse(response) {
+        // add new response object to responses and rerender response section by spreading the array into a new array
+        // problem: https://stackoverflow.com/questions/56266575/why-is-usestate-not-triggering-re-render
+        // solution by ray hatfield: https://stackoverflow.com/a/56266640
+        response[response.length] = { "responseNumber": response.length, "indicator": "", "score": "" }
+        setResponses([...response])
+    }
 
-    // console.log(questionRole)
-    // console.log(questionType)
-    // console.log(questionLifecycle)
-    console.log(responses)
+    function removeResponse(index) {
+        console.log(responses, index)
+        delete responses[index]
+        const newResponse = responses.filter(function (i) { return i; })
+        console.log(newResponse)
+        setResponses(newResponse)
+        setResponses([...newResponse])
+    }
 
     return (
         <Modal
@@ -45,8 +58,7 @@ export default function QuestionModal(props) {
             <Modal.Body>
                 <Form>
                     <Row>
-                        <Col xs={12} md={1} />
-                        <Col xs={10} md={2}>
+                        <Col xs={4} md={2}>
                             <Form.Group controlId="formDimension">
                                 <Form.Label>Dimension</Form.Label>
                                 <Form.Control defaultValue={props.question.trustIndexDimension} as="select">
@@ -57,10 +69,10 @@ export default function QuestionModal(props) {
                                 </Form.Control>
                             </Form.Group>
                         </Col>
-                        <Col xs={10} md={2}>
+                        <Col xs={4} md={2}>
                             <Form.Group controlId="formType">
                                 <Form.Label>Question Type</Form.Label>
-                                <Form.Control defaultValue={questionType} as="select" onChange={(event) => setType(event.target.value)}> {/*console.log(event.target.value) */}
+                                <Form.Control defaultValue={questionType} as="select" onChange={(event) => setType(event.target.value)}>
                                     <option>Choose...</option>
                                     {responseType.map((type, index) =>
                                         <option key={index} value={type}>{type}</option>
@@ -70,17 +82,11 @@ export default function QuestionModal(props) {
                         </Col>
                         {(questionType === "radiogroup" || questionType === "checkbox") ?
                             <React.Fragment>
-                                {/* <Col xs={10} md={1}>
-                                    <Form.Group controlId="formResponseNumber">
-                                        <Form.Label>Choices</Form.Label>
-                                        <Form.Control type="number" defaultValue={numResponse} />
-                                    </Form.Group>
-                                </Col> */}
-                                <Col xs={6} md={1}>
+                                <Col xs={4} md={1}>
                                     <Form.Label>Points</Form.Label>
                                     <Form.Control type="number" placeholder="Points" defaultValue={props.question ? props.question.pointsAvailable : "Points"}></Form.Control>
                                 </Col>
-                                <Col xs={6} md={1}>
+                                <Col xs={4} md={1}>
                                     <Form.Label>Weighting</Form.Label>
                                     <Form.Control type="number" placeholder="Weighting" defaultValue={props.question ? props.question.weighting : "Weighting"}></Form.Control>
                                 </Col>
@@ -88,36 +94,45 @@ export default function QuestionModal(props) {
                             : null}
                     </Row>
                     <Row>
-                        <Col xs={12} md={1} />
-                        <Col xs={12} md={10}>
+                        <Col xs={12} md={12}>
                             <Form.Group controlId="formQuestion">
                                 <Form.Label>Question</Form.Label>
                                 <Form.Control as="textarea" placeholder="Question" defaultValue={props.question.question} />
                             </Form.Group>
                         </Col>
-                        <Col xs={12} md={1} />
                     </Row>
                     {(questionType === "comment" || questionType === "text" || questionType === "dropdown") ? null :
                         <Row>
-                            <Col xs={6} md={1} />
-                            <Col xs={6} md={9}>
+                            <Col xs={11} md={11} style={{ display: "inline-block" }}>
                                 <Form.Group controlId="formResponses">
-                                    <Form.Label>Responses
-                                                <IconButton aria-label="add response" size="small" style={{ "marginLeft": "0.5em"}}><Add /></IconButton>
+                                    <Form.Label>
+                                        Responses
+                                        <IconButton aria-label="add response" size="small" style={{ "marginLeft": "0.3em" }} onClick={() => { addResponse(responses) }}>
+                                            <Add style={{ color: green[500] }} />
+                                        </IconButton>
                                     </Form.Label>
-                                    {props.question.responses.map((response, index) =>
-                                        <div key={index} style={{ "paddingBottom": "0.5em" }}>
-                                            <Form.Control defaultValue={response.indicator} />
+                                    {responses.map((response, index) =>
+                                        <div key={index} style={{ paddingBottom: "0.5em" }}>
+                                            <InputGroup className="mb-2">
+                                                <InputGroup.Prepend>
+                                                    <InputGroup.Text>
+                                                        <IconButton size="small" color="secondary" onClick={() => { removeResponse(index) }}>
+                                                            <DeleteIcon key={index} style={{ color: red[500] }} />
+                                                        </IconButton>
+                                                    </InputGroup.Text>
+                                                </InputGroup.Prepend>
+                                                <Form.Control style={{ height: "inherit" }} value={response.indicator} onChange={() => { setResponses(response) }} />
+                                            </InputGroup>
                                         </div>
                                     )}
                                 </Form.Group>
                             </Col>
-                            <Col xs={6} md={1}>
+                            <Col xs={1} md={1}>
                                 <Form.Group controlId="formScore">
-                                    <Form.Label>Score</Form.Label>
+                                    <Form.Label style={{ paddingBottom: "4px" }}>Score</Form.Label>
                                     {responses.map((response, index) =>
-                                        <div key={index} style={{ "paddingBottom": "0.5em" }}>
-                                            <Form.Control type="text" defaultValue={response.score}></Form.Control>
+                                        <div key={index} style={{ paddingBottom: "15px" }}>
+                                            <Form.Control type="text" defaultValue={response.score} style={{ height: "39.5px" }}></Form.Control>
                                         </div>
                                     )}
                                 </Form.Group>
@@ -125,8 +140,7 @@ export default function QuestionModal(props) {
                         </Row>
                     }
                     <Row>
-                        <Col xs={6} md={1} />
-                        <Col xs={6} md={2}>
+                        <Col xs={2} md={2}>
                             <Form.Group>
                                 <Form.Label>Role</Form.Label>
                                 <Form.Control defaultValue={questionRole} as="select" onChange={(event) => setRole(event.target.value)}>
@@ -136,7 +150,7 @@ export default function QuestionModal(props) {
                                 </Form.Control>
                             </Form.Group>
                         </Col>
-                        <Col xs={6} md={2}>
+                        <Col xs={2} md={2}>
                             <Form.Group>
                                 <Form.Label>Domain</Form.Label>
                                 {/* TODO: update default value when questions have domain */}
@@ -147,7 +161,7 @@ export default function QuestionModal(props) {
                                 </Form.Control>
                             </Form.Group>
                         </Col>
-                        <Col xs={6} md={2}>
+                        <Col xs={2} md={2}>
                             <Form.Group>
                                 <Form.Label>Region</Form.Label>
                                 {/* TODO: update default value when questions have region */}
@@ -158,7 +172,7 @@ export default function QuestionModal(props) {
                                 </Form.Control>
                             </Form.Group>
                         </Col>
-                        <Col xs={6} md={2}>
+                        <Col xs={2} md={2}>
                             <Form.Group>
                                 <Form.Label>Life-Cycle</Form.Label>
                                 <Form.Control defaultValue={questionLifecycle} as="select" onChange={(event) => setLifecycle(event.target.value)}>
@@ -170,8 +184,7 @@ export default function QuestionModal(props) {
                         </Col>
                     </Row>
                     <Row>
-                        <Col xs={6} md={1} />
-                        <Col xs={6} md={10}>
+                        <Col xs={12} md={12}>
                             <Form.Group controlId="formResponses">
                                 <Form.Label>Help Text</Form.Label>
                                 <Form.Control as="textarea" placeholder="Help text" defaultValue={(props.question.alt_text === "\r") ? "" : props.question.alt_text} />
@@ -179,14 +192,12 @@ export default function QuestionModal(props) {
                         </Col>
                     </Row>
                 </Form>
-            </Modal.Body>
-            <Modal.Footer>
-                <div className="d-flex justify-content-start col">
+                <div id="modal-footer-border"/>
+                <div id="modal-footer" alt_text="footer">
                     <Button id="resetButton">Delete</Button>
+                    <Button id="saveButton">Save</Button>
                 </div>
-                <Button onClick={props.onHide}>Close</Button>
-                <Button id="saveButton">Save</Button>
-            </Modal.Footer>
+            </Modal.Body>
         </Modal>
     );
 }
