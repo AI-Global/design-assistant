@@ -17,10 +17,7 @@ async function getDimensions() {
     return Dimensions
 }
 
-async function formatQuestion(q) {
-    // Get dimensions from DB
-    let Dimensions = await getDimensions()
-
+function formatQuestion(q, Dimensions) {
     // This function takes a question from mongoDB as input and formats it for surveyJS to use
 
     // All questions have a title, name, and type
@@ -96,7 +93,7 @@ async function formatQuestion(q) {
     return question;
 }
 
-async function createPage(questions, pageName, pageTitle) {
+function createPage(questions, pageName, pageTitle, Dimensions) {
     // Helper function for createPages
     // function takes in a list of question plus title and creates a page for it
     var page = {};
@@ -108,17 +105,14 @@ async function createPage(questions, pageName, pageTitle) {
     page.title.default = pageTitle;
     page.title.fr = "";
     // Map MongoDB questions to surveyJS format
-    page.elements = await Promise.all(questions.map(async function (q) {
-        return await formatQuestion(q);
-    }));
+    page.elements = questions.map(function (q) {
+        return formatQuestion(q, Dimensions);
+    });
 
     return page
 }
 
-async function createPages(q) {
-    // Get dimensions from DB
-    let Dimensions = await getDimensions()
-
+function createPages(q, Dimensions) {
     // This function takes in a list of questions from mongoDB and formats them into pages for surveyJS
     page = {};
     page.pages = [];
@@ -152,7 +146,7 @@ async function createPages(q) {
     }
 
     // Create project details page
-    projectDetails = await createPage(tombstone, "projectDetails1", "Project Details");
+    projectDetails = createPage(tombstone, "projectDetails1", "Project Details", Dimensions);
     page.pages.push(projectDetails);
 
     // Create pages for the dimensions
@@ -166,7 +160,7 @@ async function createPages(q) {
             questions.push(question);
             questions.push({ responseType: "comment", id: "other" + question.id, question: "Other:", alttext: "If possible, support the feedback with specific recommendations \/ suggestions to improve the tool. Feedback can include:\n - Refinement to existing questions, like suggestions on how questions can be simplified or clarified further\n - Additions of new questions for specific scenarios that may be missed\n - Feedback on whether the listed AI risk domains are fulsome and complete\n - What types of response indicators should be included for your context?" });
             if (questions.length == 4) {
-                var dimPage = await createPage(questions, Dimensions[question.trustIndexDimension].page + pageCount, Dimensions[question.trustIndexDimension].name);
+                var dimPage = createPage(questions, Dimensions[question.trustIndexDimension].page + pageCount, Dimensions[question.trustIndexDimension].name, Dimensions);
                 page.pages.push(dimPage);
                 pageCount++;
                 questions = [];
@@ -177,7 +171,7 @@ async function createPages(q) {
 
         // Deal with odd number of pages
         if (questions.length > 0) {
-            var dimPage = await createPage(questions, Dimensions[questions[0].trustIndexDimension].page + pageCount, Dimensions[questions[0].trustIndexDimension].name);
+            var dimPage = createPage(questions, Dimensions[questions[0].trustIndexDimension].page + pageCount, Dimensions[questions[0].trustIndexDimension].name, Dimensions);
             page.pages.push(dimPage);
         }
 
@@ -191,18 +185,22 @@ async function createPages(q) {
 }
 
 // Get all questions. Assemble SurveyJS JSON here
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
+    // Get dimensions from DB
+    let Dimensions = await getDimensions()
     Question.find()
-        .then(async (questions) => res.status(200).send(await createPages(questions)))
+        .then((questions) => res.status(200).send(createPages(questions, Dimensions)))
         .catch((err) => res.status(400).send(err));
 
 });
 
 
 // Get question by id
-router.get('/:questionId', (req, res) => {
+router.get('/:questionId', async (req, res) => {
+    // Get dimensions from DB
+    let Dimensions = await getDimensions()
     Question.findOne({ _id: req.params.questionId })
-        .then(async (question) => res.status(200).send(await formatQuestion(question)))
+        .then((question) => res.status(200).send(formatQuestion(question, Dimensions)))
         .catch((err) => res.status(400).send(err));
 });
 
