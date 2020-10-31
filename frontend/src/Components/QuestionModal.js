@@ -2,28 +2,43 @@ import '../css/theme.css';
 import React, { useState } from 'react';
 import Add from '@material-ui/icons/Add';
 import Modal from 'react-bootstrap/Modal';
+import CloseIcon from '@material-ui/icons/Close';
 import DeleteIcon from '@material-ui/icons/Delete';
+import InputGroup from 'react-bootstrap/InputGroup';
 import IconButton from '@material-ui/core/IconButton';
-import { Button, Form, Row, Col } from 'react-bootstrap';
 import { green, red } from '@material-ui/core/colors';
-import InputGroup from 'react-bootstrap/InputGroup'
+import { Button, Form, Row, Col } from 'react-bootstrap';
+
 
 export default function QuestionModal(props) {
     const responseType = ["text", "comment", "dropdown", "radiogroup", "checkbox", "slider"]
 
     // TODO: replace constants and JSON files with backend calls
+    const questionsJSON = require('../tempJSON/questionsJSON.json')
     const dimensionJSON = require('../tempJSON/dimensionJSON.json')
     const domainJSON = require('../tempJSON/domainJSON.json')
     const lifecycleJSON = require('../tempJSON/lifecycleJSON.json')
     const regionJSON = require('../tempJSON/regionJSON.json')
     const rolesJSON = require('../tempJSON/rolesJSON.json')
 
-    const [questionType, setType] = useState(props.question.responseType)
-    const [questionRole, setRole] = useState(rolesJSON[props.question.roles].name)
-    const [questionLifecycle, setLifecycle] = useState(lifecycleJSON[props.question.lifecycle].name)
-    const [responses, setResponses] = useState(props.question.responses)
+    const [, closeModal] = useState(props.show)
+
+    // make copy of responses array so we can revert back to it if needed
+    const responsesA = [...props.question.responses]
+
+    // Set all question properties as hooks for rendering and updating
+    const [altText, setAltText] = useState(props.question.alt_text)
     // const [questionDomain, setDomain] = useState(domainJSON[props.question.domainApplicability].name)
+    const [questionLifecycle, setLifecycle] = useState(lifecycleJSON[props.question.lifecycle].name)
+    const [points, setPoints] = useState(props.question.pointsAvailable)
+    const [question, setQuestion] = useState(props.question.question)
+    const [questionRef, setRef] = useState(props.question.reference)
     // const [questionRegion setRegion] = useState(regionJSON[props.question.regionalApplicability].name)
+    const [questionType, setType] = useState(props.question.responseType)
+    const [responses, setResponses] = useState(responsesA)
+    const [questionRole, setRole] = useState(rolesJSON[props.question.roles].name)
+    const [dimension, setDimension] = useState(props.question.trustIndexDimension)
+    const [weight, setWeight] = useState(props.question.weighting)
 
     function addResponse(response) {
         // add new response object to responses and rerender response section by spreading the array into a new array
@@ -34,8 +49,10 @@ export default function QuestionModal(props) {
     }
 
     function removeResponse(index) {
-        delete responses[index]
-        const newResponse = responses.filter(function (i) { return i; })
+        const newResponse = responses.filter(function (e) { return e.responseNumber !== index; })
+        for (var i in newResponse) {
+            newResponse[i].responseNumber = parseInt(i)
+        }
         setResponses(newResponse)
         setResponses([...newResponse])
     }
@@ -45,9 +62,46 @@ export default function QuestionModal(props) {
         setResponses([...responses])
     }
 
+    function revertIndicators(r) {
+        for (var i in r) {
+            r[i].responseNumber = parseInt(i)
+        }
+        setResponses([...r])
+    }
+
     function editScore(score, index, indicator) {
         responses[index] = { "responseNumber": index, "indicator": indicator, "score": score }
         setResponses([...responses])
+    }
+
+    function close() {
+        // if modal close button is clicked, edits will not be saved, so revert all values to default
+        setAltText(props.question.alt_text)
+        setLifecycle(lifecycleJSON[props.question.lifecycle].name)
+        setPoints(props.question.pointsAvailable)
+        setQuestion(props.question.question)
+        setRef(props.question.reference)
+        setType(props.question.responseType)
+        revertIndicators(props.question.responses)
+        setRole(rolesJSON[props.question.roles].name)
+        setDimension(props.question.trustIndexDimension)
+        setWeight(props.question.weighting)
+        closeModal(props.onHide)
+    }
+
+    function save() {
+        // questionsJSON[props.question.questionNumber].alt_text = altText
+        // questionsJSON[props.question.questionNumber].lifecycle = questionLifecycle
+        // questionsJSON[props.question.questionNumber].pointsAvailable = points
+        // questionsJSON[props.question.questionNumber].question = question
+        // questionsJSON[props.question.questionNumber].reference = questionRef
+        // questionsJSON[props.question.questionNumber].responseType = questionType
+        // questionsJSON[props.question.questionNumber].responses = responses
+        // questionsJSON[props.question.questionNumber].roles = questionRole        
+        // questionsJSON[props.question.questionNumber].trustIndexDimension = dimension
+        // questionsJSON[props.question.questionNumber].weighting = weight
+        console.log(questionsJSON[props.question.questionNumber])
+        closeModal(props.onHide)
     }
 
     return (
@@ -56,20 +110,23 @@ export default function QuestionModal(props) {
             aria-labelledby="contained-modal-title-vcenter"
             centered
             dialogClassName="modal-60w"
+            backdrop="static"
         >
-            <Modal.Header closeButton>
+            <Modal.Header>
                 <Modal.Title id="contained-modal-title-vcenter">
                     Edit Question
                 </Modal.Title>
+                <IconButton size="small" onClick={() => close()} label="Close">
+                    <CloseIcon />
+                </IconButton>
             </Modal.Header>
-
             <Modal.Body>
                 <Form>
                     <Row>
                         <Col xs={4} md={3}>
                             <Form.Group controlId="formDimension">
                                 <Form.Label>Dimension</Form.Label>
-                                <Form.Control defaultValue={props.question.trustIndexDimension} as="select">
+                                <Form.Control value={dimension || ""} as="select" onChange={(event) => setDimension(event.target.value)}>
                                     <option>Choose...</option>
                                     {dimensionJSON.map((dimension, index) =>
                                         <option key={index} value={index}>{dimension.name}</option>
@@ -79,8 +136,8 @@ export default function QuestionModal(props) {
                         </Col>
                         <Col xs={4} md={2}>
                             <Form.Group controlId="formType">
-                                <Form.Label>Question Type</Form.Label>
-                                <Form.Control defaultValue={questionType} as="select" onChange={(event) => setType(event.target.value)}>
+                                <Form.Label>Response Type</Form.Label>
+                                <Form.Control value={questionType} as="select" onChange={(event) => setType(event.target.value)}>
                                     <option>Choose...</option>
                                     {responseType.map((type, index) =>
                                         <option key={index} value={type}>{type}</option>
@@ -92,11 +149,11 @@ export default function QuestionModal(props) {
                             <React.Fragment>
                                 <Col xs={4} md={1}>
                                     <Form.Label>Points</Form.Label>
-                                    <Form.Control type="number" placeholder="Points" defaultValue={props.question ? props.question.pointsAvailable : "Points"}></Form.Control>
+                                    <Form.Control type="number" placeholder="--" value={points} onChange={(event) => setPoints(event.target.value)} />
                                 </Col>
                                 <Col xs={4} md={1}>
-                                    <Form.Label>Weighting</Form.Label>
-                                    <Form.Control type="number" placeholder="Weighting" defaultValue={props.question ? props.question.weighting : "Weighting"}></Form.Control>
+                                    <Form.Label>Weight</Form.Label>
+                                    <Form.Control type="number" placeholder="--" value={weight} onChange={(event) => setWeight(event.target.value)} />
                                 </Col>
                             </React.Fragment>
                             : null}
@@ -105,7 +162,7 @@ export default function QuestionModal(props) {
                         <Col xs={12} md={12}>
                             <Form.Group controlId="formQuestion">
                                 <Form.Label>Question</Form.Label>
-                                <Form.Control as="textarea" placeholder="Question" defaultValue={props.question.question} />
+                                <Form.Control as="textarea" placeholder="Question" value={question || ""} onChange={(event) => setQuestion(event.target.value)} />
                             </Form.Group>
                         </Col>
                     </Row>
@@ -129,7 +186,7 @@ export default function QuestionModal(props) {
                                                         </IconButton>
                                                     </InputGroup.Text>
                                                 </InputGroup.Prepend>
-                                                <Form.Control type="text" placeholder="Response" value={response.indicator} style={{ height: "inherit" }} ref={{}} onChange={(event) => editIndicator(event.target.value, index, response.score)} />
+                                                <Form.Control type="text" placeholder="Response" value={response.indicator} style={{ height: "inherit" }} onChange={(event) => editIndicator(event.target.value, index, response.score)} />
                                             </InputGroup>
                                         </div>
                                     )}
@@ -137,12 +194,12 @@ export default function QuestionModal(props) {
                             </Col>
                             <Col xs={1} md={1}>
                                 <Form.Group controlId="formScore">
-                                     <Form.Label style={{ paddingBottom: "4px" }}> {/*  */}
+                                    <Form.Label style={{ paddingBottom: "4px" }}> {/*  */}
                                         Score
                                     </Form.Label>
                                     {responses.map((response, index) =>
                                         <div key={index} style={{ paddingBottom: "15px" }}>
-                                            <Form.Control type="number" placeholder="--" defaultValue={response.score} style={{ height: "39.5px" }} onChange={(event) => editScore(event.target.value, index, response.indicator)} ></Form.Control>
+                                            <Form.Control type="number" placeholder="--" value={response.score} style={{ height: "39.5px" }} onChange={(event) => editScore(event.target.value, index, response.indicator)} ></Form.Control>
                                         </div>
                                     )}
                                 </Form.Group>
@@ -196,8 +253,16 @@ export default function QuestionModal(props) {
                     <Row>
                         <Col xs={12} md={12}>
                             <Form.Group controlId="formResponses">
-                                <Form.Label>Help Text</Form.Label>
-                                <Form.Control as="textarea" placeholder="Help text" defaultValue={(props.question.alt_text === "\r") ? "" : props.question.alt_text} />
+                                <Form.Label>Alt Text</Form.Label>
+                                <Form.Control as="textarea" placeholder="Alt text" value={(altText === "\r") ? "" : altText} onChange={(event) => setAltText(event.target.value)} />
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col xs={12} md={12}>
+                            <Form.Group controlId="formResponses">
+                                <Form.Label>Reference</Form.Label>
+                                <Form.Control as="textarea" placeholder="Reference" value={questionRef || ""} onChange={(event) => setRef(event.target.value)} />
                             </Form.Group>
                         </Col>
                     </Row>
@@ -205,7 +270,7 @@ export default function QuestionModal(props) {
                 <div id="modal-footer-border" />
                 <div id="modal-footer" alt_text="footer">
                     <Button id="resetButton">Delete</Button>
-                    <Button id="saveButton">Save</Button>
+                    <Button id="saveButton" onClick={() => save()}>Save</Button>
                 </div>
             </Modal.Body>
         </Modal>
