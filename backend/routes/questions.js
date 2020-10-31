@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Question = require('../models/question.model');
+const Dimension = require('../models/dimension.model');
 const fs = require('fs');
 const { create } = require('../models/question.model');
 
@@ -31,8 +32,7 @@ function formatQuestion(q) {
         question.alttext.fr = "";
     }
 
-    // Not sure how they determine which prompts they want displayed
-    if (q.prompt == "select all that have been completed:" || q.prompt == "select all that apply:") {
+    if (q.prompt) {
         question.description = {};
         question.description.default = q.prompt;
         question.description.fr = "";
@@ -108,6 +108,7 @@ function createPage(questions, pageName, pageTitle) {
 }
 
 function createPages(q) {
+    console.log(Dimension.find());
     // This function takes in a list of questions from mongoDB and formats them into pages for surveyJS
     page = {};
     page.pages = [];
