@@ -119,15 +119,31 @@ function createPages(q, Dimensions) {
     page.firstPageIsStarted = "false";
     page.showNavigationButtons = "false";
 
+    // Separate the questions by dimension 
+    // TODO: we might want to make tombstone questions a dimension too
+    var dimQuestions = {}
+    for(let d in Dimensions){
+        dimQuestions[d] = [];
+    }
+    
+    var tombQuestions = {}
+    tombQuestions["tombstone"] = [];
+    
     // TODO Make this not harcoded
-    var A = [];
-    var EI = [];
-    var D = [];
-    var B = [];
-    var R = [];
-    var tombstone = [];
+    //var A = [];
+    //var EI = [];
+    //var D = [];
+    //var B = [];
+    //var R = [];
+    //var tombstone = [];
     // separate the questions by dimension
     for (let question of q) {
+        if (question.questionType == "tombstone") {
+            tombQuestions["tombstone"].push(question)//tombstone.push(question);
+        }else if(question.trustIndexDimension){
+            dimQuestions[question.trustIndexDimension].push(question)
+        }
+        /*
         if (question.trustIndexDimension == 0) {
             A.push(question);
         } else if (question.trustIndexDimension == 1) {
@@ -141,20 +157,23 @@ function createPages(q, Dimensions) {
         } else if (question.questionType == "tombstone") {
             tombstone.push(question);
         }
+        */
     }
-
+    console.log(tombQuestions["tombstone"])
+    //console.log(Object.keys(dimQuestions))
     // Create project details page
-    projectDetails = createPage(tombstone, "projectDetails1", "Project Details", Dimensions);
+ 
+    projectDetails = createPage(tombQuestions["tombstone"], "projectDetails1", "Project Details", Dimensions);
     page.pages.push(projectDetails);
-
+  
     // Create pages for the dimensions
     var pageCount = 1;
     var questions = [];
-
+    
     // Loop through each dimension in this order
-    for (let dimension of [A, B, EI, R, D]) {
+    for (let dimension of Object.keys(dimQuestions)) {//
         // Create pages of 2 questions 
-        for (let question of dimension) {
+        for (let question of dimQuestions[dimension]) {
             questions.push(question);
             questions.push({ responseType: "comment", id: "other" + question.id, question: "Other:", alttext: "If possible, support the feedback with specific recommendations \/ suggestions to improve the tool. Feedback can include:\n - Refinement to existing questions, like suggestions on how questions can be simplified or clarified further\n - Additions of new questions for specific scenarios that may be missed\n - Feedback on whether the listed AI risk domains are fulsome and complete\n - What types of response indicators should be included for your context?" });
             if (questions.length == 4) {
@@ -177,7 +196,7 @@ function createPages(q, Dimensions) {
         questions = [];
         pageCount = 1;
     }
-    console.log(page)
+
     return page;
 
 }
