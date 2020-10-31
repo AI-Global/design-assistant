@@ -97,9 +97,7 @@ function createPage(questions, pageName, pageTitle, Dimensions) {
     // Helper function for createPages
     // function takes in a list of question plus title and creates a page for it
     var page = {};
-    if (pageTitle == "Project Details") {
-        page.navigationTitle = "Details";
-    }
+
     page.name = pageName;
     page.title = {};
     page.title.default = pageTitle;
@@ -121,7 +119,7 @@ function createPages(q, Dimensions) {
     page.firstPageIsStarted = "false";
     page.showNavigationButtons = "false";
 
-
+    // TODO Make this not harcoded
     var A = [];
     var EI = [];
     var D = [];
