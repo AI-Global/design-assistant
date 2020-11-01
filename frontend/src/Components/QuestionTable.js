@@ -86,6 +86,7 @@ export default class QuestionTable extends Component {
                                 <QuestionModal
                                     show={this.state.showModal}
                                     onHide={this.handleCloseModal}
+                                    // TODO: probably a better way to load empty question template into modal
                                     question={{
                                         "_id": {
                                             "$oid": "5f992cbad17b20d5d4201d58"

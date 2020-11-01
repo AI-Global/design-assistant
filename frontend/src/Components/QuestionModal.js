@@ -13,7 +13,7 @@ import { Button, Form, Row, Col } from 'react-bootstrap';
 export default function QuestionModal(props) {
     const responseType = ["text", "comment", "dropdown", "radiogroup", "checkbox", "slider"]
 
-    // TODO: replace constants and JSON files with backend calls
+    // TODO: replace constants and JSON files with API calls to get JSON's from DB
     const questionsJSON = require('../tempJSON/questionsJSON.json')
     const dimensionJSON = require('../tempJSON/dimensionJSON.json')
     const domainJSON = require('../tempJSON/domainJSON.json')
@@ -90,6 +90,7 @@ export default function QuestionModal(props) {
     }
 
     function save() {
+        // TODO: API call to save question changes to DB
         questionsJSON[props.question.questionNumber].alt_text = altText
         questionsJSON[props.question.questionNumber].lifecycle = questionLifecycle
         questionsJSON[props.question.questionNumber].pointsAvailable = points
@@ -105,6 +106,7 @@ export default function QuestionModal(props) {
     }
 
     function deleteQuestion() {
+        // TODO: API call to remove question from DB
         setWarningShow(false)
         props.onHide()
     }
