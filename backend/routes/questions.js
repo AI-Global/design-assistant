@@ -212,9 +212,15 @@ router.post('/', async (req, res) => {
 
 });
 
-router.delete('/', async (req, res) => {
+router.delete('/:questionId', async (req, res) => {
+    try {
+        // Delete existing question in DB
+        var response = await Question.remove({ _id: req.params.questionId }, req.body);
 
-    return ""
+        res.json(response);
+    } catch (err) {
+        res.json({ message: err });
+    }
 });
 
 router.put('/:questionId', async (req, res) => {
