@@ -199,26 +199,9 @@ router.get('/:questionId', async (req, res) => {
 // TODO: Should be restricted to admin role
 router.post('/', async (req, res) => {
     try {
+        // Create new questions and insert into DB
         const question = new Question(
-            {
-                "questionNumber":req.body.questionNumber,
-                "alt_text":req.body.alt_text,
-                "domainApplicability":req.body.domainApplicability,
-                "lifecycle":req.body.lifecycle,
-                "mandatory":req.body.mandatory,
-                "parent":req.body.parent,
-                "pointsAvailable":req.body.pointsAvailable,
-                "prompt":req.body.prompt,
-                "question":req.body.question,
-                "questionType":req.body.questionType,
-                "reference":req.body.reference,
-                "regionalApplicability":req.body.regionalApplicability,
-                "responseType":req.body.responseType,
-                "responses":req.body.responses,
-                "roles":req.body.roles,
-                "trustIndexDimension":req.body.trustIndexDimension,
-                "weighting":req.body.weighting
-             }
+            req.body
         )
 
         const savedQuestions = await question.save();
@@ -234,9 +217,15 @@ router.delete('/', async (req, res) => {
     return ""
 });
 
-router.put('/', async (req, res) => {
-    return ""
+router.put('/:questionId', async (req, res) => {
+    try {
+        // Update existing question in DB
+        var response = await Question.findOneAndUpdate({ _id: req.params.questionId }, req.body);
 
+        res.json(response);
+    } catch (err) {
+        res.json({ message: err });
+    }
 });
 
 // // not going to be an endpoint in production
