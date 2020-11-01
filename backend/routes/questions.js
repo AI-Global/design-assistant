@@ -122,56 +122,30 @@ function createPages(q, Dimensions) {
     // Separate the questions by dimension 
     // TODO: we might want to make tombstone questions a dimension too
     var dimQuestions = {}
-    for(let d in Dimensions){
+    for (let d in Dimensions) {
         dimQuestions[d] = [];
     }
-    
+
     var tombQuestions = {}
     tombQuestions["tombstone"] = [];
-    
-    // TODO Make this not harcoded
-    //var A = [];
-    //var EI = [];
-    //var D = [];
-    //var B = [];
-    //var R = [];
-    //var tombstone = [];
-    // separate the questions by dimension
+
     for (let question of q) {
         if (question.questionType == "tombstone") {
             tombQuestions["tombstone"].push(question)//tombstone.push(question);
-        }else if(question.trustIndexDimension){
+        } else if (question.trustIndexDimension) {
             dimQuestions[question.trustIndexDimension].push(question)
         }
-        /*
-        if (question.trustIndexDimension == 0) {
-            A.push(question);
-        } else if (question.trustIndexDimension == 1) {
-            EI.push(question);
-        } else if (question.trustIndexDimension == 2) {
-            D.push(question);
-        } else if (question.trustIndexDimension == 3) {
-            B.push(question);
-        } else if (question.trustIndexDimension == 4) {
-            R.push(question);
-        } else if (question.questionType == "tombstone") {
-            tombstone.push(question);
-        }
-        */
     }
-    console.log(tombQuestions["tombstone"])
-    //console.log(Object.keys(dimQuestions))
-    // Create project details page
- 
+
     projectDetails = createPage(tombQuestions["tombstone"], "projectDetails1", "Project Details", Dimensions);
     page.pages.push(projectDetails);
-  
+
     // Create pages for the dimensions
     var pageCount = 1;
     var questions = [];
-    
+
     // Loop through each dimension in this order
-    for (let dimension of Object.keys(dimQuestions)) {//
+    for (let dimension of Object.keys(dimQuestions)) {
         // Create pages of 2 questions 
         for (let question of dimQuestions[dimension]) {
             questions.push(question);
@@ -182,8 +156,6 @@ function createPages(q, Dimensions) {
                 pageCount++;
                 questions = [];
             }
-
-
         }
 
         // Deal with odd number of pages
@@ -198,7 +170,6 @@ function createPages(q, Dimensions) {
     }
 
     return page;
-
 }
 
 // Get all questions. Assemble SurveyJS JSON here
