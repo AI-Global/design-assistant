@@ -2,12 +2,6 @@ const mongoose = require('mongoose');
 const { schema } = require('./dimension.model');
 
 const QuestionSchema = mongoose.Schema({
-    uuid: {
-        type: Number,
-        required: true,
-        unique: true
-    },
-
     // numbered 0 to n-1
     questionNumber: {
         type: Number,
