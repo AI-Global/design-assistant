@@ -61,6 +61,7 @@ export default class QuestionTable extends Component {
     }
 
     addQuestion() {
+        // TODO: API call to add new question to DB
         this.handleOpenModal()
         console.log("Add Question")
     }
