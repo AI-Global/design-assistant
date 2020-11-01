@@ -286,3 +286,7 @@ input[type=number]
   -moz-appearance: textfield;
   border-radius: 5%;
 }
+
+.modal{
+  z-index: 1040;
+}
