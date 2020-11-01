@@ -1,19 +1,23 @@
 const express = require('express');
 const router = express.Router();
 const Question = require('../models/question.model');
+const Dimension = require('../models/dimension.model');
 const fs = require('fs');
 const { create } = require('../models/question.model');
 
-// Mapping of dimensions to Labels and Names
-const Dimensions = {
-    "accountability": { label: "A", name: "Accountability", page: "accountability" },
-    "explainability and interpretability": { label: "EI", name: "Explainability and Interpretability", page: "explainabilityInterpretability" },
-    "data quality": { label: "D", name: "Data Quality", page: "dataQuality" },
-    "bias and fairness": { label: "B", name: "Bias and Fairness", page: "biasFairness" },
-    "robustness": { label: "R", name: "Robustness", page: "robustness" },
+async function getDimensions() {
+    let dimensions = await Dimension.find()
+
+    // Format questions into format
+    let Dimensions = {}
+    for (let d of dimensions) {
+        Dimensions[d.dimensionID] = { label: d.label, name: d.name, page: d.name.replace(/\s+/g, '') }
+    }
+
+    return Dimensions
 }
 
-function formatQuestion(q) {
+function formatQuestion(q, Dimensions) {
     // This function takes a question from mongoDB as input and formats it for surveyJS to use
 
     // All questions have a title, name, and type
@@ -25,14 +29,13 @@ function formatQuestion(q) {
     question.type = q.responseType;
 
     // The rest of these properties are dependant on the question
-    if (q.alttext) {
+    if (q.alt_text) {
         question.alttext = {};
-        question.alttext.default = q.alttext;
+        question.alttext.default = q.alt_text;
         question.alttext.fr = "";
     }
 
-    // Not sure how they determine which prompts they want displayed
-    if (q.prompt == "select all that have been completed:" || q.prompt == "select all that apply:") {
+    if (q.prompt) {
         question.description = {};
         question.description.default = q.prompt;
         question.description.fr = "";
@@ -58,9 +61,10 @@ function formatQuestion(q) {
             choice.text.fr = "";
             question.choices.push(choice);
         }
-        
+
     } else if (question.type == "radiogroup" || question.type == "checkbox") {
         if (q.pointsAvailable) {
+
             question.score = {};
             question.score.dimension = Dimensions[q.trustIndexDimension].name;
             question.score.max = q.pointsAvailable * q.weighting;
@@ -70,6 +74,7 @@ function formatQuestion(q) {
             for (let c of q.responses) {
                 question.score.choices[c.id] = c.score * q.weighting;
             }
+
         }
 
         // Add choices to question
@@ -88,26 +93,24 @@ function formatQuestion(q) {
     return question;
 }
 
-function createPage(questions, pageName, pageTitle) {
+function createPage(questions, pageName, pageTitle, Dimensions) {
     // Helper function for createPages
     // function takes in a list of question plus title and creates a page for it
     var page = {};
-    if (pageTitle == "Project Details") {
-        page.navigationTitle = "Details";
-    }
+
     page.name = pageName;
     page.title = {};
     page.title.default = pageTitle;
     page.title.fr = "";
     // Map MongoDB questions to surveyJS format
     page.elements = questions.map(function (q) {
-        return formatQuestion(q);
+        return formatQuestion(q, Dimensions);
     });
 
     return page
 }
 
-function createPages(q) {
+function createPages(q, Dimensions) {
     // This function takes in a list of questions from mongoDB and formats them into pages for surveyJS
     page = {};
     page.pages = [];
@@ -116,32 +119,27 @@ function createPages(q) {
     page.firstPageIsStarted = "false";
     page.showNavigationButtons = "false";
 
+    // Separate the questions by dimension 
+    // TODO: we might want to make tombstone questions a dimension too
+    var dimQuestions = {}
+    for (let d in Dimensions) {
+        dimQuestions[d] = [];
+    }
 
-    var A = [];
-    var EI = [];
-    var D = [];
-    var B = [];
-    var R = [];
-    var tombstone = [];
-    // separate the questions by dimension
+    var tombQuestions = {}
+    tombQuestions["tombstone"] = [];
+
     for (let question of q) {
-        if (question.trustIndexDimension == "accountability") {
-            A.push(question);
-        } else if (question.trustIndexDimension == "explainability and interpretability") {
-            EI.push(question);
-        } else if (question.trustIndexDimension == "data quality") {
-            D.push(question);
-        } else if (question.trustIndexDimension == "bias and fairness") {
-            B.push(question);
-        } else if (question.trustIndexDimension == "robustness") {
-            R.push(question);
-        } else if (question.questionType == "tombstone") {
-            tombstone.push(question);
+        if (question.questionType == "tombstone") {
+            tombQuestions["tombstone"].push(question);
+        } else if (question.trustIndexDimension) {
+            dimQuestions[question.trustIndexDimension].push(question)
         }
     }
 
-    // Create project details page
-    projectDetails = createPage(tombstone, "projectDetails1", "Project Details");
+    // Add Other question to tombstone and create page 
+    tombQuestions["tombstone"].push({ responseType: "comment", id: "otherTombstone", question: "Other:", alt_text: "If possible, support the feedback with specific recommendations \/ suggestions to improve the tool. Feedback can include:\n - Refinement to existing questions, like suggestions on how questions can be simplified or clarified further\n - Additions of new questions for specific scenarios that may be missed\n - Feedback on whether the listed AI risk domains are fulsome and complete\n - What types of response indicators should be included for your context?" });
+    projectDetails = createPage(tombQuestions["tombstone"], "projectDetails1", "Project Details", Dimensions);
     page.pages.push(projectDetails);
 
     // Create pages for the dimensions
@@ -149,24 +147,22 @@ function createPages(q) {
     var questions = [];
 
     // Loop through each dimension in this order
-    for (let dimension of [A, B, EI, R, D]) {
+    for (let dimension of Object.keys(dimQuestions)) {
         // Create pages of 2 questions 
-        for (let question of dimension) {
+        for (let question of dimQuestions[dimension]) {
             questions.push(question);
-            questions.push({responseType:"comment", id:"other"+question.id, question:"Other:", alttext:"If possible, support the feedback with specific recommendations \/ suggestions to improve the tool. Feedback can include:\n - Refinement to existing questions, like suggestions on how questions can be simplified or clarified further\n - Additions of new questions for specific scenarios that may be missed\n - Feedback on whether the listed AI risk domains are fulsome and complete\n - What types of response indicators should be included for your context?"});
+            questions.push({ responseType: "comment", id: "other" + question.id, question: "Other:", alt_text: "If possible, support the feedback with specific recommendations \/ suggestions to improve the tool. Feedback can include:\n - Refinement to existing questions, like suggestions on how questions can be simplified or clarified further\n - Additions of new questions for specific scenarios that may be missed\n - Feedback on whether the listed AI risk domains are fulsome and complete\n - What types of response indicators should be included for your context?" });
             if (questions.length == 4) {
-                var dimPage = createPage(questions, Dimensions[question.trustIndexDimension].page + pageCount, Dimensions[question.trustIndexDimension].name);
+                var dimPage = createPage(questions, Dimensions[question.trustIndexDimension].page + pageCount, Dimensions[question.trustIndexDimension].name, Dimensions);
                 page.pages.push(dimPage);
                 pageCount++;
                 questions = [];
             }
-
-            
         }
 
         // Deal with odd number of pages
         if (questions.length > 0) {
-            var dimPage = createPage(questions, Dimensions[questions[0].trustIndexDimension].page + pageCount, Dimensions[questions[0].trustIndexDimension].name);
+            var dimPage = createPage(questions, Dimensions[questions[0].trustIndexDimension].page + pageCount, Dimensions[questions[0].trustIndexDimension].name, Dimensions);
             page.pages.push(dimPage);
         }
 
@@ -176,46 +172,66 @@ function createPages(q) {
     }
 
     return page;
-
 }
 
 // Get all questions. Assemble SurveyJS JSON here
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
+    // Get dimensions from DB
+    let Dimensions = await getDimensions()
     Question.find()
-    .then((questions) => res.status(200).send(createPages(questions)))
-    .catch((err) => res.status(400).send(err));
+        .then((questions) => res.status(200).send(createPages(questions, Dimensions)))
+        .catch((err) => res.status(400).send(err));
 
 });
 
 
 // Get question by id
 router.get('/:questionId', async (req, res) => {
-    try {
-        const question = await Question.findOne({ _id: req.params.questionId });
-        console.log(question);
-        res.json(formatQuestion(question));
-    } catch (err) {
-        res.json({ message: err });
-    }
+    // Get dimensions from DB
+    let Dimensions = await getDimensions()
+    Question.findOne({ _id: req.params.questionId })
+        .then((question) => res.status(200).send(formatQuestion(question, Dimensions)))
+        .catch((err) => res.status(400).send(err));
 });
-
 
 
 // Add new question
 // TODO: Should be restricted to admin role
 router.post('/', async (req, res) => {
-    const question = new Question({
-        questionNumber: req.body.questionNumber,
-        question: req.body.question
-    });
-
     try {
+        // Create new questions and insert into DB
+        const question = new Question(
+            req.body
+        )
+
         const savedQuestions = await question.save();
         res.json(savedQuestions);
     } catch (err) {
         res.json({ message: err });
     }
 
+});
+
+router.delete('/:questionId', async (req, res) => {
+    try {
+        // Delete existing question in DB
+        var response = await Question.remove({ _id: req.params.questionId }, req.body);
+
+        res.json(response);
+    } catch (err) {
+        res.json({ message: err });
+    }
+});
+
+router.put('/:questionId', async (req, res) => {
+    try {
+        // Update existing question in DB
+        var response = await Question.findOneAndUpdate({ _id: req.params.questionId }, req.body);
+
+        res.json(response);
+    } catch (err) {
+        res.json({ message: err });
+    }
 });
 
 // // not going to be an endpoint in production
