@@ -164,7 +164,7 @@ export default function QuestionModal(props) {
                             <Col xs={4} md={2}>
                                 <Form.Group controlId="formType">
                                     <Form.Label>Response Type</Form.Label>
-                                    <Form.Control value={questionType} as="select" onChange={(event) => setType(event.target.value)}>
+                                    <Form.Control value={questionType || ''} as="select" onChange={(event) => setType(event.target.value)}>
                                         <option>Choose...</option>
                                         {responseType.map((type, index) =>
                                             <option key={index} value={type}>{type}</option>
