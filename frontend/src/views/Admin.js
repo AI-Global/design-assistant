@@ -1,24 +1,35 @@
+import axios from 'axios';
 import { Link } from 'react-router-dom';
 import React, { Component } from 'react';
-import { Tabs, Tab, } from 'react-bootstrap';
 import Table from '@material-ui/core/Table';
-
-import QuestionTable from '../Components/QuestionTable'
-
-//TODO: replace this with backend API to get JSONs from mongoDB
-const questionsJSON = require('../tempJSON/questionsJSON.json')
-// console.log(questionsJSON)
+import { Tabs, Tab, } from 'react-bootstrap';
+import QuestionTable from '../Components/QuestionTable';
 
 export default class Results extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            json: [],
-            questions: []
+            json: {},
+            dimensions: {}
         }
     }
 
+    componentDidMount() {
+        var endPoint = '/questions/:all';
+        axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
+            .then(res => {
+                this.setState({ dimensions: res.data.Dimensions });
+                this.setState({ json: res.data.questions });
+            })
+    }
+
     render() {
+        if (!this.state.json.length) {
+            return null;
+        }
+        const questions = this.state.json
+        const dimensions = this.state.dimensions
+
         return (
             <main id="wb-cont" role="main" property="mainContentOfPage" className="container" style={{ paddingBottom: "1rem" }}>
                 <h1 className="section-header">
@@ -26,7 +37,7 @@ export default class Results extends Component {
                 </h1>
                 <Tabs defaultActiveKey="surveyManagement">
                     <Tab eventKey="surveyManagement" title="Survey Management">
-                        <QuestionTable questions={questionsJSON} />
+                        <QuestionTable questions={questions} dimensions={dimensions}/>
                     </Tab>
                     <Tab eventKey="userManagement" title="Users">
                         <div className="table-responsive mt-3">

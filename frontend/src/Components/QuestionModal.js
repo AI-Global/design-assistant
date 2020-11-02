@@ -14,8 +14,9 @@ export default function QuestionModal(props) {
     const responseType = ["text", "comment", "dropdown", "radiogroup", "checkbox", "slider"]
 
     // TODO: replace constants and JSON files with API calls to get JSON's from DB
+    const dimensions = props.dimensions
+
     const questionsJSON = require('../tempJSON/questionsJSON.json')
-    const dimensionJSON = require('../tempJSON/dimensionJSON.json')
     const domainJSON = require('../tempJSON/domainJSON.json')
     const lifecycleJSON = require('../tempJSON/lifecycleJSON.json')
     const regionJSON = require('../tempJSON/regionJSON.json')
@@ -110,6 +111,10 @@ export default function QuestionModal(props) {
         setWarningShow(false)
         props.onHide()
     }
+    
+    if (!dimensions) {
+        return null;
+    }
 
     return (
         <React.Fragment>
@@ -157,7 +162,7 @@ export default function QuestionModal(props) {
                                     <Form.Label>Dimension</Form.Label>
                                     <Form.Control value={dimension === null ? "" : dimension} as="select" onChange={(event) => setDimension(parseInt(event.target.value))}>
                                         <option value="-1">Details</option>
-                                        {dimensionJSON.map((dimension, index) =>
+                                        {Object.values(dimensions).map((dimension, index) =>
                                             <option key={index} value={index}>{dimension.name}</option>
                                         )}
                                     </Form.Control>

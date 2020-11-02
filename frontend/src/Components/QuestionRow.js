@@ -22,17 +22,17 @@ const useRowStyles = makeStyles({
 
 export default function QuestionRow(props) {
     // const [open, setOpen] = React.useState(false);
-    const { question, index } = props;
+    const { question, dimensions, index } = props;
     const [modalShow, setModalShow] = React.useState(false);
     const classes = useRowStyles();
-    const dimensionJSON = require('../tempJSON/dimensionJSON.json')
-
+    
     return (
         <React.Fragment>
             <QuestionModal
                 show={modalShow}
                 onHide={() => setModalShow(false)}
                 question={question}
+                dimensions={dimensions}
             />
             <TableCell className={classes.tablecell}>
                 {/* <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
@@ -43,7 +43,7 @@ export default function QuestionRow(props) {
             <TableCell className={classes.tablecell} component="th" scope="row">
                 {question.question}
             </TableCell>
-            <TableCell className={classes.tablecell} align="right">{(question.trustIndexDimension !== null) ? dimensionJSON[question.trustIndexDimension].name : 'Details'}</TableCell>
+            <TableCell className={classes.tablecell} align="right">{(question.trustIndexDimension !== null) ? dimensions[question.trustIndexDimension].name : 'Details'}</TableCell>
             <TableCell className={classes.tabecell}><Button onClick={() => setModalShow(true)}>Edit</Button></TableCell>
 
             {/* <TableRow>
