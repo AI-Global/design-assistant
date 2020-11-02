@@ -15,7 +15,7 @@ export default class Results extends Component {
     }
 
     componentDidMount() {
-        var endPoint = '/questions/:all';
+        var endPoint = '/questions/all';
         axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
             .then(res => {
                 this.setState({ dimensions: res.data.Dimensions });

@@ -185,7 +185,7 @@ router.get('/', async (req, res) => {
 });
 
 // Get all questions as JSON from DB. No Assembly for SurveyJS
-router.get('/:all', async (req, res)=> {
+router.get('/all', async (req, res)=> {
     let Dimensions = await getDimensions()
     Question.find()
         .then((questions) => res.status(200).send({questions, Dimensions}))

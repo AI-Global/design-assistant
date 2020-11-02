@@ -112,7 +112,7 @@ class App extends Component {
             if (title) {
               // add tooltip for question if alttext has default value
               let altTextHTML = "";
-              if (options.question.alttext.default !== "\r" && options.question.alttext.hasOwnProperty("default")) {
+              if (options.question.alttext && options.question.alttext.hasOwnProperty("default")) {
                 let altText = converter.makeHtml(options.question.alttext.default.replace(/"/g, "&quot;"));
                 altText = `<div class="text-justify">${altText}</div>`.replace(/"/g, "&quot;");
                 altTextHTML = `<i class="fas fa-info-circle ml-2" data-toggle="tooltip" data-html="true" title="${altText}"></i>`;
