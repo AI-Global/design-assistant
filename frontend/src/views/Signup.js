@@ -46,7 +46,6 @@ export default class Signup extends Component {
         else{
             var endPoint = '/users/create/';
             axios.post(process.env.REACT_APP_SERVER_ADDR + endPoint, {
-                name: name,
                 email: email,
                 username: username,
                 password: password,
