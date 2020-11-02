@@ -8,7 +8,6 @@ const Region = require('../models/region.model');
 const Role = require('../models/role.model');
 const fs = require('fs');
 const { create } = require('../models/question.model');
-// const lak = require('../populateDBScripts/json/trustIndexDimensions.json')
 
 router.get('/populateroles', async (req, res) => {
     try {
@@ -16,7 +15,7 @@ router.get('/populateroles', async (req, res) => {
         let parsed_roles = JSON.parse(json_temp);
 
         for (let i = 0; i < parsed_roles.length; ++i) {
-            await Role.findOneAndUpdate({roleID: i}, {
+            await Role.findOneAndUpdate({roleID: i+1}, {
                 name: parsed_roles[i].name
             }, {upsert:true, runValidators: true});
         }
@@ -32,7 +31,7 @@ router.get('/populateregions', async (req, res) => {
         let parsed_regions = JSON.parse(json_temp);
 
         for (let i = 0; i < parsed_regions.length; ++i) {
-            await Region.findOneAndUpdate({regionID: i}, {
+            await Region.findOneAndUpdate({regionID: i+1}, {
                 name: parsed_regions[i].name
             }, {upsert:true, runValidators: true});
         }
@@ -48,7 +47,7 @@ router.get('/populatelifecycles', async (req, res) => {
         let parsed_lifecycles = JSON.parse(json_temp);
 
         for (let i = 0; i < parsed_lifecycles.length; ++i) {
-            await LifeCycle.findOneAndUpdate({lifecycleID: i}, {
+            await LifeCycle.findOneAndUpdate({lifecycleID: i+1}, {
                 name: parsed_lifecycles[i].name
             }, {upsert:true, runValidators: true});
         }
@@ -64,7 +63,7 @@ router.get('/populatedomains', async (req, res) => {
         let parsed_domains = JSON.parse(json_temp);
 
         for (let i = 0; i < parsed_domains.length; ++i) {
-            await Domain.findOneAndUpdate({domainID: i}, {
+            await Domain.findOneAndUpdate({domainID: i+1}, {
                 name: parsed_domains[i].name
             }, {upsert:true, runValidators: true});
         }
@@ -80,7 +79,7 @@ router.get('/populatedimensions', async (req, res) => {
         let parsed_dimensions = JSON.parse(json_temp);
 
         for (let i = 0; i < parsed_dimensions.length; ++i) {
-            await Dimension.findOneAndUpdate({dimensionID: i}, {
+            await Dimension.findOneAndUpdate({dimensionID: i+1}, {
                 name: parsed_dimensions[i].name,
                 label: parsed_dimensions[i].label
             }, {upsert:true, runValidators: true});
@@ -155,15 +154,20 @@ router.get('/populatequestions', async (req, res) => {
                 });
             }
 
+            let alt_text = null;
+            if (parsed_questions[i].alt_text != "" && parsed_questions[i].alt_text != "\r") {
+                alt_text = parsed_questions[i].alt_text;
+            }
 
-            await Question.findOneAndUpdate({questionNumber: i}, {
+
+            await Question.findOneAndUpdate({questionNumber: i+1}, {
                 trustIndexDimension: trustIndexDimensionObj ? trustIndexDimensionObj.dimensionID: null,
                 domainApplicability: domainObj ? domainObj.domainID : null,
                 regionalApplicability: regionObj ? regionObj.regionID : null,
                 mandatory: parsed_questions[i].mandatory || true,
                 questionType: ((parsed_questions[i].questionType) ? (parsed_questions[i].questionType.toLowerCase().trim()) : null),
                 question: parsed_questions[i].question || "",
-                alt_text: parsed_questions[i].alt_text || null,
+                alt_text: alt_text,
                 prompt: (prompt === "select all that apply:" || prompt === "select all that have been completed:") ?  prompt : null,
                 responses: q_responses,
                 responseType: parsed_questions[i].responseType || null,
@@ -175,7 +179,6 @@ router.get('/populatequestions', async (req, res) => {
                 parent: parsed_questions[i].parent ? parsed_questions[i].parent : null
             }, {upsert:true, runValidators: true}); 
 
-            
 
             // TODO: Add uuid
 
