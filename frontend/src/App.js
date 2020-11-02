@@ -17,6 +17,8 @@ import ModalFooter from 'react-bootstrap/ModalFooter';
 import ModalHeader from 'react-bootstrap/ModalHeader';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
+import Login from './views/Login';
+require('dotenv').config();
 
 // set up survey styles and properties for rendering html
 Survey
@@ -58,6 +60,7 @@ class App extends Component {
       E: 19,
       R: 25,
       D: 28,
+      authToken: localStorage.getItem("authToken")
     };
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
@@ -65,15 +68,28 @@ class App extends Component {
 
   // Request questions JSON from backend 
   componentDidMount() {
-    axios.get('http://localhost:9000/questions')
+    var endPoint = '/questions';
+    axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
       .then(res => {
-        const json = res.data;
+        var json = res.data;
+        // replace double escaped characters so showdown correctly renders markdown frontslashes and newlines
+        var stringified = JSON.stringify(json);
+        stringified = stringified.replace(/\\\\n/g, "\\n")
+        stringified = stringified.replace(/\\\//g, "/")
+        json = JSON.parse(stringified);
         const model = new Survey.Model(json);
         const converter = new showdown.Converter();
 
         // Set json and model
         this.setState({ json });
         this.setState({ model });
+
+        model
+          .onTextMarkdown
+          .add(function (model, options) {
+            var str = converter.makeHtml(options.text)
+            options.html = str;
+          })
 
         // add tooltip
         model
@@ -181,22 +197,25 @@ class App extends Component {
   }
 
   navDim(dimension) {
+    const survey = this.state.model
     switch (dimension) {
       case 0:
-        this.state.model.currentPage = this.state.model.pages[this.state.A]
+        survey.currentPage = survey.pages[this.state.A]
         break;
       case 1:
-        this.state.model.currentPage = this.state.model.pages[this.state.B]
+        survey.currentPage = survey.pages[this.state.B]
         break;
       case 2:
-        this.state.model.currentPage = this.state.model.pages[this.state.E]
+        survey.currentPage = survey.pages[this.state.E]
         break;
       case 3:
-        this.state.model.currentPage = this.state.model.pages[this.state.R]
+        survey.currentPage = survey.pages[this.state.R]
         break;
       case 4:
-        this.state.model.currentPage = this.state.model.pages[this.state.D]
+        survey.currentPage = survey.pages[this.state.D]
         break;
+      default:
+        survey.currentPage = survey.pages[0]
     }
     this.setState(this.state)
   }
@@ -241,7 +260,7 @@ class App extends Component {
               </Card>
             </Accordion>
           </div>
-          <div className="container">
+          <div className="container" style={{"paddingTop":"2em"}}>
             <div className="d-flex justify-content-center col">{this.percent()}%</div>
           </div>
           <Survey.Survey model={this.state.model} onComplete={this.onComplete} />
@@ -321,6 +340,7 @@ class App extends Component {
               </div>
             </div>
           </div>
+            <Login/>
         </div>
       );
     }
