@@ -93,6 +93,17 @@ router.get('/isLoggedIn', auth, (req, res) => {
     if(req.user){
         res.json({isLoggedIn: "true"});
     }
-})
+});
+
+// TODO: restrict endpoint to admin only TEST
+router.get('/', auth, (req, res) => {
+    if (req.user.role != 'admin') {
+        res.status(400).send("You are not authorized to view all users.");
+    }
+
+    User.find()
+    .then((users) => res.status(200).send(users))
+    .catch((err) => res.status(400).send(err));
+});
 
 module.exports = router;
