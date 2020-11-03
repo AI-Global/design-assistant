@@ -21,7 +21,6 @@ const Domain = require('../models/domain.model');
 const LifeCycle = require('../models/lifecycle.model');
 const Region = require('../models/region.model');
 const Role = require('../models/role.model');
-const fs = require('fs');
 
 router.get('/populateroles', async (req, res) => {
     try {
