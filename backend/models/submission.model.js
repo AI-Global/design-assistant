@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 
 const SubmissionSchema = mongoose.Schema({
 
-    // user ID that owns this 
-    userId: {
+    // username that owns this submission
+    username: {
         type: Number,
         required: true,
         unique: true
@@ -12,15 +12,12 @@ const SubmissionSchema = mongoose.Schema({
     // unique ID for a project that owns this submission
     projectId: {
         type: Number,
+        required: true,
         unique: true
     },
 
-    // Possible life cycles
-    lifecycle: [{
-        type: String,
-        enum: ['Plan and Design', 'Data and Model', 'Verify and Validate', 'Deploy', 'Operate and Monitor'],
-        required: true
-    }],
+    // Question can belong to multiple lifecycles
+    lifecycle: Number,
 
     // json file that gets output from survey.js
     submission: {
