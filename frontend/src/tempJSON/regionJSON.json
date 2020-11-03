@@ -1,0 +1,57 @@
+[{
+  "_id": {
+    "$oid": "5f989c77d17b20d5d4d07f0c"
+  },
+  "regionID": 0,
+  "__v": 0,
+  "name": "Africa"
+},{
+  "_id": {
+    "$oid": "5f989c77d17b20d5d4d07f23"
+  },
+  "regionID": 1,
+  "__v": 0,
+  "name": "Antarctica"
+},{
+  "_id": {
+    "$oid": "5f989c77d17b20d5d4d07f35"
+  },
+  "regionID": 2,
+  "__v": 0,
+  "name": "Asia"
+},{
+  "_id": {
+    "$oid": "5f989c77d17b20d5d4d07f43"
+  },
+  "regionID": 3,
+  "__v": 0,
+  "name": "Europe"
+},{
+  "_id": {
+    "$oid": "5f989c77d17b20d5d4d07f52"
+  },
+  "regionID": 4,
+  "__v": 0,
+  "name": "North America"
+},{
+  "_id": {
+    "$oid": "5f989c77d17b20d5d4d07f64"
+  },
+  "regionID": 5,
+  "__v": 0,
+  "name": "South America"
+},{
+  "_id": {
+    "$oid": "5f989c77d17b20d5d4d07f7a"
+  },
+  "regionID": 6,
+  "__v": 0,
+  "name": "Oceania"
+},{
+  "_id": {
+    "$oid": "5f989c78d17b20d5d4d07f8b"
+  },
+  "regionID": 7,
+  "__v": 0,
+  "name": "Other"
+}]

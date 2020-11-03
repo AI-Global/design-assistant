@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Add from '@material-ui/icons/Add';
 import Table from '@material-ui/core/Table';
 import Paper from '@material-ui/core/Paper';
+import QuestionModal from './QuestionModal';
 import TableRow from '@material-ui/core/TableRow';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -36,9 +37,11 @@ export default class QuestionTable extends Component {
         super(props)
         this.state = {
             questions: this.props.questions,
-            showChildModal: false,
+            modalShow: false
         }
-        this.onDragEnd = this.onDragEnd.bind(this);
+        this.onDragEnd = this.onDragEnd.bind(this)
+        this.handleOpenModal = this.handleOpenModal.bind(this);
+        this.handleCloseModal = this.handleCloseModal.bind(this);
     }
 
 
@@ -73,7 +76,21 @@ export default class QuestionTable extends Component {
             })
         }
         console.log("Source:", result.source.index)
-        console.log("Parent:", result.destination.index-1)
+        console.log("Parent:", result.destination.index - 1)
+    }
+
+    addQuestion() {
+        // TODO: API call to add new question to DB
+        this.handleOpenModal()
+        console.log("Add Question")
+    }
+
+    handleOpenModal() {
+        this.setState({ showModal: true });
+    }
+
+    handleCloseModal() {
+        this.setState({ showModal: false });
     }
 
     setChildModalShow(val){
@@ -100,9 +117,39 @@ export default class QuestionTable extends Component {
                     <TableHead>
                         <TableRow>
                             <TableCell>
-                                <IconButton aria-label="add question" size="small">
+                                <IconButton aria-label="add question" size="small" onClick={() => this.addQuestion()}>
                                     <Add />
                                 </IconButton>
+                                <QuestionModal
+                                    show={this.state.showModal}
+                                    onHide={this.handleCloseModal}
+                                    // TODO: probably a better way to load empty question template into modal
+                                    question={{
+                                        "_id": {
+                                            "$oid": "5f992cbad17b20d5d4201d58"
+                                        },
+                                        "questionNumber": 0,
+                                        "__v": 0,
+                                        "alt_text": "\r",
+                                        "domainApplicability": null,
+                                        "lifecycle": 5,
+                                        "mandatory": true,
+                                        "parent": null,
+                                        "pointsAvailable": 0,
+                                        "prompt": null,
+                                        "question": null,
+                                        "questionType": null,
+                                        "reference": null,
+                                        "regionalApplicability": null,
+                                        "responseType": null,
+                                        "responses": [],
+                                        "roles": [
+                                            12
+                                        ],
+                                        "trustIndexDimension": null,
+                                        "weighting": 0
+                                    }}
+                                />
                             </TableCell>
                             <TableCell>No.</TableCell>
                             <TableCell>Question</TableCell>
