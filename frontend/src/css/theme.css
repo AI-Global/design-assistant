@@ -247,6 +247,11 @@ form .btn:not(.btn-call-to-action) {
   max-width: none !important;
 }
 
+.modal-30w{
+  width: 30%;
+  max-width: none !important;
+}
+
 .form-label {
   font-weight: 600;
 }
