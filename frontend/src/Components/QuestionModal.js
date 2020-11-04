@@ -150,7 +150,7 @@ export default function QuestionModal(props) {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    Are you sure you would like to delte this quesiton?
+                    Are you sure you would like to delete this quesiton?
                 </Modal.Body>
                 <Modal.Footer>
                     <Button onClick={() => deleteQuestion()}>Yes</Button>
@@ -229,8 +229,8 @@ export default function QuestionModal(props) {
                                             </IconButton>
                                         </Form.Label>
                                         {responses.map((response, index) =>
-                                            <div key={index} style={{ paddingBottom: "0.5em" }}>
-                                                <InputGroup className="mb-2">
+                                            <div key={index} style={{ paddingBottom: "0.5em"}}>
+                                                <InputGroup className="mb-2" style={{ "minHeight": "44px" }}>
                                                     <InputGroup.Prepend>
                                                         <InputGroup.Text>
                                                             <IconButton size="small" color="secondary" onClick={() => { removeResponse(index) }}>
@@ -250,8 +250,8 @@ export default function QuestionModal(props) {
                                         Score
                                     </Form.Label>
                                         {responses.map((response, index) =>
-                                            <div key={index} style={{ paddingBottom: "15px" }}>
-                                                <Form.Control type="number" placeholder="--" value={response.score || ''} style={{ height: "39.5px" }} onChange={(event) => editScore(event.target.value, index, response.indicator)} ></Form.Control>
+                                            <div key={index} style={{ paddingBottom: "1em" }}>
+                                                <Form.Control type="number" placeholder="--" value={response.score || ''} style={{ "minHeight": "44px" }} onChange={(event) => editScore(event.target.value, index, response.indicator)} ></Form.Control>
                                             </div>
                                         )}
                                     </Form.Group>
@@ -262,7 +262,7 @@ export default function QuestionModal(props) {
                             <Col xs={2} md={2}>
                                 <Form.Group>
                                     <Form.Label>Role</Form.Label>
-                                    <Form.Control defaultValue={rolesJSON[questionRole - 1].name} as="select" onChange={(event) => setRole(event.target.selectedIndex)}>
+                                    <Form.Control value={rolesJSON[questionRole - 1].name || ''} as="select" onChange={(event) => setRole(event.target.selectedIndex)}>
                                         <option>Choose...</option>
                                         {rolesJSON.map((role, index) =>
                                             <option key={index} value={role.name}>{role.name}</option>

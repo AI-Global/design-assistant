@@ -290,3 +290,7 @@ input[type=number]
 .modal{
   z-index: 1040;
 }
+
+.form-label{
+  min-height: 40px !important;
+}
