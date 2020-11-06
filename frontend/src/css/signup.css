@@ -43,3 +43,7 @@
 .modal-signup .description {
     padding-bottom: 8px;
 }
+
+.password-errors {
+    white-space: pre-line;
+}
