@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const Question = require('../models/question.model');
 const Dimension = require('../models/dimension.model');
 const Domain = require('../models/domain.model');
 const LifeCycle = require('../models/lifecycle.model');
@@ -7,9 +8,10 @@ const Region = require('../models/region.model');
 const Role = require('../models/role.model');
 const fs = require('fs');
 
-router.get('/populateroles', async (req, res) => {
+
+router.get('/roles', async (req, res) => {
     try {
-        let json_temp = fs.readFileSync(__dirname + "/../populateDBScripts/json/roles.json", "utf-8");
+        let json_temp = fs.readFileSync(__dirname + "/roles.json", "utf-8");
         let parsed_roles = JSON.parse(json_temp);
 
         for (let i = 0; i < parsed_roles.length; ++i) {
@@ -23,9 +25,9 @@ router.get('/populateroles', async (req, res) => {
     }
 });
 
-router.get('/populateregions', async (req, res) => {
+router.get('/regions', async (req, res) => {
     try {
-        let json_temp = fs.readFileSync(__dirname + "/../populateDBScripts/json/regions.json", "utf-8");
+        let json_temp = fs.readFileSync(__dirname + "/regions.json", "utf-8");
         let parsed_regions = JSON.parse(json_temp);
 
         for (let i = 0; i < parsed_regions.length; ++i) {
@@ -39,9 +41,9 @@ router.get('/populateregions', async (req, res) => {
     }
 });
 
-router.get('/populatelifecycles', async (req, res) => {
+router.get('/lifecycles', async (req, res) => {
     try {
-        let json_temp = fs.readFileSync(__dirname + "/../populateDBScripts/json/lifecycles.json", "utf-8");
+        let json_temp = fs.readFileSync(__dirname + "/lifecycles.json", "utf-8");
         let parsed_lifecycles = JSON.parse(json_temp);
 
         for (let i = 0; i < parsed_lifecycles.length; ++i) {
@@ -55,9 +57,9 @@ router.get('/populatelifecycles', async (req, res) => {
     }
 });
 
-router.get('/populatedomains', async (req, res) => {
+router.get('/domains', async (req, res) => {
     try {
-        let json_temp = fs.readFileSync(__dirname + "/../populateDBScripts/json/domains.json", "utf-8");
+        let json_temp = fs.readFileSync(__dirname + "/domains.json", "utf-8");
         let parsed_domains = JSON.parse(json_temp);
 
         for (let i = 0; i < parsed_domains.length; ++i) {
@@ -71,9 +73,9 @@ router.get('/populatedomains', async (req, res) => {
     }
 });
 
-router.get('/populatedimensions', async (req, res) => {
+router.get('/dimensions', async (req, res) => {
     try {
-        let json_temp = fs.readFileSync(__dirname + "/../populateDBScripts/json/trustIndexDimensions.json", "utf-8");
+        let json_temp = fs.readFileSync(__dirname + "/trustIndexDimensions.json", "utf-8");
         let parsed_dimensions = JSON.parse(json_temp);
 
         for (let i = 0; i < parsed_dimensions.length; ++i) {
@@ -89,9 +91,9 @@ router.get('/populatedimensions', async (req, res) => {
 });
 
 // not going to be an endpoint in production
-router.get('/populatequestions', async (req, res) => {
+router.get('/questions', async (req, res) => {
     try {
-        let json_temp = fs.readFileSync(__dirname + "/../populateDBScripts/json/questionsJSON.json", "utf-8");
+        let json_temp = fs.readFileSync(__dirname + "/questionsJSON.json", "utf-8");
         let parsed_questions = JSON.parse(json_temp);
         for (let i = 0; i < parsed_questions.length; ++i) {
             let q_responses = [];

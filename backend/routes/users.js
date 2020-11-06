@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/user.model');
 const jwt = require("jsonwebtoken");
-const { json } = require('express');
 require('dotenv').config();
 const auth = require('../middleware/auth');
 
@@ -96,10 +95,10 @@ router.get('/isLoggedIn', auth, (req, res) => {
 });
 
 // TODO: restrict endpoint to admin only TEST
-router.get('/', auth, (req, res) => {
-    if (req.user.role != 'admin') {
-        res.status(400).send("You are not authorized to view all users.");
-    }
+router.get('/all', (req, res) => {
+    // if (req.user.role != 'admin') {
+    //     res.status(400).send("You are not authorized to view all users.");
+    // }
 
     User.find()
     .then((users) => res.status(200).send(users))

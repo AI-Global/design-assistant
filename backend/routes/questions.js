@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const Question = require('../models/question.model');
-const { create } = require('../models/question.model');
 
 // Mapping of dimensions to Labels and Names
 const Dimensions = {
