@@ -115,7 +115,6 @@ export default function QuestionModal(props) {
                 })
         } else {
             endPoint = '/questions/';
-            console.log('ADDING NEW QUESTION')
             axios.post(process.env.REACT_APP_SERVER_ADDR + endPoint, props.question)
                 .then(res => {
                     const result = res.data;

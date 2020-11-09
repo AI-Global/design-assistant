@@ -1,18 +1,8 @@
 import React from 'react';
-// import Box from '@material-ui/core/Box';
-// import Table from '@material-ui/core/Table';
 import { Button } from 'react-bootstrap';
-// import Collapse from '@material-ui/core/Collapse';
-// import TableRow from '@material-ui/core/TableRow';
-// import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-// import TableHead from '@material-ui/core/TableHead';
 import { makeStyles } from '@material-ui/core/styles';
-// import IconButton from '@material-ui/core/IconButton';
 import QuestionModal from './QuestionModal';
-// import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-// import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-// import Card from 'react-bootstrap/Card';
 
 const useRowStyles = makeStyles({
     tablecell: {
@@ -21,23 +11,21 @@ const useRowStyles = makeStyles({
 });
 
 export default function QuestionRow(props) {
-    // const [open, setOpen] = React.useState(false);
-    const { question, dimensions, index } = props;
+    const { question, dimensions, index, onDelete} = props;
     const [modalShow, setModalShow] = React.useState(false);
     const classes = useRowStyles();
-
     return (
         <React.Fragment>
             <QuestionModal
                 show={modalShow}
-                onHide={() => setModalShow(false)}
+                onHide={() => {setModalShow(false); props.onDelete()}}
                 question={question}
                 mode={"edit"}
                 dimensions={dimensions}
             />
             <TableCell className={classes.tablecell}>
             </TableCell>
-            <TableCell className={classes.tablecell}>{index}</TableCell>
+            <TableCell className={classes.tablecell}>{index+1}</TableCell>
             <TableCell className={classes.tablecell} component="th" scope="row">
                 {question.question}
             </TableCell>

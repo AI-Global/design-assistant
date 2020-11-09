@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { Component } from 'react';
 import Add from '@material-ui/icons/Add';
 import Table from '@material-ui/core/Table';
@@ -16,14 +17,12 @@ const reorder = (list, startIndex, endIndex) => {
     const result = Array.from(list)
     const [removed] = result.splice(startIndex, 1)
     result.splice(endIndex, 0, removed)
-
     return result
 }
 
 const getItemStyle = (isDragging, draggableStyle) => ({
     // styles we need to apply on draggables
     ...draggableStyle,
-
     ...(isDragging && {
         background: "rgb(235,235,235)"
     })
@@ -31,16 +30,31 @@ const getItemStyle = (isDragging, draggableStyle) => ({
 
 export default class QuestionTable extends Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
-            questions: this.props.questions,
-            dimensions: this.props.dimensions,
-            modalShow: false
+            questions: {},
+            dimensions: {}
         }
         this.onDragEnd = this.onDragEnd.bind(this)
         this.handleOpenModal = this.handleOpenModal.bind(this);
         this.handleCloseModal = this.handleCloseModal.bind(this);
+        this.getQuestions = this.getQuestions.bind(this);
     }
+
+    componentDidMount() {
+        this.getQuestions();
+    }
+
+    async getQuestions() {
+        var endPoint = '/questions/all';
+        await axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
+            .then(res => {
+                this.setState({ dimensions: res.data.Dimensions });
+                this.setState({ questions: res.data.questions });
+            })
+        console.log(this.state.questions)
+    }
+
 
     onDragEnd(result) {
         // dropped outside the list
@@ -62,21 +76,24 @@ export default class QuestionTable extends Component {
     }
 
     addQuestion() {
-        // var endPoint = '/questions/'
-        // Axios.post(process.env.REACT_APP_SERVER_ADDR + endPoint)
         this.handleOpenModal()
-        console.log("Add Question")
     }
 
     handleOpenModal() {
         this.setState({ modalShow: true });
+
     }
 
     handleCloseModal() {
         this.setState({ modalShow: false });
+        this.getQuestions();
     }
 
     render() {
+        if (!this.state.questions.length) {
+            return null;
+        }
+
         return (
             <TableContainer component={Paper}>
                 <Table>
@@ -97,7 +114,7 @@ export default class QuestionTable extends Component {
                                         "lifecycle": 6,
                                         "mandatory": true,
                                         "parent": null,
-                                        "pointsAvailable": null,
+                                        "pointsAvailable": 0,
                                         "prompt": null,
                                         "question": null,
                                         "questionType": null,
@@ -109,7 +126,7 @@ export default class QuestionTable extends Component {
                                             13
                                         ],
                                         "trustIndexDimension": null,
-                                        "weighting": null
+                                        "weighting": 0
                                     }}
                                     mode={"new"}
                                     dimensions={this.state.dimensions}
@@ -124,7 +141,12 @@ export default class QuestionTable extends Component {
                     <TableBody component={DroppableComponent(this.onDragEnd)}>
                         {this.state.questions.map((question, index) => (
                             <TableRow component={DraggableComponent(question._id, index)} key={question._id}>
-                                <QuestionRow question={question} dimensions={this.state.dimensions} index={index} />
+                                <QuestionRow
+                                    question={question}
+                                    dimensions={this.state.dimensions}
+                                    index={index}
+                                    onDelete={this.getQuestions}
+                                />
                             </TableRow>
                         ))}
                     </TableBody>
