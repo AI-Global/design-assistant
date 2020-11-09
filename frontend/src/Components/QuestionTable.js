@@ -11,7 +11,6 @@ import QuestionRow from '../Components/QuestionRow';
 import IconButton from '@material-ui/core/IconButton';
 import TableContainer from '@material-ui/core/TableContainer';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import Axios from 'axios';
 
 const reorder = (list, startIndex, endIndex) => {
     const result = Array.from(list)
@@ -91,9 +90,6 @@ export default class QuestionTable extends Component {
                                     show={this.state.modalShow}
                                     onHide={this.handleCloseModal}
                                     question={{
-                                        "_id": {
-                                            "$oid": "5f992cbad17b20d5d4201d58"
-                                        },
                                         "questionNumber": 0,
                                         "__v": 0,
                                         "alt_text": null,
@@ -101,7 +97,7 @@ export default class QuestionTable extends Component {
                                         "lifecycle": 6,
                                         "mandatory": true,
                                         "parent": null,
-                                        "pointsAvailable": 0,
+                                        "pointsAvailable": null,
                                         "prompt": null,
                                         "question": null,
                                         "questionType": null,
@@ -113,8 +109,9 @@ export default class QuestionTable extends Component {
                                             13
                                         ],
                                         "trustIndexDimension": null,
-                                        "weighting": 0
+                                        "weighting": null
                                     }}
+                                    mode={"new"}
                                     dimensions={this.state.dimensions}
                                 />
                             </TableCell>

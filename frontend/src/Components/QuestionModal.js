@@ -21,7 +21,6 @@ export default function QuestionModal(props) {
     const regionJSON = require('../tempJSON/regionJSON.json')
     const rolesJSON = require('../tempJSON/rolesJSON.json')
 
-
     // make copy of responses array so we can revert back to it if needed
     const responsesA = [...props.question.responses]
     // Set all question properties as hooks for rendering and updating
@@ -90,7 +89,7 @@ export default function QuestionModal(props) {
     }
 
     function save() {
-        var endPoint = '/questions/' + props.question._id;
+        var endPoint
         props.question.alt_text = altText
         props.question.lifecycle = questionLifecycle
         props.question.pointsAvailable = points
@@ -101,16 +100,33 @@ export default function QuestionModal(props) {
         props.question.roles = questionRole
         dimension === -1 ? props.question.trustIndexDimension = null : props.question.trustIndexDimension = dimension
         props.question.weighting = weight
-        axios.put(process.env.REACT_APP_SERVER_ADDR + endPoint, props.question)
-            .then(res => {
-                const result = res.data;
-                if (result.errors) {
-                    console.log(result.errors);
-                }
-                else {
-                    console.log("Updated Question: ", result)
-                }
-            })
+
+        if (props.mode === "edit") {
+            endPoint = '/questions/' + props.question._id;
+            axios.put(process.env.REACT_APP_SERVER_ADDR + endPoint, props.question)
+                .then(res => {
+                    const result = res.data;
+                    if (result.errors) {
+                        console.log(result.errors);
+                    }
+                    else {
+                        console.log("Updated Question: ", result)
+                    }
+                })
+        } else {
+            endPoint = '/questions/';
+            console.log('ADDING NEW QUESTION')
+            axios.post(process.env.REACT_APP_SERVER_ADDR + endPoint, props.question)
+                .then(res => {
+                    const result = res.data;
+                    if (result.errors) {
+                        console.log(result.errors);
+                    }
+                    else {
+                        console.log("Added Question: ", result)
+                    }
+                })
+        }
         props.onHide()
     }
 
@@ -201,11 +217,11 @@ export default function QuestionModal(props) {
                                 <React.Fragment>
                                     <Col xs={4} md={1}>
                                         <Form.Label>Points</Form.Label>
-                                        <Form.Control type="number" placeholder="--" value={points} onChange={(event) => setPoints(event.target.value)} />
+                                        <Form.Control type="number" placeholder="--" value={points || ''} onChange={(event) => setPoints(event.target.value)} />
                                     </Col>
                                     <Col xs={4} md={1}>
                                         <Form.Label>Weight</Form.Label>
-                                        <Form.Control type="number" placeholder="--" value={weight} onChange={(event) => setWeight(event.target.value)} />
+                                        <Form.Control type="number" placeholder="--" value={weight || ''} onChange={(event) => setWeight(event.target.value)} />
                                     </Col>
                                 </React.Fragment>
                                 : null}
@@ -229,7 +245,7 @@ export default function QuestionModal(props) {
                                             </IconButton>
                                         </Form.Label>
                                         {responses.map((response, index) =>
-                                            <div key={index} style={{ paddingBottom: "0.5em"}}>
+                                            <div key={index} style={{ paddingBottom: "0.5em" }}>
                                                 <InputGroup className="mb-2" style={{ "minHeight": "44px" }}>
                                                     <InputGroup.Prepend>
                                                         <InputGroup.Text>
