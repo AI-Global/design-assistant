@@ -427,7 +427,7 @@ router.post('/', async (req, res) => {
 router.delete('/:questionId', async (req, res) => {
     try {
         // Delete existing question in DB
-        var response = await Question.remove({ _id: req.params.questionId }, req.body);
+        var response = await Question.deleteOne({ _id: req.params.questionId }, req.body);
 
         res.json(response);
     } catch (err) {
