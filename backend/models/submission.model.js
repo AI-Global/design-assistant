@@ -15,12 +15,22 @@ const SubmissionSchema = mongoose.Schema({
         unique: true
     },
 
-    // Possible life cycles
-    lifecycle: [{
-        type: String,
-        enum: ['Plan and Design', 'Data and Model', 'Verify and Validate', 'Deploy', 'Operate and Monitor'],
+    date: {
+        type: Date,
         required: true
-    }],
+    },
+
+    // Possible life cycles
+    predeployment: {
+        type: String,
+        enum: ['Plan and Design', 'Data and Model']
+    },
+
+    deployment: {
+        type: String,
+        enum: ['Verify and Validate', 'Deploy', 'Operate and Monitor'],
+    },
+
 
     // json file that gets output from survey.js
     submission: {
