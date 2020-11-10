@@ -78,6 +78,7 @@ const QuestionSchema = mongoose.Schema({
     lifecycle: Number,
 
     // Which Question and Response determine whether this question should be displayed
+    child:Boolean,
     trigger: {
         parent: {
             type: String

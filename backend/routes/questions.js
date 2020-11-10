@@ -6,9 +6,9 @@ const fs = require('fs');
 const { create } = require('../models/question.model');
 
 async function getDimensions() {
+    // Get Lookup of Dimensions from DB
     let dimensions = await Dimension.find()
 
-    // Format questions into format
     let Dimensions = {}
     for (let d of dimensions) {
         Dimensions[d.dimensionID] = { label: d.label, name: d.name, page: d.name.replace(/\s+/g, '') }
@@ -17,7 +17,34 @@ async function getDimensions() {
     return Dimensions
 }
 
-function formatQuestion(q, Dimensions) {
+function formatTrigger(trigger) {
+    // Formats the triggers into a string for SurveyJS
+    //"{5fa50dfbd17b20d5d45df5d3} == 0 or {5fa50dfbd17b20d5d45df5d3} == 1"
+    triggerList = [];
+    for (let t of trigger.responses) {
+        triggerList.push("{" + trigger.parent + "} == " + String(t));
+    }
+
+    //console.log(triggerList.join(" or "))
+    return triggerList.join(" or ");
+}
+
+async function getChildren() {
+    // Get Lookup of child questions
+    let questions = await Question.find({ "trigger": { $ne: null } })
+    let children = {}
+    for (let q of questions) {
+        //console.log(q.trigger.parent)
+        children[q.trigger.parent] = {};
+        children[q.trigger.parent].question = q;
+        children[q.trigger.parent].trigger = formatTrigger(q.trigger);
+    }
+    //console.log(children)
+    return children
+}
+
+function formatQuestion(q, Dimensions, Triggers = null) {
+
     // This function takes a question from mongoDB as input and formats it for surveyJS to use
 
     // All questions have a title, name, and type
@@ -28,6 +55,12 @@ function formatQuestion(q, Dimensions) {
     question.name = q.id;
     question.type = q.responseType;
 
+    if (Triggers) {//q.id != "5fa50dfbd17b20d5d45df5d3"
+        //question.title.default = "TESTSETSET"
+        //question.visibleIf = "{5fa50dfbd17b20d5d45df5d3} notempty";
+        //question.visibleIf = "{5fa50dfbd17b20d5d45df5d3} == 0 or {5fa50dfbd17b20d5d45df5d3} == 1";
+        question.visibleIf = Triggers;
+    }
     // The rest of these properties are dependant on the question
     if (q.alt_text) {
         question.alttext = {};
@@ -81,7 +114,7 @@ function formatQuestion(q, Dimensions) {
         question.choices = [];
         for (let c of q.responses) {
             var choice = {};
-            choice.value = c.id;
+            choice.value = c.responseNumber;
             choice.text = {};
             choice.text.default = c.indicator;
             choice.text.fr = "";
@@ -93,26 +126,78 @@ function formatQuestion(q, Dimensions) {
     return question;
 }
 
-function createPage(questions, pageName, pageTitle, Dimensions) {
+function chainChildren(q, Children) {
+    // Given a question this function will recursivly check for deeper chains of heirarchy questions
+    var childChain = [];
+
+    childChain.push(Children[q.id].question);
+
+    // Recursivly get children of children
+    if (Children[q.id].question.id in Children) {
+        //onsole.log("deep")
+        //console.log(chainChildren(Children[q.id].question, Children))
+        childChain = childChain.concat(chainChildren(Children[q.id].question, Children))
+    }
+    
+    return childChain;
+}
+
+function createHierarchy(questions, Children) {
+    // Given a list of questions, check for any child questions and build the heirarchy
+    //console.log(questions)
+    var heirarchy = [];
+
+    questions.forEach( q => {
+        heirarchy.push(q);
+
+        // If the questions has children
+        if (q.id in Children) {
+            heirarchy = heirarchy.concat(chainChildren(q, Children));
+        }
+    })
+
+    return heirarchy;
+}
+
+function createPage(questions, pageName, pageTitle, Dimensions, Children) {
     // Helper function for createPages
     // function takes in a list of question plus title and creates a page for it
     var page = {};
+
+    // Build Heirachy
+    
+    var questionHeiarchy = createHierarchy(questions, Children)
+    //console.log(questionHeiarchy)
 
     page.name = pageName;
     page.title = {};
     page.title.default = pageTitle;
     page.title.fr = "";
     // Map MongoDB questions to surveyJS format
-    page.elements = questions.map(function (q) {
-        return formatQuestion(q, Dimensions);
+    page.elements = questionHeiarchy.map(function (q) {
+        //console.log(q.trigger)
+        if (q.child){
+            console.log(q.trigger)
+            return formatQuestion(q, Dimensions, Children[q.trigger.parent].trigger);
+
+        }else{
+            //console.log("else")
+            //console.log(q)
+            return formatQuestion(q, Dimensions);
+        }
     });
 
     return page
 }
 
-function createPages(q, Dimensions) {
+async function createPages(q) {
+    // Get dimensions from DB
+    let Dimensions = await getDimensions()
+    // Get child questions from DB
+    let Children = await getChildren()
+
     // This function takes in a list of questions from mongoDB and formats them into pages for surveyJS
-    page = {};
+    var page = {};
     page.pages = [];
     page.showQuestionNumbers = "false";
     page.showProgressBar = "top";
@@ -120,7 +205,7 @@ function createPages(q, Dimensions) {
     page.showNavigationButtons = "false";
 
     // Separate the questions by dimension 
-    // TODO: we might want to make tombstone questions a dimension too
+    // TODO: we might want to make tombstone questions a dimension too for cleaner code
     var dimQuestions = {}
     for (let d in Dimensions) {
         dimQuestions[d] = [];
@@ -139,7 +224,7 @@ function createPages(q, Dimensions) {
 
     // Add Other question to tombstone and create page 
     tombQuestions["tombstone"].push({ responseType: "comment", id: "otherTombstone", question: "Other:", alt_text: "If possible, support the feedback with specific recommendations \/ suggestions to improve the tool. Feedback can include:\n - Refinement to existing questions, like suggestions on how questions can be simplified or clarified further\n - Additions of new questions for specific scenarios that may be missed\n - Feedback on whether the listed AI risk domains are fulsome and complete\n - What types of response indicators should be included for your context?" });
-    projectDetails = createPage(tombQuestions["tombstone"], "projectDetails1", "Project Details", Dimensions);
+    var projectDetails = createPage(tombQuestions["tombstone"], "projectDetails1", "Project Details", Dimensions, Children);
     page.pages.push(projectDetails);
 
     // Create pages for the dimensions
@@ -147,13 +232,13 @@ function createPages(q, Dimensions) {
     var questions = [];
 
     // Loop through each dimension in this order
-    for (let dimension of Object.keys(dimQuestions)) {
+    for (let dimension of [2]) {//Object.keys(dimQuestions)
         // Create pages of 2 questions 
         for (let question of dimQuestions[dimension]) {
             questions.push(question);
             questions.push({ responseType: "comment", id: "other" + question.id, question: "Other:", alt_text: "If possible, support the feedback with specific recommendations \/ suggestions to improve the tool. Feedback can include:\n - Refinement to existing questions, like suggestions on how questions can be simplified or clarified further\n - Additions of new questions for specific scenarios that may be missed\n - Feedback on whether the listed AI risk domains are fulsome and complete\n - What types of response indicators should be included for your context?" });
             if (questions.length == 4) {
-                var dimPage = createPage(questions, Dimensions[question.trustIndexDimension].page + pageCount, Dimensions[question.trustIndexDimension].name, Dimensions);
+                var dimPage = createPage(questions, Dimensions[question.trustIndexDimension].page + pageCount, Dimensions[question.trustIndexDimension].name, Dimensions, Children);
                 page.pages.push(dimPage);
                 pageCount++;
                 questions = [];
@@ -162,7 +247,7 @@ function createPages(q, Dimensions) {
 
         // Deal with odd number of pages
         if (questions.length > 0) {
-            var dimPage = createPage(questions, Dimensions[questions[0].trustIndexDimension].page + pageCount, Dimensions[questions[0].trustIndexDimension].name, Dimensions);
+            var dimPage = createPage(questions, Dimensions[questions[0].trustIndexDimension].page + pageCount, Dimensions[questions[0].trustIndexDimension].name, Dimensions, Children);
             page.pages.push(dimPage);
         }
 
@@ -176,10 +261,12 @@ function createPages(q, Dimensions) {
 
 // Get all questions. Assemble SurveyJS JSON here
 router.get('/', async (req, res) => {
-    // Get dimensions from DB
-    let Dimensions = await getDimensions()
-    Question.find()
-        .then((questions) => res.status(200).send(createPages(questions, Dimensions)))
+    // Only request parent questions from DB
+    Question.find({ "trigger": null })
+        .then(async (questions) => {
+            pages = await createPages(questions);
+            res.status(200).send(pages);
+        })
         .catch((err) => res.status(400).send(err));
 
 });
