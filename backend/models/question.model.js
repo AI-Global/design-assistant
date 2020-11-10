@@ -78,14 +78,11 @@ const QuestionSchema = mongoose.Schema({
     lifecycle: Number,
 
     // Which Question and Response determine whether this question should be displayed
-    parent: {
-        questionNumber: {
-            type: Number
+    trigger: {
+        parent: {
+            type: String
         },
-        responseNumber: {
-            type: Number
-        },
-        
+        responses: [Number]
     }
 
     // TODO: Add test of schema to model
