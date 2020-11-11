@@ -5,7 +5,6 @@ const SubmissionSchema = mongoose.Schema({
     // user ID that owns this 
     userId: {
         type: Number,
-        required: true,
         unique: true
     },
 
@@ -21,14 +20,9 @@ const SubmissionSchema = mongoose.Schema({
     },
 
     // Possible life cycles
-    predeployment: {
-        type: String,
-        enum: ['Plan and Design', 'Data and Model']
-    },
-
-    deployment: {
-        type: String,
-        enum: ['Verify and Validate', 'Deploy', 'Operate and Monitor'],
+    // reference to the id of the lifecycle
+    lifecycle: {
+        type: Number
     },
 
 

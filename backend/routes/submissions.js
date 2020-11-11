@@ -1,8 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const Submission = require('../models/submission.model');
-const Response = require('../models/submission.model');
-
 
 // Get all submissions
 router.get('/', async (req,res) => {
@@ -21,7 +19,16 @@ router.get('/', async (req,res) => {
 
 router.get('/:userId', async (req,res) => {
     try{
-        const submissions = await Submission.find({'userId' : req.params.userId});
+        const submissions = await Submission.findOneAndUpdate({'userId' : req.params.userId},
+        {
+            userId: req.body.userId,
+            projectId: req.body.projectId,
+            date: req.body.date,
+            predeployment: req.body.predeployment,
+            deployemnt: req.body.deployment,
+            submission: req.body.submission
+        },
+        {upsert:true, runValidators: true});
         res.json(submissions);
         // debug
         console.log("Incoming sumissions request by userId");
@@ -29,6 +36,14 @@ router.get('/:userId', async (req,res) => {
     } catch(err){
         res.json({message: err});
     }   
+});
+
+router.get('/update/:projectId', async (req, res) => {
+    try{
+        const submissions = await Submission.find({'projectId' : req.params.projectId});
+    } catch(err){
+        res.json({message: err});
+    }
 });
 
 
