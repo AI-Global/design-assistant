@@ -33,7 +33,7 @@ export default class QuestionTable extends Component {
         super(props);
         this.state = {
             questions: {},
-            dimensions: {}
+            dimensions: {},
         }
         this.onDragEnd = this.onDragEnd.bind(this)
         this.handleOpenModal = this.handleOpenModal.bind(this);
@@ -52,9 +52,7 @@ export default class QuestionTable extends Component {
                 this.setState({ dimensions: res.data.Dimensions });
                 this.setState({ questions: res.data.questions });
             })
-        console.log(this.state.questions)
     }
-
 
     onDragEnd(result) {
         // dropped outside the list
@@ -93,6 +91,26 @@ export default class QuestionTable extends Component {
         if (!this.state.questions.length) {
             return null;
         }
+        const newQuestion = {
+            "questionNumber": this.state.questions.length+1,
+            "__v": 0,
+            "alt_text": null,
+            "domainApplicability": null,
+            "lifecycle": 6,
+            "mandatory": true,
+            "parent": null,
+            "pointsAvailable": 0,
+            "prompt": null,
+            "question": null,
+            "questionType": null,
+            "reference": null,
+            "regionalApplicability": null,
+            "responseType": null,
+            "responses": [],
+            "roles": [13],
+            "trustIndexDimension": null,
+            "weighting": 0
+        }
 
         return (
             <TableContainer component={Paper}>
@@ -106,28 +124,7 @@ export default class QuestionTable extends Component {
                                 <QuestionModal
                                     show={this.state.modalShow}
                                     onHide={this.handleCloseModal}
-                                    question={{
-                                        "questionNumber": 0,
-                                        "__v": 0,
-                                        "alt_text": null,
-                                        "domainApplicability": null,
-                                        "lifecycle": 6,
-                                        "mandatory": true,
-                                        "parent": null,
-                                        "pointsAvailable": 0,
-                                        "prompt": null,
-                                        "question": null,
-                                        "questionType": null,
-                                        "reference": null,
-                                        "regionalApplicability": null,
-                                        "responseType": null,
-                                        "responses": [],
-                                        "roles": [
-                                            13
-                                        ],
-                                        "trustIndexDimension": null,
-                                        "weighting": 0
-                                    }}
+                                    question={newQuestion}
                                     mode={"new"}
                                     dimensions={this.state.dimensions}
                                 />

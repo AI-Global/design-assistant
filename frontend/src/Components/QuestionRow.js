@@ -11,7 +11,7 @@ const useRowStyles = makeStyles({
 });
 
 export default function QuestionRow(props) {
-    const { question, dimensions, index, onDelete} = props;
+    const { question, dimensions, index} = props;
     const [modalShow, setModalShow] = React.useState(false);
     const classes = useRowStyles();
     return (
