@@ -116,7 +116,12 @@ function formatQuestion(q, Dimensions, Triggers = null) {
             question.choices.push(choice);
         }
 
-    }//TODO: else if (question.type == slider)
+    } else if (question.type == "bootstrapslider") {
+        // Low Medium and High
+        question.step = 1;
+        question.rangeMin = 1;
+        question.rangeMax = 3;
+    }
 
     return question;
 }
