@@ -19,13 +19,11 @@ async function getDimensions() {
 
 function formatTrigger(trigger) {
     // Formats the triggers into a string for SurveyJS
-    //"{5fa50dfbd17b20d5d45df5d3} == 0 or {5fa50dfbd17b20d5d45df5d3} == 1"
     triggerList = [];
     for (let t of trigger.responses) {
         triggerList.push("{" + trigger.parent + "} == " + String(t));
     }
 
-    //console.log(triggerList.join(" or "))
     return triggerList.join(" or ");
 }
 
@@ -34,17 +32,15 @@ async function getChildren() {
     let questions = await Question.find({ "trigger": { $ne: null } })
     let children = {}
     for (let q of questions) {
-        //console.log(q.trigger.parent)
         children[q.trigger.parent] = {};
         children[q.trigger.parent].question = q;
         children[q.trigger.parent].trigger = formatTrigger(q.trigger);
     }
-    //console.log(children)
+
     return children
 }
 
 function formatQuestion(q, Dimensions, Triggers = null) {
-
     // This function takes a question from mongoDB as input and formats it for surveyJS to use
 
     // All questions have a title, name, and type
@@ -55,12 +51,11 @@ function formatQuestion(q, Dimensions, Triggers = null) {
     question.name = q.id;
     question.type = q.responseType;
 
-    if (Triggers) {//q.id != "5fa50dfbd17b20d5d45df5d3"
-        //question.title.default = "TESTSETSET"
-        //question.visibleIf = "{5fa50dfbd17b20d5d45df5d3} notempty";
-        //question.visibleIf = "{5fa50dfbd17b20d5d45df5d3} == 0 or {5fa50dfbd17b20d5d45df5d3} == 1";
+    // Set conditions for when the question is visiable
+    if (Triggers) {
         question.visibleIf = Triggers;
     }
+
     // The rest of these properties are dependant on the question
     if (q.alt_text) {
         question.alttext = {};
@@ -134,8 +129,6 @@ function chainChildren(q, Children) {
 
     // Recursivly get children of children
     if (Children[q.id].question.id in Children) {
-        //onsole.log("deep")
-        //console.log(chainChildren(Children[q.id].question, Children))
         childChain = childChain.concat(chainChildren(Children[q.id].question, Children))
     }
     
@@ -144,7 +137,6 @@ function chainChildren(q, Children) {
 
 function createHierarchy(questions, Children) {
     // Given a list of questions, check for any child questions and build the heirarchy
-    //console.log(questions)
     var heirarchy = [];
 
     questions.forEach( q => {
@@ -167,7 +159,6 @@ function createPage(questions, pageName, pageTitle, Dimensions, Children) {
     // Build Heirachy
     
     var questionHeiarchy = createHierarchy(questions, Children)
-    //console.log(questionHeiarchy)
 
     page.name = pageName;
     page.title = {};
@@ -175,14 +166,12 @@ function createPage(questions, pageName, pageTitle, Dimensions, Children) {
     page.title.fr = "";
     // Map MongoDB questions to surveyJS format
     page.elements = questionHeiarchy.map(function (q) {
-        //console.log(q.trigger)
         if (q.child){
             console.log(q.trigger)
             return formatQuestion(q, Dimensions, Children[q.trigger.parent].trigger);
 
         }else{
-            //console.log("else")
-            //console.log(q)
+
             return formatQuestion(q, Dimensions);
         }
     });
@@ -232,7 +221,7 @@ async function createPages(q) {
     var questions = [];
 
     // Loop through each dimension in this order
-    for (let dimension of [2]) {//Object.keys(dimQuestions)
+    for (let dimension of Object.keys(dimQuestions)) {
         // Create pages of 2 questions 
         for (let question of dimQuestions[dimension]) {
             questions.push(question);
