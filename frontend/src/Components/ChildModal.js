@@ -10,8 +10,11 @@ export default function ChildModal(props) {
 
     var currentQuestion = (props.current_question) ? props.current_question.question : "0";
     var previousQuestion = (props.previous_question) ? props.previous_question.question : "0";
+
+    const [responses, setResponses] = useState(props.previous_question.responses);
+
     const [makeChild, setMakeChild] = useState(false);
-    
+
     return (
         <Modal
             show={props.show}
@@ -36,6 +39,16 @@ export default function ChildModal(props) {
                             </div>
                         </Row>
                     </Col>
+                    </Form.Group>
+                    <Form.Group>
+                        <Row>
+                            <div classname='mb-3'>
+                                { responses.map( (response) =>
+                                <Form.Check type="checkbox" id={response.responseNumber} label={response.indicator}/>
+                                )
+                                }
+                            </div>
+                        </Row>
                     </Form.Group>
                 </Form>
             </Modal.Header>
