@@ -5,8 +5,7 @@ const QuestionSchema = mongoose.Schema({
     // numbered 0 to n-1
     questionNumber: {
         type: Number,
-        required: true,
-        unique: true
+        required: true
     },
 
     // 5 possible dimensions

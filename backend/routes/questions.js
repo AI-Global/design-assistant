@@ -4,6 +4,7 @@ const Question = require('../models/question.model');
 const Dimension = require('../models/dimension.model');
 const fs = require('fs');
 const { create } = require('../models/question.model');
+const mongoose = require('mongoose');
 
 async function getDimensions() {
     // Get Lookup of Dimensions from DB
@@ -130,7 +131,7 @@ function chainChildren(q, Children) {
     if (Children[q.id].question.id in Children) {
         childChain = childChain.concat(chainChildren(Children[q.id].question, Children))
     }
-    
+
     return childChain;
 }
 
@@ -138,7 +139,7 @@ function createHierarchy(questions, Children) {
     // Given a list of questions, check for any child questions and build the heirarchy
     var heirarchy = [];
 
-    questions.forEach( q => {
+    questions.forEach(q => {
         heirarchy.push(q);
 
         // If the questions has children
@@ -156,7 +157,7 @@ function createPage(questions, pageName, pageTitle, Dimensions, Children) {
     var page = {};
 
     // Build Heirachy
-    
+
     var questionHeiarchy = createHierarchy(questions, Children)
 
     page.name = pageName;
@@ -165,11 +166,11 @@ function createPage(questions, pageName, pageTitle, Dimensions, Children) {
     page.title.fr = "";
     // Map MongoDB questions to surveyJS format
     page.elements = questionHeiarchy.map(function (q) {
-        if (q.child){
+        if (q.child) {
             console.log(q.trigger)
             return formatQuestion(q, Dimensions, Children[q.trigger.parent].trigger);
 
-        }else{
+        } else {
 
             return formatQuestion(q, Dimensions);
         }
@@ -211,7 +212,7 @@ async function createPages(q) {
     }
 
     tombQuestions["tombstone"].sort((a, b) => (a.questionNumber > b.questionNumber) ? 1 : -1);
-    for(let i = 0; i < dimQuestions.length; i++){
+    for (let i = 0; i < dimQuestions.length; i++) {
         dimQuestions.sort((a, b) => (a.questionNumber > b.questionNumber) ? 1 : -1);
     }
 
@@ -266,10 +267,10 @@ router.get('/', async (req, res) => {
 });
 
 // Get all questions as JSON from DB. No Assembly for SurveyJS
-router.get('/all', async (req, res)=> {
+router.get('/all', async (req, res) => {
     let Dimensions = await getDimensions()
     Question.find()
-        .then((questions) => res.status(200).send({questions, Dimensions}))
+        .then((questions) => res.status(200).send({ questions, Dimensions }))
         .catch((err) => res.status(400).send(err));
 })
 
@@ -321,6 +322,33 @@ router.put('/:questionId', async (req, res) => {
     } catch (err) {
         res.json({ message: err });
     }
+});
+
+router.put('/:startNumber/:endNumber', async (req, res) => {
+
+
+    try {
+        const session = await mongoose.startSession();
+        session.withTransaction(async () => {
+            
+        
+            //shift questions down
+            
+            for (let i = req.params.startNumber; i <= req.params.endNumber; i++) {
+                console.log(req.params.startNumber)
+                 await Question.findOneAndUpdate({ questionNumber: i }, { questionNumber: i - 1 });
+                 
+            }
+
+        })
+
+        // free up starting question number (unique)
+        res.json({ message: "Transaction Complete" })
+
+    } catch (err) {
+        res.json({ message: err, part: 4 });
+    }
+
 });
 
 
