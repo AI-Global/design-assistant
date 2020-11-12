@@ -11,6 +11,7 @@ import TableHead from '@material-ui/core/TableHead';
 import QuestionRow from '../Components/QuestionRow';
 import IconButton from '@material-ui/core/IconButton';
 import TableContainer from '@material-ui/core/TableContainer';
+import ChildModal from './ChildModal';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 const reorder = (list, startIndex, endIndex) => {
@@ -29,6 +30,8 @@ const getItemStyle = (isDragging, draggableStyle) => ({
 })
 
 export default class QuestionTable extends Component {
+
+
     constructor(props) {
         super(props);
         this.state = {
@@ -54,6 +57,7 @@ export default class QuestionTable extends Component {
             })
     }
 
+
     onDragEnd(result) {
         // dropped outside the list
         if (!result.destination) {
@@ -66,9 +70,24 @@ export default class QuestionTable extends Component {
             result.destination.index
         )
 
-        this.setState({
-            questions
-        })
+        const qList = Array.from(this.state.questions);
+        console.log("LIST:" );
+        console.log(qList[0].questionNumber);
+
+
+        if(result.destination.index != 0){
+            this.setState({
+                questions,
+                currentQuestion: qList[result.destination.index],
+                previousQuestion: qList[result.destination.index-1],
+                showChildModal: true
+            })
+        } else{
+            // do not ask to make a child-parent relationship
+            this.setState({
+                questions
+            })
+        }
         console.log("Source:", result.source.index)
         console.log("Parent:", result.destination.index - 1)
     }
@@ -85,6 +104,16 @@ export default class QuestionTable extends Component {
     handleCloseModal() {
         this.setState({ modalShow: false });
         this.getQuestions();
+    }
+
+    setChildModalShow(val){
+        this.setState({showChildModal: val});
+    }
+
+    makeRelationship(){
+        this.setChildModalShow(false);
+        console.log("in make relationship");
+        // TODO: Add functionality to make question child of parent
     }
 
     render() {
@@ -114,6 +143,13 @@ export default class QuestionTable extends Component {
 
         return (
             <TableContainer component={Paper}>
+                <ChildModal
+                    show={this.state.showChildModal}
+                    onHide={() => this.setChildModalShow(false)}
+                    clickYes={() => this.makeRelationship()}
+                    current_question={this.state.currentQuestion}
+                    previous_question={this.state.previousQuestion}
+                />
                 <Table>
                     <TableHead>
                         <TableRow>

@@ -13,7 +13,6 @@ async function getDimensions() {
     for (let d of dimensions) {
         Dimensions[d.dimensionID] = { label: d.label, name: d.name, page: d.name.replace(/\s+/g, '') }
     }
-
     return Dimensions
 }
 
@@ -210,6 +209,12 @@ async function createPages(q) {
             dimQuestions[question.trustIndexDimension].push(question)
         }
     }
+
+    tombQuestions["tombstone"].sort((a, b) => (a.questionNumber > b.questionNumber) ? 1 : -1);
+    for(let i = 0; i < dimQuestions.length; i++){
+        dimQuestions.sort((a, b) => (a.questionNumber > b.questionNumber) ? 1 : -1);
+    }
+
 
     // Add Other question to tombstone and create page 
     tombQuestions["tombstone"].push({ responseType: "comment", id: "otherTombstone", question: "Other:", alt_text: "If possible, support the feedback with specific recommendations \/ suggestions to improve the tool. Feedback can include:\n - Refinement to existing questions, like suggestions on how questions can be simplified or clarified further\n - Additions of new questions for specific scenarios that may be missed\n - Feedback on whether the listed AI risk domains are fulsome and complete\n - What types of response indicators should be included for your context?" });
