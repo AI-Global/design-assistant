@@ -20,6 +20,7 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import Login from './views/Login';
 import "bootstrap-slider/dist/css/bootstrap-slider.min.css";
 import * as widgets from  "surveyjs-widgets";
+require('dotenv').config();
 
 // set up survey styles and properties for rendering html
 Survey
