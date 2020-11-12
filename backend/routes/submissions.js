@@ -24,8 +24,7 @@ router.get('/:userId', async (req,res) => {
             userId: req.body.userId,
             projectId: req.body.projectId,
             date: req.body.date,
-            predeployment: req.body.predeployment,
-            deployemnt: req.body.deployment,
+            lifecycle: req.body.lifecycle,
             submission: req.body.submission
         },
         {upsert:true, runValidators: true});
@@ -38,9 +37,15 @@ router.get('/:userId', async (req,res) => {
     }   
 });
 
-router.get('/update/:projectId', async (req, res) => {
+router.post('/update/:projectId', async (req, res) => {
     try{
-        const submissions = await Submission.find({'projectId' : req.params.projectId});
+        const submissions = await Submission.findOneAndUpdate({'projectId' : req.params.projectId}, {
+            userId: req.body.userId,
+            date: req.body.date,
+            lifecycle: req.body.lifecycle,
+            submission: req.body.submission
+        }, {upsert:true, runValidators: true});
+        res.json(submissions);
     } catch(err){
         res.json({message: err});
     }
@@ -53,8 +58,7 @@ router.post('/', async (req, res) => {
         userId: req.body.userId,
         projectId: req.body.projectId,
         date: req.body.date,
-        predeployment: req.body.predeployment,
-        deployemnt: req.body.deployment,
+        lifecycle: req.body.lifecycle,
         submission: req.body.submission
     });
 
