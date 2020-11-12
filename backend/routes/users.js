@@ -15,6 +15,7 @@ owasp.config({
     minOptionalTestsToPass: 4,
 })
 
+// create user - for signup
 router.post('/create', async (req,res) => {
     let errors = [];
     const {username, email, password, passwordConfirmation} = req.body;
@@ -65,6 +66,7 @@ router.post('/create', async (req,res) => {
         });
 });
 
+// authenticate user - for login
 router.post('/auth', async(req, res) => {
     let errors = [];
     const { username, password } = req.body;
@@ -95,16 +97,96 @@ router.post('/auth', async(req, res) => {
         });
 });
 
+// find user by auth token
 router.get('/user', auth, (req, res) => {
     User.findById(req.user.id)
         .select('-hashedPassword -salt')
         .then(user => res.json(user))
 });
 
+// check if valid authentication token 
 router.get('/isLoggedIn', auth, (req, res) => {
     if(req.user){
         res.json({isLoggedIn: "true"});
     }
 })
+
+// changed user fields
+router.post('/updateEmail', auth, (req, res) => {
+    console.log("update email")
+    // error with authentication token
+    if(!req.user){
+        return res.json();
+    }
+    let newEmail = req.body.newEmail;
+    let password = req.body.password;
+    User.findById(req.user.id)
+        .select()
+        .then(existingUser => {
+            if(!existingUser) return res.status(400).json({username: { isInvalid: true, message: 'User does not exist. Please create an account.'}})
+            if(!existingUser.authenticate(password)) return res.status(400).json({password: { isInvalid: true, message: 'Incorrect password entered'}})
+            existingUser.email = newEmail;
+            console.log("Update Email!")
+            User.findByIdAndUpdate(req.user.id, existingUser, {upsert: false})
+            .then(user => {
+                return
+            })
+        });
+    
+})
+
+// changed user fields
+router.post('/updateUsername', auth, (req, res) => {
+    // error with authentication token
+    if(!req.user){
+        return res.json();
+    }
+    let newUsername = req.body.newUsername;
+    let password = req.body.password;
+    User.findById(req.user.id)
+        .select()
+        .then(existingUser => {
+            if(!existingUser) return res.status(400).json({username: { isInvalid: true, message: 'User does not exist. Please create an account.'}})
+            if(!existingUser.authenticate(password)) return res.status(400).json({password: { isInvalid: true, message: 'Incorrect password entered'}})
+            existingUser.username = newUsername;
+            console.log("Update Username!")
+            console.log(existingUser.username);
+            User.findByIdAndUpdate(req.user.id, existingUser, {upsert: false})
+            .then(user => {
+                return
+            })
+        })
+    
+})
+
+// // changed user fields
+router.post('/updatePassword', auth, (req, res) => {
+    // error with authentication token
+    if(!req.user){
+        return res.json();
+    }
+    let password = req.body.password;
+    let newPassword = req.body.newPassword;
+    let result = owasp.test(newPassword);
+    if(result.strong == false){
+        return res.status(400).json({password: {isInvalid: true, message: result.errors.join('\n')}})
+    }
+
+    User.findById(req.user.id)
+        .select()
+        .then(existingUser => {
+            if(!existingUser) return res.status(400).json({username: { isInvalid: true, message: 'User does not exist. Please create an account.'}})
+            if(!existingUser.authenticate(password)) return res.status(400).json({password: { isInvalid: true, message: 'Incorrect password entered'}})
+            existingUser.password = newPassword
+            console.log("Update Email!")
+            User.findByIdAndUpdate(req.user.id, existingUser, {upsert: false})
+                .then(user => {
+                    return
+                })
+        })
+    
+})
+
+
 
 module.exports = router;
