@@ -110,9 +110,20 @@ export default class QuestionTable extends Component {
         this.setState({showChildModal: val});
     }
 
-    makeRelationship(){
+    updateQuestionNumbers(){
         this.setChildModalShow(false);
         console.log("in make relationship");
+        var endPoint = '/questions/' + this.currentQuestion._id;
+            axios.put(process.env.REACT_APP_SERVER_ADDR + endPoint, this.currentQuestion)
+                .then(res => {
+                    const result = res.data;
+                    if (result.errors) {
+                        console.log(result.errors);
+                    }
+                    else {
+                        console.log("Updated Question: ", result)
+                    }
+                })
         // TODO: Add functionality to make question child of parent
     }
 
@@ -147,7 +158,7 @@ export default class QuestionTable extends Component {
                 <ChildModal
                     show={this.state.showChildModal}
                     onHide={() => this.setChildModalShow(false)}
-                    clickYes={() => this.makeRelationship()}
+                    clickYes={() => this.updateQuestionNumbers()}
                     current_question={this.state.currentQuestion}
                     previous_question={this.state.previousQuestion}
                 />
