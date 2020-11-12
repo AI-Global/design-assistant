@@ -30,13 +30,13 @@ const getItemStyle = (isDragging, draggableStyle) => ({
 })
 
 export default class QuestionTable extends Component {
-
-
     constructor(props) {
         super(props);
         this.state = {
             questions: {},
             dimensions: {},
+            previousQuestion: null,
+            currentQuestion: null
         }
         this.onDragEnd = this.onDragEnd.bind(this)
         this.handleOpenModal = this.handleOpenModal.bind(this);
@@ -143,6 +143,7 @@ export default class QuestionTable extends Component {
 
         return (
             <TableContainer component={Paper}>
+                {this.state.previousQuestion === null ? null : 
                 <ChildModal
                     show={this.state.showChildModal}
                     onHide={() => this.setChildModalShow(false)}
@@ -150,6 +151,7 @@ export default class QuestionTable extends Component {
                     current_question={this.state.currentQuestion}
                     previous_question={this.state.previousQuestion}
                 />
+                }
                 <Table>
                     <TableHead>
                         <TableRow>

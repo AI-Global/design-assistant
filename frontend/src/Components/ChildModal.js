@@ -12,7 +12,6 @@ export default function ChildModal(props) {
     var previousQuestion = (props.previous_question) ? props.previous_question.question : "0";
 
     const [responses, setResponses] = useState(props.previous_question.responses);
-
     const [makeChild, setMakeChild] = useState(false);
 
     return (
