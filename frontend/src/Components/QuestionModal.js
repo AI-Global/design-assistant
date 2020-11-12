@@ -208,7 +208,7 @@ export default function QuestionModal(props) {
                 <Modal.Header>
                     <Modal.Title id="contained-modal-title-vcenter">
                         Edit Question
-                </Modal.Title>
+                    </Modal.Title>
                     <IconButton size="small" onClick={() => close()} label="Close">
                         <CloseIcon />
                     </IconButton>
@@ -222,7 +222,7 @@ export default function QuestionModal(props) {
                                     <Form.Control value={dimension === null ? "" : dimension} as="select" onChange={(event) => setDimension(parseInt(event.target.value))}>
                                         <option value="-1">Details</option>
                                         {Object.values(dimensions).map((dimension, index) =>
-                                            <option key={index + 1} value={index + 1}>{dimension.name}</option>
+                                            <option key={index + 1} value={index + 1} data-testid={dimension.name}>{dimension.name}</option>
                                         )}
                                     </Form.Control>
                                 </Form.Group>
@@ -230,7 +230,7 @@ export default function QuestionModal(props) {
                             <Col xs={4} md={2}>
                                 <Form.Group controlId="responseType">
                                     <Form.Label>Response Type</Form.Label>
-                                    <Form.Control value={responseType || ''} as="select" onChange={(event) => setType(event.target.value)}>
+                                    <Form.Control data-testid="responseType" value={responseType || ''} as="select" onChange={(event) => setType(event.target.value)}>
                                         {responseTypes.map((type, index) =>
                                             <option key={index} value={type}>{type}</option>
                                         )}
@@ -240,7 +240,7 @@ export default function QuestionModal(props) {
                             <Col xs={4} md={2}>
                                 <Form.Group controlId="questionType">
                                     <Form.Label>Question Type</Form.Label>
-                                    <Form.Control value={questionType || ''} as="select" onChange={(event) => setQType(event.target.value)}>
+                                    <Form.Control data-testid="questionType" value={questionType || ''} as="select" onChange={(event) => setQType(event.target.value)}>
                                         <option>tombstone</option>
                                         <option>mitigation</option>
                                         <option>risk</option>
@@ -273,7 +273,7 @@ export default function QuestionModal(props) {
                             <Col xs={12} md={12}>
                                 <Form.Group controlId="question">
                                     <Form.Label>Question</Form.Label>
-                                    <Form.Control required="required" isInvalid={questionValid} as="textarea" placeholder="Question" value={question || ""} onChange={(event) => setQuestion(event.target.value)} />
+                                    <Form.Control data-testid="question" required="required" isInvalid={questionValid} as="textarea" placeholder="Question" value={question || ""} onChange={(event) => setQuestion(event.target.value)} />
                                     <Form.Control.Feedback type="invalid">Please enter a question</Form.Control.Feedback>
                                 </Form.Group>
                             </Col>

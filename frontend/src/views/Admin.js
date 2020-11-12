@@ -67,7 +67,7 @@ export default class Results extends Component {
                                 <thead>
                                     <tr>
                                         <th className="score-card-headers">
-                                            Analytics
+                                            Google Analytics
                                         </th>
                                     </tr>
                                 </thead>
