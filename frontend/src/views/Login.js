@@ -4,6 +4,7 @@ import "../css/login.css";
 import Signup from "./Signup";
 import axios from 'axios';
 import { getLoggedInUser, expireAuthToken } from '../helper/AuthHelper';
+import UserSettings from "./UserSettings";
 require('dotenv').config();
 
 export default class Login extends Component {
@@ -65,15 +66,6 @@ export default class Login extends Component {
     }
 
     /**
-     * Expires the authorization tokens upon
-     * log out button being clicked
-     */
-    handleLogOut(){
-        expireAuthToken();
-        this.setState({user: undefined});
-    }
-
-    /**
      * Renders user information if there 
      * is a user logged in.
      */
@@ -84,9 +76,7 @@ export default class Login extends Component {
             return (
                 <div className="user-status">
                     Logged in as: {user.username} &nbsp;
-                    <Button variant="primary" onClick={() =>  this.handleLogOut()}>
-                        Log out
-                    </Button>
+                    <UserSettings/>
                 </div>
             )
         }
