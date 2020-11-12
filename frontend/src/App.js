@@ -18,7 +18,8 @@ import ModalHeader from 'react-bootstrap/ModalHeader';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Login from './views/Login';
-require('dotenv').config();
+import "bootstrap-slider/dist/css/bootstrap-slider.min.css";
+import * as widgets from  "surveyjs-widgets";
 
 // set up survey styles and properties for rendering html
 Survey
@@ -68,6 +69,7 @@ class App extends Component {
 
   // Request questions JSON from backend 
   componentDidMount() {
+    widgets.bootstrapslider(Survey);
     var endPoint = '/questions';
     axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
       .then(res => {
