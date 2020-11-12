@@ -12,7 +12,7 @@ import { Button, Form, Row, Col } from 'react-bootstrap';
 
 
 export default function QuestionModal(props) {
-    const responseTypes = ["text", "comment", "dropdown", "radiogroup", "checkbox", "slider"]
+    const responseTypes = ["text", "comment", "dropdown", "radiogroup", "checkbox", "bootstrapslider"]
 
     // TODO: replace constants and JSON files with API calls to get JSON's from DB
     const dimensions = props.dimensions
@@ -249,7 +249,7 @@ export default function QuestionModal(props) {
                                     </Form.Control>
                                 </Form.Group>
                             </Col>
-                            {(responseType === "radiogroup" || responseType === "checkbox") ?
+                            {(responseType === "radiogroup" || responseType === "checkbox" || responseType === "bootstrapslider") ?
                                 <React.Fragment>
                                     <Col xs={4} md={2}>
                                         <Form.Label>Points</Form.Label>
@@ -280,7 +280,7 @@ export default function QuestionModal(props) {
                                 </Form.Group>
                             </Col>
                         </Row>
-                        {(responseType === "comment" || responseType === "text" || responseType === "dropdown") ? null :
+                        {(responseType === "comment" || responseType === "text" || responseType === "dropdown" || responseType === "bootstrapslider") ? null :
                             <Row>
                                 <Col xs={11} md={11} style={{ display: "inline-block" }}>
                                     <Form.Group controlId="responses">
