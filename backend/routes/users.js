@@ -5,10 +5,12 @@ const jwt = require("jsonwebtoken");
 const { json } = require('express');
 require('dotenv').config();
 const auth = require('../middleware/auth');
+const mailService = require('../middleware/mailService');
 const owasp = require('owasp-password-strength-test');
 
 const jwtSecret = process.env.JWT_SECRET;
 const sessionTimeout = process.env.SESSION_TIMEOUT;
+
 
 owasp.config({
     minLength: 8,
@@ -33,6 +35,9 @@ router.post('/create', async (req,res) => {
     let user = new User({email, username, password});
     await user.save()
         .then(user => {
+            let emailSubject = 'Responsible AI Design Assistant Account Creation';
+            let emailTemplate = 'emailTemplates/accountCreation.html';
+            mailService.sendEmail(email, emailSubject, emailTemplate);
             jwt.sign(
                 { id: user.id} ,
                     jwtSecret ,
@@ -52,6 +57,7 @@ router.post('/create', async (req,res) => {
             )
         })
         .catch(err => {
+
             // user already exists
             if (err.name === 'MongoError' && err.code === 11000){
                 if(Object.keys(err.keyPattern).includes("username")){
