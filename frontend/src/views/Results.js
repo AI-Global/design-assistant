@@ -9,6 +9,9 @@ import exportReport from "../helper/ExportReport";
 import ReportCard from "./ReportCard";
 import DimensionScore from "./DimensionScore";
 import TrustedAIProviders from './TrustedAIProviders';
+import ReactGa from 'react-ga';
+
+ReactGa.initialize(process.env.REACT_APP_GAID);
 
 const Dimensions = {
     Accountability: {label: "A", name: "Accountability"},
@@ -18,12 +21,30 @@ const Dimensions = {
     Robustness: {label: "R", name: "Robustness"},
 }
 
+const StartAgainHandler = () => {
+    ReactGa.event({
+        category: 'Button',
+        action: 'Clicked the Start Again button from the Results page'
+    })
+}
+
+const ExportHandler = () => {
+    ReactGa.event({
+        category: 'Button',
+        action: 'Exported report as PDF'
+    })
+}
+
 /**
  * Component processes the answers to the survey and
  * renders the results to the user in various different ways.
  */
 export default class Results extends Component {
 
+    componentDidMount() {
+        ReactGa.pageview(window.location.pathname + window.location.search);
+    }
+    
     render() {
         var json = this?.props?.location?.state?.questions;
         var surveyResults = this?.props?.location?.state?.responses;
@@ -48,7 +69,7 @@ export default class Results extends Component {
                 <h1 className="section-header">
                     Results
                 </h1>
-                <button id="exportButton" type="button" className="btn btn-save mr-2 btn btn-primary export-button" onClick={() => exportReport(projectTitle, projectDescription)}>Export</button>
+                <button id="exportButton" type="button" className="btn btn-save mr-2 btn btn-primary export-button" onClick={() => {exportReport(projectTitle, projectDescription); ExportHandler()}}>Export</button>
                 <Tabs defaultActiveKey="score">
                     <Tab eventKey="score" title="Score">
                         <div className="table-responsive mt-3">
@@ -145,7 +166,7 @@ export default class Results extends Component {
                     Since‌ ‌we‌ ‌want‌ ‌you‌ ‌to‌ ‌use‌ ‌the‌ ‌Design‌ ‌Assistant‌ ‌early‌ ‌and‌ ‌often,‌ ‌you‌ ‌can‌ ‌click‌ ‌the‌ ‌button‌ below‌ ‌to‌ ‌start‌ ‌over‌ ‌again!‌
                 </p>
                 <Link to='/'>
-                    <Button id="restartButton">Start Again</Button>
+                    <Button id="restartButton" onClick={StartAgainHandler}>Start Again</Button>
                 </Link>
             </main>
         );
