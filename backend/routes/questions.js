@@ -72,7 +72,7 @@ function formatQuestion(q, Dimensions) {
         if (q.pointsAvailable) {
 
             question.score = {};
-            question.score.dimension = Dimensions[q.trustIndexDimension].label;
+            question.score.dimension = Dimensions[q.trustIndexDimension].name;
             question.score.max = q.pointsAvailable * q.weighting;
 
             // Add score to the choices

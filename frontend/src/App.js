@@ -74,9 +74,10 @@ class App extends Component {
         var json = res.data;
         // replace double escaped characters so showdown correctly renders markdown frontslashes and newlines
         var stringified = JSON.stringify(json);
-        stringified = stringified.replace(/\\\\n/g, "\\n")
-        stringified = stringified.replace(/\\\//g, "/")
+        stringified = stringified.replace(/\\\\n/g, "\\n");
+        stringified = stringified.replace(/\\\//g, "/");
         json = JSON.parse(stringified);
+
         const model = new Survey.Model(json);
         const converter = new showdown.Converter();
 

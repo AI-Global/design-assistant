@@ -180,7 +180,7 @@ function getDropdownChoices(jsonPath){
 
 function formatList(text){
 	if(text.search(":")){
-		text = text.replace(/ \- /g, "/n- ");
+		text = text.replace(/ \- /g, "\n- ");
 	}
 	return text;
 }

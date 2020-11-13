@@ -1,4 +1,6 @@
+import { Link } from 'react-router-dom';
 import React, { Component } from 'react';
+<<<<<<< HEAD
 import { Tabs, Tab, Table, } from 'react-bootstrap';
 import axios from 'axios';
 
@@ -49,6 +51,26 @@ export default class Users extends Component {
     }
 
 
+=======
+import { Tabs, Tab, } from 'react-bootstrap';
+import Table from '@material-ui/core/Table';
+
+import QuestionTable from '../Components/QuestionTable'
+
+//TODO: replace this with backend API to get JSONs from mongoDB
+const questionsJSON = require('../tempJSON/questionsJSON.json')
+// console.log(questionsJSON)
+
+export default class Results extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            json: [],
+            questions: []
+        }
+    }
+
+>>>>>>> origin/get-user-submissions
     render() {
         return (
             <main id="wb-cont" role="main" property="mainContentOfPage" className="container" style={{ paddingBottom: "1rem" }}>
@@ -57,71 +79,60 @@ export default class Users extends Component {
                 </h1>
                 <Tabs defaultActiveKey="surveyManagement">
                     <Tab eventKey="surveyManagement" title="Survey Management">
+                        <QuestionTable questions={questionsJSON} />
+                    </Tab>
+                    <Tab eventKey="userManagement" title="Users">
                         <div className="table-responsive mt-3">
-                            <Table id="questions" bordered hover responsive className="question-table">
+                            <Table id="users" bordered="true" hover="true" responsive="true" className="user-table">
                                 <thead>
                                     <tr>
                                         <th className="score-card-headers">
                                             No.
                                         </th>
                                         <th className="score-card-headers">
-                                            Question
+                                            User Name
                                         </th>
                                         <th className="score-card-headers">
-                                            Type
+                                            User Email
                                         </th>
                                         <th className="score-card-headers">
-                                            Responses
+                                            User Type
                                         </th>
                                         <th className="score-card-headers">
-                                            Help Text
+                                            User Role
                                         </th>
                                         <th className="score-card-headers">
-                                            Domain
+                                            User Submissions
                                         </th>
                                         <th className="score-card-headers">
-                                            Role
-                                        </th>
-                                        <th className="score-card-headers">
-                                            Points
-                                        </th>
-                                        <th className="score-card-headers">
-                                            Weighting
+                                            User Score
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
                                         <td>1</td>
-                                        <td>Here is a question.</td>
-                                        <td>Radio</td>
-                                        <td>No, Yes, Maybe</td>
-                                        <td>Help alt-text</td>
-                                        <td>Accountability</td>
-                                        <td>All</td>
-                                        <td>3</td>
-                                        <td>2</td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>Here is another question.</td>
-                                        <td>Slider</td>
-                                        <td>N/A</td>
-                                        <td>N/A</td>
-                                        <td>Bias and Fairness</td>
-                                        <td>All</td>
+                                        <td>Michael</td>
+                                        <td>michaeljackson@pop.com</td>
+                                        <td>Registered</td>
                                         <td>1</td>
-                                        <td>1</td>
+                                        <td>
+                                            <Link to='/Results'>
+                                                <input type='button' value='View Responses' />
+                                            </Link>
+                                        </td>
+                                        <td>95</td>
                                     </tr>
                                 </tbody>
                             </Table>
                         </div>
                     </Tab>
-                    <Tab eventKey="userManagement" title="Users">
+                    <Tab eventKey="analytics" title="Analytics">
                         <div className="table-responsive mt-3">
-                            <Table id="users" bordered hover responsive className="user-table">
+                            <Table id="analytics" bordered="true" hover="true" responsive="true" className="analytics-table">
                                 <thead>
                                     <tr>
+<<<<<<< HEAD
                                     <th className="score-card-headers">
                                             Email
                                         </th>
@@ -149,12 +160,18 @@ export default class Users extends Component {
                     <Tab eventKey="analytics" title="Analytics">
                         <div className="table-responsive mt-3">
                             <Table id="analytics" bordered hover responsive className="analytics-table">
+=======
+                                        <th className="score-card-headers">
+                                            Analytics
+                                        </th>
+                                    </tr>
+                                </thead>
+>>>>>>> origin/get-user-submissions
                             </Table>
                         </div>
                     </Tab>
                 </Tabs>
             </main>
-
         )
     }
 }

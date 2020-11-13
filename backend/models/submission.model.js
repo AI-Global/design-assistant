@@ -5,7 +5,6 @@ const SubmissionSchema = mongoose.Schema({
     // username that owns this submission
     username: {
         type: Number,
-        required: true,
         unique: true
     },
 
@@ -16,8 +15,22 @@ const SubmissionSchema = mongoose.Schema({
         unique: true
     },
 
+<<<<<<< HEAD
     // Question can belong to multiple lifecycles
     lifecycle: Number,
+=======
+    date: {
+        type: Date,
+        required: true
+    },
+
+    // Possible life cycles
+    // reference to the id of the lifecycle
+    lifecycle: {
+        type: Number
+    },
+
+>>>>>>> origin/get-user-submissions
 
     // json file that gets output from survey.js
     submission: {
