@@ -325,20 +325,30 @@ router.put('/:questionId', async (req, res) => {
 });
 
 router.put('/:startNumber/:endNumber', async (req, res) => {
-
+    let startNum = parseInt(req.params.startNumber);
+    let endNum = parseInt(req.params.endNumber);
 
     try {
+
         const session = await mongoose.startSession();
         session.withTransaction(async () => {
-            
-        
-            //shift questions down
-            
-            for (let i = req.params.startNumber; i <= req.params.endNumber; i++) {
-                console.log(req.params.startNumber)
-                 await Question.findOneAndUpdate({ questionNumber: i }, { questionNumber: i - 1 });
-                 
+
+            startQuestion = await Question.findOne({ questionNumber: startNum }).exec();
+            startQuestion.questionNumber = 0;
+            await startQuestion.save();
+
+            // shift questions down
+            if (startNum < endNum) {
+                for (let i = startNum + 1; i <= endNum; i++) {
+                    await Question.findOneAndUpdate({ questionNumber: i }, { questionNumber: i - 1 });
+                }
+            } else {
+                for (let i = startNum -1; i >= endNum; i--) {
+                    await Question.findOneAndUpdate({ questionNumber: i }, { questionNumber: i + 1 });
+                }
             }
+            startQuestion.questionNumber = endNum;
+            await startQuestion.save();
 
         })
 
@@ -350,6 +360,8 @@ router.put('/:startNumber/:endNumber', async (req, res) => {
     }
 
 });
+
+
 
 
 
