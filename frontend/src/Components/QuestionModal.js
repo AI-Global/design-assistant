@@ -112,6 +112,7 @@ export default function QuestionModal(props) {
             props.question.roles = questionRole
             dimension === -1 ? props.question.trustIndexDimension = null : props.question.trustIndexDimension = dimension
             props.question.weighting = weight
+            props.question.trigger = null;
 
             if (props.mode === "edit") {
                 endPoint = '/questions/' + props.question._id;
@@ -150,6 +151,7 @@ export default function QuestionModal(props) {
                 props.question.roles = [13]
                 props.question.trustIndexDimension = null
                 props.question.weighting = 0
+                props.question.trigger = null;
                 close()
             }
         }
@@ -311,7 +313,7 @@ export default function QuestionModal(props) {
                                     </Form.Label>
                                         {responses.map((response, index) =>
                                             <div key={index} style={{ paddingBottom: "1em" }}>
-                                                <Form.Control type="number" placeholder="--" value={response.score || ''} style={{ "minHeight": "44px" }} onChange={(event) => editScore(event.target.value, index, response.indicator)} ></Form.Control>
+                                                <Form.Control type="number" placeholder="0" value={response.score || ''} style={{ "minHeight": "44px" }} onChange={(event) => editScore(event.target.value, index, response.indicator)} ></Form.Control>
                                             </div>
                                         )}
                                     </Form.Group>
