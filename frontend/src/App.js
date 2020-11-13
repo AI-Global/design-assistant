@@ -7,7 +7,7 @@ import showdown from 'showdown';
 import * as Survey from "survey-react";
 import Card from 'react-bootstrap/Card';
 import { Button } from 'react-bootstrap';
-import React, { Component } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { withRouter } from 'react-router-dom';
 import Accordion from 'react-bootstrap/Accordion';
@@ -20,6 +20,8 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import Login from './views/Login';
 import "bootstrap-slider/dist/css/bootstrap-slider.min.css";
 import * as widgets from  "surveyjs-widgets";
+import ReactGa from 'react-ga';
+
 require('dotenv').config();
 
 // set up survey styles and properties for rendering html
@@ -52,6 +54,7 @@ localizedStrs.progressText = "";
 const dimArray = ['Accountabililty', 'Bias and Fairness', 'Explainability and Interpretability', 'Robustness', 'Data Quality']
 
 class App extends Component {
+
   constructor(props) {
     super(props);
     this.state = {
@@ -71,6 +74,7 @@ class App extends Component {
   // Request questions JSON from backend 
   componentDidMount() {
     widgets.bootstrapslider(Survey);
+
     var endPoint = '/questions';
     axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
       .then(res => {
