@@ -40,7 +40,7 @@ export default class Login extends Component {
         let remember = form.loginRemember.checked;
         var endPoint = '/users/auth';
         axios.post(process.env.REACT_APP_SERVER_ADDR + endPoint, {
-            username: username,
+            username: username?.toLowerCase(),
             password: password
         })
             .then(response => {
