@@ -113,7 +113,6 @@ router.get('/isLoggedIn', auth, (req, res) => {
 
 // changed user fields
 router.post('/updateEmail', auth, (req, res) => {
-    console.log("update email")
     // error with authentication token
     if(!req.user){
         return res.json();
@@ -126,12 +125,21 @@ router.post('/updateEmail', auth, (req, res) => {
             if(!existingUser) return res.status(400).json({username: { isInvalid: true, message: 'User does not exist. Please create an account.'}})
             if(!existingUser.authenticate(password)) return res.status(400).json({password: { isInvalid: true, message: 'Incorrect password entered'}})
             existingUser.email = newEmail;
-            console.log("Update Email!")
             User.findByIdAndUpdate(req.user.id, existingUser, {upsert: false})
             .then(user => {
-                return
+                res.json(user);
             })
-        });
+            .catch(err => {
+                // user already exists
+                if (err.name === 'MongoError' && err.code === 11000){
+                    if(Object.keys(err.keyPattern).includes("email")){
+                        return res.status(422).json({email: { isInvalid: true, message: 'User with Email Address already exists!' }});
+                    }
+                }
+                // unknown mongodb error
+                return res.status(400).json(err);
+            });
+        })
     
 })
 
@@ -149,14 +157,21 @@ router.post('/updateUsername', auth, (req, res) => {
             if(!existingUser) return res.status(400).json({username: { isInvalid: true, message: 'User does not exist. Please create an account.'}})
             if(!existingUser.authenticate(password)) return res.status(400).json({password: { isInvalid: true, message: 'Incorrect password entered'}})
             existingUser.username = newUsername;
-            console.log("Update Username!")
-            console.log(existingUser.username);
             User.findByIdAndUpdate(req.user.id, existingUser, {upsert: false})
             .then(user => {
-                return
+                res.json(user);
             })
+            .catch(err => {
+                // user already exists
+                if (err.name === 'MongoError' && err.code === 11000){
+                    if(Object.keys(err.keyPattern).includes("username")){
+                        return res.status(422).json({username: { isInvalid: true  , message: 'Username already exists!' }});
+                    }
+                }
+                // unknown mongodb error
+                return res.status(400).json(err);
+            });
         })
-    
 })
 
 // // changed user fields
@@ -169,7 +184,7 @@ router.post('/updatePassword', auth, (req, res) => {
     let newPassword = req.body.newPassword;
     let result = owasp.test(newPassword);
     if(result.strong == false){
-        return res.status(400).json({password: {isInvalid: true, message: result.errors.join('\n')}})
+        return res.status(400).json({newPassword: {isInvalid: true, message: result.errors.join('\n')}})
     }
 
     User.findById(req.user.id)
@@ -178,13 +193,15 @@ router.post('/updatePassword', auth, (req, res) => {
             if(!existingUser) return res.status(400).json({username: { isInvalid: true, message: 'User does not exist. Please create an account.'}})
             if(!existingUser.authenticate(password)) return res.status(400).json({password: { isInvalid: true, message: 'Incorrect password entered'}})
             existingUser.password = newPassword
-            console.log("Update Email!")
             User.findByIdAndUpdate(req.user.id, existingUser, {upsert: false})
                 .then(user => {
-                    return
+                    res.json(user);
                 })
         })
-    
+        .catch(err => {
+            // unknown mongodb error
+            return res.status(400).json(err);            
+        });
 })
 
 

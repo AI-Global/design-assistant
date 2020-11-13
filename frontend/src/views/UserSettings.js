@@ -31,14 +31,17 @@ export default class UserSettings extends Component {
     }
 
     changeEmailModal() {
+        this.resetValidations();
         this.setState({showEmailSettings: true})
     }
 
     changeUsernameModal(){
+        this.resetValidations();
         this.setState({showUserNameSettings: true})
     }
 
     changePasswordModal(){
+        this.resetValidations();
         this.setState({showPasswordSettings: true})
     }
 
@@ -53,6 +56,7 @@ export default class UserSettings extends Component {
 
     handleEmailSubmit(event){
         event.preventDefault();
+        this.resetValidations();
         let form = event.target.elements;
         let newEmail = form.newEmail.value;
         let password = form.emailPassword.value;
@@ -68,15 +72,20 @@ export default class UserSettings extends Component {
             headers: {
                 "x-auth-token": authToken
             }
-        }).catch(err => {
-            return false;
         }).then(response =>{
-            window.location.reload();
+            const result = response.data;
+            if(!result.errors){
+                window.location.reload();
+            }
+        }).catch(err => {
+            let result = err.response.data;
+            this.setState(result);
         });    
     }
 
     handleUsernameSubmit(event){
         event.preventDefault();
+        this.resetValidations();
         let form = event.target.elements;
         let newUsername = form.newUsername.value;
         let password = form.usernamePassword.value;
@@ -91,21 +100,27 @@ export default class UserSettings extends Component {
             headers: {
                 "x-auth-token": authToken
             }
-        }).catch(err => {
-            return false;
         }).then(response =>{
-            window.location.reload();
+            const result = response.data;
+            if(!result.errors){
+                window.location.reload();
+            }
+        }).catch(err => {
+            let result = err.response.data;
+            this.setState(result);
         });   
     }
     
     handlePasswordSubmit(event){
         event.preventDefault();
+        this.resetValidations();
         let form = event.target.elements;
         let oldPassword = form.oldPassword.value;
         let newPassword = form.newPassword.value;
         let confirmPassword = form.confirmPassword.value;
         if(confirmPassword !== newPassword){
-
+            this.setState({passwordConfirmation: {isInvalid: true, message: "Those passwords didn't match. Please try again."}})
+            return
         }
         let authToken = getAuthToken();
         let endPoint = '/users/updatePassword';
@@ -118,15 +133,25 @@ export default class UserSettings extends Component {
             headers: {
                 "x-auth-token": authToken
             }
-        }).catch(err => {
-            return false;
         }).then(response =>{
-            window.location.reload();
-        });    
+            const result = response.data;
+            if(!result.errors){
+                window.location.reload();
+            }
+        }).catch(err => {
+            let result = err.response.data;
+            this.setState(result);
+        }); 
     }
 
-    updateUserToDB(user){
-        
+    resetValidations(){
+        this.setState({
+            password: {isInvalid: false, message: ""},
+            email: {isInvalid: false, message: ""},
+            username: {isInvalid: false, message: ""},
+            newPassword: {isInvalid: false, message: ""},
+            passwordConfirmation: {isInvalid: false, message: ""}
+        });
     }
 
     render(){
@@ -162,14 +187,16 @@ export default class UserSettings extends Component {
                         <Form onSubmit={(e) => this.handleEmailSubmit(e)}>
                             <Form.Group controlId="newEmail">
                                 <i className="fa fa-envelope"></i>
-                                <Form.Control type="email" placeholder="New Email" required="required" autoComplete="email"/>
+                                <Form.Control type="email" placeholder="New Email" required="required" autoComplete="email" isInvalid={this.state.email?.isInvalid}/>
                                 <Form.Control.Feedback type="invalid">
+                                    {this.state.email?.message}
                                 </Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group controlId="emailPassword">
                                 <i className="fa fa-lock"></i>
-                                <Form.Control type="password" placeholder="Password" required="required" autoComplete="current-password"/>
+                                <Form.Control type="password" placeholder="Password" required="required" autoComplete="current-password" isInvalid={this.state.password?.isInvalid}/>
                                 <Form.Control.Feedback type="invalid">
+                                    {this.state.password?.message}
                                 </Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group controlId="formSubmit">
@@ -194,14 +221,16 @@ export default class UserSettings extends Component {
                         <Form onSubmit={(e) => this.handleUsernameSubmit(e)}>
                             <Form.Group controlId="newUsername">
                                 <i className="fa fa-user"></i>
-                                <Form.Control type="text" placeholder="New Username" required="required" autoComplete="username"/>
+                                <Form.Control type="text" placeholder="New Username" required="required" autoComplete="username" isInvalid={this.state.username?.isInvalid}/>
                                 <Form.Control.Feedback type="invalid">
+                                    {this.state.username?.message}
                                 </Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group controlId="usernamePassword">
                                 <i className="fa fa-lock"></i>
-                                <Form.Control type="password" placeholder="Password" required="required" autoComplete="current-password"/>
+                                <Form.Control type="password" placeholder="Password" required="required" autoComplete="current-password" isInvalid={this.state.password?.isInvalid}/>
                                 <Form.Control.Feedback type="invalid">
+                                    {this.state.password?.message}
                                 </Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group controlId="formSubmit">
@@ -226,20 +255,23 @@ export default class UserSettings extends Component {
                         <Form onSubmit={(e) => this.handlePasswordSubmit(e)}>
                             <Form.Group controlId="oldPassword">
                                 <i className="fa fa-lock"></i>
-                                <Form.Control type="password" placeholder="Current Password" required="required" autoComplete="current-password"/>
+                                <Form.Control type="password" placeholder="Current Password" required="required" autoComplete="current-password" isInvalid={this.state.password?.isInvalid}/>
                                 <Form.Control.Feedback type="invalid">
+                                    {this.state.password?.message}
                                 </Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group controlId="newPassword">
                                 <i className="fa fa-lock"></i>
-                                <Form.Control type="password" placeholder="New Password" required="required" autoComplete="password"/>
+                                <Form.Control type="password" placeholder="New Password" required="required" autoComplete="password" isInvalid={this.state.newPassword?.isInvalid}/>
                                 <Form.Control.Feedback type="invalid">
+                                    {this.state.newPassword?.message}
                                 </Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group controlId="confirmPassword">
                                 <i className="fa fa-lock"></i>
-                                <Form.Control type="password" placeholder="Confirm New Password" required="required" autoComplete="password"/>
+                                <Form.Control type="password" placeholder="Confirm New Password" required="required" autoComplete="password" isInvalid={this.state.passwordConfirmation?.isInvalid}/>
                                 <Form.Control.Feedback type="invalid">
+                                    {this.state.passwordConfirmation?.message}
                                 </Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group controlId="formSubmit">
