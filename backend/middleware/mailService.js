@@ -28,7 +28,6 @@ async function sendEmail(email, emailSubject, emailTemplate) {
                 subject: emailSubject, // Subject line
                 html: html
             });
-            console.log("Message sent: %s", info.messageId);
         }
     })
 }
