@@ -4,14 +4,11 @@ const SubmissionSchema = mongoose.Schema({
 
     // user ID that owns this 
     userId: {
-        type: Number,
-        unique: true
+        type: mongoose.Types.ObjectId
     },
 
-    // unique ID for a project that owns this submission
-    projectId: {
-        type: Number,
-        unique: true
+    projectName: {
+        type: String
     },
 
     date: {
@@ -23,6 +20,11 @@ const SubmissionSchema = mongoose.Schema({
     // reference to the id of the lifecycle
     lifecycle: {
         type: Number
+    },
+
+    completed: {
+        type: Boolean,
+        required: true
     },
 
 

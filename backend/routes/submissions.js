@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const auth = require('../middleware/auth');
 const Submission = require('../models/submission.model');
 
 // Get all submissions
@@ -17,33 +18,24 @@ router.get('/', async (req,res) => {
 
 // Get submissions by user id
 
-router.get('/:userId', async (req,res) => {
+router.get('/user/:userId',  async (req,res) => {
     try{
-        const submissions = await Submission.findOneAndUpdate({'userId' : req.params.userId},
-        {
-            userId: req.body.userId,
-            projectId: req.body.projectId,
-            date: req.body.date,
-            lifecycle: req.body.lifecycle,
-            submission: req.body.submission
-        },
-        {upsert:true, runValidators: true});
-        res.json(submissions);
-        // debug
-        console.log("Incoming sumissions request by userId");
-
+        await Submission.find({userId : req.params.userId}).then(submissions => {
+            res.json({submissions: submissions});
+        });
     } catch(err){
         res.json({message: err});
     }   
 });
 
-router.post('/update/:projectId', async (req, res) => {
+router.post('/update/:submissionId', async (req, res) => {
     try{
-        const submissions = await Submission.findOneAndUpdate({'projectId' : req.params.projectId}, {
+        const submissions = await Submission.findOneAndUpdate({'_id' : req.params.submissionId}, {
             userId: req.body.userId,
             date: req.body.date,
             lifecycle: req.body.lifecycle,
-            submission: req.body.submission
+            submission: req.body.submission,
+            completed: req.body.completed
         }, {upsert:true, runValidators: true});
         res.json(submissions);
     } catch(err){
@@ -56,17 +48,16 @@ router.post('/update/:projectId', async (req, res) => {
 router.post('/', async (req, res) => {
     const submission = new Submission({
         userId: req.body.userId,
-        projectId: req.body.projectId,
+        projectName: req.body.projectName,
         date: req.body.date,
         lifecycle: req.body.lifecycle,
-        submission: req.body.submission
+        submission: req.body.submission,
+        completed: req.body.completed
     });
 
     try{
         const savedSubmission = await submission.save();
         res.json(savedSubmission);
-        // debug
-        console.log("Post submissions request");
     } catch(err){
         res.json({message: err});
     }
