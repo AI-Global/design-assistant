@@ -83,7 +83,7 @@ const QuestionSchema = mongoose.Schema({
         parent: {
             type: String
         },
-        responses: [Number]
+        responses: [String]
     }
 
     // TODO: Add test of schema to model
