@@ -180,10 +180,30 @@ class App extends Component {
   }
 
   save() {
-    console.log('SAVE SURVEY');
+    let submission = this.state.model.data;
+    let dateTime = new Date();
+    var endPoint = '/submissions/';
+    axios.post(process.env.REACT_APP_SERVER_ADDR + endPoint, {
+      userId: 6,
+      projectId: 6,
+      date: dateTime,
+      lifecycle: 6,
+      submission: submission
+    });
   }
 
   finish() {
+    let submission = this.state.model.data;
+    let dateTime = new Date();
+    var endPoint = '/submissions/';
+    axios.post(process.env.REACT_APP_SERVER_ADDR + endPoint, {
+      userId: 6,
+      projectId: 6,
+      date: dateTime,
+      lifecycle: 6,
+      submission: submission
+    });
+
     this.state.model.doComplete();
     this.nextPath('/Results/');
   }
