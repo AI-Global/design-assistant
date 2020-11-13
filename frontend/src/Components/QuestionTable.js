@@ -113,8 +113,8 @@ export default class QuestionTable extends Component {
     updateQuestionNumbers(){
         this.setChildModalShow(false);
         console.log("in make relationship");
-        var endPoint = '/questions/' + this.currentQuestion._id;
-            axios.put(process.env.REACT_APP_SERVER_ADDR + endPoint, this.currentQuestion)
+        var endPoint = '/questions/' + this.currentQuestion.questionNumber;
+            axios.put(process.env.REACT_APP_SERVER_ADDR + endPoint, this.currentQuestion.questionNumber)
                 .then(res => {
                     const result = res.data;
                     if (result.errors) {
