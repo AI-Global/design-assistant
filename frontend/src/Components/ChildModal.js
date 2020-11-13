@@ -27,7 +27,7 @@ export default function ChildModal(props) {
 
     function save() {
         // saves the parent child relationship
-        if (setMakeChild) {
+        if (makeChild) {
             props.current_question.child = true;
             var parentNumber = props.previous_question.questionNumber;
             var triggers = [];
@@ -49,12 +49,11 @@ export default function ChildModal(props) {
                         console.log("Updated Question: ", result)
                     }
                 })
-            setMakeChild(false);
-            setCheckedBoxes({});
-            props.clickYes();
-        } else{
-            close();
+            
         }
+        setMakeChild(false);
+        setCheckedBoxes({});
+        props.clickYes();
     }
 
     return (
