@@ -6,7 +6,7 @@ import axios from 'axios';
 import showdown from 'showdown';
 import * as Survey from "survey-react";
 import Card from 'react-bootstrap/Card';
-import { Button } from 'react-bootstrap';
+import { Button, Table } from 'react-bootstrap';
 import React, { Component } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { withRouter } from 'react-router-dom';
@@ -18,6 +18,7 @@ import ModalHeader from 'react-bootstrap/ModalHeader';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Login from './views/Login';
+import { getLoggedInUser } from './helper/AuthHelper';
 require('dotenv').config();
 
 // set up survey styles and properties for rendering html
@@ -60,7 +61,8 @@ class App extends Component {
       E: 19,
       R: 25,
       D: 28,
-      authToken: localStorage.getItem("authToken")
+      authToken: localStorage.getItem("authToken"),
+      submissions: []
     };
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
@@ -142,6 +144,15 @@ class App extends Component {
             }
           });
       })
+      getLoggedInUser().then( user => {
+        endPoint = '/submissions/user/' + user._id;
+        this.setState({user: user});
+        axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
+          .then(res => {
+            var submissions = res.data;
+            this.setState(submissions);
+        });
+      });
   }
 
   nextPath(path) {
@@ -180,30 +191,21 @@ class App extends Component {
   }
 
   save() {
+    let user = this.state.user;
     let submission = this.state.model.data;
     let dateTime = new Date();
     var endPoint = '/submissions/';
     axios.post(process.env.REACT_APP_SERVER_ADDR + endPoint, {
-      userId: 6,
-      projectId: 6,
+      userId: user._id,
+      projectName: "Test",
       date: dateTime,
       lifecycle: 6,
-      submission: submission
+      submission: submission,
+      completed: false
     });
   }
 
   finish() {
-    let submission = this.state.model.data;
-    let dateTime = new Date();
-    var endPoint = '/submissions/';
-    axios.post(process.env.REACT_APP_SERVER_ADDR + endPoint, {
-      userId: 6,
-      projectId: 6,
-      date: dateTime,
-      lifecycle: 6,
-      submission: submission
-    });
-
     this.state.model.doComplete();
     this.nextPath('/Results/');
   }
@@ -239,6 +241,17 @@ class App extends Component {
         survey.currentPage = survey.pages[0]
     }
     this.setState(this.state)
+  }
+
+  resumeSurvey(index) {
+    let submission = this.state.submissions[index];
+    this.state.model.data = submission.submission;
+    if(submission.completed){
+      this.finish();
+    }
+    else{
+      this.setState({ isSurveyStarted: true })
+    }
   }
 
   render() {
@@ -342,26 +355,51 @@ class App extends Component {
             <p>To‌ ‌learn‌ ‌more‌ ‌about‌ ‌the‌ ‌background‌ ‌of‌ ‌this‌ ‌project,‌ ‌check‌ ‌out‌ ‌our‌ ‌post‌ ‌about‌ ‌the‌ creation‌ ‌of‌ ‌the‌ ‌Design‌ ‌Assistant‌ ‌on‌ <a target="_blank" rel="noopener noreferrer" href="https://ai-global.org/2020/04/28/creating-a-responsible-ai-trust-index-a-unified-assessment-to-assure-the-responsible-design-development-and-deployment-of-ai/">ai-global.org</a>‌‌</p>
             <p>For‌ ‌more‌ ‌information‌ ‌on‌ ‌how‌ ‌to‌ ‌use‌ ‌the‌ ‌Design‌ ‌Assistant,‌ ‌including‌ ‌FAQ’s,‌ ‌check‌ ‌out‌ our <a target="_blank" rel="noopener noreferrer" href="https://docs.google.com/presentation/d/1EDPhyRhIsiOrujLcHQv_fezXfgOz4Rl7a8lyOM_guoA/edit#slide=id.p1">Guide</a></p>
           </div>
-          <div className="row" style={{ padding: "25px" }}>
-            <div className="col-sm-6">
-              <div className="card h-100">
-                <div className="card-header">Design assistant</div>
-                <div className="card-body d-flex justify-content-center h-100">
-                  <div>
-                    <Button onClick={() => this.startSurvey()}>Start measuring your AI Trust Index now!</Button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-sm-6">
-              <div className="card h-100">
-                <div className="card-header">Continue existing survey</div>
-                <div className="card-body d-flex justify-content-center h-100">
-                </div>
+          <div>
+            <div className="card">
+              <div className="card-header">Continue existing survey</div>
+              <div className="card-body">
+                <Table bordered responsive> 
+                  <thead>
+                    <tr>
+                      <td>
+                        Project Name
+                      </td>
+                      <td>
+                        Date
+                      </td>
+                      <td width="175"></td>
+
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {this.state.submissions.map((value, index) => {
+                      return (
+                        <tr key={index}>
+                          <td>
+                            {value.projectName}
+                          </td>
+                          <td>
+                            {new Date(value.date).toLocaleString('en-US', {timeZone: Intl?.DateTimeFormat()?.resolvedOptions()?.timeZone ?? 'UTC'})}
+                          </td>
+                          <td>
+                              <Button onClick={() => this.resumeSurvey(index)}>
+                                {!value.completed && <div>Resume Survey</div>}
+                                {value.completed && <div>See Results</div>}
+                              </Button>
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </Table>
               </div>
             </div>
           </div>
-            <Login/>
+          <div className="float-right mr-3 mt-2">
+            <Button onClick={() => this.startSurvey()}>Start New Survey</Button>
+          </div>
+          <Login/>
         </div>
       );
     }
