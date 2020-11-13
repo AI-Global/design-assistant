@@ -36,7 +36,9 @@ export default class QuestionTable extends Component {
             questions: {},
             dimensions: {},
             previousQuestion: null,
-            currentQuestion: null
+            currentQuestion: null,
+            previousNumber: null,
+            newNumber: null
         }
         this.onDragEnd = this.onDragEnd.bind(this)
         this.handleOpenModal = this.handleOpenModal.bind(this);
@@ -53,12 +55,12 @@ export default class QuestionTable extends Component {
         await axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
             .then(res => {
                 this.setState({ dimensions: res.data.Dimensions });
-                this.setState({ questions: res.data.questions });
+                this.setState({ questions: res.data.questions.sort((a, b) => (a.questionNumber > b.questionNumber) ? 1 : -1) });
             })
     }
 
 
-    onDragEnd(result) {
+    async onDragEnd(result) {
         // dropped outside the list
         if (!result.destination) {
             return
@@ -71,22 +73,31 @@ export default class QuestionTable extends Component {
         )
 
         const qList = Array.from(this.state.questions);
-        console.log("LIST:" );
+        console.log("LIST:");
         console.log(qList[0].questionNumber);
 
 
-        if(result.destination.index != 0){
+        if (result.destination.index != 0) {
             this.setState({
                 questions,
-                currentQuestion: qList[result.destination.index],
-                previousQuestion: qList[result.destination.index-1],
+                currentQuestion: qList[result.destination.index -1],
+                previousQuestion: qList[result.destination.index],
+                previousNumber: result.source.index + 1,
+                newNumber: result.destination.index + 1,
                 showChildModal: true
             })
-        } else{
+            
+        } else {
             // do not ask to make a child-parent relationship
-            this.setState({
-                questions
-            })
+            var endPoint = '/questions/' + (result.source.index + 1).toString() + '/1';
+            await axios.put(process.env.REACT_APP_SERVER_ADDR + endPoint)
+                .then(() => {
+                    console.log("Question: " + result.source.index.toString() + "is now question: " + result.destination.index.toString() );
+                    this.setState({
+                        questions
+                    })
+                })
+            
         }
         console.log("Source:", result.source.index)
         console.log("Parent:", result.destination.index - 1)
@@ -106,24 +117,19 @@ export default class QuestionTable extends Component {
         this.getQuestions();
     }
 
-    setChildModalShow(val){
-        this.setState({showChildModal: val});
+    setChildModalShow(val) {
+        this.setState({ showChildModal: val });
     }
 
-    updateQuestionNumbers(){
+    updateQuestionNumbers() {
         this.setChildModalShow(false);
         console.log("in make relationship");
-        var endPoint = '/questions/' + this.currentQuestion.questionNumber;
-            axios.put(process.env.REACT_APP_SERVER_ADDR + endPoint, this.currentQuestion.questionNumber)
-                .then(res => {
-                    const result = res.data;
-                    if (result.errors) {
-                        console.log(result.errors);
-                    }
-                    else {
-                        console.log("Updated Question: ", result)
-                    }
-                })
+        console.log(this.state.newNumber);
+        var endPoint = '/questions/' + this.state.previousNumber.toString() + '/'+ this.state.newNumber.toString();
+        axios.put(process.env.REACT_APP_SERVER_ADDR + endPoint, this.state.currentQuestion.questionNumber)
+            .then(() => {
+                console.log("Question: " + this.state.previousNumber.toString() + "is now question: " + this.state.newNumber.toString() );
+            })
         // TODO: Add functionality to make question child of parent
     }
 
@@ -132,7 +138,7 @@ export default class QuestionTable extends Component {
             return null;
         }
         const newQuestion = {
-            "questionNumber": this.state.questions.length+1,
+            "questionNumber": this.state.questions.length + 1,
             "__v": 0,
             "alt_text": null,
             "domainApplicability": null,
@@ -154,14 +160,14 @@ export default class QuestionTable extends Component {
 
         return (
             <TableContainer component={Paper}>
-                {this.state.previousQuestion === null ? null : 
-                <ChildModal
-                    show={this.state.showChildModal}
-                    onHide={() => this.setChildModalShow(false)}
-                    clickYes={() => this.updateQuestionNumbers()}
-                    current_question={this.state.currentQuestion}
-                    previous_question={this.state.previousQuestion}
-                />
+                {this.state.previousQuestion === null ? null :
+                    <ChildModal
+                        show={this.state.showChildModal}
+                        onHide={() => this.setChildModalShow(false)}
+                        clickYes={() => this.updateQuestionNumbers()}
+                        current_question={this.state.currentQuestion}
+                        previous_question={this.state.previousQuestion}
+                    />
                 }
                 <Table>
                     <TableHead>
