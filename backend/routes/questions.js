@@ -19,8 +19,9 @@ async function getDimensions() {
 function formatTrigger(trigger) {
     // Formats the triggers into a string for SurveyJS
     triggerList = [];
+
     for (let t of trigger.responses) {
-        triggerList.push("{" + trigger.parent + "} == " + String(t));
+        triggerList.push("{" + trigger.parent + "} contains " + "'" + t + "'");
     }
 
     return triggerList.join(" or ");
@@ -28,11 +29,12 @@ function formatTrigger(trigger) {
 
 async function getChildren() {
     // Get Lookup of child questions
-    let questions = await Question.find({ "trigger": { $ne: null } })
+    let questions = await Question.find({ "child": true })
     let children = {}
     for (let q of questions) {
         children[q.trigger.parent] = {};
         children[q.trigger.parent].question = q;
+
         children[q.trigger.parent].trigger = formatTrigger(q.trigger);
     }
 
@@ -44,15 +46,18 @@ function formatQuestion(q, Dimensions, Triggers = null) {
 
     // All questions have a title, name, and type
     var question = {};
+    
     question.title = {};
     question.title.default = q.question;
     question.title.fr = "";
     question.name = q.id;
     question.type = q.responseType;
 
+    
     // Set conditions for when the question is visiable
     if (Triggers) {
         question.visibleIf = Triggers;
+        
     }
 
     // The rest of these properties are dependant on the question
@@ -82,7 +87,7 @@ function formatQuestion(q, Dimensions, Triggers = null) {
         question.choices = [];
         for (let c of q.responses) {
             var choice = {};
-            choice.value = c.responseNumber;
+            choice.value = c.id;
             choice.text = {};
             choice.text.default = c.indicator;
             choice.text.fr = "";
@@ -108,14 +113,19 @@ function formatQuestion(q, Dimensions, Triggers = null) {
         question.choices = [];
         for (let c of q.responses) {
             var choice = {};
-            choice.value = c.responseNumber;
+            choice.value = c.id;
             choice.text = {};
             choice.text.default = c.indicator;
             choice.text.fr = "";
             question.choices.push(choice);
         }
 
-    }//TODO: else if (question.type == slider)
+    } else if (question.type == "bootstrapslider") {
+        // Low Medium and High
+        question.step = 1;
+        question.rangeMin = 1;
+        question.rangeMax = 3;
+    }
 
     return question;
 }
@@ -130,7 +140,7 @@ function chainChildren(q, Children) {
     if (Children[q.id].question.id in Children) {
         childChain = childChain.concat(chainChildren(Children[q.id].question, Children))
     }
-    
+
     return childChain;
 }
 
@@ -138,7 +148,7 @@ function createHierarchy(questions, Children) {
     // Given a list of questions, check for any child questions and build the heirarchy
     var heirarchy = [];
 
-    questions.forEach( q => {
+    questions.forEach(q => {
         heirarchy.push(q);
 
         // If the questions has children
@@ -156,7 +166,7 @@ function createPage(questions, pageName, pageTitle, Dimensions, Children) {
     var page = {};
 
     // Build Heirachy
-    
+
     var questionHeiarchy = createHierarchy(questions, Children)
 
     page.name = pageName;
@@ -165,13 +175,13 @@ function createPage(questions, pageName, pageTitle, Dimensions, Children) {
     page.title.fr = "";
     // Map MongoDB questions to surveyJS format
     page.elements = questionHeiarchy.map(function (q) {
-        if (q.child){
-            console.log(q.trigger)
+        if (q.child) {
+
             return formatQuestion(q, Dimensions, Children[q.trigger.parent].trigger);
 
-        }else{
-
+        } else {
             return formatQuestion(q, Dimensions);
+            
         }
     });
 
@@ -191,6 +201,7 @@ async function createPages(q) {
     page.showProgressBar = "top";
     page.firstPageIsStarted = "false";
     page.showNavigationButtons = "false";
+    page.clearInvisibleValues = "onHidden";
 
     // Separate the questions by dimension 
     // TODO: we might want to make tombstone questions a dimension too for cleaner code
@@ -256,7 +267,8 @@ async function createPages(q) {
 // Get all questions. Assemble SurveyJS JSON here
 router.get('/', async (req, res) => {
     // Only request parent questions from DB
-    Question.find({ "trigger": null })
+    Question.find({ "child": false })
+        .sort( { questionNumber: 1 } )
         .then(async (questions) => {
             pages = await createPages(questions);
             res.status(200).send(pages);
