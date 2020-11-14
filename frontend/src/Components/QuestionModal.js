@@ -323,7 +323,7 @@ export default function QuestionModal(props) {
                         {questionType === "tombstone" ? null :
                             <Row>
                                 <Col xs={2} md={2}>
-                                    <Form.Group controlID="roles">
+                                    <Form.Group controlId="roles">
                                         <Form.Label>Role</Form.Label>
                                         <Form.Control value={rolesJSON[questionRole - 1].name || ''} as="select" onChange={(event) => setRole(event.target.selectedIndex)}>
                                             <option>Choose...</option>
@@ -334,7 +334,7 @@ export default function QuestionModal(props) {
                                     </Form.Group>
                                 </Col>
                                 <Col xs={2} md={2}>
-                                    <Form.Group controlID="domains">
+                                    <Form.Group controlId="domains">
                                         <Form.Label>Domain</Form.Label>
                                         {/* TODO: update default value when questions have domain */}
                                         <Form.Control defaultValue="Other" as="select">
@@ -345,7 +345,7 @@ export default function QuestionModal(props) {
                                     </Form.Group>
                                 </Col>
                                 <Col xs={2} md={2}>
-                                    <Form.Group controlID="regions">
+                                    <Form.Group controlId="regions">
                                         <Form.Label>Region</Form.Label>
                                         {/* TODO: update default value when questions have region */}
                                         <Form.Control defaultValue="Other" as="select">
@@ -356,7 +356,7 @@ export default function QuestionModal(props) {
                                     </Form.Group>
                                 </Col>
                                 <Col xs={2} md={2}>
-                                    <Form.Group controlID="lifecycles">
+                                    <Form.Group controlId="lifecycles">
                                         <Form.Label>Life-Cycle</Form.Label>
                                         <Form.Control defaultValue={lifecycleJSON[questionLifecycle - 1].name} as="select" onChange={(event) => setLifecycle(event.target.selectedIndex)}>
                                             <option>Choose...</option>
