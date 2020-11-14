@@ -3,7 +3,8 @@ const router = express.Router();
 const Question = require('../models/question.model');
 const Dimension = require('../models/dimension.model');
 const fs = require('fs');
-const { create } = require('../models/question.model');
+const { create, findOne } = require('../models/question.model');
+const mongoose = require('mongoose');
 
 async function getDimensions() {
     // Get Lookup of Dimensions from DB
@@ -46,18 +47,18 @@ function formatQuestion(q, Dimensions, Triggers = null) {
 
     // All questions have a title, name, and type
     var question = {};
-    
+
     question.title = {};
     question.title.default = q.question;
     question.title.fr = "";
     question.name = q.id;
     question.type = q.responseType;
 
-    
+
     // Set conditions for when the question is visiable
     if (Triggers) {
         question.visibleIf = Triggers;
-        
+
     }
 
     // The rest of these properties are dependant on the question
@@ -181,7 +182,7 @@ function createPage(questions, pageName, pageTitle, Dimensions, Children) {
 
         } else {
             return formatQuestion(q, Dimensions);
-            
+
         }
     });
 
@@ -222,7 +223,7 @@ async function createPages(q) {
     }
 
     tombQuestions["tombstone"].sort((a, b) => (a.questionNumber > b.questionNumber) ? 1 : -1);
-    for(let i = 0; i < dimQuestions.length; i++){
+    for (let i = 0; i < dimQuestions.length; i++) {
         dimQuestions.sort((a, b) => (a.questionNumber > b.questionNumber) ? 1 : -1);
     }
 
@@ -268,7 +269,7 @@ async function createPages(q) {
 router.get('/', async (req, res) => {
     // Only request parent questions from DB
     Question.find({ "child": false })
-        .sort( { questionNumber: 1 } )
+        .sort({ questionNumber: 1 })
         .then(async (questions) => {
             pages = await createPages(questions);
             res.status(200).send(pages);
@@ -278,10 +279,10 @@ router.get('/', async (req, res) => {
 });
 
 // Get all questions as JSON from DB. No Assembly for SurveyJS
-router.get('/all', async (req, res)=> {
+router.get('/all', async (req, res) => {
     let Dimensions = await getDimensions()
     Question.find()
-        .then((questions) => res.status(200).send({questions, Dimensions}))
+        .then((questions) => res.status(200).send({ questions, Dimensions }))
         .catch((err) => res.status(400).send(err));
 })
 
@@ -316,12 +317,27 @@ router.post('/', async (req, res) => {
 router.delete('/:questionId', async (req, res) => {
     try {
         // Delete existing question in DB
-        var response = await Question.deleteOne({ _id: req.params.questionId }, req.body);
 
-        res.json(response);
+        const session = await mongoose.startSession();
+        session.withTransaction(async () => {
+            var number;
+            var question = await Question.findOne({_id: req.params.questionId})
+            var number = question.questionNumber
+            await Question.deleteOne({ _id: req.params.questionId })
+            var maxQ = await Question.find().sort({ questionNumber: -1 }).limit(1)
+            var maxNumber = maxQ[0].questionNumber
+            console.log(number, maxNumber)
+
+            for (let i = number + 1; i <= maxNumber; i++) {
+                await Question.findOneAndUpdate({ questionNumber: i }, { questionNumber: i - 1 });
+            }
+
+        })
+        res.json(doc);
     } catch (err) {
         res.json({ message: err });
     }
+
 });
 
 router.put('/:questionId', async (req, res) => {
@@ -334,6 +350,45 @@ router.put('/:questionId', async (req, res) => {
         res.json({ message: err });
     }
 });
+
+router.put('/:startNumber/:endNumber', async (req, res) => {
+    let startNum = parseInt(req.params.startNumber);
+    let endNum = parseInt(req.params.endNumber);
+
+    try {
+
+        const session = await mongoose.startSession();
+        session.withTransaction(async () => {
+
+            startQuestion = await Question.findOne({ questionNumber: startNum }).exec();
+            startQuestion.questionNumber = 0;
+            await startQuestion.save();
+
+            // shift questions down
+            if (startNum < endNum) {
+                for (let i = startNum + 1; i <= endNum; i++) {
+                    await Question.findOneAndUpdate({ questionNumber: i }, { questionNumber: i - 1 });
+                }
+            } else {
+                for (let i = startNum - 1; i >= endNum; i--) {
+                    await Question.findOneAndUpdate({ questionNumber: i }, { questionNumber: i + 1 });
+                }
+            }
+            startQuestion.questionNumber = endNum;
+            await startQuestion.save();
+
+        })
+
+        // free up starting question number (unique)
+        res.json({ message: "Transaction Complete" })
+
+    } catch (err) {
+        res.json({ message: err, part: 4 });
+    }
+
+});
+
+
 
 
 

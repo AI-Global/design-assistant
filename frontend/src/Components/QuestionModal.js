@@ -8,7 +8,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import InputGroup from 'react-bootstrap/InputGroup';
 import IconButton from '@material-ui/core/IconButton';
 import { green, red } from '@material-ui/core/colors';
-import { Button, Form, Row, Col } from 'react-bootstrap';
+import { Button, Form, Row, Col, Card } from 'react-bootstrap';
 
 
 export default function QuestionModal(props) {
@@ -43,6 +43,9 @@ export default function QuestionModal(props) {
     // Hook for showing delet quesiton warning
     const [warningShow, setWarningShow] = useState(false)
     const [questionValid, setInvalid] = useState(false)
+
+    const [child, setChild] = useState(props.question.child)
+    const [trigger, setTrigger] = useState(props.question.trigger)
 
     function addResponse(response) {
         // add new response object to responses and rerender response section by spreading the array into a new array
@@ -91,6 +94,8 @@ export default function QuestionModal(props) {
         setRole(props.question.roles)
         setDimension(props.question.trustIndexDimension)
         setWeight(props.question.weighting)
+        setChild(props.question.child)
+        setTrigger(props.question.trigger)
         setInvalid(false)
         props.onHide()
     }
@@ -112,7 +117,8 @@ export default function QuestionModal(props) {
             props.question.roles = questionRole
             dimension === -1 ? props.question.trustIndexDimension = null : props.question.trustIndexDimension = dimension
             props.question.weighting = weight
-            props.question.trigger = null;
+            props.question.child = child
+            props.question.trigger = trigger
 
             if (props.mode === "edit") {
                 endPoint = '/questions/' + props.question._id;
@@ -151,15 +157,16 @@ export default function QuestionModal(props) {
                 props.question.roles = [13]
                 props.question.trustIndexDimension = null
                 props.question.weighting = 0
-                props.question.trigger = null;
+                props.question.child = child
+                props.question.trigger = trigger
                 close()
             }
         }
     }
 
-    function deleteQuestion() {
+    async function deleteQuestion() {
         var endPoint = '/questions/' + props.question._id;
-        axios.delete(process.env.REACT_APP_SERVER_ADDR + endPoint)
+        await axios.delete(process.env.REACT_APP_SERVER_ADDR + endPoint)
             .then(res => {
                 const result = res.data;
                 if (result.errors) {
@@ -171,6 +178,11 @@ export default function QuestionModal(props) {
             })
         setWarningShow(false)
         props.onHide()
+    }
+
+    function deleteParent(){
+        setTrigger(null);
+        setChild(false);
     }
 
     if (!dimensions) {
@@ -217,6 +229,19 @@ export default function QuestionModal(props) {
                 </Modal.Header>
                 <Modal.Body>
                     <Form onSubmit={(e) => save(e)} noValidate>
+                        {!child ? null :
+                            <Row style={{ paddingBottom: "1em" }}>
+                                <Col md={12}>
+                                    <Card style={{ padding: "1em", backgroundColor: "#f5f5f5", paddingTop: "0"}}>
+                                    <Row style={{alignItems: "center", paddingBottom:"0.5em"}}>
+                                        <IconButton size="small" color="secondary" onClick={() => { deleteParent()}}><DeleteIcon style={{ color: red[500] }}/></IconButton>
+                                        <div style={{ fontSize: "12px", fontStyle: "italic", position: "relative" }}>Parent</div>
+                                    </Row>
+                                        {props.question.trigger.parentQuestion}
+                                    </Card>
+                                </Col>
+                            </Row>
+                        }
                         <Row>
                             <Col xs={4} md={3}>
                                 <Form.Group controlId="questionDimension">
@@ -323,7 +348,7 @@ export default function QuestionModal(props) {
                         {questionType === "tombstone" ? null :
                             <Row>
                                 <Col xs={2} md={2}>
-                                    <Form.Group controlID="roles">
+                                    <Form.Group controlId="roles">
                                         <Form.Label>Role</Form.Label>
                                         <Form.Control value={rolesJSON[questionRole - 1].name || ''} as="select" onChange={(event) => setRole(event.target.selectedIndex)}>
                                             <option>Choose...</option>
@@ -334,7 +359,7 @@ export default function QuestionModal(props) {
                                     </Form.Group>
                                 </Col>
                                 <Col xs={2} md={2}>
-                                    <Form.Group controlID="domains">
+                                    <Form.Group controlId="domains">
                                         <Form.Label>Domain</Form.Label>
                                         {/* TODO: update default value when questions have domain */}
                                         <Form.Control defaultValue="Other" as="select">
@@ -345,7 +370,7 @@ export default function QuestionModal(props) {
                                     </Form.Group>
                                 </Col>
                                 <Col xs={2} md={2}>
-                                    <Form.Group controlID="regions">
+                                    <Form.Group controlId="regions">
                                         <Form.Label>Region</Form.Label>
                                         {/* TODO: update default value when questions have region */}
                                         <Form.Control defaultValue="Other" as="select">
@@ -356,7 +381,7 @@ export default function QuestionModal(props) {
                                     </Form.Group>
                                 </Col>
                                 <Col xs={2} md={2}>
-                                    <Form.Group controlID="lifecycles">
+                                    <Form.Group controlId="lifecycles">
                                         <Form.Label>Life-Cycle</Form.Label>
                                         <Form.Control defaultValue={lifecycleJSON[questionLifecycle - 1].name} as="select" onChange={(event) => setLifecycle(event.target.selectedIndex)}>
                                             <option>Choose...</option>
@@ -386,14 +411,14 @@ export default function QuestionModal(props) {
                                         </Form.Group>
                                     </Col>
                                 </Row>
-                                <Row>
+                                {/* <Row>
                                     <Col xs={12} md={12}>
                                         <Form.Group controlId="Link">
                                             <Form.Label>Link</Form.Label>
                                             <Form.Control placeholder="Link" value={questionLink || ""} onChange={(event) => setLink(event.target.value)}/>
                                         </Form.Group>
                                     </Col>
-                                </Row>
+                                </Row> */}
                             </React.Fragment>
                         }
                         <div id="modal-footer-border" />
