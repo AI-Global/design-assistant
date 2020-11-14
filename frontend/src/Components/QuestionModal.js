@@ -157,9 +157,9 @@ export default function QuestionModal(props) {
         }
     }
 
-    function deleteQuestion() {
+   async function deleteQuestion() {
         var endPoint = '/questions/' + props.question._id;
-        axios.delete(process.env.REACT_APP_SERVER_ADDR + endPoint )
+        await axios.delete(process.env.REACT_APP_SERVER_ADDR + endPoint )
             .then(res => {
                 const result = res.data;
                 if (result.errors) {
