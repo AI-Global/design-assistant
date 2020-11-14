@@ -6,6 +6,14 @@ import { getLoggedInUser, expireAuthToken, getAuthToken} from '../helper/AuthHel
 import "../css/usersettings.css";
 import DropdownItem from 'react-bootstrap/esm/DropdownItem';
 import axios from 'axios';
+import ReactGa from 'react-ga';
+
+const LogoutHandler = () => {
+    ReactGa.event({
+        category: 'Button',
+        action: 'User Logged Out'
+    })
+}
 
 export default class UserSettings extends Component {
     constructor(props){
@@ -51,6 +59,7 @@ export default class UserSettings extends Component {
      */
     handleLogout(){
         expireAuthToken();
+        LogoutHandler();
         window.location.reload();
     }
 
