@@ -24,6 +24,7 @@ export default function QuestionRow(props) {
                 dimensions={dimensions}
             />
             <TableCell className={classes.tablecell}>
+                {question.child ? <div style={{ fontSize: "12px", fontStyle: "italic", color:"#8f8f8f"}}>Child</div> : null}
             </TableCell>
             <TableCell className={classes.tablecell}>{index+1}</TableCell>
             <TableCell className={classes.tablecell} component="th" scope="row">

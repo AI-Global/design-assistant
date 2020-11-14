@@ -292,10 +292,10 @@ input[type=number]
   border-radius: 5%;
 }
 
-.modal{
+.modal {
   z-index: 1040;
 }
 
-.form-label{
+.form-label {
   min-height: 40px !important;
 }
