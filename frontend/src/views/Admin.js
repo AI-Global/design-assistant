@@ -210,7 +210,7 @@ export default class Admin extends Component {
                                 <thead>
                                     <tr>
                                     <th className="score-card-headers">
-                                            User ID
+                                            User Name
                                         </th>
                                         <th className="score-card-headers">
                                             Project Name
