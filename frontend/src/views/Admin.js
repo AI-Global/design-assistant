@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { Tabs, Tab, Table, Button } from 'react-bootstrap';
 import axios from 'axios';
-import Results from './Results'
+import ReactGa from 'react-ga';
+
+ReactGa.initialize(process.env.REACT_APP_GAID);
 
 const User = props => (
     <tr>
@@ -16,7 +18,6 @@ const User = props => (
 )
 
 export default class Admin extends Component {
-
     constructor(props) {
         super(props);
 
@@ -30,7 +31,7 @@ export default class Admin extends Component {
     }
 
     componentDidMount(){
-
+        ReactGa.pageview(window.location.pathname + window.location.search);
         var endPoint = '/questions';
         axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
         .then(res => {
@@ -66,10 +67,6 @@ export default class Admin extends Component {
         })
 
     }
-
-    /*submissiondata(){
-        Object.keys(this.props.submission.submission).map((key,i)=>(key ={i}))
-    }*/
         
     nextPath(path, submission) {
         this.props.history.push({
@@ -109,7 +106,6 @@ export default class Admin extends Component {
             )
         })
     }
-
 
     render() {
         return (
