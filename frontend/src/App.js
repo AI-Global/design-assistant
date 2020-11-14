@@ -23,7 +23,7 @@ import * as widgets from  "surveyjs-widgets";
 import ReactGa from 'react-ga';
 require('dotenv').config();
 
-ReactGa.initialize(process.env.REACT_APP_GAID);
+ReactGa.initialize(process.env.REACT_APP_GAID, { testMode: process.env.NODE_ENV === 'test' });
 
 const StartSurveyHandler = () => {
   ReactGa.event({

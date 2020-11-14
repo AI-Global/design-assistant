@@ -2,7 +2,12 @@ import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import Results from '../views/Results'
 import { BrowserRouter as Router } from 'react-router-dom';
+import axios from 'axios';
 
+jest.mock('axios');
+const data = [];
+const response = {data: data};
+axios.get.mockResolvedValue(response);
 
 const mockElements = [{
     "type": "radiogroup",
@@ -106,7 +111,7 @@ test('Results switches to Report Card Tab', () => {
             responses: {}
     }}
     render(<Router><Results location={mockLocation}/></Router>)
-    fireEvent.click(screen.getByText("Report Card"));
+    fireEvent.click(screen.getAllByText("Report Card")[0]);
     expect(screen.queryAllByText("Recommendation")).toBeTruthy();
 })
 
@@ -118,6 +123,6 @@ test('Results switches to Trusted AI Providers Tab', () => {
             responses: {}
     }}
     render(<Router><Results location={mockLocation}/></Router>)
-    fireEvent.click(screen.getByText("Trusted AI Providers"));
+    fireEvent.click(screen.getAllByText("Trusted AI Providers")[0]);
     expect(screen.queryAllByText).toBeTruthy();
 })

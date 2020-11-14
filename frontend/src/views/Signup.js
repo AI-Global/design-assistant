@@ -57,7 +57,7 @@ export default class Signup extends Component {
         let password = form.signupPassword.value;
         let passwordConfirmation = form.signupPasswordConfirmation.value;
         if(password!==passwordConfirmation){
-            this.setState({passwordConfirmation: {isInvalid: true, message: "Those passwords didn't match. Try again."}})
+            this.setState({passwordConfirmation: {isInvalid: true, message: "Those passwords didn't match. Please try again."}})
         }
         else{
             var endPoint = '/users/create/';

@@ -11,12 +11,14 @@ const UserSchema = new mongoose.Schema({
     email: { 
         type: String, 
         unique: true, 
-        required: true 
+        required: true,
+        lowercase: true
     },
     username: { 
         type: String, 
         unique: true, 
-        required: true 
+        required: true,
+        lowercase: true
     },
     role: { 
         type: String, 

@@ -11,7 +11,7 @@ import DimensionScore from "./DimensionScore";
 import TrustedAIProviders from './TrustedAIProviders';
 import ReactGa from 'react-ga';
 
-ReactGa.initialize(process.env.REACT_APP_GAID);
+ReactGa.initialize(process.env.REACT_APP_GAID, { testMode: process.env.NODE_ENV === 'test' });
 
 const Dimensions = {
     Accountability: { label: "A", name: "Accountability" },
