@@ -107,16 +107,22 @@ router.get('/isLoggedIn', auth, (req, res) => {
     }
 });
 
-// TODO: restrict endpoint to admin only TEST
-router.get('/all', (req, res) => {
-    // if (req.user.role != 'admin') {
-    //     res.status(400).send("You are not authorized to view all users.");
-    // }
 
+// Get all users
+router.get('/', async (req, res) => {
     User.find()
-    .then((users) => res.status(200).send(users))
-    .catch((err) => res.status(400).send(err));
+        .then(users => res.status(200).send(users))
+        .catch((err) => res.status(400).send(err));
 });
+
+// Get user by id
+router.get('/:userId', (req, res) => {
+    User.findOne({ _id: req.params.userId })
+        .select('-hashedPassword -salt')
+        .then(user => res.status(200).send(user))
+        .catch((err) => res.status(400).send(err));
+});
+
 
 router.route('/:id').get((req, res) => {
     User.findById(req.params.id)
