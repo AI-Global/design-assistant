@@ -42,15 +42,26 @@ export default class Results extends Component {
 
         var projectTitle = surveyResults[(allQuestions[0]?.name)];
         var projectDescription = surveyResults[(allQuestions[1]?.name)];
-        var projectIndustry = allQuestions[3].choices
-            .filter((choice) => {
-                return choice.value == surveyResults[(allQuestions[3]?.name)]
-            })[0].text.default
+        var projectIndustry;
+        var projectRegion;
 
-        var projectRegion = allQuestions[4].choices
-            .filter((choice) => {
-                return choice.value == surveyResults[(allQuestions[4]?.name)]
-            })[0].text.default
+        try {
+            projectIndustry = allQuestions[3].choices
+                .filter((choice) => {
+                    return choice.value === surveyResults[(allQuestions[3]?.name)]
+                })[0].text.default
+        } catch {
+            projectIndustry = null;
+        }
+
+        try {
+            projectRegion = allQuestions[4].choices
+                .filter((choice) => {
+                    return choice.value === surveyResults[(allQuestions[4]?.name)]
+                })[0].text.default
+        } catch {
+            projectRegion = null;
+        }
 
 
         var questions = allQuestions.filter((question) => Object.keys(surveyResults).includes(question.name))

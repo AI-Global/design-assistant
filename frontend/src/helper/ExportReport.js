@@ -31,14 +31,24 @@ function addTitleDescription(title, description, region, industry, doc, y) {
   doc.setFontSize(16);
   doc.text(title, 10, y);
 
-  y += doc.getTextDimensions(title).h + 1;
-  doc.setFontSize(10);
-  let RI = "Region: " + region + "    Industry: " + industry;
-  doc.text(RI, 10, y);
+  if (region || industry ) {
+    y += doc.getTextDimensions(title).h + 1;
+    doc.setFontSize(10);
+    
+    let RI = []
+    if (region){
+      RI.push("Region: " + region);
+    }
+    if (industry){
+      RI.push("Industry: " + industry);
+    }
 
-  y += doc.getTextDimensions(RI).h + 1;
+    //"Region: " + region + "    Industry: " + industry;
+    doc.text(RI.join("      "), 10, y);
 
-  y += 1; // Padding between title and horizontal line.
+  }
+
+  y += 2; // Padding between title and horizontal line.
   doc.setDrawColor(0, 0, 0);
 
   doc.line(10, y, 200, y);  // Horizontal line.
@@ -272,8 +282,8 @@ export function exportReport(title, description, industry, region) {
   // eslint-disable-next-line
   var y = 35;
   y = addHeader(doc, y);
-  if (title !== undefined || description !== undefined) {
-    y = addTitleDescription(title ?? " ", description ?? " ", region ?? " ", industry ?? " ", doc, y);
+  if (title !== undefined || description !== undefined || region || industry ) {
+    y = addTitleDescription(title ?? " ", description ?? " ", region , industry, doc, y);
   }
 
   y = addAbout(doc, y);
