@@ -30,7 +30,7 @@ function formatTrigger(trigger) {
 
 async function getChildren() {
     // Get Lookup of child questions
-    let questions = await Question.find({ "trigger": { $ne: null } })
+    let questions = await Question.find({ "child": true })
     let children = {}
     for (let q of questions) {
         children[q.trigger.parent] = {};
@@ -47,6 +47,7 @@ function formatQuestion(q, Dimensions, Triggers = null) {
 
     // All questions have a title, name, and type
     var question = {};
+    
     question.title = {};
     question.title.default = q.question;
     question.title.fr = "";
@@ -120,7 +121,12 @@ function formatQuestion(q, Dimensions, Triggers = null) {
             question.choices.push(choice);
         }
 
-    }//TODO: else if (question.type == slider)
+    } else if (question.type == "bootstrapslider") {
+        // Low Medium and High
+        question.step = 1;
+        question.rangeMin = 1;
+        question.rangeMax = 3;
+    }
 
     return question;
 }
@@ -171,6 +177,7 @@ function createPage(questions, pageName, pageTitle, Dimensions, Children) {
     // Map MongoDB questions to surveyJS format
     page.elements = questionHeiarchy.map(function (q) {
         if (q.child) {
+
             return formatQuestion(q, Dimensions, Children[q.trigger.parent].trigger);
 
         } else {
@@ -255,7 +262,8 @@ async function createPages(q) {
 // Get all questions. Assemble SurveyJS JSON here
 router.get('/', async (req, res) => {
     // Only request parent questions from DB
-    Question.find({ "trigger": null })
+    Question.find({ "child": false })
+        .sort( { questionNumber: 1 } )
         .then(async (questions) => {
             pages = await createPages(questions);
             res.status(200).send(pages);
