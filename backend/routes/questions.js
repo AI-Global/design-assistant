@@ -3,7 +3,7 @@ const router = express.Router();
 const Question = require('../models/question.model');
 const Dimension = require('../models/dimension.model');
 const fs = require('fs');
-const { create } = require('../models/question.model');
+const { create, findOne } = require('../models/question.model');
 const mongoose = require('mongoose');
 
 async function getDimensions() {
@@ -321,16 +321,9 @@ router.delete('/:questionId', async (req, res) => {
         const session = await mongoose.startSession();
         session.withTransaction(async () => {
             var number;
-            var response = await Question.findOneAndDelete({ _id: req.params.questionId }, function (err, doc) {
-                if (err) {
-                    console.log(err)
-                }
-                else {
-                    console.log(doc.questionNumber)
-                    number = doc.questionNumber
-                }
-            });
-
+            var question = await Question.findOne({_id: req.params.questionId})
+            var number = question.questionNumber
+            await Question.deleteOne({ _id: req.params.questionId })
             var maxQ = await Question.find().sort({ questionNumber: -1 }).limit(1)
             var maxNumber = maxQ[0].questionNumber
             console.log(number, maxNumber)
