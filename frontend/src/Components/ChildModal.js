@@ -29,13 +29,14 @@ export default function ChildModal(props) {
         if (makeChild) {
             props.current_question.child = true;
             var parentId = props.previous_question._id;
+            var parentQ = props.previous_question.question;
             var triggers = [];
             for (const [key, val] of Object.entries(checkedBoxes)) {
                 if (val) {
                     triggers.push(key);
                 }
             }
-            props.current_question.trigger = { parent: parentId, responses: triggers };
+            props.current_question.trigger = { parent: parentId, responses: triggers, parentQuestion: parentQ };
 
             var endPoint = '/questions/' + props.current_question._id;
             axios.put(process.env.REACT_APP_SERVER_ADDR + endPoint, props.current_question)
