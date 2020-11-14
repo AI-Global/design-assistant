@@ -75,7 +75,7 @@ const QuestionSchema = mongoose.Schema({
     roles: [Number],
 
     // Question can belong to multiple lifecycles
-    lifecycle: Number,
+    lifecycle: [Number],
 
     // Which Question and Response determine whether this question should be displayed
     child:Boolean,
