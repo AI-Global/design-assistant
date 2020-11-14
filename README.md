@@ -4,6 +4,8 @@
 
 [API documentation](docs/API.md)
 
+[Project Structure Text Overview](docs/project_structure.md)
+
 
 ## License
 
