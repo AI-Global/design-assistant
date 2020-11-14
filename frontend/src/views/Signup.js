@@ -3,7 +3,23 @@ import { Modal, Form} from 'react-bootstrap';
 import "../css/signup.css";
 import axios from 'axios';
 import { expireAuthToken } from '../helper/AuthHelper';
+import ReactGa from 'react-ga';
 require('dotenv').config();
+
+const CreateAccHandler = () => {
+    ReactGa.event({
+        category: 'Button',
+        action: 'User clicked on Create new account'
+    })
+}
+
+const AccCreatedHandler = () => {
+    ReactGa.event({
+        category: 'Button',
+        action: 'User Successfully Created account'
+    })
+}
+
 
 const RegistrationDescription = `You can create an account for the Responsible AI Design Assistant! 
 After creating your account, an email verfication will be sent to you.`
@@ -56,6 +72,7 @@ export default class Signup extends Component {
                     console.log(result.errors);
                 }
                 else{
+                    AccCreatedHandler();
                     expireAuthToken();
                     sessionStorage.setItem('authToken', result["token"])
                     window.location.reload();
@@ -96,7 +113,7 @@ export default class Signup extends Component {
         const handleSignupShow = () => this.setState({showSignupModal: true});
         return(
             <div style={{display: "inline-block"}}>
-                <a href="#/" onClick={handleSignupShow}>Create your account</a>
+                <a href="#/" onClick={() => {handleSignupShow();CreateAccHandler();}}>Create your account</a>
                 <Modal show={showSignup}
                 onHide={handleSignupClose}
                 backdrop="static"

@@ -2,10 +2,17 @@ import '../css/admin.css';
 import { Link } from 'react-router-dom';
 import React, { Component } from 'react';
 import Table from '@material-ui/core/Table';
-import { Tabs, Tab, } from 'react-bootstrap';
 import QuestionTable from '../Components/QuestionTable';
+import { Tabs, Tab, } from 'react-bootstrap';
+import ReactGa from 'react-ga';
+
+ReactGa.initialize(process.env.REACT_APP_GAID);
 
 export default class Results extends Component {
+    componentDidMount() {
+        ReactGa.pageview(window.location.pathname + window.location.search);
+    }
+
     render() {
         return (
             <main id="wb-cont" role="main" property="mainContentOfPage" className="container" style={{ paddingBottom: "1rem" }}>
