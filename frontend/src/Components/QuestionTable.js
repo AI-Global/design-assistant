@@ -128,6 +128,19 @@ export default class QuestionTable extends Component {
         // TODO: Add functionality to make question child of parent
     }
 
+    cancelQuestionUpdate() {
+        const questions = reorder(
+            this.state.questions,
+            this.state.newNumber-1,
+            this.state.previousNumber-1
+        )
+        this.setState({
+                questions,
+        })
+
+        this.setChildModalShow(false);
+    }
+
     render() {
         if (!this.state.questions.length) {
             return null;
@@ -158,7 +171,7 @@ export default class QuestionTable extends Component {
                 {this.state.previousQuestion === null ? null :
                     <ChildModal
                         show={this.state.showChildModal}
-                        onHide={() => this.setChildModalShow(false)}
+                        onHide={() => this.cancelQuestionUpdate()}
                         clickYes={() => this.updateQuestionNumbers()}
                         current_question={this.state.currentQuestion}
                         previous_question={this.state.previousQuestion}
