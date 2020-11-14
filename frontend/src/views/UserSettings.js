@@ -1,10 +1,9 @@
 import React,{ Component } from 'react';
-import { Modal, DropdownButton, Form} from 'react-bootstrap';
+import { Modal, DropdownButton, Form, Dropdown} from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCog } from '@fortawesome/free-solid-svg-icons';
 import { getLoggedInUser, expireAuthToken, getAuthToken} from '../helper/AuthHelper';
 import "../css/usersettings.css";
-import DropdownItem from 'react-bootstrap/esm/DropdownItem';
 import axios from 'axios';
 import ReactGa from 'react-ga';
 
@@ -71,7 +70,6 @@ export default class UserSettings extends Component {
         let password = form.emailPassword.value;
         let authToken = getAuthToken();
         let endPoint = '/users/updateEmail';
-        console.log(authToken);
         return axios.post(process.env.REACT_APP_SERVER_ADDR + endPoint,
             {
                 newEmail: newEmail,
@@ -168,16 +166,16 @@ export default class UserSettings extends Component {
 
         return (
             <span>
-                <DropdownButton className="usersettings-dropdown"
+                <DropdownButton className="usersettings-dropdown" 
                 title={
                     <span>
-                    <FontAwesomeIcon icon={faUserCog} size="lg" className="mr-2" cursor="pointer"/>
+                    <FontAwesomeIcon icon={faUserCog} size="lg" className="mr-2" cursor="pointer" aria-label="Settings Dropdown"/>
                     </span>
                 }>
-                    <DropdownItem onClick={() => this.changeEmailModal()}><i className="fa fa-envelope fa-fw"></i> Change Email</DropdownItem>
-                    <DropdownItem onClick={() => this.changeUsernameModal()}><i className="fa fa-user fa-fw"></i> Change Username</DropdownItem>
-                    <DropdownItem onClick={() => this.changePasswordModal()}><i className="fa fa-key fa-fw"></i> Change Password</DropdownItem>
-                    <DropdownItem onClick={() => this.handleLogout()}><i className="fa fa-sign-out fa-fw"></i> Log Out</DropdownItem>
+                    <Dropdown.Item onClick={() => this.changeEmailModal()}><i className="fa fa-envelope fa-fw"></i> Change Email</Dropdown.Item>
+                    <Dropdown.Item onClick={() => this.changeUsernameModal()}><i className="fa fa-user fa-fw"></i> Change Username</Dropdown.Item>
+                    <Dropdown.Item onClick={() => this.changePasswordModal()}><i className="fa fa-key fa-fw"></i> Change Password</Dropdown.Item>
+                    <Dropdown.Item onClick={() => this.handleLogout()}><i className="fa fa-sign-out fa-fw"></i> Log Out</Dropdown.Item>
                 </DropdownButton>
 
 
@@ -196,14 +194,14 @@ export default class UserSettings extends Component {
                         <Form onSubmit={(e) => this.handleEmailSubmit(e)}>
                             <Form.Group controlId="newEmail">
                                 <i className="fa fa-envelope"></i>
-                                <Form.Control type="email" placeholder="New Email" required="required" autoComplete="email" isInvalid={this.state.email?.isInvalid}/>
+                                <Form.Control type="email" placeholder="New Email" required="required" autoComplete="email" isInvalid={this.state.email?.isInvalid} aria-label="new email"/>
                                 <Form.Control.Feedback type="invalid">
                                     {this.state.email?.message}
                                 </Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group controlId="emailPassword">
                                 <i className="fa fa-lock"></i>
-                                <Form.Control type="password" placeholder="Password" required="required" autoComplete="current-password" isInvalid={this.state.password?.isInvalid}/>
+                                <Form.Control type="password" placeholder="Password" required="required" autoComplete="current-password" isInvalid={this.state.password?.isInvalid} aria-label="current password"/>
                                 <Form.Control.Feedback type="invalid">
                                     {this.state.password?.message}
                                 </Form.Control.Feedback>
@@ -230,14 +228,14 @@ export default class UserSettings extends Component {
                         <Form onSubmit={(e) => this.handleUsernameSubmit(e)}>
                             <Form.Group controlId="newUsername">
                                 <i className="fa fa-user"></i>
-                                <Form.Control type="text" placeholder="New Username" required="required" autoComplete="username" isInvalid={this.state.username?.isInvalid}/>
+                                <Form.Control type="text" placeholder="New Username" required="required" autoComplete="username" isInvalid={this.state.username?.isInvalid} aria-label="new username"/>
                                 <Form.Control.Feedback type="invalid">
                                     {this.state.username?.message}
                                 </Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group controlId="usernamePassword">
                                 <i className="fa fa-lock"></i>
-                                <Form.Control type="password" placeholder="Password" required="required" autoComplete="current-password" isInvalid={this.state.password?.isInvalid}/>
+                                <Form.Control type="password" placeholder="Password" required="required" autoComplete="current-password" isInvalid={this.state.password?.isInvalid} aria-label="current password"/>
                                 <Form.Control.Feedback type="invalid">
                                     {this.state.password?.message}
                                 </Form.Control.Feedback>
@@ -264,21 +262,21 @@ export default class UserSettings extends Component {
                         <Form onSubmit={(e) => this.handlePasswordSubmit(e)}>
                             <Form.Group controlId="oldPassword">
                                 <i className="fa fa-lock"></i>
-                                <Form.Control type="password" placeholder="Current Password" required="required" autoComplete="current-password" isInvalid={this.state.password?.isInvalid}/>
+                                <Form.Control type="password" placeholder="Current Password" required="required" autoComplete="current-password" isInvalid={this.state.password?.isInvalid} aria-label="current password"/>
                                 <Form.Control.Feedback type="invalid">
                                     {this.state.password?.message}
                                 </Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group controlId="newPassword">
                                 <i className="fa fa-lock"></i>
-                                <Form.Control type="password" placeholder="New Password" required="required" autoComplete="password" isInvalid={this.state.newPassword?.isInvalid}/>
+                                <Form.Control type="password" placeholder="New Password" required="required" autoComplete="password" isInvalid={this.state.newPassword?.isInvalid} aria-label="new password"/>
                                 <Form.Control.Feedback type="invalid">
                                     {this.state.newPassword?.message}
                                 </Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group controlId="confirmPassword">
                                 <i className="fa fa-lock"></i>
-                                <Form.Control type="password" placeholder="Confirm New Password" required="required" autoComplete="password" isInvalid={this.state.passwordConfirmation?.isInvalid}/>
+                                <Form.Control type="password" placeholder="Confirm New Password" required="required" autoComplete="password" isInvalid={this.state.passwordConfirmation?.isInvalid} aria-label="confirm password"/>
                                 <Form.Control.Feedback type="invalid">
                                     {this.state.passwordConfirmation?.message}
                                 </Form.Control.Feedback>
