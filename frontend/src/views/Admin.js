@@ -8,7 +8,7 @@ const User = props => (
         <td>{props.user.username}</td>
         <td>{props.user.role}</td>
         <td>
-         <a href="#" onClick={() => { if (window.confirm('Are you sure')) {(props.deleteUser(props.user._id))} }}>Delete User</a>
+         <a href="#" onClick={() => { if (window.confirm('Are you sure you want to delete the user?')) {(props.deleteUser(props.user._id))} }}>Delete User</a>
 
         </td>
     </tr>
