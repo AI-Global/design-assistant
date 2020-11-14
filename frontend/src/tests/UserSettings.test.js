@@ -8,8 +8,8 @@ jest.mock('axios');
 const user = {
     _id: "5fae2bbc6591d482788ad733",
     role: "member",
-    email: "micheal.le.nguyen@gmail.com",
-    username: "micheal.le.nguyen@gmail.com",
+    email: "test@test.com",
+    username: "test",
 }
 
 test('User Settings renders successfully', () => {

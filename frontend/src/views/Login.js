@@ -67,8 +67,6 @@ export default class Login extends Component {
                     console.log(result.errors);
                 }
                 else {
-                    console.log(result["token"]);
-                    console.log(result["user"]);
                     expireAuthToken();
                     if (remember) {
                         localStorage.setItem('authToken', result["token"]);
