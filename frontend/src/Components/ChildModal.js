@@ -28,14 +28,14 @@ export default function ChildModal(props) {
         // saves the parent child relationship
         if (makeChild) {
             props.current_question.child = true;
-            var parentNumber = props.previous_question.questionNumber;
+            var parentId = props.previous_question._id;
             var triggers = [];
             for (const [key, val] of Object.entries(checkedBoxes)) {
                 if (val) {
                     triggers.push(key);
                 }
             }
-            props.current_question.trigger = { parentNumber, triggers };
+            props.current_question.trigger = { parent: parentId, responses: triggers };
 
             var endPoint = '/questions/' + props.current_question._id;
             axios.put(process.env.REACT_APP_SERVER_ADDR + endPoint, props.current_question)
@@ -107,7 +107,7 @@ export default function ChildModal(props) {
                             <Row>
                                 <Col md={12}>
                                     {responses.map((response, index) =>
-                                        <Form.Check type="checkbox" id={response.responseNumber} label={response.indicator} checked={checkedBoxes[response.responseNumber]}
+                                        <Form.Check type="checkbox" key={index} id={response.responseNumber} label={response.indicator} checked={checkedBoxes[response.responseNumber]}
                                             onChange={() => {
                                                 let temp = checkedBoxes;
                                                 temp[response.responseNumber] = !checkedBoxes[response.responseNumber];
