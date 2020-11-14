@@ -47,18 +47,18 @@ function formatQuestion(q, Dimensions, Triggers = null) {
 
     // All questions have a title, name, and type
     var question = {};
-    
+
     question.title = {};
     question.title.default = q.question;
     question.title.fr = "";
     question.name = q.id;
     question.type = q.responseType;
 
-    
+
     // Set conditions for when the question is visiable
     if (Triggers) {
         question.visibleIf = Triggers;
-        
+
     }
 
     // The rest of these properties are dependant on the question
@@ -182,7 +182,7 @@ function createPage(questions, pageName, pageTitle, Dimensions, Children) {
 
         } else {
             return formatQuestion(q, Dimensions);
-            
+
         }
     });
 
@@ -269,7 +269,7 @@ async function createPages(q) {
 router.get('/', async (req, res) => {
     // Only request parent questions from DB
     Question.find({ "child": false })
-        .sort( { questionNumber: 1 } )
+        .sort({ questionNumber: 1 })
         .then(async (questions) => {
             pages = await createPages(questions);
             res.status(200).send(pages);
@@ -317,12 +317,34 @@ router.post('/', async (req, res) => {
 router.delete('/:questionId', async (req, res) => {
     try {
         // Delete existing question in DB
-        var response = await Question.deleteOne({ _id: req.params.questionId }, req.body);
 
-        res.json(response);
+        const session = await mongoose.startSession();
+        session.withTransaction(async () => {
+            var number;
+            var response = await Question.findOneAndDelete({ _id: req.params.questionId }, function (err, doc) {
+                if (err) {
+                    console.log(err)
+                }
+                else {
+                    console.log(doc.questionNumber)
+                    number = doc.questionNumber
+                }
+            });
+
+            var maxQ = await Question.find().sort({ questionNumber: -1 }).limit(1)
+            var maxNumber = maxQ[0].questionNumber
+            console.log(number, maxNumber)
+
+            for (let i = number + 1; i <= maxNumber; i++) {
+                await Question.findOneAndUpdate({ questionNumber: i }, { questionNumber: i - 1 });
+            }
+
+        })
+        res.json(doc);
     } catch (err) {
         res.json({ message: err });
     }
+
 });
 
 router.put('/:questionId', async (req, res) => {
@@ -355,7 +377,7 @@ router.put('/:startNumber/:endNumber', async (req, res) => {
                     await Question.findOneAndUpdate({ questionNumber: i }, { questionNumber: i - 1 });
                 }
             } else {
-                for (let i = startNum -1; i >= endNum; i--) {
+                for (let i = startNum - 1; i >= endNum; i--) {
                     await Question.findOneAndUpdate({ questionNumber: i }, { questionNumber: i + 1 });
                 }
             }
