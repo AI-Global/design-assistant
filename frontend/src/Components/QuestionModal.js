@@ -180,6 +180,11 @@ export default function QuestionModal(props) {
         props.onHide()
     }
 
+    function deleteParent(){
+        setTrigger(null);
+        setChild(false);
+    }
+
     if (!dimensions) {
         return null;
     }
@@ -224,12 +229,12 @@ export default function QuestionModal(props) {
                 </Modal.Header>
                 <Modal.Body>
                     <Form onSubmit={(e) => save(e)} noValidate>
-                        {!props.question.child ? null :
+                        {!child ? null :
                             <Row style={{ paddingBottom: "1em" }}>
                                 <Col md={12}>
                                     <Card style={{ padding: "1em", backgroundColor: "#f5f5f5" }}>
                                     <Row>
-                                        <IconButton size="small" color="secondary" ><DeleteIcon style={{ color: red[500] }}/></IconButton>
+                                        <IconButton size="small" color="secondary" onClick={() => { deleteParent()}}><DeleteIcon style={{ color: red[500] }}/></IconButton>
                                         <div style={{ fontSize: "12px", fontStyle: "italic", position: "relative", top: "-1em" }}>Parent</div>
                                     </Row>
                                         {props.question.trigger.parentQuestion}
