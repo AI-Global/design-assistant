@@ -20,7 +20,18 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import Login from './views/Login';
 import "bootstrap-slider/dist/css/bootstrap-slider.min.css";
 import * as widgets from  "surveyjs-widgets";
+import ReactGa from 'react-ga';
 require('dotenv').config();
+
+ReactGa.initialize(process.env.REACT_APP_GAID);
+
+const StartSurveyHandler = () => {
+  ReactGa.event({
+      category: 'Button',
+      action: 'Clicked the Start Survey Button'
+  })
+}
+
 
 // set up survey styles and properties for rendering html
 Survey
@@ -52,6 +63,7 @@ localizedStrs.progressText = "";
 const dimArray = ['Accountabililty', 'Bias and Fairness', 'Explainability and Interpretability', 'Robustness', 'Data Quality']
 
 class App extends Component {
+
   constructor(props) {
     super(props);
     this.state = {
@@ -71,6 +83,9 @@ class App extends Component {
   // Request questions JSON from backend 
   componentDidMount() {
     widgets.bootstrapslider(Survey);
+
+    ReactGa.pageview(window.location.pathname + window.location.search);
+
     var endPoint = '/questions';
     axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
       .then(res => {
@@ -144,6 +159,7 @@ class App extends Component {
             }
           });
       })
+      
   }
 
   nextPath(path) {
@@ -330,7 +346,7 @@ class App extends Component {
                 <div className="card-header">Design assistant</div>
                 <div className="card-body d-flex justify-content-center h-100">
                   <div>
-                    <Button onClick={() => this.startSurvey()}>Start measuring your AI Trust Index now!</Button>
+                    <Button onClick={() => {this.startSurvey(); StartSurveyHandler()}}>Start measuring your AI Trust Index now!</Button>
                   </div>
                 </div>
               </div>
