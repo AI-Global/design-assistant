@@ -51,7 +51,7 @@ export default class Admin extends Component {
     }
 
     componentDidMount(){
-        axios.get('http://localhost:9000/users/all')
+        axios.get('http://localhost:9000/users')
         .then(response => {
             this.setState({users: response.data})
         })
