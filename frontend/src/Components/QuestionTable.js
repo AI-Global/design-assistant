@@ -163,7 +163,9 @@ export default class QuestionTable extends Component {
             "responses": [],
             "roles": [13],
             "trustIndexDimension": null,
-            "weighting": 0
+            "weighting": 0,
+            "trigger": null,
+            "child": false
         }
 
         return (

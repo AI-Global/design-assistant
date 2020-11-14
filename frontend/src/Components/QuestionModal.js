@@ -8,7 +8,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import InputGroup from 'react-bootstrap/InputGroup';
 import IconButton from '@material-ui/core/IconButton';
 import { green, red } from '@material-ui/core/colors';
-import { Button, Form, Row, Col } from 'react-bootstrap';
+import { Button, Form, Row, Col, Card } from 'react-bootstrap';
 
 
 export default function QuestionModal(props) {
@@ -43,6 +43,9 @@ export default function QuestionModal(props) {
     // Hook for showing delet quesiton warning
     const [warningShow, setWarningShow] = useState(false)
     const [questionValid, setInvalid] = useState(false)
+
+    const [child, setChild] = useState(props.question.child)
+    const [trigger, setTrigger] = useState(props.question.trigger)
 
     function addResponse(response) {
         // add new response object to responses and rerender response section by spreading the array into a new array
@@ -91,6 +94,8 @@ export default function QuestionModal(props) {
         setRole(props.question.roles)
         setDimension(props.question.trustIndexDimension)
         setWeight(props.question.weighting)
+        setChild(props.question.child)
+        setTrigger(props.question.trigger)
         setInvalid(false)
         props.onHide()
     }
@@ -112,7 +117,8 @@ export default function QuestionModal(props) {
             props.question.roles = questionRole
             dimension === -1 ? props.question.trustIndexDimension = null : props.question.trustIndexDimension = dimension
             props.question.weighting = weight
-            props.question.trigger = null;
+            props.question.child = child
+            props.question.trigger = trigger
 
             if (props.mode === "edit") {
                 endPoint = '/questions/' + props.question._id;
@@ -151,15 +157,16 @@ export default function QuestionModal(props) {
                 props.question.roles = [13]
                 props.question.trustIndexDimension = null
                 props.question.weighting = 0
-                props.question.trigger = null;
+                props.question.child = child
+                props.question.trigger = trigger
                 close()
             }
         }
     }
 
-   async function deleteQuestion() {
+    async function deleteQuestion() {
         var endPoint = '/questions/' + props.question._id;
-        await axios.delete(process.env.REACT_APP_SERVER_ADDR + endPoint )
+        await axios.delete(process.env.REACT_APP_SERVER_ADDR + endPoint)
             .then(res => {
                 const result = res.data;
                 if (result.errors) {
@@ -217,6 +224,19 @@ export default function QuestionModal(props) {
                 </Modal.Header>
                 <Modal.Body>
                     <Form onSubmit={(e) => save(e)} noValidate>
+                        {!props.question.child ? null :
+                            <Row style={{ paddingBottom: "1em" }}>
+                                <Col md={12}>
+                                    <Card style={{ padding: "1em", backgroundColor: "#f5f5f5" }}>
+                                    <Row>
+                                        <IconButton size="small" color="secondary" ><DeleteIcon style={{ color: red[500] }}/></IconButton>
+                                        <div style={{ fontSize: "12px", fontStyle: "italic", position: "relative", top: "-1em" }}>Parent</div>
+                                    </Row>
+                                        {props.question.trigger.parentQuestion}
+                                    </Card>
+                                </Col>
+                            </Row>
+                        }
                         <Row>
                             <Col xs={4} md={3}>
                                 <Form.Group controlId="questionDimension">
