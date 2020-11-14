@@ -61,7 +61,13 @@ export default class Admin extends Component {
 
         axios.get('http://localhost:9000/submissions')
         .then(response => {
-            this.setState({submissions: response.data})
+            var resp = response.data;
+            resp = resp.map(submission => {
+                submission.userId = this.state.users.filter(user => {return user.userId = submission.userId})[0].name;
+                return submission
+            });
+
+            this.setState({submissions: resp })
         })
         .catch((error) => {
             console.log(error);
