@@ -1,0 +1,62 @@
+.MuiTableCell-head {
+    font-size: 16px !important;
+    background-color: #d0e0e3;
+  }
+  
+  .modal-60w{
+    width: 60%;
+    max-width: none !important;
+  }
+  
+  .modal-30w{
+    width: 30%;
+    max-width: none !important;
+  }
+  
+  .form-label {
+    font-weight: 600;
+  }
+  
+  .modal-body {
+    padding-left: 6em;
+    padding-right: 6em;
+  }
+  
+  #modal-footer-border {
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid #dee2e6;
+    padding: .75rem; 
+    margin: 0 -6em;
+  }
+  
+  #modal-footer {
+    display: flex;
+    justify-content: space-between;
+    /* padding: .75rem; 
+    margin: 0 -6em; */
+  }
+  
+  
+  /* remove number buttons on input form */
+  /* https://www.w3schools.com/howto/howto_css_hide_arrow_number.asp */
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button
+  {
+    -webkit-appearance: none;
+     margin: 0; 
+  }
+  
+  input[type=number]
+  {
+    -moz-appearance: textfield;
+    border-radius: 5%;
+  }
+  
+  .modal {
+    z-index: 1040;
+  }
+  
+  .form-label {
+    min-height: 40px !important;
+  }
