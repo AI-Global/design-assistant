@@ -133,7 +133,7 @@ export default class QuestionTable extends Component {
             return null;
         }
         const newQuestion = {
-            "questionNumber": 0,
+            "questionNumber": this.state.questions.length + 1,
             "__v": 0,
             "alt_text": null,
             "domainApplicability": null,

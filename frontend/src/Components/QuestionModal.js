@@ -159,7 +159,7 @@ export default function QuestionModal(props) {
 
     function deleteQuestion() {
         var endPoint = '/questions/' + props.question._id;
-        axios.delete(process.env.REACT_APP_SERVER_ADDR + endPoint)
+        axios.delete(process.env.REACT_APP_SERVER_ADDR + endPoint )
             .then(res => {
                 const result = res.data;
                 if (result.errors) {
@@ -386,14 +386,14 @@ export default function QuestionModal(props) {
                                         </Form.Group>
                                     </Col>
                                 </Row>
-                                <Row>
+                                {/* <Row>
                                     <Col xs={12} md={12}>
                                         <Form.Group controlId="Link">
                                             <Form.Label>Link</Form.Label>
                                             <Form.Control placeholder="Link" value={questionLink || ""} onChange={(event) => setLink(event.target.value)}/>
                                         </Form.Group>
                                     </Col>
-                                </Row>
+                                </Row> */}
                             </React.Fragment>
                         }
                         <div id="modal-footer-border" />
