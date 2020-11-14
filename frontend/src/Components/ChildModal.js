@@ -79,11 +79,11 @@ export default function ChildModal(props) {
                         </Card>
                     </Col>
                 </Row>
-                <Row style={{ paddingTop: "0.5em"}}>
-                    <Col md={1} style={{paddingRight: "0", textAlign:"right"}}>
+                <Row style={{ paddingTop: "0.5em" }}>
+                    <Col md={1} style={{ paddingRight: "0", textAlign: "right" }}>
                         <SubdirectoryArrowRightIcon size="large" />
                     </Col>
-                    <Col md={11} style={{paddingLeft: "0"}}>
+                    <Col md={11} style={{ paddingLeft: "0" }}>
                         <Card style={{ padding: "1em", backgroundColor: "#f5f5f5" }}>
                             <p style={{ fontSize: "12px", fontStyle: "italic", position: "relative", top: "-1em" }}>Child</p>
                             {currentQuestion}
@@ -92,22 +92,20 @@ export default function ChildModal(props) {
                 </Row>
                 <Form>
                     <Form.Group controlId="makeChild">
-                        <Col sm="12" md={{ size: 6, offset: 5 }}>
-                            <Row>
+                        <Row>
+                            <Col sm="12" md={{ size: 6, offset: 5 }}>
                                 <div key='inline-radio' className="mb-3" style={{ paddingTop: "1.5em" }}>
                                     <Form.Check inline label="Yes" type='radio' checked={makeChild} id='inline-radio-1' onChange={() => setMakeChild(true)} />
                                     <Form.Check inline label="No" type='radio' checked={!makeChild} id='inline-radio-2' onChange={() => setMakeChild(false)} />
                                 </div>
-                            </Row>
-                        </Col>
+                            </Col>
+                        </Row>
                     </Form.Group>
                     {!makeChild ? null :
                         <Form.Group>
+                            <div className="form-label">Which response(s) should trigger the child question:</div>
                             <Row>
-                                <div className="form-label">Which response(s) should trigger the child question:</div>
-                            </Row>
-                            <Row>
-                                <div key='responses-list' className='mb-3'>
+                                <Col md={12}>
                                     {responses.map((response, index) =>
                                         <Form.Check type="checkbox" id={response.responseNumber} label={response.indicator} checked={checkedBoxes[response.responseNumber]}
                                             onChange={() => {
@@ -117,7 +115,7 @@ export default function ChildModal(props) {
                                             }} />
                                     )
                                     }
-                                </div>
+                                </Col>
                             </Row>
                         </Form.Group>
                     }
