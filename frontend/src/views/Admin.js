@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Tabs, Tab, Table, } from 'react-bootstrap';
 import axios from 'axios';
+import Results from './Results'
 
 const User = props => (
     <tr>
@@ -22,16 +23,7 @@ const Submission = props => (
         <td>{props.submission.lifecycle}</td>
         <td>{String(props.submission.completed)}</td>
         <td>
-            
-        {
-        Object.keys(props.submission.submission).map((key, i) => (
-          <tr key={i}>
-            <td>Question: {key}</td>
-            <td>Response: {props.submission.submission[key]}</td>
-          </tr>
-        ))
-        
-    }
+        <button onClick={() => this.nextPath('./Results')}>View Responses</button>
         </td>
     </tr>
 )
@@ -51,6 +43,20 @@ export default class Admin extends Component {
     }
 
     componentDidMount(){
+
+        var endPoint = '/questions';
+        axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
+        .then(res => {
+        var json = res.data;
+        // replace double escaped characters so showdown correctly renders markdown frontslashes and newlines
+        var stringified = JSON.stringify(json);
+        stringified = stringified.replace(/\\\\n/g, "\\n");
+        stringified = stringified.replace(/\\\//g, "/");
+        json = JSON.parse(stringified);
+        
+        })
+
+
         axios.get('http://localhost:9000/users')
         .then(response => {
             this.setState({users: response.data})
@@ -73,6 +79,18 @@ export default class Admin extends Component {
             console.log(error);
         })
     }
+
+    /*submissiondata(){
+        Object.keys(this.props.submission.submission).map((key,i)=>(key ={i}))
+    }*/
+
+        
+    nextPath(path) {
+        this.props.history.push({
+          pathname: path,
+          state:  {questions: this.json, responses: this.props.submission.submission}
+        })
+      }
 
     deleteUser(id) {
         axios.delete('http://localhost:9000/users/'+id)
