@@ -14,15 +14,15 @@ export function getLoggedInUser() {
         headers: {
             "x-auth-token": authToken
         }
+    }).catch(err => {
+        localStorage.removeItem(key);
+        sessionStorage.removeItem(key);
+        return err;
     }).then(response => {
         if (response) {
             let result = response.data;
             return result;
         }
-    }).catch(err => {
-        localStorage.removeItem(key);
-        sessionStorage.removeItem(key);
-        return err;
     })
 }
 
@@ -36,11 +36,11 @@ export function isLoggedIn() {
         headers: {
             "x-auth-token": authToken
         }
-    }).then(response => { return true }).catch(err => {
+    }).catch(err => {
         localStorage.removeItem(key);
         sessionStorage.removeItem(key);
-        return false
-    });
+        return false;
+    }).then(response => { return true });
 
 }
 
