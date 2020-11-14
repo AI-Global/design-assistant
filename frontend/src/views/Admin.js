@@ -68,7 +68,7 @@ export default class Admin extends Component {
     }
 
     deleteUser(id) {
-        axios.delete('http://localhost:9000/users/all'+id)
+        axios.delete('http://localhost:9000/users/'+id)
         .then(response => {console.log(response.data)});
 
         this.setState({
