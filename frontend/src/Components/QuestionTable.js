@@ -77,7 +77,7 @@ export default class QuestionTable extends Component {
         console.log(qList[0].questionNumber);
 
 
-        if (result.destination.index != 0) {
+        if (result.destination.index !== 0) {
             this.setState({
                 questions,
                 currentQuestion: qList[result.destination.index -1],
@@ -138,7 +138,7 @@ export default class QuestionTable extends Component {
             return null;
         }
         const newQuestion = {
-            "questionNumber": this.state.questions.length + 1,
+            "questionNumber": 0,
             "__v": 0,
             "alt_text": null,
             "domainApplicability": null,

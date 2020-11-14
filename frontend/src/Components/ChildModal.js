@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form, Card } from 'react-bootstrap';
 import { Row, Col } from 'react-bootstrap';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
+import SubdirectoryArrowRightIcon from '@material-ui/icons/SubdirectoryArrowRight';
 import '../css/theme.css';
 
 
@@ -49,7 +48,7 @@ export default function ChildModal(props) {
                         console.log("Updated Question: ", result)
                     }
                 })
-            
+
         }
         setMakeChild(false);
         setCheckedBoxes({});
@@ -62,27 +61,40 @@ export default function ChildModal(props) {
             onHide={props.onHide}
             aria-labelledby="contained-modal-title-vcenter"
             centered
-            dialogClassName="modal-30w"
+            dialogClassName="modal-60w"
+            backdrop="static"
         >
             <Modal.Header>
-
+                <Modal.Title id="contained-modal-title-vcenter">
+                    Add Relationship
+                </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <div className="form-label">Would you like to form this question relationship:</div>
+                <Row>
+                    <Col md={12}>
+                        <Card style={{ padding: "1em", backgroundColor: "#f5f5f5" }}>
+                            <p style={{ fontSize: "12px", fontStyle: "italic", position: "relative", top: "-1em" }}>Parent</p>
+                            {previousQuestion}
+                        </Card>
+                    </Col>
+                </Row>
+                <Row style={{ paddingTop: "0.5em"}}>
+                    <Col md={1} style={{paddingRight: "0", textAlign:"right"}}>
+                        <SubdirectoryArrowRightIcon size="large" />
+                    </Col>
+                    <Col md={11} style={{paddingLeft: "0"}}>
+                        <Card style={{ padding: "1em", backgroundColor: "#f5f5f5" }}>
+                            <p style={{ fontSize: "12px", fontStyle: "italic", position: "relative", top: "-1em" }}>Child</p>
+                            {currentQuestion}
+                        </Card>
+                    </Col>
+                </Row>
                 <Form>
-                    <Row>
-                        <Col md={{ span: 4, offset: 10 }}>
-                            <IconButton size="small" onClick={() => close()} label="Close">
-                                <CloseIcon />
-                            </IconButton>
-                        </Col>
-                    </Row>
                     <Form.Group controlId="makeChild">
-                        <Row>
-                            <Modal.Title id="contained-modal-title-vcenter">
-                                Make "{currentQuestion}" a child question of "{previousQuestion}"?
-                    </Modal.Title>
-                        </Row>
                         <Col sm="12" md={{ size: 6, offset: 5 }}>
                             <Row>
-                                <div key='inline-radio' className="mb-3">
+                                <div key='inline-radio' className="mb-3" style={{ paddingTop: "1.5em" }}>
                                     <Form.Check inline label="Yes" type='radio' checked={makeChild} id='inline-radio-1' onChange={() => setMakeChild(true)} />
                                     <Form.Check inline label="No" type='radio' checked={!makeChild} id='inline-radio-2' onChange={() => setMakeChild(false)} />
                                 </div>
@@ -91,6 +103,9 @@ export default function ChildModal(props) {
                     </Form.Group>
                     {!makeChild ? null :
                         <Form.Group>
+                            <Row>
+                                <div className="form-label">Which response(s) should trigger the child question:</div>
+                            </Row>
                             <Row>
                                 <div key='responses-list' className='mb-3'>
                                     {responses.map((response, index) =>
@@ -107,7 +122,7 @@ export default function ChildModal(props) {
                         </Form.Group>
                     }
                 </Form>
-            </Modal.Header>
+            </Modal.Body>
             <Modal.Footer>
                 <Button onClick={() => close()} id="resetButton">Cancel</Button>
                 <Button onClick={() => save()} id="saveButton">Confirm Changes</Button>
