@@ -84,7 +84,7 @@ class App extends Component {
         const converter = new showdown.Converter();
 
         // Set json and model
-        this.setState({ json });
+        this.setState({ json: json });
         this.setState({ model });
 
         model
