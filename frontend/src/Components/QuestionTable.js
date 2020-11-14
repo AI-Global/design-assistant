@@ -72,16 +72,11 @@ export default class QuestionTable extends Component {
             result.destination.index
         )
 
-        const qList = Array.from(this.state.questions);
-        console.log("LIST:");
-        console.log(qList[0].questionNumber);
-
-
         if (result.destination.index !== 0) {
             this.setState({
                 questions,
-                currentQuestion: qList[result.destination.index -1],
-                previousQuestion: qList[result.destination.index],
+                currentQuestion: questions[result.destination.index],
+                previousQuestion: questions[result.destination.index -1],
                 previousNumber: result.source.index + 1,
                 newNumber: result.destination.index + 1,
                 showChildModal: true
