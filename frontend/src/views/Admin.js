@@ -8,7 +8,7 @@ import ReactGa from 'react-ga';
 
 ReactGa.initialize(process.env.REACT_APP_GAID);
 
-export default class Results extends Component {
+export default class AdminPanel extends Component {
     componentDidMount() {
         ReactGa.pageview(window.location.pathname + window.location.search);
     }
@@ -17,7 +17,7 @@ export default class Results extends Component {
         return (
             <main id="wb-cont" role="main" property="mainContentOfPage" className="container" style={{ paddingBottom: "1rem" }}>
                 <h1 className="section-header">
-                    Administration
+                    Administration Panel
                 </h1>
                 <Tabs defaultActiveKey="surveyManagement">
                     <Tab eventKey="surveyManagement" title="Survey Management">

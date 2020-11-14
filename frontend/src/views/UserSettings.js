@@ -7,6 +7,7 @@ import "../css/usersettings.css";
 import DropdownItem from 'react-bootstrap/esm/DropdownItem';
 import axios from 'axios';
 import ReactGa from 'react-ga';
+import { withRouter } from 'react-router-dom';
 
 const LogoutHandler = () => {
     ReactGa.event({
@@ -15,7 +16,7 @@ const LogoutHandler = () => {
     })
 }
 
-export default class UserSettings extends Component {
+class UserSettings extends Component {
     constructor(props){
         super(props);
         this.state = {
@@ -163,9 +164,15 @@ export default class UserSettings extends Component {
         });
     }
 
+    navAdmin() {
+        this.props.history.push({
+          pathname: '/Admin/',  
+          state: {userRole: this.state.user.role}
+        })
+      }
+
     render(){
         const handleClose = () => this.setState({showEmailSettings: false, showUserNameSettings: false, showPasswordSettings: false});
-
         return (
             <span>
                 <DropdownButton className="usersettings-dropdown"
@@ -174,12 +181,14 @@ export default class UserSettings extends Component {
                     <FontAwesomeIcon icon={faUserCog} size="lg" className="mr-2" cursor="pointer"/>
                     </span>
                 }>
+                    {this.state.user ? 
+                        this.state.user.role === "admin" ? <DropdownItem onClick={() => this.navAdmin()}><i className="fa fa-database fa-fw"></i> Admin Panel</DropdownItem> : null 
+                    : null}
                     <DropdownItem onClick={() => this.changeEmailModal()}><i className="fa fa-envelope fa-fw"></i> Change Email</DropdownItem>
                     <DropdownItem onClick={() => this.changeUsernameModal()}><i className="fa fa-user fa-fw"></i> Change Username</DropdownItem>
                     <DropdownItem onClick={() => this.changePasswordModal()}><i className="fa fa-key fa-fw"></i> Change Password</DropdownItem>
                     <DropdownItem onClick={() => this.handleLogout()}><i className="fa fa-sign-out fa-fw"></i> Log Out</DropdownItem>
                 </DropdownButton>
-
 
                 <Modal show={this.state.showEmailSettings}
                     onHide={handleClose}
@@ -294,3 +303,5 @@ export default class UserSettings extends Component {
         )
     }
 }
+
+export default withRouter(UserSettings);

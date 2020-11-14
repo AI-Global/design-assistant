@@ -98,7 +98,7 @@ class App extends Component {
 
         const model = new Survey.Model(json);
         const converter = new showdown.Converter();
-        console.log(json)
+        // console.log(json)
         // Set json and model
         this.setState({ json: json });
         this.setState({ model });
