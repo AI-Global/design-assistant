@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Tabs, Tab, Table, } from 'react-bootstrap';
+import { Tabs, Tab, Table, Button } from 'react-bootstrap';
 import axios from 'axios';
 import Results from './Results'
 
@@ -11,19 +11,6 @@ const User = props => (
         <td>
          <a href="#" onClick={() => { if (window.confirm('Are you sure you want to delete the user?')) {(props.deleteUser(props.user._id))} }}>Delete User</a>
 
-        </td>
-    </tr>
-)
-
-const Submission = props => (
-    <tr>
-        <td>{props.submission.userId}</td>
-        <td>{props.submission.projectName}</td>
-        <td>{props.submission.date}</td>
-        <td>{props.submission.lifecycle}</td>
-        <td>{String(props.submission.completed)}</td>
-        <td>
-        <button onClick={() => this.nextPath('./Results')}>View Responses</button>
         </td>
     </tr>
 )
@@ -47,48 +34,47 @@ export default class Admin extends Component {
         var endPoint = '/questions';
         axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
         .then(res => {
-        var json = res.data;
-        // replace double escaped characters so showdown correctly renders markdown frontslashes and newlines
-        var stringified = JSON.stringify(json);
-        stringified = stringified.replace(/\\\\n/g, "\\n");
-        stringified = stringified.replace(/\\\//g, "/");
-        json = JSON.parse(stringified);
-        
+            var json = res.data;
+            // replace double escaped characters so showdown correctly renders markdown frontslashes and newlines
+            var stringified = JSON.stringify(json);
+            stringified = stringified.replace(/\\\\n/g, "\\n");
+            stringified = stringified.replace(/\\\//g, "/");
+            json = JSON.parse(stringified);
+            this.setState({json: json});
         })
 
 
         axios.get('http://localhost:9000/users')
         .then(response => {
             this.setState({users: response.data})
+            axios.get('http://localhost:9000/submissions')
+            .then(response => {
+                var resp = response.data;
+                resp = resp.map(submission => {
+                    submission.userId = this.state.users.filter(user => {return user.userId = submission.userId})[0].name;
+                    return submission
+                });
+    
+                this.setState({submissions: resp })
+            })
+            .catch((error) => {
+                console.log(error);
+            })
         })
         .catch((error) => {
             console.log(error);
         })
 
-        axios.get('http://localhost:9000/submissions')
-        .then(response => {
-            var resp = response.data;
-            resp = resp.map(submission => {
-                submission.userId = this.state.users.filter(user => {return user.userId = submission.userId})[0].name;
-                return submission
-            });
-
-            this.setState({submissions: resp })
-        })
-        .catch((error) => {
-            console.log(error);
-        })
     }
 
     /*submissiondata(){
         Object.keys(this.props.submission.submission).map((key,i)=>(key ={i}))
     }*/
-
         
-    nextPath(path) {
+    nextPath(path, submission) {
         this.props.history.push({
           pathname: path,
-          state:  {questions: this.json, responses: this.props.submission.submission}
+          state:  {questions: this.state.json, responses: submission}
         })
       }
 
@@ -109,7 +95,18 @@ export default class Admin extends Component {
 
     submissionList() {
         return this.state.submissions.map(currentsubmission => {
-            return <Submission submission={currentsubmission} key={currentsubmission._id}/>;
+            return (
+                <tr>
+                    <td>{currentsubmission.userId}</td>
+                    <td>{currentsubmission.projectName}</td>
+                    <td>{currentsubmission.date}</td>
+                    <td>{currentsubmission.lifecycle}</td>
+                    <td>{String(currentsubmission.completed)}</td>
+                    <td>
+                        <Button size="sm" onClick={() => this.nextPath('/Results/', currentsubmission.submission)}>View Responses</Button>
+                    </td>
+                </tr>
+            )
         })
     }
 
@@ -222,7 +219,7 @@ export default class Admin extends Component {
                                         <th className="score-card-headers">
                                             Project Name
                                         </th>
-                            
+
                                         <th className="score-card-headers">
                                             Date
                                         </th>
