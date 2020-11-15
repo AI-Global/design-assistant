@@ -140,7 +140,7 @@ export default class Signup extends Component {
                                 <Form.Check type="checkbox" label="Sign in using email instead of username" defaultChecked={this.state.emailAsUsername} onChange={(e) => this.toggleUsernameAsEmail(e)} />
                             </Form.Group>             
                             <Form.Group controlId="signupUsername">
-                                {this.state.emailAsUsername && <Form.Control type="text" placeholder = "Username" required="required" isInvalid={this.state.username.isInvalid} autoComplete="username" aria-label="username" readOnly/>}
+                                {this.state.emailAsUsername && <Form.Control type="text" placeholder = "Username" required="required" isInvalid={this.state.username.isInvalid} autoComplete="username" aria-label="username" value={this.state.usernameInput} readOnly/>}
                                 {!this.state.emailAsUsername  && <Form.Control type="text" placeholder = "Username" required="required" isInvalid={this.state.username.isInvalid} autoComplete="username" aria-label="username"/>}
                                 <Form.Control.Feedback type="invalid">
                                     {this.state.username.message}
