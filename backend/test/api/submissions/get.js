@@ -50,7 +50,7 @@ describe('GET /submissions', () => {
 });
 
 
-describe('GET /submissions/{UID}', () => {
+describe('GET /submissions/user/{UID}', () => {
     before((done) => {
         connect()
             .then(() => done())
@@ -66,14 +66,13 @@ describe('GET /submissions/{UID}', () => {
     });
 
     it('Getting submission by user ID ', (done) => {
-        request(app).get('/submissions/5f9fb622a18e399f03dafc73')
+        request(app).get('/submissions/user/5fadea7e2bb08880f012cf5c')
         .then((res) => {
-            const body = res.body;
+            const body = res.body.submissions;
             expect(body[0]).to.contain.property('userId');
             expect(body[0]).to.contain.property('projectName');
             expect(body[0]).to.contain.property('date');
             expect(body[0]).to.contain.property('lifecycle');
-            expect(body[0]).to.contain.property('submission');
             expect(body[0]).to.contain.property('completed');
             done()
         })
