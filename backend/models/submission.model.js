@@ -8,10 +8,9 @@ const SubmissionSchema = mongoose.Schema({
         unique: true
     },
 
-    // unique ID for a project that owns this submission
-    projectId: {
-        type: Number,
-        unique: true
+    // name for a project that owns this submission
+    projectName: {
+        type: String
     },
 
     date: {
@@ -29,6 +28,11 @@ const SubmissionSchema = mongoose.Schema({
     // json file that gets output from survey.js
     submission: {
         type: Object,
+        required: true
+    },
+    
+    completed: {
+        type: Boolean,
         required: true
     }
 
