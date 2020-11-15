@@ -1,236 +1,66 @@
 const express = require('express');
 const router = express.Router();
 const Question = require('../models/question.model');
+
 const Dimension = require('../models/dimension.model');
 const fs = require('fs');
-const { create } = require('../models/question.model');
+const { create, findOne } = require('../models/question.model');
+const mongoose = require('mongoose');
 
 async function getDimensions() {
+    // Get Lookup of Dimensions from DB
     let dimensions = await Dimension.find()
 
-    // Format questions into format
     let Dimensions = {}
     for (let d of dimensions) {
         Dimensions[d.dimensionID] = { label: d.label, name: d.name, page: d.name.replace(/\s+/g, '') }
     }
-
     return Dimensions
 }
 
-const Domain = require('../models/domain.model');
-const LifeCycle = require('../models/lifecycle.model');
-const Region = require('../models/region.model');
-const Role = require('../models/role.model');
+function formatTrigger(trigger) {
+    // Formats the triggers into a string for SurveyJS
+    triggerList = [];
 
-router.get('/populateroles', async (req, res) => {
-    try {
-        let json_temp = fs.readFileSync(__dirname + "/../populateDBScripts/json/roles.json", "utf-8");
-        let parsed_roles = JSON.parse(json_temp);
-
-        for (let i = 0; i < parsed_roles.length; ++i) {
-            await Role.findOneAndUpdate({roleID: i+1}, {
-                name: parsed_roles[i].name
-            }, {upsert:true, runValidators: true});
-        }
-        res.json(parsed_roles);
-    } catch(err) {
-        console.log(err);
+    for (let t of trigger.responses) {
+        triggerList.push("{" + trigger.parent + "} contains " + "'" + t + "'");
     }
-});
 
-router.get('/populateregions', async (req, res) => {
-    try {
-        let json_temp = fs.readFileSync(__dirname + "/../populateDBScripts/json/regions.json", "utf-8");
-        let parsed_regions = JSON.parse(json_temp);
+    return triggerList.join(" or ");
+}
 
-        for (let i = 0; i < parsed_regions.length; ++i) {
-            await Region.findOneAndUpdate({regionID: i+1}, {
-                name: parsed_regions[i].name
-            }, {upsert:true, runValidators: true});
-        }
-        res.json(parsed_regions);
-    } catch(err) {
-        console.log(err);
+async function getChildren() {
+    // Get Lookup of child questions
+    let questions = await Question.find({ "child": true })
+    let children = {}
+    for (let q of questions) {
+        children[q.trigger.parent] = {};
+        children[q.trigger.parent].question = q;
+
+        children[q.trigger.parent].trigger = formatTrigger(q.trigger);
     }
-});
 
-router.get('/populatelifecycles', async (req, res) => {
-    try {
-        let json_temp = fs.readFileSync(__dirname + "/../populateDBScripts/json/lifecycles.json", "utf-8");
-        let parsed_lifecycles = JSON.parse(json_temp);
+    return children
+}
 
-        for (let i = 0; i < parsed_lifecycles.length; ++i) {
-            await LifeCycle.findOneAndUpdate({lifecycleID: i+1}, {
-                name: parsed_lifecycles[i].name
-            }, {upsert:true, runValidators: true});
-        }
-        res.json(parsed_lifecycles);
-    } catch(err) {
-        console.log(err);
-    }
-});
-
-router.get('/populatedomains', async (req, res) => {
-    try {
-        let json_temp = fs.readFileSync(__dirname + "/../populateDBScripts/json/domains.json", "utf-8");
-        let parsed_domains = JSON.parse(json_temp);
-
-        for (let i = 0; i < parsed_domains.length; ++i) {
-            await Domain.findOneAndUpdate({domainID: i+1}, {
-                name: parsed_domains[i].name
-            }, {upsert:true, runValidators: true});
-        }
-        res.json(parsed_domains);
-    } catch(err) {
-        console.log(err);
-    }
-});
-
-router.get('/populatedimensions', async (req, res) => {
-    try {
-        let json_temp = fs.readFileSync(__dirname + "/../populateDBScripts/json/trustIndexDimensions.json", "utf-8");
-        let parsed_dimensions = JSON.parse(json_temp);
-
-        for (let i = 0; i < parsed_dimensions.length; ++i) {
-            await Dimension.findOneAndUpdate({dimensionID: i+1}, {
-                name: parsed_dimensions[i].name,
-                label: parsed_dimensions[i].label
-            }, {upsert:true, runValidators: true});
-        }
-        res.json(parsed_dimensions);
-    } catch(err) {
-        console.log(err);
-    }
-});
-
-// not going to be an endpoint in production
-router.get('/populatequestions', async (req, res) => {
-    try {
-        let json_temp = fs.readFileSync(__dirname + "/../populateDBScripts/json/questionsJSON.json", "utf-8");
-        let parsed_questions = JSON.parse(json_temp);
-        for (let i = 0; i < parsed_questions.length; ++i) {
-            let q_responses = [];
-            
-            if (parsed_questions[i].responses) {
-                for (let j = 0; j < parsed_questions[i].responses.length; ++j) {
-                    const q_response = {
-                        responseNumber: j,
-                        indicator: parsed_questions[i].responses[j].indicator || null,
-                        score: parsed_questions[i].responses[j].score || null
-                    };
-                    q_responses.push(q_response);
-                }
-            }
-            console.log(parsed_questions[i])
-
-            let prompt = parsed_questions[i].prompt.toLowerCase();
-            console.log(prompt)
-
-            // let trustIndexDimensionString = parsed_questions[i].trustIndexDimension;
-            // if trustIndexDimension
-
-            let trustIndexDimensionObj;
-            let domainObj;
-            let regionObj;
-            let lifecycleObj;
-            let roleObj;
-
-            await Dimension.findOne({name: parsed_questions[i].trustIndexDimension}, function(err, obj) {
-                trustIndexDimensionObj = obj; 
-            });
-
-            await Domain.findOne({name: parsed_questions[i].domainApplicability}, function(err, obj) {
-                domainObj = obj;
-            });
-
-            await Region.findOne({name: parsed_questions[i].regionalApplicability}, function(err, obj) {
-                regiobObj = obj;
-            });
-                
-            await Role.findOne({name: parsed_questions[i].roles}, function(err, obj) {
-                roleObj = obj;
-            })
-
-            if(!roleObj){
-                await Role.findOne({name: "All"}, function(err, obj){
-                    roleObj = obj;
-                });
-            }
-
-            await LifeCycle.findOne({name: parsed_questions[i].lifecycle}, function(err, obj) {
-                lifecycleObj = obj;
-            });
-
-            if(!lifecycleObj){
-                await LifeCycle.findOne({name: "All"}, function(err, obj){
-                    lifecycleObj = obj;
-                });
-            }
-
-            let alt_text = null;
-            if (parsed_questions[i].alt_text != "" && parsed_questions[i].alt_text != "\r") {
-                alt_text = parsed_questions[i].alt_text;
-            }
-
-
-            await Question.findOneAndUpdate({questionNumber: i+1}, {
-                trustIndexDimension: trustIndexDimensionObj ? trustIndexDimensionObj.dimensionID: null,
-                domainApplicability: domainObj ? domainObj.domainID : null,
-                regionalApplicability: regionObj ? regionObj.regionID : null,
-                mandatory: parsed_questions[i].mandatory || true,
-                questionType: ((parsed_questions[i].questionType) ? (parsed_questions[i].questionType.toLowerCase().trim()) : null),
-                question: parsed_questions[i].question || "",
-                alt_text: alt_text,
-                prompt: (prompt === "select all that apply:" || prompt === "select all that have been completed:") ?  prompt : null,
-                responses: q_responses,
-                responseType: parsed_questions[i].responseType || null,
-                pointsAvailable: parsed_questions[i].pointsAvailable || 0,
-                weighting: parsed_questions[i].weighting || 0,
-                reference: parsed_questions[i].reference || null,
-                roles: roleObj.roleID,
-                lifecycle: lifecycleObj.lifecycleID,
-                parent: parsed_questions[i].parent ? parsed_questions[i].parent : null
-            }, {upsert:true, runValidators: true}); 
-
-
-            // TODO: Add uuid
-
-            // await Question.findOneAndUpdate({questionNumber: i}, {
-            //     trustIndexDimension: ((typeof parsed_questions[i].trustIndexDimension === 'string') ? parsed_questions[i].trustIndexDimension.toLowerCase() : null),
-            //     domainApplicability: parsed_questions[i].domainApplicability || null,
-            //     regionalApplicability: parsed_questions[i].regionalApplicability || null,
-            //     mandatory: parsed_questions[i].mandatory || true,
-            //     questionType: ((parsed_questions[i].questionType) ? (parsed_questions[i].questionType.toLowerCase().trim()) : null),
-            //     question: parsed_questions[i].question || "",
-            //     alt_text: parsed_questions[i].alt_text || null,
-            //     prompt: parsed_questions[i].prompt || null,
-            //     responses: q_responses,
-            //     responseType: parsed_questions[i].responseType || null,
-            //     pointsAvailable: parsed_questions[i].pointsAvailable || 0,
-            //     weighting: parsed_questions[i].weighting || 0,
-            //     reference: parsed_questions[i].reference || null,
-            //     roles: parsed_questions[i].roles || null,
-            //     lifecycle: parsed_questions[i].lifecycle || null,
-            //     parent: parsed_questions[i].parent || null
-            // }, {upsert:true, runValidators: true});
-        }
-
-        res.json(parsed_questions);
-    } catch (err) {
-        console.log(err);
-    }
-});
-
-function formatQuestion(q, Dimensions) {
+function formatQuestion(q, Dimensions, Triggers = null) {
     // This function takes a question from mongoDB as input and formats it for surveyJS to use
 
     // All questions have a title, name, and type
     var question = {};
+
     question.title = {};
     question.title.default = q.question;
     question.title.fr = "";
     question.name = q.id;
     question.type = q.responseType;
+
+
+    // Set conditions for when the question is visiable
+    if (Triggers) {
+        question.visibleIf = Triggers;
+
+    }
 
     // The rest of these properties are dependant on the question
     if (q.alt_text) {
@@ -259,7 +89,7 @@ function formatQuestion(q, Dimensions) {
         question.choices = [];
         for (let c of q.responses) {
             var choice = {};
-            choice.value = c.responseNumber;
+            choice.value = c.id;
             choice.text = {};
             choice.text.default = c.indicator;
             choice.text.fr = "";
@@ -270,7 +100,7 @@ function formatQuestion(q, Dimensions) {
         if (q.pointsAvailable) {
 
             question.score = {};
-            question.score.dimension = Dimensions[q.trustIndexDimension].name;
+            question.score.dimension = Dimensions[q.trustIndexDimension].label;
             question.score.max = q.pointsAvailable * q.weighting;
 
             // Add score to the choices
@@ -292,39 +122,91 @@ function formatQuestion(q, Dimensions) {
             question.choices.push(choice);
         }
 
-    }//TODO: else if (question.type == slider)
+    } else if (question.type == "bootstrapslider") {
+        // Low Medium and High
+        question.step = 1;
+        question.rangeMin = 1;
+        question.rangeMax = 3;
+    }
 
     return question;
 }
 
-function createPage(questions, pageName, pageTitle, Dimensions) {
+function chainChildren(q, Children) {
+    // Given a question this function will recursivly check for deeper chains of heirarchy questions
+    var childChain = [];
+
+    childChain.push(Children[q.id].question);
+
+    // Recursivly get children of children
+    if (Children[q.id].question.id in Children) {
+        childChain = childChain.concat(chainChildren(Children[q.id].question, Children))
+    }
+
+    return childChain;
+}
+
+function createHierarchy(questions, Children) {
+    // Given a list of questions, check for any child questions and build the heirarchy
+    var heirarchy = [];
+
+    questions.forEach(q => {
+        heirarchy.push(q);
+
+        // If the questions has children
+        if (q.id in Children) {
+            heirarchy = heirarchy.concat(chainChildren(q, Children));
+        }
+    })
+
+    return heirarchy;
+}
+
+function createPage(questions, pageName, pageTitle, Dimensions, Children) {
     // Helper function for createPages
     // function takes in a list of question plus title and creates a page for it
     var page = {};
+
+    // Build Heirachy
+
+    var questionHeiarchy = createHierarchy(questions, Children)
 
     page.name = pageName;
     page.title = {};
     page.title.default = pageTitle;
     page.title.fr = "";
     // Map MongoDB questions to surveyJS format
-    page.elements = questions.map(function (q) {
-        return formatQuestion(q, Dimensions);
+    page.elements = questionHeiarchy.map(function (q) {
+        if (q.child) {
+
+            return formatQuestion(q, Dimensions, Children[q.trigger.parent].trigger);
+
+        } else {
+            return formatQuestion(q, Dimensions);
+
+        }
     });
 
     return page
 }
 
-function createPages(q, Dimensions) {
+async function createPages(q) {
+    // Get dimensions from DB
+    let Dimensions = await getDimensions()
+    // Get child questions from DB
+    let Children = await getChildren()
+
     // This function takes in a list of questions from mongoDB and formats them into pages for surveyJS
-    page = {};
+    var page = {};
     page.pages = [];
     page.showQuestionNumbers = "false";
     page.showProgressBar = "top";
     page.firstPageIsStarted = "false";
     page.showNavigationButtons = "false";
+    page.clearInvisibleValues = "onHidden";
 
     // Separate the questions by dimension 
-    // TODO: we might want to make tombstone questions a dimension too
+    // TODO: we might want to make tombstone questions a dimension too for cleaner code
     var dimQuestions = {}
     for (let d in Dimensions) {
         dimQuestions[d] = [];
@@ -341,9 +223,15 @@ function createPages(q, Dimensions) {
         }
     }
 
+    tombQuestions["tombstone"].sort((a, b) => (a.questionNumber > b.questionNumber) ? 1 : -1);
+    for (let i = 0; i < dimQuestions.length; i++) {
+        dimQuestions.sort((a, b) => (a.questionNumber > b.questionNumber) ? 1 : -1);
+    }
+
+
     // Add Other question to tombstone and create page 
     tombQuestions["tombstone"].push({ responseType: "comment", id: "otherTombstone", question: "Other:", alt_text: "If possible, support the feedback with specific recommendations \/ suggestions to improve the tool. Feedback can include:\n - Refinement to existing questions, like suggestions on how questions can be simplified or clarified further\n - Additions of new questions for specific scenarios that may be missed\n - Feedback on whether the listed AI risk domains are fulsome and complete\n - What types of response indicators should be included for your context?" });
-    projectDetails = createPage(tombQuestions["tombstone"], "projectDetails1", "Project Details", Dimensions);
+    var projectDetails = createPage(tombQuestions["tombstone"], "projectDetails1", "Project Details", Dimensions, Children);
     page.pages.push(projectDetails);
 
     // Create pages for the dimensions
@@ -357,7 +245,7 @@ function createPages(q, Dimensions) {
             questions.push(question);
             questions.push({ responseType: "comment", id: "other" + question.id, question: "Other:", alt_text: "If possible, support the feedback with specific recommendations \/ suggestions to improve the tool. Feedback can include:\n - Refinement to existing questions, like suggestions on how questions can be simplified or clarified further\n - Additions of new questions for specific scenarios that may be missed\n - Feedback on whether the listed AI risk domains are fulsome and complete\n - What types of response indicators should be included for your context?" });
             if (questions.length == 4) {
-                var dimPage = createPage(questions, Dimensions[question.trustIndexDimension].page + pageCount, Dimensions[question.trustIndexDimension].name, Dimensions);
+                var dimPage = createPage(questions, Dimensions[question.trustIndexDimension].page + pageCount, Dimensions[question.trustIndexDimension].name, Dimensions, Children);
                 page.pages.push(dimPage);
                 pageCount++;
                 questions = [];
@@ -366,7 +254,7 @@ function createPages(q, Dimensions) {
 
         // Deal with odd number of pages
         if (questions.length > 0) {
-            var dimPage = createPage(questions, Dimensions[questions[0].trustIndexDimension].page + pageCount, Dimensions[questions[0].trustIndexDimension].name, Dimensions);
+            var dimPage = createPage(questions, Dimensions[questions[0].trustIndexDimension].page + pageCount, Dimensions[questions[0].trustIndexDimension].name, Dimensions, Children);
             page.pages.push(dimPage);
         }
 
@@ -380,13 +268,24 @@ function createPages(q, Dimensions) {
 
 // Get all questions. Assemble SurveyJS JSON here
 router.get('/', async (req, res) => {
-    // Get dimensions from DB
-    let Dimensions = await getDimensions()
-    Question.find()
-        .then((questions) => res.status(200).send(createPages(questions, Dimensions)))
+    // Only request parent questions from DB
+    Question.find({ "child": false })
+        .sort({ questionNumber: 1 })
+        .then(async (questions) => {
+            pages = await createPages(questions);
+            res.status(200).send(pages);
+        })
         .catch((err) => res.status(400).send(err));
 
 });
+
+// Get all questions as JSON from DB. No Assembly for SurveyJS
+router.get('/all', async (req, res) => {
+    let Dimensions = await getDimensions()
+    Question.find()
+        .then((questions) => res.status(200).send({ questions, Dimensions }))
+        .catch((err) => res.status(400).send(err));
+})
 
 
 // Get question by id
@@ -419,12 +318,27 @@ router.post('/', async (req, res) => {
 router.delete('/:questionId', async (req, res) => {
     try {
         // Delete existing question in DB
-        var response = await Question.remove({ _id: req.params.questionId }, req.body);
 
-        res.json(response);
+        const session = await mongoose.startSession();
+        session.withTransaction(async () => {
+            var number;
+            var question = await Question.findOne({_id: req.params.questionId})
+            var number = question.questionNumber
+            await Question.deleteOne({ _id: req.params.questionId })
+            var maxQ = await Question.find().sort({ questionNumber: -1 }).limit(1)
+            var maxNumber = maxQ[0].questionNumber
+            console.log(number, maxNumber)
+
+            for (let i = number + 1; i <= maxNumber; i++) {
+                await Question.findOneAndUpdate({ questionNumber: i }, { questionNumber: i - 1 });
+            }
+
+        })
+        res.json(doc);
     } catch (err) {
         res.json({ message: err });
     }
+
 });
 
 router.put('/:questionId', async (req, res) => {
@@ -437,6 +351,45 @@ router.put('/:questionId', async (req, res) => {
         res.json({ message: err });
     }
 });
+
+router.put('/:startNumber/:endNumber', async (req, res) => {
+    let startNum = parseInt(req.params.startNumber);
+    let endNum = parseInt(req.params.endNumber);
+
+    try {
+
+        const session = await mongoose.startSession();
+        session.withTransaction(async () => {
+
+            startQuestion = await Question.findOne({ questionNumber: startNum }).exec();
+            startQuestion.questionNumber = 0;
+            await startQuestion.save();
+
+            // shift questions down
+            if (startNum < endNum) {
+                for (let i = startNum + 1; i <= endNum; i++) {
+                    await Question.findOneAndUpdate({ questionNumber: i }, { questionNumber: i - 1 });
+                }
+            } else {
+                for (let i = startNum - 1; i >= endNum; i--) {
+                    await Question.findOneAndUpdate({ questionNumber: i }, { questionNumber: i + 1 });
+                }
+            }
+            startQuestion.questionNumber = endNum;
+            await startQuestion.save();
+
+        })
+
+        // free up starting question number (unique)
+        res.json({ message: "Transaction Complete" })
+
+    } catch (err) {
+        res.json({ message: err, part: 4 });
+    }
+
+});
+
+
 
 
 

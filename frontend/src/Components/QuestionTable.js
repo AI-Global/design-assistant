@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { Component } from 'react';
 import Add from '@material-ui/icons/Add';
 import Table from '@material-ui/core/Table';
@@ -17,14 +18,12 @@ const reorder = (list, startIndex, endIndex) => {
     const result = Array.from(list)
     const [removed] = result.splice(startIndex, 1)
     result.splice(endIndex, 0, removed)
-
     return result
 }
 
 const getItemStyle = (isDragging, draggableStyle) => ({
     // styles we need to apply on draggables
     ...draggableStyle,
-
     ...(isDragging && {
         background: "rgb(235,235,235)"
     })
@@ -32,20 +31,43 @@ const getItemStyle = (isDragging, draggableStyle) => ({
 
 export default class QuestionTable extends Component {
 
-
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
-            questions: this.props.questions,
-            modalShow: false
+            questions: {},
+            dimensions: {},
+            metadata: {},
+            previousQuestion: null,
+            currentQuestion: null,
+            previousNumber: null,
+            newNumber: null
         }
         this.onDragEnd = this.onDragEnd.bind(this)
         this.handleOpenModal = this.handleOpenModal.bind(this);
         this.handleCloseModal = this.handleCloseModal.bind(this);
+        this.getQuestions = this.getQuestions.bind(this);
+    }
+
+    componentDidMount() {
+        var endPoint = '/metadata';
+        axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
+            .then(res => {
+                this.setState({metadata: res.data})
+            })
+        this.getQuestions();
+    }
+
+    async getQuestions() {
+        var endPoint = '/questions/all';
+        await axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
+            .then(res => {
+                this.setState({ dimensions: res.data.Dimensions });
+                this.setState({ questions: res.data.questions.sort((a, b) => (a.questionNumber > b.questionNumber) ? 1 : -1) });
+            })
     }
 
 
-    onDragEnd(result) {
+    async onDragEnd(result) {
         // dropped outside the list
         if (!result.destination) {
             return
@@ -57,40 +79,66 @@ export default class QuestionTable extends Component {
             result.destination.index
         )
 
-        const qList = Array.from(this.state.questions);
-        console.log("LIST:" );
-        console.log(qList[0].questionNumber);
-
-
-        if(result.destination.index != 0){
+        if (result.destination.index !== 0) {
             this.setState({
                 questions,
-                currentQuestion: qList[result.destination.index],
-                previousQuestion: qList[result.destination.index-1],
+                currentQuestion: questions[result.destination.index],
+                previousQuestion: questions[result.destination.index -1],
+                previousNumber: result.source.index + 1,
+                newNumber: result.destination.index + 1,
                 showChildModal: true
             })
-        } else{
+            
+        } else {
             // do not ask to make a child-parent relationship
-            this.setState({
-                questions
-            })
+            var endPoint = '/questions/' + (result.source.index + 1).toString() + '/1';
+            await axios.put(process.env.REACT_APP_SERVER_ADDR + endPoint)
+                .then(() => {
+                    console.log("Question: " + result.source.index.toString() + "is now question: " + result.destination.index.toString() );
+                    this.setState({
+                        questions
+                    })
+                })
+            
         }
-        console.log("Source:", result.source.index)
-        console.log("Parent:", result.destination.index - 1)
     }
 
     addQuestion() {
-        // TODO: API call to add new question to DB
         this.handleOpenModal()
-        console.log("Add Question")
     }
 
     handleOpenModal() {
-        this.setState({ showModal: true });
+        this.setState({ modalShow: true });
+
     }
 
     handleCloseModal() {
-        this.setState({ showModal: false });
+        this.setState({ modalShow: false });
+        this.getQuestions();
+    }
+
+
+    updateQuestionNumbers() {
+        this.setChildModalShow(false);
+        var endPoint = '/questions/' + this.state.previousNumber.toString() + '/'+ this.state.newNumber.toString();
+        axios.put(process.env.REACT_APP_SERVER_ADDR + endPoint, this.state.currentQuestion.questionNumber)
+            .then(() => {
+                console.log("Question: " + this.state.previousNumber.toString() + "is now question: " + this.state.newNumber.toString() );
+            })
+        // TODO: Add functionality to make question child of parent
+    }
+
+    cancelQuestionUpdate() {
+        const questions = reorder(
+            this.state.questions,
+            this.state.newNumber-1,
+            this.state.previousNumber-1
+        )
+        this.setState({
+                questions,
+        })
+
+        this.setChildModalShow(false);
     }
 
     setChildModalShow(val){
@@ -99,20 +147,47 @@ export default class QuestionTable extends Component {
 
     makeRelationship(){
         this.setChildModalShow(false);
-        console.log("in make relationship");
         // TODO: Add functionality to make question child of parent
     }
 
     render() {
+        if (!this.state.questions.length) {
+            return null;
+        }
+        const newQuestion = {
+            "questionNumber": this.state.questions.length + 1,
+            "__v": 0,
+            "alt_text": null,
+            "domainApplicability": null,
+            "lifecycle": 6,
+            "mandatory": true,
+            "parent": null,
+            "pointsAvailable": 0,
+            "prompt": null,
+            "question": null,
+            "questionType": "tombstone",
+            "reference": null,
+            "regionalApplicability": null,
+            "responseType": "text",
+            "responses": [],
+            "roles": [13],
+            "trustIndexDimension": null,
+            "weighting": 0,
+            "trigger": null,
+            "child": false
+        }
+
         return (
             <TableContainer component={Paper}>
-                <ChildModal
-                    show={this.state.showChildModal}
-                    onHide={() => this.setChildModalShow(false)}
-                    clickYes={() => this.makeRelationship()}
-                    current_question={this.state.currentQuestion}
-                    previous_question={this.state.previousQuestion}
-                />
+                {this.state.previousQuestion === null ? null :
+                    <ChildModal
+                        show={this.state.showChildModal}
+                        onHide={() => this.cancelQuestionUpdate()}
+                        clickYes={() => this.updateQuestionNumbers()}
+                        current_question={this.state.currentQuestion}
+                        previous_question={this.state.previousQuestion}
+                    />
+                }
                 <Table>
                     <TableHead>
                         <TableRow>
@@ -121,34 +196,12 @@ export default class QuestionTable extends Component {
                                     <Add />
                                 </IconButton>
                                 <QuestionModal
-                                    show={this.state.showModal}
+                                    show={this.state.modalShow}
                                     onHide={this.handleCloseModal}
-                                    // TODO: probably a better way to load empty question template into modal
-                                    question={{
-                                        "_id": {
-                                            "$oid": "5f992cbad17b20d5d4201d58"
-                                        },
-                                        "questionNumber": 0,
-                                        "__v": 0,
-                                        "alt_text": "\r",
-                                        "domainApplicability": null,
-                                        "lifecycle": 5,
-                                        "mandatory": true,
-                                        "parent": null,
-                                        "pointsAvailable": 0,
-                                        "prompt": null,
-                                        "question": null,
-                                        "questionType": null,
-                                        "reference": null,
-                                        "regionalApplicability": null,
-                                        "responseType": null,
-                                        "responses": [],
-                                        "roles": [
-                                            12
-                                        ],
-                                        "trustIndexDimension": null,
-                                        "weighting": 0
-                                    }}
+                                    question={newQuestion}
+                                    mode={"new"}
+                                    dimensions={this.state.dimensions}
+                                    metadata={this.state.metadata}
                                 />
                             </TableCell>
                             <TableCell>No.</TableCell>
@@ -159,8 +212,14 @@ export default class QuestionTable extends Component {
                     </TableHead>
                     <TableBody component={DroppableComponent(this.onDragEnd)}>
                         {this.state.questions.map((question, index) => (
-                            <TableRow component={DraggableComponent(question._id.$oid, index)} key={question._id.$oid}>
-                                <QuestionRow question={question} index={index} />
+                            <TableRow component={DraggableComponent(question._id, index)} key={question._id}>
+                                <QuestionRow
+                                    question={question}
+                                    dimensions={this.state.dimensions}
+                                    index={index}
+                                    onDelete={this.getQuestions}
+                                    metadata={this.state.metadata}
+                                />
                             </TableRow>
                         ))}
                     </TableBody>

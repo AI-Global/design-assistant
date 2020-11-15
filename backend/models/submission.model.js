@@ -22,15 +22,14 @@ const SubmissionSchema = mongoose.Schema({
         type: Number
     },
 
-    completed: {
-        type: Boolean,
-        required: true
-    },
-
-
     // json file that gets output from survey.js
     submission: {
         type: Object,
+        required: true
+    },
+    
+    completed: {
+        type: Boolean,
         required: true
     }
 

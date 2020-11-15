@@ -61,7 +61,7 @@ router.post('/', async (req, res) => {
         date: req.body.date,
         lifecycle: req.body.lifecycle,
         submission: req.body.submission,
-        completed: req.body.completed
+        completed: req.body.completed ? req.body.completed : false
     });
 
     try{

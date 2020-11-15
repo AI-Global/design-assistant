@@ -19,7 +19,20 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Login from './views/Login';
 import { getLoggedInUser } from './helper/AuthHelper';
+import "bootstrap-slider/dist/css/bootstrap-slider.min.css";
+import * as widgets from "surveyjs-widgets";
+import ReactGa from 'react-ga';
 require('dotenv').config();
+
+ReactGa.initialize(process.env.REACT_APP_GAID, { testMode: process.env.NODE_ENV === 'test' });
+
+const StartSurveyHandler = () => {
+  ReactGa.event({
+    category: 'Button',
+    action: 'Clicked the Start Survey Button'
+  })
+}
+
 
 // set up survey styles and properties for rendering html
 Survey
@@ -51,6 +64,7 @@ localizedStrs.progressText = "";
 const dimArray = ['Accountabililty', 'Bias and Fairness', 'Explainability and Interpretability', 'Robustness', 'Data Quality']
 
 class App extends Component {
+
   constructor(props) {
     super(props);
     this.state = {
@@ -71,6 +85,10 @@ class App extends Component {
 
   // Request questions JSON from backend 
   componentDidMount() {
+    widgets.bootstrapslider(Survey);
+
+    ReactGa.pageview(window.location.pathname + window.location.search);
+
     var endPoint = '/questions';
     axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
       .then(res => {
@@ -83,9 +101,9 @@ class App extends Component {
 
         const model = new Survey.Model(json);
         const converter = new showdown.Converter();
-
+        // console.log(json)
         // Set json and model
-        this.setState({ json });
+        this.setState({ json: json });
         this.setState({ model });
 
         model
@@ -145,17 +163,17 @@ class App extends Component {
             }
           });
       })
-      getLoggedInUser().then( user => {
-        if(user){
-          endPoint = '/submissions/user/' + user._id;
-          this.setState({user: user});
-          axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
-            .then(res => {
-              var submissions = res.data;
-              this.setState(submissions);
+    getLoggedInUser().then(user => {
+      if (user) {
+        endPoint = '/submissions/user/' + user._id;
+        this.setState({ user: user });
+        axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
+          .then(res => {
+            var submissions = res.data;
+            this.setState(submissions);
           });
-        }
-      });
+      }
+    });
   }
 
   nextPath(path) {
@@ -246,25 +264,25 @@ class App extends Component {
       submission: submission,
       completed: false
     })
-    .then(res => {
-      // update this.state.submissions object here
-      if (user) {
-        axios.get(process.env.REACT_APP_SERVER_ADDR + '/submissions/user/' + user._id)
-          .then(res => {
-            var submissions = res.data;
-            this.setState(submissions);
-            this.state.currentSubmissionIdx = this.state.submissions.length - 1;
-            console.log("Submissions after starting survey: ", this.state.submissions);
-        });
-      } else {
-        var submissions = [res.data];
-        // this.setState(submissions);
-        this.state.submissions = submissions;
-        this.state.currentSubmissionIdx = this.state.submissions.length - 1;
-        console.log("No user model initialized", this.state.submissions, this.state.currentSubmissionIdx);
-      }
-      
-    });
+      .then(res => {
+        // update this.state.submissions object here
+        if (user) {
+          axios.get(process.env.REACT_APP_SERVER_ADDR + '/submissions/user/' + user._id)
+            .then(res => {
+              var submissions = res.data;
+              this.setState(submissions);
+              this.state.currentSubmissionIdx = this.state.submissions.length - 1;
+              console.log("Submissions after starting survey: ", this.state.submissions);
+            });
+        } else {
+          var submissions = [res.data];
+          // this.setState(submissions);
+          this.state.submissions = submissions;
+          this.state.currentSubmissionIdx = this.state.submissions.length - 1;
+          console.log("No user model initialized", this.state.submissions, this.state.currentSubmissionIdx);
+        }
+
+      });
 
 
     this.setState({ isSurveyStarted: true })
@@ -301,10 +319,10 @@ class App extends Component {
 
     let submission = this.state.submissions[index];
     this.state.model.data = submission.submission;
-    if(submission.completed){
+    if (submission.completed) {
       this.finish();
     }
-    else{
+    else {
       this.setState({ isSurveyStarted: true })
     }
   }
@@ -349,7 +367,7 @@ class App extends Component {
               </Card>
             </Accordion>
           </div>
-          <div className="container" style={{"paddingTop":"2em"}}>
+          <div className="container" style={{ "paddingTop": "2em" }}>
             <div className="d-flex justify-content-center col">{this.percent()}%</div>
           </div>
           <Survey.Survey model={this.state.model} onComplete={this.onComplete} />
@@ -432,7 +450,7 @@ class App extends Component {
             <div className="card">
               <div className="card-header">Continue existing survey</div>
               <div className="card-body">
-                <Table bordered responsive className="survey-results-table"> 
+                <Table bordered responsive className="survey-results-table">
                   <thead>
                     <tr>
                       <th>
@@ -449,17 +467,17 @@ class App extends Component {
                       return (
                         <tr key={index}>
                           <td>
-                            
+
                             {value?.projectName ? value?.projectName : "No Project Name"}
                           </td>
                           <td>
-                            {new Date(value.date).toLocaleString('en-US', {timeZone: Intl?.DateTimeFormat()?.resolvedOptions()?.timeZone ?? 'UTC'})}
+                            {new Date(value.date).toLocaleString('en-US', { timeZone: Intl?.DateTimeFormat()?.resolvedOptions()?.timeZone ?? 'UTC' })}
                           </td>
                           <td width="175px" className="text-center">
-                              {!value.completed &&
-                              <Button block onClick={() => this.resumeSurvey(index)} >Resume Survey</Button>}
-                              {value.completed &&
-                              <Button id="ResultsButton" block onClick={() => this.resumeSurvey(index)} >Survey Results</Button>}
+                            {!value.completed &&
+                              <Button block onClick={() => { this.resumeSurvey(index); StartSurveyHandler() }} >Resume Survey</Button>}
+                            {value.completed &&
+                              <Button id="ResultsButton" block onClick={() => { this.resumeSurvey(index); StartSurveyHandler() }} >Survey Results</Button>}
 
                           </td>
                         </tr>
@@ -473,7 +491,7 @@ class App extends Component {
           <div className="float-right mr-3 mt-2">
             <Button onClick={() => this.startSurvey()}>Start New Survey</Button>
           </div>
-          <Login/>
+          <Login />
         </div>
       );
     }
