@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
-import { Tabs, Tab, Table, } from 'react-bootstrap';
+import { Tabs, Tab, Table, Button } from 'react-bootstrap';
 import axios from 'axios';
+import ReactGa from 'react-ga';
+
+ReactGa.initialize(process.env.REACT_APP_GAID);
 
 const User = props => (
     <tr>
@@ -8,33 +11,72 @@ const User = props => (
         <td>{props.user.username}</td>
         <td>{props.user.role}</td>
         <td>
-         <a href="#" onClick={() => { props.deleteUser(props.user._id) }}>Delete User</a>
+         <a href="#" onClick={() => { if (window.confirm('Are you sure you want to delete the user?')) {(props.deleteUser(props.user._id))} }}>Delete User</a>
+
         </td>
     </tr>
 )
 
-export default class Users extends Component {
-
+export default class Admin extends Component {
     constructor(props) {
         super(props);
 
         this.deleteUser = this.deleteUser.bind(this)
 
-        this.state = {users: []};
+        this.state = {
+            users: [],
+            submissions: []
+
+        };
     }
 
     componentDidMount(){
-        axios.get('http://localhost:9000/users/all')
+        ReactGa.pageview(window.location.pathname + window.location.search);
+        var endPoint = '/questions';
+        axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
+        .then(res => {
+            var json = res.data;
+            // replace double escaped characters so showdown correctly renders markdown frontslashes and newlines
+            var stringified = JSON.stringify(json);
+            stringified = stringified.replace(/\\\\n/g, "\\n");
+            stringified = stringified.replace(/\\\//g, "/");
+            json = JSON.parse(stringified);
+            this.setState({json: json});
+        })
+
+
+        axios.get('http://localhost:9000/users')
         .then(response => {
             this.setState({users: response.data})
+            axios.get('http://localhost:9000/submissions')
+            .then(response => {
+                var resp = response.data;
+                resp = resp.map(submission => {
+                    submission.userId = this.state.users.filter(user => {return user.userId = submission.userId})[0].name;
+                    return submission
+                });
+    
+                this.setState({submissions: resp })
+            })
+            .catch((error) => {
+                console.log(error);
+            })
         })
         .catch((error) => {
             console.log(error);
         })
+
     }
+        
+    nextPath(path, submission) {
+        this.props.history.push({
+          pathname: path,
+          state:  {questions: this.state.json, responses: submission}
+        })
+      }
 
     deleteUser(id) {
-        axios.delete('http://localhost:9000/users/all'+id)
+        axios.delete('http://localhost:9000/users/'+id)
         .then(response => {console.log(response.data)});
 
         this.setState({
@@ -48,6 +90,22 @@ export default class Users extends Component {
         })
     }
 
+    submissionList() {
+        return this.state.submissions.map(currentsubmission => {
+            return (
+                <tr>
+                    <td>{currentsubmission.userId}</td>
+                    <td>{currentsubmission.projectName}</td>
+                    <td>{currentsubmission.date}</td>
+                    <td>{currentsubmission.lifecycle}</td>
+                    <td>{String(currentsubmission.completed)}</td>
+                    <td>
+                        <Button size="sm" onClick={() => this.nextPath('/Results/', currentsubmission.submission)}>View Responses</Button>
+                    </td>
+                </tr>
+            )
+        })
+    }
 
     render() {
         return (
@@ -146,12 +204,49 @@ export default class Users extends Component {
                             </Table>
                         </div>
                     </Tab>
+                    <Tab eventKey="submissions" title="Submissions">
+                        <div className="table-responsive mt-3">
+                            <Table id="submissions" bordered hover responsive className="submission-table">
+                                <thead>
+                                    <tr>
+                                    <th className="score-card-headers">
+                                            User Name
+                                        </th>
+                                        <th className="score-card-headers">
+                                            Project Name
+                                        </th>
+
+                                        <th className="score-card-headers">
+                                            Date
+                                        </th>
+
+                                        <th className="score-card-headers">
+                                            Lifecycle
+                                        </th>
+                                        <th className="score-card-headers">
+                                            Completed
+                                        </th>
+                                        <th className="score-card-headers">
+                                            Submissions
+                                        </th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {this.submissionList()}
+
+                                </tbody>
+                            </Table>
+                        </div>
+                    </Tab>
+
                     <Tab eventKey="analytics" title="Analytics">
                         <div className="table-responsive mt-3">
                             <Table id="analytics" bordered hover responsive className="analytics-table">
                             </Table>
                         </div>
                     </Tab>
+                    
                 </Tabs>
             </main>
 
