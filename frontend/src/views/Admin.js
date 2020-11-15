@@ -3,10 +3,11 @@ import { Link } from 'react-router-dom';
 import React, { Component } from 'react';
 import Table from '@material-ui/core/Table';
 import QuestionTable from '../Components/QuestionTable';
+import AnalyticsDashboard from '../Components/AnalyticsDashboard';
 import { Tabs, Tab, } from 'react-bootstrap';
 import ReactGa from 'react-ga';
 
-ReactGa.initialize(process.env.REACT_APP_GAID);
+ReactGa.initialize(process.env.REACT_APP_GAID, { testMode: process.env.NODE_ENV === 'test' });
 
 export default class AdminPanel extends Component {
     componentDidMount() {
@@ -70,17 +71,7 @@ export default class AdminPanel extends Component {
                         </div>
                     </Tab>
                     <Tab eventKey="analytics" title="Analytics">
-                        <div className="table-responsive mt-3">
-                            <Table id="analytics" bordered="true" hover="true" responsive="true" className="analytics-table">
-                                <thead>
-                                    <tr>
-                                        <th className="score-card-headers">
-                                            Google Analytics
-                                        </th>
-                                    </tr>
-                                </thead>
-                            </Table>
-                        </div>
+                        <AnalyticsDashboard/>
                     </Tab>
                 </Tabs>
             </main>

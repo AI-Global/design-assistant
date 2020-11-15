@@ -117,7 +117,7 @@ router.get('/isLoggedIn', auth, (req, res) => {
     }
 })
 
-// changed user fields
+// update email of current user
 router.post('/updateEmail', auth, (req, res) => {
     // error with authentication token
     if(!req.user){
@@ -149,7 +149,7 @@ router.post('/updateEmail', auth, (req, res) => {
     
 })
 
-// changed user fields
+// update username of current user
 router.post('/updateUsername', auth, (req, res) => {
     // error with authentication token
     if(!req.user){
@@ -180,7 +180,7 @@ router.post('/updateUsername', auth, (req, res) => {
         })
 })
 
-// // changed user fields
+// /update password of current user
 router.post('/updatePassword', auth, (req, res) => {
     // error with authentication token
     if(!req.user){
