@@ -38,16 +38,19 @@ class UserSettings extends Component {
         })
     }
 
+    // show modal for changing Email
     changeEmailModal() {
         this.resetValidations();
         this.setState({ showEmailSettings: true })
     }
 
+    // show modal for changing Username
     changeUsernameModal() {
         this.resetValidations();
         this.setState({ showUserNameSettings: true })
     }
 
+    // show modal for changing Password
     changePasswordModal() {
         this.resetValidations();
         this.setState({ showPasswordSettings: true })
@@ -63,6 +66,10 @@ class UserSettings extends Component {
         window.location.reload();
     }
 
+    /**
+     * send post request to update username of user
+     * upon submission of change email form
+     */
     handleEmailSubmit(event) {
         event.preventDefault();
         this.resetValidations();
@@ -91,6 +98,10 @@ class UserSettings extends Component {
             });
     }
 
+    /**
+     * send post request to update username of user
+     * upon submission of change username form
+     */
     handleUsernameSubmit(event) {
         event.preventDefault();
         this.resetValidations();
@@ -119,6 +130,11 @@ class UserSettings extends Component {
             });
     }
 
+    /**
+     * send post request to update password of user 
+     * upon submission of change password form and
+     * validating confirmation of password field
+     */
     handlePasswordSubmit(event) {
         event.preventDefault();
         this.resetValidations();
@@ -152,6 +168,7 @@ class UserSettings extends Component {
             });
     }
 
+    // reset validations in state
     resetValidations() {
         this.setState({
             password: { isInvalid: false, message: "" },
@@ -162,6 +179,7 @@ class UserSettings extends Component {
         });
     }
 
+    // navigation to admin page
     navAdmin() {
         this.props.history.push({
           pathname: '/Admin/',  
