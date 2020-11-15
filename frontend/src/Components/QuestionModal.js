@@ -14,12 +14,11 @@ import { Button, Form, Row, Col, Card } from 'react-bootstrap';
 export default function QuestionModal(props) {
     const responseTypes = ["text", "comment", "dropdown", "radiogroup", "checkbox", "bootstrapslider"]
 
-    // TODO: replace constants and JSON files with API calls to get JSON's from DB
     const dimensions = props.dimensions
-    const domainJSON = require('../tempJSON/domainJSON.json')
-    const lifecycleJSON = require('../tempJSON/lifecycleJSON.json')
-    const regionJSON = require('../tempJSON/regionJSON.json')
-    const rolesJSON = require('../tempJSON/rolesJSON.json')
+    const domains = props.metadata.domain
+    const lifecycles = props.metadata.lifecycle
+    const regions = props.metadata.region
+    const roles = props.metadata.roles
 
     // make copy of responses array so we can revert back to it if needed
     const responsesA = [...props.question.responses]
@@ -350,9 +349,8 @@ export default function QuestionModal(props) {
                                 <Col xs={2} md={2}>
                                     <Form.Group controlId="roles">
                                         <Form.Label>Role</Form.Label>
-                                        <Form.Control value={rolesJSON[questionRole - 1].name || ''} as="select" onChange={(event) => setRole(event.target.selectedIndex)}>
-                                            <option>Choose...</option>
-                                            {rolesJSON.map((role, index) =>
+                                        <Form.Control value={roles[questionRole - 1].name || ''} as="select" onChange={(event) => setRole(event.target.selectedIndex)}>
+                                            {roles.map((role, index) =>
                                                 <option key={index} value={role.name}>{role.name}</option>
                                             )}
                                         </Form.Control>
@@ -363,7 +361,7 @@ export default function QuestionModal(props) {
                                         <Form.Label>Domain</Form.Label>
                                         {/* TODO: update default value when questions have domain */}
                                         <Form.Control defaultValue="Other" as="select">
-                                            {domainJSON.map((domain, index) =>
+                                            {domains.map((domain, index) =>
                                                 <option key={index} value={domain.name}>{domain.name}</option>
                                             )}
                                         </Form.Control>
@@ -374,7 +372,7 @@ export default function QuestionModal(props) {
                                         <Form.Label>Region</Form.Label>
                                         {/* TODO: update default value when questions have region */}
                                         <Form.Control defaultValue="Other" as="select">
-                                            {regionJSON.map((region, index) =>
+                                            {regions.map((region, index) =>
                                                 <option key={index} value={region.name}>{region.name}</option>
                                             )}
                                         </Form.Control>
@@ -383,9 +381,8 @@ export default function QuestionModal(props) {
                                 <Col xs={2} md={2}>
                                     <Form.Group controlId="lifecycles">
                                         <Form.Label>Life-Cycle</Form.Label>
-                                        <Form.Control defaultValue={lifecycleJSON[questionLifecycle - 1].name} as="select" onChange={(event) => setLifecycle(event.target.selectedIndex)}>
-                                            <option>Choose...</option>
-                                            {lifecycleJSON.map((lifecycle, index) =>
+                                        <Form.Control defaultValue={lifecycles[questionLifecycle - 1].name} as="select" onChange={(event) => setLifecycle(event.target.selectedIndex)}>
+                                            {lifecycles.map((lifecycle, index) =>
                                                 <option key={index} value={lifecycle.name}>{lifecycle.name}</option>
                                             )}
                                         </Form.Control>

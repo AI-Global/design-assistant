@@ -31,12 +31,12 @@ const getItemStyle = (isDragging, draggableStyle) => ({
 
 export default class QuestionTable extends Component {
 
-
     constructor(props) {
         super(props);
         this.state = {
             questions: {},
             dimensions: {},
+            metadata: {},
             previousQuestion: null,
             currentQuestion: null,
             previousNumber: null,
@@ -49,6 +49,11 @@ export default class QuestionTable extends Component {
     }
 
     componentDidMount() {
+        var endPoint = '/metadata';
+        axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
+            .then(res => {
+                this.setState({metadata: res.data})
+            })
         this.getQuestions();
     }
 
@@ -114,9 +119,6 @@ export default class QuestionTable extends Component {
         this.getQuestions();
     }
 
-    setChildModalShow(val) {
-        this.setState({ showChildModal: val });
-    }
 
     updateQuestionNumbers() {
         this.setChildModalShow(false);
@@ -204,6 +206,7 @@ export default class QuestionTable extends Component {
                                     question={newQuestion}
                                     mode={"new"}
                                     dimensions={this.state.dimensions}
+                                    metadata={this.state.metadata}
                                 />
                             </TableCell>
                             <TableCell>No.</TableCell>
@@ -220,6 +223,7 @@ export default class QuestionTable extends Component {
                                     dimensions={this.state.dimensions}
                                     index={index}
                                     onDelete={this.getQuestions}
+                                    metadata={this.state.metadata}
                                 />
                             </TableRow>
                         ))}
