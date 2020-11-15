@@ -6,6 +6,8 @@
 
 [Project Structure Text Overview](docs/project_structure.md)
 
+[Admin Panel Guide](docs/admin_guide.md)
+
 
 ## License
 

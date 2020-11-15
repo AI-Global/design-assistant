@@ -2,19 +2,16 @@ const mongoose = require('mongoose');
 
 const SubmissionSchema = mongoose.Schema({
 
-    // username that owns this submission
-    username: {
-        type: Number,
+    // user ID that owns this 
+    userId: {
+        type: String,
         unique: true
     },
 
-    // unique ID for a project that owns this submission
-    projectId: {
-        type: Number,
-        required: true,
-        unique: true
+    // name for a project that owns this submission
+    projectName: {
+        type: String
     },
-
 
     date: {
         type: Date,
@@ -30,6 +27,11 @@ const SubmissionSchema = mongoose.Schema({
     // json file that gets output from survey.js
     submission: {
         type: Object,
+        required: true
+    },
+    
+    completed: {
+        type: Boolean,
         required: true
     }
 

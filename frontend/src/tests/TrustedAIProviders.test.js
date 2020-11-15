@@ -16,7 +16,7 @@ test('Trusted AI Providers renders', () => {
     const response = {data: data};
     axios.get.mockResolvedValue(response);
     render(<TrustedAIProviders/>);
-    expect(screen.queryByText("Trusted AI Provider")).toBeTruthy();
+    expect(screen.queryAllByText("Trusted AI Provider")).toBeTruthy();
 });
 
 test('Trusted AI Providers renders with no data', () => {
@@ -24,5 +24,5 @@ test('Trusted AI Providers renders with no data', () => {
     const response = {data: data};
     axios.get.mockResolvedValue(response);
     render(<TrustedAIProviders/>);
-    expect(screen.queryByText("Trusted AI Provider")).toBeTruthy();
+    expect(screen.queryAllByText("Trusted AI Provider")).toBeTruthy();
 });

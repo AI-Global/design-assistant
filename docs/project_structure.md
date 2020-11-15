@@ -23,15 +23,18 @@ Renders a Table that displays the trusted AI providers that are stored in the da
 Renders a ```Modal``` for user to enter email and password to create an account. A valid account is stored into the ```users``` database through a post request to ```/users/create``` 
 
 #### Login.js
-Renders a ```Modal``` for user to enter email and password to log into an existing account. Upon submission, it sends form values to the backend through a post request to  ```/users/auth``` to be validated against the database, and sends back authorization token and user information. When the user is logged in, it renders the information, and expires the token upon clicking the logout button.
+Renders a ```Modal``` for user to enter email and password to log into an existing account. Upon submission, it sends form values to the backend through a post request to  ```/users/auth``` to be validated against the database, and sends back authorization token and user information. When the user is logged in, it renders the information.
+
+#### UserSettings.js
+Upon login of a user, renders a ```Dropdown``` for various user settings such as a ```Modal``` to modify the user's email address, username, or password. Upon submission of these modal forms, a post request is sent respectively to ```/users/updateEmail```, ```/users/updateUsername```, or ```/users/updatePassword```. The dropdown also allows the user to Logout which expires the authorization token of the user. Finally, the UserSettings ```Dropdown``` allows the user to access the administration panel if user has a ```Role``` of Admin.
 
 #### Admin.js
-Renderd the administration panel for users with valid admin credentials. It renders the ```QuestionTable.js``` component for the Survey Management functionality.
+Renders the administration panel for users with valid admin credentials. It renders the ```QuestionTable.js``` component for the Survey Management functionality.
 
 ### Components
 
 #### QuestionTable.js
-Renders a table of all the questions in the database. Gets question and other metadata from a get request to ```/questions/all```, which returns them in pure JSON format (not formatted for SurveyJS). For each question, the function renders a ```QuestionRow```. Rows can be re-ordered by dragging and dropping.
+Renders a table of all the questions in the database. Gets question and other metadata from a get request to ```/questions/all```, which returns them in pure JSON format (not formatted for SurveyJS). For each question, the function renders a ```QuestionRow```. Rows can be re-ordered by dragging and dropping with the mouse, or space bar and arrow keys. If a question is rearranged, the ```ChildModal.js``` component renders and prompts the admin if they would like to create a new parent-child relationship. If the question reordering is saved, question numbers are updated by the ```questions/:startNumber/:endNumber/``` put request, where ```startNumber``` is the dragged questions starting number, and ```endNumber``` is the the table index that it was dropped at.
 
 #### QuestionRow.js
 Creates a single row in the ```QuestionTable``` to display the basic information for each question: Number, Question, Dimension, and a button to allow for editing questions. Clicking the edit button renders the ```QuestionModal```
@@ -44,3 +47,6 @@ Changes to a question is stored in the database by sending the data to the backe
 A new question is stored in the database by sending the data to the backend through the ```/questions/``` post request.
 
 When a question is deleted (by clicking the delete button, and then confirming), it is removed from the database  by sending the data to the backend through the ```/questions/:question_id``` delete request.
+
+#### ChildModal.js
+Manages the creation of hierarchy questions. When a question is dragged and dropped below another in ```QuesionTable.js```, modal is triggered and admin can select whether or not to form the relationship (*option: yes*), simply re-order the questions (*option: no*), or *cancel* to return all questions to their original positions. If *no* is selected, modal closes and ```QuestionTable.js``` updates the question numbers in the database. If *yes* is selected, the admin can select which response(s) trigger the child question, and the data is saved to the database through ```/questions/:question_id``` put request. 

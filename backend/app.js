@@ -31,6 +31,9 @@ const usersRouter = require("./routes/users");
 const populateRouter = require("./populateDBScripts/populate");
 
 const submissionsRouter = require("./routes/submissions");
+const metaDataRouter = require("./routes/metadata");
+const analyticsRouter = require("./routes/analytics");
+
 
 
 app.use("/questions", questionsRouter);
@@ -41,6 +44,8 @@ app.use("/users", usersRouter);
 app.use("/populate", populateRouter);
 
 app.use("/submissions", submissionsRouter);
+app.use("/metadata", metaDataRouter);
+app.use("/analytics", analyticsRouter);
 
 
 // Listen on port

@@ -4,6 +4,7 @@ import "../css/login.css";
 import Signup from "./Signup";
 import axios from 'axios';
 import { getLoggedInUser, expireAuthToken } from '../helper/AuthHelper';
+import UserSettings from "./UserSettings";
 import ReactGa from 'react-ga';
 require('dotenv').config();
 
@@ -11,13 +12,6 @@ const LoginHandler = () => {
     ReactGa.event({
         category: 'Button',
         action: 'Login clicked'
-    })
-}
-
-const LogoutHandler = () => {
-    ReactGa.event({
-        category: 'Button',
-        action: 'User Logged Out'
     })
 }
 
@@ -64,7 +58,7 @@ export default class Login extends Component {
         let remember = form.loginRemember.checked;
         var endPoint = '/users/auth';
         axios.post(process.env.REACT_APP_SERVER_ADDR + endPoint, {
-            username: username,
+            username: username?.toLowerCase(),
             password: password
         })
             .then(response => {
@@ -90,16 +84,6 @@ export default class Login extends Component {
     }
 
     /**
-     * Expires the authorization tokens upon
-     * log out button being clicked
-     */
-    handleLogOut() {
-        expireAuthToken();
-        this.setState({ user: undefined });
-        LogoutHandler();
-    }
-
-    /**
      * Renders user information if there 
      * is a user logged in.
      */
@@ -110,9 +94,7 @@ export default class Login extends Component {
             return (
                 <div className="user-status">
                     Logged in as: {user.username} &nbsp;
-                    <Button variant="primary" onClick={() => {this.handleLogOut();}}>
-                        Log out
-                    </Button>
+                    <UserSettings/>
                 </div>
             )
         }
@@ -147,14 +129,14 @@ export default class Login extends Component {
                         <Form onSubmit={(e) => this.handleSubmit(e)}>
                             <Form.Group controlId="loginUsername">
                                 <i className="fa fa-user"></i>
-                                <Form.Control type="text" placeholder="Username" required="required" isInvalid={this.state.username.isInvalid} autoComplete="username" />
+                                <Form.Control type="text" placeholder="Username" required="required" isInvalid={this.state.username.isInvalid} autoComplete="username" aria-label="username"/>
                                 <Form.Control.Feedback type="invalid">
                                     {this.state.username.message}
                                 </Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group controlId="loginPassword">
                                 <i className="fa fa-lock"></i>
-                                <Form.Control type="password" placeholder="Password" required="required" isInvalid={this.state.password.isInvalid} autoComplete="current-password" />
+                                <Form.Control type="password" placeholder="Password" required="required" isInvalid={this.state.password.isInvalid} autoComplete="current-password" aria-label="password"/>
                                 <Form.Control.Feedback type="invalid">
                                     {this.state.password.message}
                                 </Form.Control.Feedback>
