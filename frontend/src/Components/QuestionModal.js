@@ -16,10 +16,9 @@ export default function QuestionModal(props) {
 
     const dimensions = props.dimensions
     const domains = props.metadata.domain
-    const lifecycles = []
-    // props.metadata.lifecycle
+    const lifecycles = props.metadata.lifecycle
     const regions = props.metadata.region
-    const roles = []
+    const roles = props.metadata.roles
 
     // make copy of responses array so we can revert back to it if needed
     const responsesA = [...props.question.responses]
