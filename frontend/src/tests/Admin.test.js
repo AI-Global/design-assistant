@@ -6,7 +6,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 
 jest.mock('axios');
 
-const adminWelcomeText = "Administration";
+const adminWelcomeText = "Administration Panel";
 const surveyManagmentText = "Survey Management"
 const usersText = "Users"
 const analyticsText = "Analytics"
