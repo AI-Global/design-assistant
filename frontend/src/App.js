@@ -361,17 +361,16 @@ class App extends Component {
             <div className="card">
               <div className="card-header">Continue existing survey</div>
               <div className="card-body">
-                <Table bordered responsive> 
+                <Table bordered responsive className="survey-results-table"> 
                   <thead>
                     <tr>
-                      <td>
+                      <th>
                         Project Name
-                      </td>
-                      <td>
+                      </th>
+                      <th>
                         Last Updated
-                      </td>
-                      <td width="175"></td>
-
+                      </th>
+                      <th width="192px"></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -384,11 +383,12 @@ class App extends Component {
                           <td>
                             {new Date(value.date).toLocaleString('en-US', {timeZone: Intl?.DateTimeFormat()?.resolvedOptions()?.timeZone ?? 'UTC'})}
                           </td>
-                          <td>
-                              <Button onClick={() => this.resumeSurvey(index)}>
-                                {!value.completed && <div>Resume Survey</div>}
-                                {value.completed && <div>See Results</div>}
-                              </Button>
+                          <td width="175px" className="text-center">
+                              {!value.completed &&
+                              <Button block onClick={() => this.resumeSurvey(index)} >Resume Survey</Button>}
+                              {value.completed &&
+                              <Button id="ResultsButton" block onClick={() => this.resumeSurvey(index)} >Survey Results</Button>}
+
                           </td>
                         </tr>
                       )
