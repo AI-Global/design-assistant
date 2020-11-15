@@ -38,8 +38,8 @@ describe('GET /analytics', () => {
         request(app).get('/analytics')
         .then((res) => {
             const body = res.body;
-            expect(body).to.contain.property('analyticName');
-            expect(body).to.contain.property('embed');
+            expect(body[0]).to.contain.property('analyticName');
+            expect(body[0]).to.contain.property('embed');
 
             done();
         })
