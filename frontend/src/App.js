@@ -146,13 +146,15 @@ class App extends Component {
           });
       })
       getLoggedInUser().then( user => {
-        endPoint = '/submissions/user/' + user._id;
-        this.setState({user: user});
-        axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
-          .then(res => {
-            var submissions = res.data;
-            this.setState(submissions);
-        });
+        if(user){
+          endPoint = '/submissions/user/' + user._id;
+          this.setState({user: user});
+          axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
+            .then(res => {
+              var submissions = res.data;
+              this.setState(submissions);
+          });
+        }
       });
   }
 
@@ -204,10 +206,16 @@ class App extends Component {
     // console.log(this.state.currentSubmissionIdx);
 
     // console.log(this.state.submissions[this.state.currentSubmissionIdx]);
+    // if (this.state.user) {
+      axios.post(process.env.REACT_APP_SERVER_ADDR + '/submissions/update/' + this.state.submissions[this.state.currentSubmissionIdx]._id, {
+        submission: this.state.model.data
+      });
+    // } else {
+    //   axios.post(process.env.REACT_APP_SERVER_ADDR + '/submissions/update/' + this.state.model._id, {
+    //     submission: this.state.model.data
+    //   });
+    // }
 
-    axios.post(process.env.REACT_APP_SERVER_ADDR + '/submissions/update/' + this.state.submissions[this.state.currentSubmissionIdx]._id, {
-      submission: this.state.model.data
-    });
   }
 
   finish() {
@@ -249,13 +257,23 @@ class App extends Component {
     })
     .then(res => {
       // update this.state.submissions object here
-      axios.get(process.env.REACT_APP_SERVER_ADDR + '/submissions/user/' + user._id)
-        .then(res => {
-          var submissions = res.data;
-          this.setState(submissions);
-          this.state.currentSubmissionIdx = this.state.submissions.length - 1;
-          console.log("Submissions after starting survey: ", this.state.submissions);
-      });
+      if (user) {
+        axios.get(process.env.REACT_APP_SERVER_ADDR + '/submissions/user/' + user._id)
+          .then(res => {
+            var submissions = res.data;
+            this.setState(submissions);
+            this.state.currentSubmissionIdx = this.state.submissions.length - 1;
+            console.log("Submissions after starting survey: ", this.state.submissions);
+        });
+      } else {
+        // console.log(res.data);
+        var submissions = [res.data];
+        // this.setState(submissions);
+        this.state.submissions = submissions;
+        this.state.currentSubmissionIdx = this.state.submissions.length - 1;
+        console.log("No user model initialized", this.state.submissions, this.state.currentSubmissionIdx);
+      }
+      
     });
 
 
@@ -425,17 +443,16 @@ class App extends Component {
             <div className="card">
               <div className="card-header">Continue existing survey</div>
               <div className="card-body">
-                <Table bordered responsive> 
+                <Table bordered responsive className="survey-results-table"> 
                   <thead>
                     <tr>
-                      <td>
+                      <th>
                         Project Name
-                      </td>
-                      <td>
-                        Date
-                      </td>
-                      <td width="175"></td>
-
+                      </th>
+                      <th>
+                        Last Updated
+                      </th>
+                      <th width="192px"></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -448,11 +465,12 @@ class App extends Component {
                           <td>
                             {new Date(value.date).toLocaleString('en-US', {timeZone: Intl?.DateTimeFormat()?.resolvedOptions()?.timeZone ?? 'UTC'})}
                           </td>
-                          <td>
-                              <Button onClick={() => this.resumeSurvey(index)}>
-                                {!value.completed && <div>Resume Survey</div>}
-                                {value.completed && <div>See Results</div>}
-                              </Button>
+                          <td width="175px" className="text-center">
+                              {!value.completed &&
+                              <Button block onClick={() => this.resumeSurvey(index)} >Resume Survey</Button>}
+                              {value.completed &&
+                              <Button id="ResultsButton" block onClick={() => this.resumeSurvey(index)} >Survey Results</Button>}
+
                           </td>
                         </tr>
                       )

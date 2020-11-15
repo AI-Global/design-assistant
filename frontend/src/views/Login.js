@@ -57,6 +57,7 @@ export default class Login extends Component {
                     }
                     this.setState({user: result["user"]});
                     this.setState({showLoginModal: false});
+                    window.location.reload();
                 }
             }).catch(err => {
                 let result = err.response.data;
@@ -71,6 +72,7 @@ export default class Login extends Component {
     handleLogOut(){
         expireAuthToken();
         this.setState({user: undefined});
+        window.location.reload();
     }
 
     /**

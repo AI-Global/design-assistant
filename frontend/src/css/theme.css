@@ -295,3 +295,32 @@ input[type=number]
 .modal{
   z-index: 1040;
 }
+
+
+.survey-results-table {
+  display: flex;
+  flex-flow: column;
+  width: 100%;
+}
+
+
+.survey-results-table tbody {
+  display: block;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 500px;
+}
+
+.survey-results-table tr {
+  width: 100%;
+  display: table;
+  table-layout: fixed;
+}
+
+.survey-results-table th {
+  background-color: #d0e0e3;
+}
+
+#ResultsButton {
+  background-color: #007bff !important;
+}
