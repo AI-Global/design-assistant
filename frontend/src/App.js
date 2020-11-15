@@ -201,6 +201,7 @@ class App extends Component {
     this.state.model.clear()
     this.handleCloseModal()
     this.setState({ isSurveyStarted: false })
+    window.location.reload();
   }
 
   prevPage() {
