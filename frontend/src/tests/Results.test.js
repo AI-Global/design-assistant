@@ -5,9 +5,9 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import axios from 'axios';
 
 jest.mock('axios');
+
 const data = [];
 const response = {data: data};
-axios.get.mockResolvedValue(response);
 
 const mockElements = [{
     "type": "radiogroup",
@@ -65,6 +65,7 @@ test('Results successfully renders', () => {
             responses: mockResponses
         }
     }
+    axios.get.mockResolvedValue(response);
     render(<Router><Results location={mockLocation}/></Router>)
     expect(screen.queryByText("Results")).toBeTruthy();
 });
@@ -76,6 +77,7 @@ test('Results renders with no data', () => {
             questions: {"pages": mockPages},
             responses: {}
     }}
+    axios.get.mockResolvedValue(response);
     render(<Router><Results location={mockLocation}/></Router>)
     expect(screen.queryByText("Results")).toBeTruthy();
 
@@ -88,6 +90,7 @@ test('Results redirects home if survey incomplete', () => {
     const mockHistory = {
         push: mockPush
     }
+    axios.get.mockResolvedValue(response);
     render(<Router><Results history={mockHistory}/></Router>)
     expect(mockHistory.push).toHaveBeenCalledTimes(1);
 });
@@ -99,6 +102,7 @@ test('Results start again button does not error out', () => {
             questions: {"pages": mockPages},
             responses: {}
     }}
+    axios.get.mockResolvedValue(response);
     render(<Router><Results location={mockLocation}/></Router>)
     fireEvent.click(screen.getByText("Start Again"));
 });
@@ -110,6 +114,7 @@ test('Results switches to Report Card Tab', () => {
             questions: {"pages": mockPages},
             responses: {}
     }}
+    axios.get.mockResolvedValue(response);
     render(<Router><Results location={mockLocation}/></Router>)
     fireEvent.click(screen.getAllByText("Report Card")[0]);
     expect(screen.queryAllByText("Recommendation")).toBeTruthy();
@@ -122,6 +127,7 @@ test('Results switches to Trusted AI Providers Tab', () => {
             questions: {"pages": mockPages},
             responses: {}
     }}
+    axios.get.mockResolvedValue(response);
     render(<Router><Results location={mockLocation}/></Router>)
     fireEvent.click(screen.getAllByText("Trusted AI Providers")[0]);
     expect(screen.queryAllByText).toBeTruthy();

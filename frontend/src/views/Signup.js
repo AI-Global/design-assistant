@@ -131,7 +131,7 @@ export default class Signup extends Component {
                                 {RegistrationDescription}
                             </p>
                             <Form.Group controlId="signupEmail">
-                                <Form.Control type="email" placeholder="Email" required="required" isInvalid={this.state.email.isInvalid} onChange={(e) => this.handleEmailInput(e)} autoComplete="email"/>
+                                <Form.Control type="email" placeholder="Email" required="required" isInvalid={this.state.email.isInvalid} onChange={(e) => this.handleEmailInput(e)} autoComplete="email" aria-label="email"/>
                                 <Form.Control.Feedback type="invalid">
                                     {this.state.email.message}
                                 </Form.Control.Feedback>
@@ -140,19 +140,19 @@ export default class Signup extends Component {
                                 <Form.Check type="checkbox" label="Sign in using email instead of username" defaultChecked={this.state.emailAsUsername} onChange={(e) => this.toggleUsernameAsEmail(e)} />
                             </Form.Group>             
                             <Form.Group controlId="signupUsername">
-                                <Form.Control type="text" placeholder = "Username" required="required" isInvalid={this.state.username.isInvalid} autoComplete="username" readOnly={this.state.emailAsUsername} value={this.state.usernameInput}/>
+                                <Form.Control type="text" placeholder = "Username" required="required" isInvalid={this.state.username.isInvalid} autoComplete="username" readOnly={this.state.emailAsUsername} value={this.state.usernameInput} aria-label="username"/>
                                 <Form.Control.Feedback type="invalid">
                                     {this.state.username.message}
                                 </Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group controlId="signupPassword">
-                                <Form.Control type="password" placeholder="Password" required="required" isInvalid={this.state.password.isInvalid} autoComplete="current-password"/>
+                                <Form.Control type="password" placeholder="Password" required="required" isInvalid={this.state.password.isInvalid} autoComplete="current-password" aria-label="password"/>
                                 <Form.Control.Feedback type="invalid" className="password-errors">
                                     {this.state.password.message}
                                 </Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group controlId="signupPasswordConfirmation">
-                                <Form.Control type="password" placeholder="Confirm Your Password" required="required" isInvalid={this.state.passwordConfirmation.isInvalid} autoComplete="new-password"/>
+                                <Form.Control type="password" placeholder="Confirm Your Password" required="required" isInvalid={this.state.passwordConfirmation.isInvalid} autoComplete="new-password" aria-label="confirm password"/>
                                 <Form.Control.Feedback type="invalid">
                                     {this.state.passwordConfirmation.message}
                                 </Form.Control.Feedback>

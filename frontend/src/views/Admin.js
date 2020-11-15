@@ -7,7 +7,7 @@ import AnalyticsDashboard from '../Components/AnalyticsDashboard';
 import { Tabs, Tab, } from 'react-bootstrap';
 import ReactGa from 'react-ga';
 
-ReactGa.initialize(process.env.REACT_APP_GAID);
+ReactGa.initialize(process.env.REACT_APP_GAID, { testMode: process.env.NODE_ENV === 'test' });
 
 export default class AdminPanel extends Component {
     componentDidMount() {
