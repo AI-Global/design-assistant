@@ -59,7 +59,7 @@ export default class AdminPanel extends Component {
             .then(response => {
                 var resp = response.data;
                 resp = resp.map(submission => {
-                    submission.userId = this.state.users.find(user => {return user.userId = submission.userId})?.name ?? "No User";
+                    submission.userId = this.state.users.find(user => user._id === submission.userId)?.username ?? "No User";
                     return submission
                 });
     
