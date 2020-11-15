@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen} from '@testing-library/react';
 import axios from 'axios';
 import Admin from '../views/Admin';
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -24,30 +24,30 @@ const mockDB = {
             "__v": 0,
             "label": "A",
             "name": "Accountability"
-          }]
+          }],
+        "analytics" : []
     }
 }
 
-const mockAnalytics = {
-    data: []
-}
+
 
 test('Admin Page renders', async () => {
-    const emptyMockDB = { data: {"questions":[], "dimensions" : [] } };
+    const emptyMockDB = { data: {"questions":[], "dimensions" : [], "analytics": [] } };
     axios.get.mockResolvedValue(emptyMockDB);
-    axios.get('/analytics').mockResolvedValue(mockAnalytics);
 
     await render(<Router><Admin/></Router>);
+    
     expect(screen.getByText(adminWelcomeText)).toBeTruthy();
     expect(screen.getByText(surveyManagmentText)).toBeTruthy();
     expect(screen.getByText(usersText)).toBeTruthy();
     expect(screen.getByText(analyticsText)).toBeTruthy();
+    
 })
 
 test('Admin Page renders survey management', async () => {
     axios.get.mockResolvedValue(mockDB);
-    axios.get('/analytics').mockResolvedValue(mockAnalytics);
     await render(<Router><Admin/></Router>);
+
     expect(screen.getByText(adminWelcomeText)).toBeTruthy();
     expect(screen.getByText(surveyManagmentText)).toBeTruthy();
     expect(screen.getByText(usersText)).toBeTruthy();

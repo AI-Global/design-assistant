@@ -91,9 +91,11 @@ export default class AdminPanel extends Component {
     }
 
     userList() {
-        return this.state.users.map(currentuser => {
-            return <User user={currentuser} deleteUser={this.deleteUser} key={currentuser._id}/>;
-        })
+        if (Array.isArray(this.state.users)){
+            return this.state.users.map(currentuser => {
+                return <User user={currentuser} deleteUser={this.deleteUser} key={currentuser._id}/>;
+            })
+        }
     }
 
     submissionList() {
