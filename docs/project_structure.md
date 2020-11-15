@@ -25,7 +25,7 @@ Renders a ```Modal``` for user to enter email and password to create an account.
 #### Login.js
 Renders a ```Modal``` for user to enter email and password to log into an existing account. Upon submission, it sends form values to the backend through a post request to  ```/users/auth``` to be validated against the database, and sends back authorization token and user information. When the user is logged in, it renders the information.
 
-### UserSettings.js
+#### UserSettings.js
 Upon login of a user, renders a ```Dropdown``` for various user settings such as a ```Modal``` to modify their email address, username, or password. Upon submission of these modal forms, a post request is sent respectively to ```/users/updateEmail```, ```/users/updateUsername```, or ```/users/updatePassword```. The dropdown also allows the user to Logout which expires the authorization token of the user. Lastly, the UserSettings ```Dropdown``` allows the user to access the administration panel if user has a ```Role``` of Admin.
 
 #### Admin.js
