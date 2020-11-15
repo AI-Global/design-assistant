@@ -46,6 +46,10 @@ export default function QuestionModal(props) {
     const [child, setChild] = useState(props.question.child)
     const [trigger, setTrigger] = useState(props.question.trigger)
 
+
+    console.log(roles)
+    console.log(questionRole-1)
+
     function addResponse(response) {
         // add new response object to responses and rerender response section by spreading the array into a new array
         // problem: https://stackoverflow.com/questions/56266575/why-is-usestate-not-triggering-re-render
@@ -153,7 +157,7 @@ export default function QuestionModal(props) {
                 props.question.responseType = "text"
                 props.question.questionType = "tombstone"
                 props.question.responses = []
-                props.question.roles = [13]
+                props.question.roles = [12]
                 props.question.trustIndexDimension = null
                 props.question.weighting = 0
                 props.question.child = child
@@ -349,7 +353,7 @@ export default function QuestionModal(props) {
                                 <Col xs={2} md={2}>
                                     <Form.Group controlId="roles">
                                         <Form.Label>Role</Form.Label>
-                                        <Form.Control value={roles[questionRole - 1].name || ''} as="select" onChange={(event) => setRole(event.target.selectedIndex)}>
+                                        <Form.Control value={roles[questionRole-1].name || ''} as="select" onChange={(event) => setRole(event.target.selectedIndex+1)}>
                                             {roles.map((role, index) =>
                                                 <option key={index} value={role.name}>{role.name}</option>
                                             )}
@@ -381,7 +385,7 @@ export default function QuestionModal(props) {
                                 <Col xs={2} md={2}>
                                     <Form.Group controlId="lifecycles">
                                         <Form.Label>Life-Cycle</Form.Label>
-                                        <Form.Control defaultValue={lifecycles[questionLifecycle - 1].name} as="select" onChange={(event) => setLifecycle(event.target.selectedIndex)}>
+                                        <Form.Control defaultValue={lifecycles[questionLifecycle-1].name} as="select" onChange={(event) => setLifecycle(event.target.selectedIndex+1)}>
                                             {lifecycles.map((lifecycle, index) =>
                                                 <option key={index} value={lifecycle.name}>{lifecycle.name}</option>
                                             )}
