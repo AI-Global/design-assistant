@@ -27,22 +27,15 @@ const questionsRouter = require("./routes/questions");
 const responsesRouter = require("./routes/responses");
 const trustedAIProvidersRouter = require("./routes/trustedAIProviders");
 const usersRouter = require("./routes/users");
-
-const populateRouter = require("./populateDBScripts/populate");
-
 const submissionsRouter = require("./routes/submissions");
 const metaDataRouter = require("./routes/metadata");
 const analyticsRouter = require("./routes/analytics");
-
 
 
 app.use("/questions", questionsRouter);
 app.use("/responses", responsesRouter);
 app.use("/trustedAIProviders", trustedAIProvidersRouter);
 app.use("/users", usersRouter);
-
-app.use("/populate", populateRouter);
-
 app.use("/submissions", submissionsRouter);
 app.use("/metadata", metaDataRouter);
 app.use("/analytics", analyticsRouter);
