@@ -11,18 +11,9 @@ const fs = require('fs');
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-// // Connect to mongoDB
-// mongoose.connect(process.env.DB_CONNECTION , {useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true}, () => {
-//     console.log("Connected to DB")
-// });
-
-// // need so that we don't use deprecated useFindAndModify method
-// mongoose.set('useFindAndModify', false);
-
-
 async function populate() {
     // Connect to mongoDB
-    mongoose.connect(process.env.DB_CONNECTION , {useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true}, () => {
+    await mongoose.connect(process.env.DB_CONNECTION , {useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true}, () => {
         console.log("Connected to DB")
     });
 
@@ -38,7 +29,8 @@ async function populate() {
                 name: parsed_roles[i].name
             }, {upsert:true, runValidators: true});
         }
-        res.json(parsed_roles);
+        // res.json(parsed_roles);
+        console.log(parsed_roles);
     } catch(err) {
         console.log(err);
     }
@@ -51,7 +43,8 @@ async function populate() {
                 name: parsed_regions[i].name
             }, {upsert:true, runValidators: true});
         }
-        res.json(parsed_regions);
+        // res.json(parsed_regions);
+        console.log(parsed_regions);
     } catch(err) {
         console.log(err);
     }
@@ -65,7 +58,8 @@ async function populate() {
                 name: parsed_lifecycles[i].name
             }, {upsert:true, runValidators: true});
         }
-        res.json(parsed_lifecycles);
+        // res.json(parsed_lifecycles);
+        console.log(parsed_lifecycles);
     } catch(err) {
         console.log(err);
     }
@@ -79,7 +73,8 @@ async function populate() {
                 name: parsed_domains[i].name
             }, {upsert:true, runValidators: true});
         }
-        res.json(parsed_domains);
+        // res.json(parsed_domains);
+        console.log(parsed_domains);
     } catch(err) {
         console.log(err);
     }
@@ -94,7 +89,8 @@ async function populate() {
                 label: parsed_dimensions[i].label
             }, {upsert:true, runValidators: true});
         }
-        res.json(parsed_dimensions);
+        // res.json(parsed_dimensions);
+        console.log(parsed_dimensions);
     } catch(err) {
         console.log(err);
     }
@@ -209,7 +205,8 @@ async function populate() {
             // }, {upsert:true, runValidators: true});
         }
 
-        res.json(parsed_questions);
+        // res.json(parsed_questions);
+        console.log(parsed_questions);
     } catch (err) {
         console.log(err);
     }
@@ -417,4 +414,4 @@ populate()
 //     }
 // });
 
-// module.exports = router;
+module.exports = router;

@@ -29,7 +29,6 @@ const trustedAIProvidersRouter = require("./routes/trustedAIProviders");
 const usersRouter = require("./routes/users");
 const submissionsRouter = require("./routes/submissions");
 
-
 app.use("/questions", questionsRouter);
 app.use("/responses", responsesRouter);
 app.use("/trustedAIProviders", trustedAIProvidersRouter);
