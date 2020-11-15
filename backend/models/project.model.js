@@ -17,8 +17,7 @@ const ProjectSchema = mongoose.Schema({
     // possible life cycles
     lifecycle: [{
         type: String,
-        enum: ['Plan and Design', 'Data and Model', 'Verify and Validate', 'Deploy', 'Operate and Monitor'],
-        required: true
+        enum: ['Plan and Design', 'Data and Model', 'Verify and Validate', 'Deploy', 'Operate and Monitor']
     }],
 });
 

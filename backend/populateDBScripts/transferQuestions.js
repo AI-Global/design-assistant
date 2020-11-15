@@ -72,15 +72,19 @@ function main(){
 				altText = values[16];
 				
 				doc = {"questionNumber":Number(questionNumber)};
+
 				if(trustIndexDimension && trustIndexDimension != 'N/A'){
 					doc["trustIndexDimension"] = trustIndexDimension;
 				}
+
 				if(domainApplicability && domainApplicability != "N/A"){
 					doc["domainApplicability"] = domainApplicability;
 				}
+
 				if(regionalApplicability && regionalApplicability != "N/A"){
 					doc["regionalApplicability"] = regionalApplicability;
 				}
+
 				doc["mandatory"] = mandatory ? true : false;
 				doc["questionType"] = questionType;
 				doc["question"] = question;
@@ -101,7 +105,6 @@ function main(){
 						multChoice = true;
 				} else if (qPrompt.substring(0,2) === 'CV'){
 						doc["responseType"] = "dropdown";
-
 				} else {
                     doc["responseType"] = "checkbox";
                     multChoice = true;
@@ -122,13 +125,14 @@ function main(){
 					default:
 						doc["weighting"] = 0;
 				}
-				reference = reference.replace(/'/g, "\\u0027").replace(/"/g, "\\u0022");
+
+				reference = formatList(reference.replace(/'/g, "\\u0027").replace(/"/g, "\\u0022"));
 				doc["reference"] = reference;
 				doc["roles"] = roles;
 				doc["lifecycle"] = lifecycle;
 				
 				if(altText){
-					altText = altText.replace(/'/g, "\\u0027").replace(/"/g, "\\u0022");
+					altText = formatList(altText.replace(/'/g, "\\u0027").replace(/"/g, "\\u0022"));
 					doc["alt_text"] = altText;
 				} 
 
@@ -147,7 +151,7 @@ function main(){
 				}
 			} else{
 				// answer
-				let response = {"responseNumber":count, "indicator":values[10], "score":values[12]};
+				let response = {"responseNumber":count, "indicator":(values[10]) ? formatList(values[10].replace(/'/g, "\\u0027").replace(/"/g, "\\u0022")) : values[10], "score":values[12]};
 				responses[count++] = response;
 			}
 		}
@@ -173,4 +177,12 @@ function getDropdownChoices(jsonPath){
 	}
 	return choices;
 }
+
+function formatList(text){
+	if(text.search(":")){
+		text = text.replace(/ \- /g, "\n- ");
+	}
+	return text;
+}
+
 main();

@@ -4,7 +4,16 @@
 
 [API documentation](docs/API.md)
 
+[Project Structure Text Overview](docs/project_structure.md)
 
-## License
+[Admin Panel Guide](docs/admin_guide.md)
+
+### Admin Account 
+
+Username: admin\
+Password: admin
+
+
+### License
 
 [MIT License](LICENSE)

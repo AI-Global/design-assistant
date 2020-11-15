@@ -12,8 +12,14 @@ export default class ReportCard extends Component{
      * provides the question, the response to the question,
      * and the recommendation from AI Global.
      */
-    displayQuestion(result, question){     
-        var choices = question?.choices?.filter((choice) => result.includes(choice?.value));     
+    displayQuestion(result, question){    
+        var choices;
+        if(Array.isArray(result)){
+            choices = question?.choices?.filter((choice) => result?.includes(choice?.value) );     
+        }
+        else{
+            choices = question?.choices?.filter((choice) => result === choice?.value );     
+        }
         return (
             <tr key={question?.name}>
                 <td>
