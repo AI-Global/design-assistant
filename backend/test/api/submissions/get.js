@@ -40,7 +40,6 @@ describe('GET /submissions', () => {
             expect(body[0]).to.contain.property('projectName');
             expect(body[0]).to.contain.property('date');
             expect(body[0]).to.contain.property('lifecycle');
-            expect(body[0]).to.contain.property('submission');
             expect(body[0]).to.contain.property('completed');
 
             done();
@@ -67,15 +66,16 @@ describe('GET /submissions/{UID}', () => {
     });
 
     it('Getting submission by user ID ', (done) => {
-        request(app).get('/submissions/5fadea7e2bb08880f012cf5c')
+        request(app).get('/submissions/5f9fb622a18e399f03dafc73')
         .then((res) => {
             const body = res.body;
-            expect(body).to.contain.property('userId');
-            expect(body).to.contain.property('projectName');
-            expect(body).to.contain.property('date');
-            expect(body).to.contain.property('lifecycle');
-            expect(body).to.contain.property('submission');
-            expect(body).to.contain.property('completed');
+            expect(body[0]).to.contain.property('userId');
+            expect(body[0]).to.contain.property('projectName');
+            expect(body[0]).to.contain.property('date');
+            expect(body[0]).to.contain.property('lifecycle');
+            expect(body[0]).to.contain.property('submission');
+            expect(body[0]).to.contain.property('completed');
+            done()
         })
         .catch((err) => done(err));
     });

@@ -4,7 +4,7 @@ const SubmissionSchema = mongoose.Schema({
 
     // user ID that owns this 
     userId: {
-        type: Number,
+        type: String,
         unique: true
     },
 
