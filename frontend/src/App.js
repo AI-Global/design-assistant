@@ -232,7 +232,9 @@ class App extends Component {
   }
 
   finish() {
-    this.save(true);
+    if(this.state.isSurveyStarted){
+      this.save(true);
+    }
     this.state.model.doComplete();
 
     this.nextPath('/Results/');
