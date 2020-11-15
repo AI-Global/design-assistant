@@ -24,7 +24,6 @@ const SubmissionSchema = mongoose.Schema({
         type: Number
     },
 
-
     // json file that gets output from survey.js
     submission: {
         type: Object,

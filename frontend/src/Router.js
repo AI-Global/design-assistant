@@ -19,3 +19,5 @@ export default function Router() {
       </div>
     )
 }
+
+//<Route path="/submissions/:id" component={ViewSubmissions} />

@@ -46,10 +46,6 @@ export default function QuestionModal(props) {
     const [child, setChild] = useState(props.question.child)
     const [trigger, setTrigger] = useState(props.question.trigger)
 
-
-    console.log(roles)
-    console.log(questionRole-1)
-
     function addResponse(response) {
         // add new response object to responses and rerender response section by spreading the array into a new array
         // problem: https://stackoverflow.com/questions/56266575/why-is-usestate-not-triggering-re-render
