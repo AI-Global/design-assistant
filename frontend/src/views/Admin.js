@@ -1,7 +1,5 @@
 import '../css/admin.css';
-import { Link } from 'react-router-dom';
 import React, { Component } from 'react';
-import Table from '@material-ui/core/Table';
 import QuestionTable from '../Components/QuestionTable';
 import AnalyticsDashboard from '../Components/AnalyticsDashboard';
 import { Tabs, Tab, Button, Table as BootStrapTable } from 'react-bootstrap';
