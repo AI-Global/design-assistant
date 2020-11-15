@@ -14,6 +14,9 @@ export default class AnalyticsDashboard extends Component {
     componentDidMount() {
         var endPoint = '/analytics';
         axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
+            .catch(err => {
+                console.log(err);
+            })
             .then(res => {
                 this.setState({ analytics: res.data });
             })

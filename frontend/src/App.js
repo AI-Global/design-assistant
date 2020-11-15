@@ -219,7 +219,7 @@ class App extends Component {
     // i.e. the index will always point to a valid submission
     // so just make an update call
 
-    let title = this.state.json.pages[0].elements.find(q => q?.title?.default == "Title of project");
+    let title = this.state.json.pages[0].elements.find(q => q?.title?.default === "Title of project");
     let dateTime = new Date();
     let projectName = this.state.model.data[title?.name] ?? "";
     axios.post(process.env.REACT_APP_SERVER_ADDR + '/submissions/update/' + this.state.submissions[this.state.currentSubmissionIdx]._id, {
@@ -267,22 +267,11 @@ class App extends Component {
     })
       .then(res => {
         // update this.state.submissions object here
-        if (user) {
-          axios.get(process.env.REACT_APP_SERVER_ADDR + '/submissions/user/' + user._id)
-            .then(res => {
-              var submissions = res.data;
-              this.setState(submissions);
-              this.state.currentSubmissionIdx = this.state.submissions.length - 1;
-              console.log("Submissions after starting survey: ", this.state.submissions);
-            });
-        } else {
-          var submissions = [res.data];
-          // this.setState(submissions);
-          this.state.submissions = submissions;
-          this.state.currentSubmissionIdx = this.state.submissions.length - 1;
-          console.log("No user model initialized", this.state.submissions, this.state.currentSubmissionIdx);
-        }
-
+          let newSubmission = res.data;
+          let submissions = this.state.submissions;
+          submissions.push(newSubmission);
+          this.setState({submissions: submissions})
+          this.setState({currentSubmissionIdx: this.state.submissions.length - 1});
       });
 
 
@@ -316,10 +305,12 @@ class App extends Component {
   resumeSurvey(index) {
 
     // This is important because save relies on this index being updated
-    this.state.currentSubmissionIdx = index;
+    this.setState({currentSubmissionIdx: index});
 
     let submission = this.state.submissions[index];
-    this.state.model.data = submission.submission;
+    let surveyModel = this.state.model;
+    surveyModel.data = submission.submission;
+    this.setState({model: surveyModel});
     if (submission.completed) {
       this.finish();
     }
