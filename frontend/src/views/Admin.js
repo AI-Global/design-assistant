@@ -45,14 +45,16 @@ export default class Admin extends Component {
         })
 
 
-        axios.get('http://localhost:9000/users')
+        endPoint = '/users';
+        axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
         .then(response => {
             this.setState({users: response.data})
-            axios.get('http://localhost:9000/submissions')
+            endPoint = '/submissions'
+            axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
             .then(response => {
                 var resp = response.data;
                 resp = resp.map(submission => {
-                    submission.userId = this.state.users.filter(user => {return user.userId = submission.userId})[0].name;
+                    submission.userId = this.state.users.find(user => {return user.userId = submission.userId})?.name ?? "No User";
                     return submission
                 });
     
@@ -76,7 +78,8 @@ export default class Admin extends Component {
       }
 
     deleteUser(id) {
-        axios.delete('http://localhost:9000/users/'+id)
+        let endPoint = '/users/' + id;
+        axios.delete(process.env.REACT_APP_SERVER_ADDR + endPoint)
         .then(response => {console.log(response.data)});
 
         this.setState({
@@ -91,16 +94,17 @@ export default class Admin extends Component {
     }
 
     submissionList() {
-        return this.state.submissions.map(currentsubmission => {
+        return this.state.submissions.map((currentsubmission, idx) => {
+            let convertedDate = new Date(currentsubmission.date).toLocaleString("en-US", {timeZone: Intl.DateTimeFormat()?.resolvedOptions()?.timeZone ?? "UTC"});
             return (
-                <tr>
+                <tr key={idx}>
                     <td>{currentsubmission.userId}</td>
                     <td>{currentsubmission.projectName}</td>
-                    <td>{currentsubmission.date}</td>
+                    <td>{convertedDate}</td>
                     <td>{currentsubmission.lifecycle}</td>
-                    <td>{String(currentsubmission.completed)}</td>
+                    <td>{String(currentsubmission.completed) ? "Yes": "No"}</td>
                     <td>
-                        <Button size="sm" onClick={() => this.nextPath('/Results/', currentsubmission.submission)}>View Responses</Button>
+                        <Button size="sm" onClick={() => this.nextPath('/Results/', currentsubmission.submission ?? {})}>View Responses</Button>
                     </td>
                 </tr>
             )
