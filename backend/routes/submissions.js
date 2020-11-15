@@ -20,25 +20,33 @@ router.get('/', async (req,res) => {
 
 router.get('/user/:userId',  async (req,res) => {
     try{
+        console.log("returning user submissions for: ", req.params.userId);
         await Submission.find({userId : req.params.userId}).then(submissions => {
+            console.log(submissions);
             res.json({submissions: submissions});
         });
     } catch(err){
+        console.log("error returning user submissions", err)
         res.json({message: err});
     }   
 });
 
 router.post('/update/:submissionId', async (req, res) => {
     try{
+        console.log("updating");
         const submissions = await Submission.findOneAndUpdate({'_id' : req.params.submissionId}, {
-            userId: req.body.userId,
-            date: req.body.date,
-            lifecycle: req.body.lifecycle,
-            submission: req.body.submission,
-            completed: req.body.completed
+            submission: req.body.submission
         }, {upsert:true, runValidators: true});
+        // const submissions = await Submission.findOneAndUpdate({'_id' : req.params.submissionId}, {
+        //     userId: req.body.userId,
+        //     date: req.body.date,
+        //     lifecycle: req.body.lifecycle,
+        //     submission: req.body.submission,
+        //     completed: req.body.completed
+        // }, {upsert:true, runValidators: true});
         res.json(submissions);
     } catch(err){
+        console.log("error updating", err);
         res.json({message: err});
     }
 });
@@ -57,9 +65,11 @@ router.post('/', async (req, res) => {
 
     try{
         const savedSubmission = await submission.save();
+        console.log("inserting");
         res.json(savedSubmission);
     } catch(err){
         res.json({message: err});
+        console.log("error to insert", err);
     }
 
 });

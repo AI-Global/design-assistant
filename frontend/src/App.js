@@ -54,6 +54,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      currentSubmissionIdx: 0,
       isSurveyStarted: false,
       showModal: false,
       A: 1,
@@ -190,32 +191,98 @@ class App extends Component {
     this.setState(this.state)   // force re-render to update buttons and % complete
   }
 
+  // Save needs to take 
   save() {
-    let user = this.state.user;
-    let submission = this.state.model.data;
-    let dateTime = new Date();
-    var endPoint = '/submissions/';
-    axios.post(process.env.REACT_APP_SERVER_ADDR + endPoint, {
-      userId: user._id,
-      projectName: "Test",
-      date: dateTime,
-      lifecycle: 6,
-      submission: submission,
-      completed: false
+    // axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
+    //   .then(res => {
+    //     var submissions = res.data;
+    //     this.setState(submissions);
+    // });
+
+    // when we click save, we should already have a model saved to the database
+    // i.e. the index will always point to a valid submission
+    // so just make an update call
+
+    console.log("Saving survey");
+    console.log("CURRENT SUBMISSION STATE")
+    console.log(this.state.submissions);
+    console.log(this.state.currentSubmissionIdx);
+
+    console.log(this.state.submissions[this.state.currentSubmissionIdx]);
+
+    axios.post(process.env.REACT_APP_SERVER_ADDR + '/submissions/update/' + this.state.submissions[this.state.currentSubmissionIdx]._id, {
+      submission: this.state.model.data
     });
+
+
+    // how to get projectName of the survey?
+    // and if we get project name 
+
+    // let user = this.state.user;
+    // let submission = this.state.model.data;
+    // let dateTime = new Date();
+    // var endPoint = '/submissions';
+
+    // console.log(user);
+    // console.log(submission);
+    // console.log(dateTime);
+
+    // axios.post(process.env.REACT_APP_SERVER_ADDR + endPoint, {
+    //   userId: user._id,
+    //   projectName: "Test",
+    //   date: dateTime,
+    //   lifecycle: 6,
+    //   submission: submission,
+    //   completed: false
+    // });
   }
 
   finish() {
     this.state.model.doComplete();
+
+    // reset point to current submission?
+
     this.nextPath('/Results/');
   }
 
   onComplete(survey, options) {
+    // reset point to current submission?
+
     console.log("Survey results: " + JSON.stringify(survey.data));
   }
 
   startSurvey() {
     this.state.model.clear()             // clear survey to fix restart bug
+
+    // initialize and save new submission (blank)
+    // append to state.submissions
+    // set index to point to this submission
+
+    let user = this.state.user;
+    let submission = this.state.model.data ?? {};
+    let dateTime = new Date();
+    var endPoint = '/submissions/';
+
+    axios.post(process.env.REACT_APP_SERVER_ADDR + endPoint, {
+      userId: user?._id ?? null,
+      projectName: "Test",
+      date: dateTime,
+      lifecycle: 6,
+      submission: submission,
+      completed: false
+    })
+    .then(res => {
+      // update this.state.submissions object here
+      axios.get(process.env.REACT_APP_SERVER_ADDR + '/submissions/user/' + user._id)
+        .then(res => {
+          var submissions = res.data;
+          this.setState(submissions);
+          this.state.currentSubmissionIdx = this.state.submissions.length - 1;
+          console.log("Submissions after starting survey: ", this.state.submissions);
+      });
+    });
+
+
     this.setState({ isSurveyStarted: true })
   }
 
@@ -244,6 +311,10 @@ class App extends Component {
   }
 
   resumeSurvey(index) {
+
+    this.state.currentSubmissionIdx = index;
+    console.log("INDEX:", this.state.currentSubmissionIdx);
+
     let submission = this.state.submissions[index];
     this.state.model.data = submission.submission;
     if(submission.completed){
