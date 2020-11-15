@@ -16,9 +16,10 @@ export default function QuestionModal(props) {
 
     const dimensions = props.dimensions
     const domains = props.metadata.domain
-    const lifecycles = props.metadata.lifecycle
+    const lifecycles = []
+    // props.metadata.lifecycle
     const regions = props.metadata.region
-    const roles = props.metadata.roles
+    const roles = []
 
     // make copy of responses array so we can revert back to it if needed
     const responsesA = [...props.question.responses]
@@ -349,7 +350,7 @@ export default function QuestionModal(props) {
                                 <Col xs={2} md={2}>
                                     <Form.Group controlId="roles">
                                         <Form.Label>Role</Form.Label>
-                                        <Form.Control value={roles[questionRole-1].name || ''} as="select" onChange={(event) => setRole(event.target.selectedIndex+1)}>
+                                        <Form.Control value={roles.length ? roles[questionRole-1].name : ''} as="select" onChange={(event) => setRole(event.target.selectedIndex+1)}>
                                             {roles.map((role, index) =>
                                                 <option key={index} value={role.name}>{role.name}</option>
                                             )}
@@ -381,7 +382,7 @@ export default function QuestionModal(props) {
                                 <Col xs={2} md={2}>
                                     <Form.Group controlId="lifecycles">
                                         <Form.Label>Life-Cycle</Form.Label>
-                                        <Form.Control defaultValue={lifecycles[questionLifecycle-1].name} as="select" onChange={(event) => setLifecycle(event.target.selectedIndex+1)}>
+                                        <Form.Control value={lifecycles.length ? lifecycles[questionLifecycle-1].name : ''} as="select" onChange={(event) => setLifecycle(event.target.selectedIndex+1)}>
                                             {lifecycles.map((lifecycle, index) =>
                                                 <option key={index} value={lifecycle.name}>{lifecycle.name}</option>
                                             )}
