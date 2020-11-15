@@ -219,7 +219,7 @@ class App extends Component {
     // i.e. the index will always point to a valid submission
     // so just make an update call
 
-    let title = this.state.json.pages[0].elements.find(q => q?.title?.default === "Title of project");
+    let title = this.state.json?.pages[0]?.elements?.find(q => q?.title?.default === "Title of project");
     let dateTime = new Date();
     let projectName = this.state.model.data[title?.name] ?? "";
     axios.post(process.env.REACT_APP_SERVER_ADDR + '/submissions/update/' + this.state.submissions[this.state.currentSubmissionIdx]._id, {

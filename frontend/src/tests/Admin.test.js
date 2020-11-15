@@ -28,9 +28,14 @@ const mockDB = {
     }
 }
 
+const mockAnalytics = {
+    data: []
+}
+
 test('Admin Page renders', async () => {
     const emptyMockDB = { data: {"questions":[], "dimensions" : [] } };
     axios.get.mockResolvedValue(emptyMockDB);
+    axios.get('/analytics').mockResolvedValue(mockAnalytics);
 
     await render(<Router><Admin/></Router>);
     expect(screen.getByText(adminWelcomeText)).toBeTruthy();
@@ -41,7 +46,7 @@ test('Admin Page renders', async () => {
 
 test('Admin Page renders survey management', async () => {
     axios.get.mockResolvedValue(mockDB);
-
+    axios.get('/analytics').mockResolvedValue(mockAnalytics);
     await render(<Router><Admin/></Router>);
     expect(screen.getByText(adminWelcomeText)).toBeTruthy();
     expect(screen.getByText(surveyManagmentText)).toBeTruthy();
