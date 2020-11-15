@@ -33,7 +33,10 @@ router.post('/update/:submissionId', async (req, res) => {
     try{
         console.log("updating");
         const submissions = await Submission.findOneAndUpdate({'_id' : req.params.submissionId}, {
-            submission: req.body.submission
+            submission: req.body.submission,
+            date: req.body.date,
+            projectName: req.body.projectName,
+            completed: req.body.completed
         }, {upsert:true, runValidators: true});
         // const submissions = await Submission.findOneAndUpdate({'_id' : req.params.submissionId}, {
         //     userId: req.body.userId,

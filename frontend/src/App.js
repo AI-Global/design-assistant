@@ -195,40 +195,31 @@ class App extends Component {
     this.setState(this.state)   // force re-render to update buttons and % complete
   }
 
-  save() {
+  save(completed = false) {
     // when we click save, we should already have a model saved to the database
     // i.e. the index will always point to a valid submission
     // so just make an update call
 
-    // console.log("Saving survey");
-    // console.log("CURRENT SUBMISSION STATE")
-    // console.log(this.state.submissions);
-    // console.log(this.state.currentSubmissionIdx);
-
-    // console.log(this.state.submissions[this.state.currentSubmissionIdx]);
-    // if (this.state.user) {
-      axios.post(process.env.REACT_APP_SERVER_ADDR + '/submissions/update/' + this.state.submissions[this.state.currentSubmissionIdx]._id, {
-        submission: this.state.model.data
-      });
-    // } else {
-    //   axios.post(process.env.REACT_APP_SERVER_ADDR + '/submissions/update/' + this.state.model._id, {
-    //     submission: this.state.model.data
-    //   });
-    // }
+    let title = this.state.json.pages[0].elements.find(q => q?.title?.default == "Title of project");
+    let dateTime = new Date();
+    let projectName = this.state.model.data[title?.name] ?? "";
+    axios.post(process.env.REACT_APP_SERVER_ADDR + '/submissions/update/' + this.state.submissions[this.state.currentSubmissionIdx]._id, {
+      submission: this.state.model.data,
+      date: dateTime,
+      projectName: projectName,
+      completed: completed
+    });
 
   }
 
   finish() {
+    this.save(true);
     this.state.model.doComplete();
-
-    // reset pointer to current submission?
 
     this.nextPath('/Results/');
   }
 
   onComplete(survey, options) {
-    // reset point to current submission?
-
     console.log("Survey results: " + JSON.stringify(survey.data));
   }
 
@@ -249,7 +240,7 @@ class App extends Component {
 
     axios.post(process.env.REACT_APP_SERVER_ADDR + endPoint, {
       userId: user?._id ?? null,
-      projectName: "Test",
+      projectName: "",
       date: dateTime,
       lifecycle: 6,
       submission: submission,
@@ -266,7 +257,6 @@ class App extends Component {
             console.log("Submissions after starting survey: ", this.state.submissions);
         });
       } else {
-        // console.log(res.data);
         var submissions = [res.data];
         // this.setState(submissions);
         this.state.submissions = submissions;
@@ -308,7 +298,6 @@ class App extends Component {
 
     // This is important because save relies on this index being updated
     this.state.currentSubmissionIdx = index;
-    // console.log("INDEX:", this.state.currentSubmissionIdx);
 
     let submission = this.state.submissions[index];
     this.state.model.data = submission.submission;
@@ -460,7 +449,8 @@ class App extends Component {
                       return (
                         <tr key={index}>
                           <td>
-                            {value.projectName}
+                            
+                            {value?.projectName ? value?.projectName : "No Project Name"}
                           </td>
                           <td>
                             {new Date(value.date).toLocaleString('en-US', {timeZone: Intl?.DateTimeFormat()?.resolvedOptions()?.timeZone ?? 'UTC'})}
