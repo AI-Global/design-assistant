@@ -214,27 +214,8 @@ class App extends Component {
       submission: this.state.model.data
     });
 
-
     // how to get projectName of the survey?
     // and if we get project name 
-
-    // let user = this.state.user;
-    // let submission = this.state.model.data;
-    // let dateTime = new Date();
-    // var endPoint = '/submissions';
-
-    // console.log(user);
-    // console.log(submission);
-    // console.log(dateTime);
-
-    // axios.post(process.env.REACT_APP_SERVER_ADDR + endPoint, {
-    //   userId: user._id,
-    //   projectName: "Test",
-    //   date: dateTime,
-    //   lifecycle: 6,
-    //   submission: submission,
-    //   completed: false
-    // });
   }
 
   finish() {
