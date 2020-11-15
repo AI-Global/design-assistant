@@ -6,7 +6,7 @@ import axios from 'axios';
 import showdown from 'showdown';
 import * as Survey from "survey-react";
 import Card from 'react-bootstrap/Card';
-import { Button } from 'react-bootstrap';
+import { Button, Table } from 'react-bootstrap';
 import React, { Component } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { withRouter } from 'react-router-dom';
@@ -18,8 +18,9 @@ import ModalHeader from 'react-bootstrap/ModalHeader';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Login from './views/Login';
+import { getLoggedInUser } from './helper/AuthHelper';
 import "bootstrap-slider/dist/css/bootstrap-slider.min.css";
-import * as widgets from  "surveyjs-widgets";
+import * as widgets from "surveyjs-widgets";
 import ReactGa from 'react-ga';
 require('dotenv').config();
 
@@ -27,8 +28,8 @@ ReactGa.initialize(process.env.REACT_APP_GAID, { testMode: process.env.NODE_ENV 
 
 const StartSurveyHandler = () => {
   ReactGa.event({
-      category: 'Button',
-      action: 'Clicked the Start Survey Button'
+    category: 'Button',
+    action: 'Clicked the Start Survey Button'
   })
 }
 
@@ -67,6 +68,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      currentSubmissionIdx: 0,
       isSurveyStarted: false,
       showModal: false,
       A: 1,
@@ -74,7 +76,8 @@ class App extends Component {
       E: 19,
       R: 25,
       D: 28,
-      authToken: localStorage.getItem("authToken")
+      authToken: localStorage.getItem("authToken"),
+      submissions: []
     };
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
@@ -160,7 +163,17 @@ class App extends Component {
             }
           });
       })
-      
+    getLoggedInUser().then(user => {
+      if (user) {
+        endPoint = '/submissions/user/' + user._id;
+        this.setState({ user: user });
+        axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
+          .then(res => {
+            var submissions = res.data;
+            this.setState(submissions);
+          });
+      }
+    });
   }
 
   nextPath(path) {
@@ -183,9 +196,12 @@ class App extends Component {
   }
 
   resetSurvey() {
+    // do we need to delete submission object here?
+    // because we would need to call the database here
     this.state.model.clear()
     this.handleCloseModal()
     this.setState({ isSurveyStarted: false })
+    window.location.reload();
   }
 
   prevPage() {
@@ -198,12 +214,27 @@ class App extends Component {
     this.setState(this.state)   // force re-render to update buttons and % complete
   }
 
-  save() {
-    console.log('SAVE SURVEY');
+  save(completed = false) {
+    // when we click save, we should already have a model saved to the database
+    // i.e. the index will always point to a valid submission
+    // so just make an update call
+
+    let title = this.state.json?.pages[0]?.elements?.find(q => q?.title?.default === "Title of project");
+    let dateTime = new Date();
+    let projectName = this.state.model.data[title?.name] ?? "";
+    axios.post(process.env.REACT_APP_SERVER_ADDR + '/submissions/update/' + this.state.submissions[this.state.currentSubmissionIdx]._id, {
+      submission: this.state.model.data,
+      date: dateTime,
+      projectName: projectName,
+      completed: completed
+    });
+
   }
 
   finish() {
+    this.save(true);
     this.state.model.doComplete();
+
     this.nextPath('/Results/');
   }
 
@@ -213,6 +244,37 @@ class App extends Component {
 
   startSurvey() {
     this.state.model.clear()             // clear survey to fix restart bug
+
+    // initialize and save new submission (blank)
+    // append to state.submissions
+    // set index to point to this submission
+
+    // how to get projectName of the survey?
+    // and if we get project name 
+
+    let user = this.state.user;
+    let submission = this.state.model.data ?? {};
+    let dateTime = new Date();
+    var endPoint = '/submissions/';
+
+    axios.post(process.env.REACT_APP_SERVER_ADDR + endPoint, {
+      userId: user?._id ?? null,
+      projectName: "",
+      date: dateTime,
+      lifecycle: 6,
+      submission: submission,
+      completed: false
+    })
+      .then(res => {
+        // update this.state.submissions object here
+          let newSubmission = res.data;
+          let submissions = this.state.submissions;
+          submissions.push(newSubmission);
+          this.setState({submissions: submissions})
+          this.setState({currentSubmissionIdx: this.state.submissions.length - 1});
+      });
+
+
     this.setState({ isSurveyStarted: true })
   }
 
@@ -238,6 +300,23 @@ class App extends Component {
         survey.currentPage = survey.pages[0]
     }
     this.setState(this.state)
+  }
+
+  resumeSurvey(index) {
+
+    // This is important because save relies on this index being updated
+    this.setState({currentSubmissionIdx: index});
+
+    let submission = this.state.submissions[index];
+    let surveyModel = this.state.model;
+    surveyModel.data = submission.submission;
+    this.setState({model: surveyModel});
+    if (submission.completed) {
+      this.finish();
+    }
+    else {
+      this.setState({ isSurveyStarted: true })
+    }
   }
 
   render() {
@@ -280,7 +359,7 @@ class App extends Component {
               </Card>
             </Accordion>
           </div>
-          <div className="container" style={{"paddingTop":"2em"}}>
+          <div className="container" style={{ "paddingTop": "2em" }}>
             <div className="d-flex justify-content-center col">{this.percent()}%</div>
           </div>
           <Survey.Survey model={this.state.model} onComplete={this.onComplete} />
@@ -319,6 +398,24 @@ class App extends Component {
               <Button id="resetButton" onClick={() => this.resetSurvey()}>Yes</Button>
             </ModalFooter>
           </Modal>
+          <Modal
+            size="md"
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+            show={this.state.showProjectModal}>
+            <ModalHeader closeButton>
+              <ModalTitle id="contained-modal-title-vcenter">
+                Project Title
+              </ModalTitle>
+            </ModalHeader>
+            <ModalBody>
+              <p>Please enter the name of your project.</p>
+            </ModalBody>
+            <ModalFooter>
+              <Button onClick={this.handleCloseProjectModal}>No</Button>
+              <Button id="resetButton" onClick={() => this.resetSurvey()}>Yes</Button>
+            </ModalFooter>
+          </Modal>
         </div>
       );
     } else if (this.state.model) {
@@ -341,26 +438,52 @@ class App extends Component {
             <p>To‌ ‌learn‌ ‌more‌ ‌about‌ ‌the‌ ‌background‌ ‌of‌ ‌this‌ ‌project,‌ ‌check‌ ‌out‌ ‌our‌ ‌post‌ ‌about‌ ‌the‌ creation‌ ‌of‌ ‌the‌ ‌Design‌ ‌Assistant‌ ‌on‌ <a target="_blank" rel="noopener noreferrer" href="https://ai-global.org/2020/04/28/creating-a-responsible-ai-trust-index-a-unified-assessment-to-assure-the-responsible-design-development-and-deployment-of-ai/">ai-global.org</a>‌‌</p>
             <p>For‌ ‌more‌ ‌information‌ ‌on‌ ‌how‌ ‌to‌ ‌use‌ ‌the‌ ‌Design‌ ‌Assistant,‌ ‌including‌ ‌FAQ’s,‌ ‌check‌ ‌out‌ our <a target="_blank" rel="noopener noreferrer" href="https://docs.google.com/presentation/d/1EDPhyRhIsiOrujLcHQv_fezXfgOz4Rl7a8lyOM_guoA/edit#slide=id.p1">Guide</a></p>
           </div>
-          <div className="row" style={{ padding: "25px" }}>
-            <div className="col-sm-6">
-              <div className="card h-100">
-                <div className="card-header">Design assistant</div>
-                <div className="card-body d-flex justify-content-center h-100">
-                  <div>
-                    <Button onClick={() => {this.startSurvey(); StartSurveyHandler()}}>Start measuring your AI Trust Index now!</Button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-sm-6">
-              <div className="card h-100">
-                <div className="card-header">Continue existing survey</div>
-                <div className="card-body d-flex justify-content-center h-100">
-                </div>
+          <div>
+            <div className="card">
+              <div className="card-header">Continue existing survey</div>
+              <div className="card-body">
+                <Table bordered responsive className="survey-results-table">
+                  <thead>
+                    <tr>
+                      <th>
+                        Project Name
+                      </th>
+                      <th>
+                        Last Updated
+                      </th>
+                      <th width="192px"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {this.state.submissions.map((value, index) => {
+                      return (
+                        <tr key={index}>
+                          <td>
+
+                            {value?.projectName ? value?.projectName : "No Project Name"}
+                          </td>
+                          <td>
+                            {new Date(value.date).toLocaleString('en-US', { timeZone: Intl?.DateTimeFormat()?.resolvedOptions()?.timeZone ?? 'UTC' })}
+                          </td>
+                          <td width="175px" className="text-center">
+                            {!value.completed &&
+                              <Button block onClick={() => { this.resumeSurvey(index); StartSurveyHandler() }} >Resume Survey</Button>}
+                            {value.completed &&
+                              <Button id="ResultsButton" block onClick={() => { this.resumeSurvey(index); StartSurveyHandler() }} >Survey Results</Button>}
+
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </Table>
               </div>
             </div>
           </div>
-            <Login/>
+          <div className="float-right mr-3 mt-2">
+            <Button onClick={() => this.startSurvey()}>Start New Survey</Button>
+          </div>
+          <Login />
         </div>
       );
     }

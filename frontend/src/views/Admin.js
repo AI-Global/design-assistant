@@ -1,7 +1,5 @@
 import '../css/admin.css';
-import { Link } from 'react-router-dom';
 import React, { Component } from 'react';
-import Table from '@material-ui/core/Table';
 import QuestionTable from '../Components/QuestionTable';
 import AnalyticsDashboard from '../Components/AnalyticsDashboard';
 import { Tabs, Tab, Button, Table as BootStrapTable } from 'react-bootstrap';
@@ -93,9 +91,11 @@ export default class AdminPanel extends Component {
     }
 
     userList() {
-        return this.state.users.map(currentuser => {
-            return <User user={currentuser} deleteUser={this.deleteUser} key={currentuser._id}/>;
-        })
+        if (Array.isArray(this.state.users)){
+            return this.state.users.map(currentuser => {
+                return <User user={currentuser} deleteUser={this.deleteUser} key={currentuser._id}/>;
+            })
+        }
     }
 
     submissionList() {
@@ -107,7 +107,7 @@ export default class AdminPanel extends Component {
                     <td>{currentsubmission.projectName}</td>
                     <td>{convertedDate}</td>
                     <td>{currentsubmission.lifecycle}</td>
-                    <td>{String(currentsubmission.completed) ? "Yes": "No"}</td>
+                    <td>{currentsubmission.completed ? "Yes": "No"}</td>
                     <td>
                         <Button size="sm" onClick={() => this.nextPath('/Results/', currentsubmission.submission ?? {})}>View Responses</Button>
                     </td>

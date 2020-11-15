@@ -74,8 +74,9 @@ export default class Login extends Component {
                     else {
                         sessionStorage.setItem('authToken', result["token"]);
                     }
-                    this.setState({ user: result["user"] });
-                    this.setState({ showLoginModal: false });
+                    this.setState({user: result["user"]});
+                    this.setState({showLoginModal: false});
+                    window.location.reload();
                 }
             }).catch(err => {
                 let result = err.response.data;

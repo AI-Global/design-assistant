@@ -61,10 +61,10 @@ export default class Results extends Component {
             return allQuestions
         });
 
-        var titleQuestion = allQuestions.find(question => question.title.default == "Title of project");
-        var descriptionQuestion = allQuestions.find(question => question.title.default == "Project Description");
-        var industryQuestion = allQuestions.find(question => question.title.default == "Industry");
-        var regionQuestion = allQuestions.find(question => question.title.default == "Country");
+        var titleQuestion = allQuestions.find(question => question.title.default === "Title of project");
+        var descriptionQuestion = allQuestions.find(question => question.title.default === "Project Description");
+        var industryQuestion = allQuestions.find(question => question.title.default === "Industry");
+        var regionQuestion = allQuestions.find(question => question.title.default === "Country");
 
         var projectTitle = surveyResults[titleQuestion?.name];
         var projectDescription = surveyResults[descriptionQuestion?.name];
@@ -86,7 +86,7 @@ export default class Results extends Component {
                 <h1 className="section-header">
                     Results
                 </h1>
-                <button id="exportButton" type="button" className="btn btn-save mr-2 btn btn-primary export-button" onClick={() => exportReport(projectTitle, projectDescription, projectIndustry, projectRegion)}>Export</button>
+                <button id="exportButton" type="button" className="btn btn-save mr-2 btn btn-primary export-button" onClick={() => {ExportHandler(); exportReport(projectTitle, projectDescription, projectIndustry, projectRegion)}}>Export</button>
                 <Tabs defaultActiveKey="score">
                     <Tab eventKey="score" title="Score">
                         <div className="table-responsive mt-3">

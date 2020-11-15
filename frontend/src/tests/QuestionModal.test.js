@@ -88,8 +88,16 @@ const mockDimensions = [{
     "name": "Explainability and Interpretability"
 }]
 
+const mockMetaData = {
+    "domain":[{"_id":"5fa50de3d17b20d5d45dec87","domainID":1,"__v":0,"name":"Health"},{"_id":"5fa50de3d17b20d5d45dec97","domainID":2,"__v":0,"name":"Insurance"},{"_id":"5fa50de3d17b20d5d45deca8","domainID":3,"__v":0,"name":"Banking"},{"_id":"5fa50de3d17b20d5d45decbc","domainID":4,"__v":0,"name":"Media"},{"_id":"5fa50de4d17b20d5d45decce","domainID":5,"__v":0,"name":"Retail"},{"_id":"5fa50de4d17b20d5d45decdc","domainID":6,"__v":0,"name":"Other"}],
+    "lifecycle":[{"_id":"5fa50dcfd17b20d5d45de1d4","lifecycleID":1,"__v":0,"name":"Plan and Design"},{"_id":"5fa50dcfd17b20d5d45de1eb","lifecycleID":2,"__v":0,"name":"Data and Model"},{"_id":"5fa50dcfd17b20d5d45de203","lifecycleID":3,"__v":0,"name":"Verify and Validate"},{"_id":"5fa50dcfd17b20d5d45de219","lifecycleID":4,"__v":0,"name":"Deploy"},{"_id":"5fa50dcfd17b20d5d45de22d","lifecycleID":5,"__v":0,"name":"Operate and Monitor"},{"_id":"5fa50dd0d17b20d5d45de23d","lifecycleID":6,"__v":0,"name":"All"}],
+    "region":[{"_id":"5fa50d2ad17b20d5d45d96ea","regionID":1,"__v":0,"name":"Africa"},{"_id":"5fa50d2ad17b20d5d45d96fa","regionID":2,"__v":0,"name":"Antarctica"},{"_id":"5fa50d2bd17b20d5d45d970a","regionID":3,"__v":0,"name":"Asia"},{"_id":"5fa50d2bd17b20d5d45d9718","regionID":4,"__v":0,"name":"Europe"},{"_id":"5fa50d2bd17b20d5d45d972c","regionID":5,"__v":0,"name":"North America"},{"_id":"5fa50d2bd17b20d5d45d973a","regionID":6,"__v":0,"name":"South America"},{"_id":"5fa50d2bd17b20d5d45d974a","regionID":7,"__v":0,"name":"Oceania"},{"_id":"5fa50d2bd17b20d5d45d976a","regionID":8,"__v":0,"name":"Other"}],
+    "roles":[{"_id":"5fb162a2d17b20d5d440e6cb","roleID":1,"__v":0,"name":"Product Owner / Business Owner"},{"_id":"5fb162a2d17b20d5d440e6e2","roleID":2,"__v":0,"name":"Risk Management"},{"_id":"5fb162a2d17b20d5d440e6f1","roleID":3,"__v":0,"name":"Legal Lead"},{"_id":"5fb162a2d17b20d5d440e708","roleID":4,"__v":0,"name":"IT Lead"},{"_id":"5fb162a2d17b20d5d440e718","roleID":5,"__v":0,"name":"Technical Manager"},{"_id":"5fb162a2d17b20d5d440e729","roleID":6,"__v":0,"name":"Software Engineer / Software Developer"},{"_id":"5fb162a2d17b20d5d440e73f","roleID":7,"__v":0,"name":"Product Design"},{"_id":"5fb162a2d17b20d5d440e757","roleID":8,"__v":0,"name":"Data Scientist Lead"},{"_id":"5fb162a2d17b20d5d440e775","roleID":9,"__v":0,"name":"Machine Learning Engineer"},{"_id":"5fb162a2d17b20d5d440e785","roleID":10,"__v":0,"name":"Researcher"},{"_id":"5fb162a2d17b20d5d440e791","roleID":11,"__v":0,"name":"Non Government Organization Volunteer"},{"_id":"5fb162a2d17b20d5d440e79f","roleID":12,"__v":0,"name":"Policy Analyst"},{"_id":"5fb162a3d17b20d5d440e7b0","roleID":13,"__v":0,"name":"All"}]
+}
+
+
 test('Question Modal renders with Project Details question', () => {
-    render(<Router><QuestionModal show={true} question={mockTombstoneQuestion} dimensions={mockDimensions} /></Router>);
+    render(<Router><QuestionModal show={true} question={mockTombstoneQuestion} dimensions={mockDimensions} metadata={mockMetaData} /></Router>);
 
     expect(screen.getByText("Edit Question")).toBeTruthy();
     expect(screen.getByText("Details")).toBeTruthy();
@@ -107,7 +115,7 @@ test('Question Modal renders with Project Details question', () => {
 })
 
 test('Question Modal renders with survey Risk question', () => {
-    render(<Router><QuestionModal show={true} question={mockRiskQuestion} dimensions={mockDimensions} /></Router>);
+    render(<Router><QuestionModal show={true} question={mockRiskQuestion} dimensions={mockDimensions} metadata={mockMetaData}/></Router>);
 
     expect(screen.getByText("Edit Question")).toBeTruthy();
     expect(screen.getByText("Details")).toBeTruthy();
@@ -124,7 +132,7 @@ test('Question Modal renders with survey Risk question', () => {
 })
 
 test('Question Modal renders with new question', () => {
-    render(<Router><QuestionModal show={true} question={mockNewQuestion} dimensions={mockDimensions} /></Router>);
+    render(<Router><QuestionModal show={true} question={mockNewQuestion} dimensions={mockDimensions} metadata={mockMetaData}/></Router>);
 
     expect(screen.getByText("Edit Question")).toBeTruthy();
     expect(screen.getByText("Details")).toBeTruthy();

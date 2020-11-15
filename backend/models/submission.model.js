@@ -4,11 +4,9 @@ const SubmissionSchema = mongoose.Schema({
 
     // user ID that owns this 
     userId: {
-        type: String,
-        unique: true
+        type: mongoose.Types.ObjectId
     },
 
-    // name for a project that owns this submission
     projectName: {
         type: String
     },

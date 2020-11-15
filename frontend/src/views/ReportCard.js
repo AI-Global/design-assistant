@@ -13,11 +13,12 @@ export default class ReportCard extends Component{
      * and the recommendation from AI Global.
      */
     displayQuestion(result, question){    
+        var choices;
         if(Array.isArray(result)){
-            var choices = question?.choices?.filter((choice) => result?.includes(choice?.value) );     
+            choices = question?.choices?.filter((choice) => result?.includes(choice?.value) );     
         }
         else{
-            var choices = question?.choices?.filter((choice) => result === choice?.value );     
+            choices = question?.choices?.filter((choice) => result === choice?.value );     
         }
         return (
             <tr key={question?.name}>
