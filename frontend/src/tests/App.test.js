@@ -7,7 +7,7 @@ import survey from '../survey-enrf.json';
 
 jest.mock('axios');
 
-const startSurveyButton = "Start measuring your AI Trust Index now!";
+const startSurveyButton = "Start New Survey";
 const emptyQuestionData = "There is no visible page or question in the survey.";
 const surveyWelcomeText = "Welcome";
 

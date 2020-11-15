@@ -145,13 +145,15 @@ class App extends Component {
           });
       })
       getLoggedInUser().then( user => {
-        endPoint = '/submissions/user/' + user._id;
-        this.setState({user: user});
-        axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
-          .then(res => {
-            var submissions = res.data;
-            this.setState(submissions);
-        });
+        if(user){
+          endPoint = '/submissions/user/' + user._id;
+          this.setState({user: user});
+          axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
+            .then(res => {
+              var submissions = res.data;
+              this.setState(submissions);
+          });
+        }
       });
   }
 
@@ -192,11 +194,11 @@ class App extends Component {
 
   save() {
     let user = this.state.user;
-    let submission = this.state.model.data;
+    let submission = this.state.model.data ?? {};
     let dateTime = new Date();
     var endPoint = '/submissions/';
     axios.post(process.env.REACT_APP_SERVER_ADDR + endPoint, {
-      userId: user._id,
+      userId: user?._id ?? null,
       projectName: "Test",
       date: dateTime,
       lifecycle: 6,
@@ -366,7 +368,7 @@ class App extends Component {
                         Project Name
                       </td>
                       <td>
-                        Date
+                        Last Updated
                       </td>
                       <td width="175"></td>
 
