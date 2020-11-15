@@ -11,7 +11,7 @@ const useRowStyles = makeStyles({
 });
 
 export default function QuestionRow(props) {
-    const { question, dimensions, index} = props;
+    const { question, dimensions, index, metadata} = props;
     const [modalShow, setModalShow] = React.useState(false);
     const classes = useRowStyles();
     return (
@@ -22,6 +22,7 @@ export default function QuestionRow(props) {
                 question={question}
                 mode={"edit"}
                 dimensions={dimensions}
+                metadata={metadata}
             />
             <TableCell className={classes.tablecell}>
                 {question.child ? <div style={{ fontSize: "12px", fontStyle: "italic", color:"#8f8f8f"}}>Child</div> : null}
