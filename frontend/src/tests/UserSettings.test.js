@@ -2,6 +2,7 @@ import React from 'react';
 import { fireEvent, render, screen, wait } from '@testing-library/react';
 import UserSettings from '../views/UserSettings.js';
 import axios from 'axios';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 jest.mock('axios');
 
@@ -15,14 +16,14 @@ const user = {
 test('User Settings renders successfully', () => {
     const response = { data: user };
     axios.get.mockResolvedValue(response);
-    render(<UserSettings />);
+    render(<Router><UserSettings /></Router>);
     expect(screen.getByLabelText("Settings Dropdown")).toBeTruthy();
 });
 
 test('User Settings transitions to Change Email successfully', () => {
     const response = { data: user };
     axios.get.mockResolvedValue(response);
-    render(<UserSettings />);
+    render(<Router><UserSettings /></Router>);
     fireEvent.click(screen.getByLabelText("Settings Dropdown"));
     fireEvent.click(screen.getByText("Change Email"));
     expect(screen.getByText("Submit")).toBeTruthy();
@@ -31,7 +32,7 @@ test('User Settings transitions to Change Email successfully', () => {
 test('User Settings submit Change Email fails validation', async () => {
     const response = { data: user };
     axios.get.mockResolvedValue(response);
-    const component = render(<UserSettings />);
+    render(<Router><UserSettings /></Router>);
     fireEvent.click(screen.getByLabelText("Settings Dropdown"));
     fireEvent.click(screen.getByText("Change Email"));
     let input = screen.getByLabelText("new email");
@@ -48,7 +49,7 @@ test('User Settings submit Change Email fails validation', async () => {
 test('User Settings submit Change Email passes validation', async () => {
     const response = { data: user };
     axios.get.mockResolvedValue(response);
-    const component = render(<UserSettings />);
+    render(<Router><UserSettings /></Router>);
     fireEvent.click(screen.getByLabelText("Settings Dropdown"));
     fireEvent.click(screen.getByText("Change Email"));
     let input = screen.getByLabelText("new email");
@@ -63,7 +64,7 @@ test('User Settings submit Change Email passes validation', async () => {
 test('User Settings transitions to Change Username successfully', () => {
     const response = { data: user };
     axios.get.mockResolvedValue(response);
-    render(<UserSettings />);
+    render(<Router><UserSettings /></Router>);
     fireEvent.click(screen.getByLabelText("Settings Dropdown"));
     fireEvent.click(screen.getByText("Change Username"));
     expect(screen.getByText("Submit")).toBeTruthy();
@@ -73,7 +74,7 @@ test('User Settings transitions to Change Username successfully', () => {
 test('User Settings submit Change Username fails validation', async () => {
     const response = { data: user };
     axios.get.mockResolvedValue(response);
-    const component = render(<UserSettings />);
+    render(<Router><UserSettings /></Router>);
     fireEvent.click(screen.getByLabelText("Settings Dropdown"));
     fireEvent.click(screen.getByText("Change Username"));
     let input = screen.getByLabelText("new username");
@@ -90,7 +91,7 @@ test('User Settings submit Change Username fails validation', async () => {
 test('User Settings submit Change Username passes validation', async () => {
     const response = { data: user };
     axios.get.mockResolvedValue(response);
-    const component = render(<UserSettings />);
+    render(<Router><UserSettings /></Router>);
     fireEvent.click(screen.getByLabelText("Settings Dropdown"));
     fireEvent.click(screen.getByText("Change Username"));
     let input = screen.getByLabelText("new username");
@@ -104,7 +105,7 @@ test('User Settings submit Change Username passes validation', async () => {
 test('User Settings transitions to Change Password successfully', () => {
     const response = { data: user };
     axios.get.mockResolvedValue(response);
-    render(<UserSettings />);
+    render(<Router><UserSettings /></Router>);
     fireEvent.click(screen.getByLabelText("Settings Dropdown"));
     fireEvent.click(screen.getByText("Change Password"));
     expect(screen.getByText("Submit")).toBeTruthy();
@@ -113,7 +114,7 @@ test('User Settings transitions to Change Password successfully', () => {
 test('User Settings submit Change Password fails validation', async () => {
     const response = { data: user };
     axios.get.mockResolvedValue(response);
-    const component = render(<UserSettings />);
+    render(<Router><UserSettings /></Router>);
     fireEvent.click(screen.getByLabelText("Settings Dropdown"));
     fireEvent.click(screen.getByText("Change Password"));
     let input = screen.getByLabelText("current password");
@@ -132,7 +133,7 @@ test('User Settings submit Change Password fails validation', async () => {
 test('User Settings submit Change Password passes validation', async () => {
     const response = { data: user };
     axios.get.mockResolvedValue(response);
-    const component = render(<UserSettings />);
+    render(<Router><UserSettings /></Router>);
     fireEvent.click(screen.getByLabelText("Settings Dropdown"));
     fireEvent.click(screen.getByText("Change Password"));
     let input = screen.getByLabelText("current password");
