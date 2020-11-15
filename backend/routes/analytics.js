@@ -5,7 +5,7 @@ const Analytic = require('../models/analytics.model');
 // Get all Analytics
 router.get('/', async (req,res) => {
     Analytic.find()
-    .then((analytics) => res.status(200).send(analytics))
+    .then((analytics) => res.status(200).send({"analytics":analytics}))
     .catch((err) => res.status(500).send(err));
 });
 
