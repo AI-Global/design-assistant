@@ -1,32 +1,27 @@
+import '../css/admin.css';
 import { Link } from 'react-router-dom';
 import React, { Component } from 'react';
-import { Tabs, Tab, } from 'react-bootstrap';
 import Table from '@material-ui/core/Table';
+import QuestionTable from '../Components/QuestionTable';
+import { Tabs, Tab, } from 'react-bootstrap';
+import ReactGa from 'react-ga';
 
-import QuestionTable from '../Components/QuestionTable'
+ReactGa.initialize(process.env.REACT_APP_GAID);
 
-//TODO: replace this with backend API to get JSONs from mongoDB
-const questionsJSON = require('../tempJSON/questionsJSON.json')
-// console.log(questionsJSON)
-
-export default class Results extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            json: [],
-            questions: []
-        }
+export default class AdminPanel extends Component {
+    componentDidMount() {
+        ReactGa.pageview(window.location.pathname + window.location.search);
     }
 
     render() {
         return (
             <main id="wb-cont" role="main" property="mainContentOfPage" className="container" style={{ paddingBottom: "1rem" }}>
                 <h1 className="section-header">
-                    Administration
+                    Administration Panel
                 </h1>
                 <Tabs defaultActiveKey="surveyManagement">
                     <Tab eventKey="surveyManagement" title="Survey Management">
-                        <QuestionTable questions={questionsJSON} />
+                        <QuestionTable/>
                     </Tab>
                     <Tab eventKey="userManagement" title="Users">
                         <div className="table-responsive mt-3">
@@ -80,7 +75,7 @@ export default class Results extends Component {
                                 <thead>
                                     <tr>
                                         <th className="score-card-headers">
-                                            Analytics
+                                            Google Analytics
                                         </th>
                                     </tr>
                                 </thead>

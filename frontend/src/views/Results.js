@@ -9,13 +9,30 @@ import exportReport from "../helper/ExportReport";
 import ReportCard from "./ReportCard";
 import DimensionScore from "./DimensionScore";
 import TrustedAIProviders from './TrustedAIProviders';
+import ReactGa from 'react-ga';
+
+ReactGa.initialize(process.env.REACT_APP_GAID, { testMode: process.env.NODE_ENV === 'test' });
 
 const Dimensions = {
-    Accountability: {label: "A", name: "Accountability"},
-    Explainability: {label: "EI", name: "Explainability"},
-    Data: {label: "D", name: "Data quality and rights"},
-    Bias: {label: "B", name: "Bias and fairness"},
-    Robustness: {label: "R", name: "Robustness"},
+    Accountability: { label: "A", name: "Accountability" },
+    Explainability: { label: "EI", name: "Explainability" },
+    Data: { label: "D", name: "Data quality and rights" },
+    Bias: { label: "B", name: "Bias and fairness" },
+    Robustness: { label: "R", name: "Robustness" },
+}
+
+const StartAgainHandler = () => {
+    ReactGa.event({
+        category: 'Button',
+        action: 'Clicked the Start Again button from the Results page'
+    })
+}
+
+const ExportHandler = () => {
+    ReactGa.event({
+        category: 'Button',
+        action: 'Exported report as PDF'
+    })
 }
 
 /**
@@ -24,13 +41,17 @@ const Dimensions = {
  */
 export default class Results extends Component {
 
+    componentDidMount() {
+        ReactGa.pageview(window.location.pathname + window.location.search);
+    }
+    
     render() {
         var json = this?.props?.location?.state?.questions;
         var surveyResults = this?.props?.location?.state?.responses;
-        if(json === undefined || surveyResults === undefined){
+        if (json === undefined || surveyResults === undefined) {
             this.props.history.push({
                 pathname: '/'
-              })
+            })
             return null;
         }
         var pages = json["pages"];
@@ -39,16 +60,40 @@ export default class Results extends Component {
             allQuestions = allQuestions.concat(page?.elements);
             return allQuestions
         });
+
         var projectTitle = surveyResults[(allQuestions[0]?.name)];
         var projectDescription = surveyResults[(allQuestions[1]?.name)];
+        var projectIndustry;
+        var projectRegion;
+
+        try {
+            projectIndustry = allQuestions[3].choices
+                .filter((choice) => {
+                    return choice.value === surveyResults[(allQuestions[3]?.name)]
+                })[0].text.default
+        } catch {
+            projectIndustry = null;
+        }
+
+        try {
+            projectRegion = allQuestions[4].choices
+                .filter((choice) => {
+                    return choice.value === surveyResults[(allQuestions[4]?.name)]
+                })[0].text.default
+        } catch {
+            projectRegion = null;
+        }
+
+
         var questions = allQuestions.filter((question) => Object.keys(surveyResults).includes(question.name))
+
         var radarChartData = [];
         return (
             <main id="wb-cont" role="main" property="mainContentOfPage" className="container" style={{ paddingBottom: "1rem" }}>
                 <h1 className="section-header">
                     Results
                 </h1>
-                <button id="exportButton" type="button" className="btn btn-save mr-2 btn btn-primary export-button" onClick={() => exportReport(projectTitle, projectDescription)}>Export</button>
+                <button id="exportButton" type="button" className="btn btn-save mr-2 btn btn-primary export-button" onClick={() => exportReport(projectTitle, projectDescription, projectIndustry, projectRegion)}>Export</button>
                 <Tabs defaultActiveKey="score">
                     <Tab eventKey="score" title="Score">
                         <div className="table-responsive mt-3">
@@ -73,7 +118,7 @@ export default class Results extends Component {
                                     {Object.keys(Dimensions).map((dimension, idx) => {
                                         return (
                                             <DimensionScore key={idx} radarChartData={radarChartData} dimensionName={Dimensions[dimension]?.name}
-                                            results={surveyResults} questions={allQuestions.filter(x => x.score?.dimension === Dimensions[dimension]?.label)} />
+                                                results={surveyResults} questions={allQuestions.filter(x => x.score?.dimension === Dimensions[dimension]?.label)} />
                                         )
                                     })}
                                 </tbody>
@@ -84,36 +129,36 @@ export default class Results extends Component {
                         <Tab.Container id="left-tabs-example" defaultActiveKey={Object.values(Dimensions)[0]?.label}>
                             <Tab.Content>
                                 {Object.keys(Dimensions).map((dimension, idx) => {
-                                    return(
+                                    return (
                                         <Tab.Pane key={idx} eventKey={Dimensions[dimension]?.label}>
                                             <ReportCard dimension={Dimensions[dimension]?.label} results={surveyResults} questions={questions.filter(x => x.score?.dimension === Dimensions[dimension]?.label)} />
-                                        </Tab.Pane>  
+                                        </Tab.Pane>
                                     );
-                                })}                                                          
+                                })}
                             </Tab.Content>
                             <Nav variant="tabs" className="report-card-nav" defaultActiveKey="accountability">
                                 {Object.keys(Dimensions).map((dimension, idx) => {
-                                    return(
+                                    return (
                                         <Nav.Item key={idx} >
                                             <Nav.Link eventKey={Dimensions[dimension]?.label}>
                                                 {Dimensions[dimension]?.name}
                                             </Nav.Link>
                                         </Nav.Item>
                                     );
-                                })}                                  
+                                })}
                             </Nav>
                         </Tab.Container>
                     </Tab>
                     <Tab eventKey="ai-providers" title="Trusted AI Providers">
                         <Tab.Container id="left-tabs-example" defaultActiveKey={Object.values(Dimensions)[0]?.label}>
-                                <TrustedAIProviders/>
-                        </Tab.Container>                        
+                            <TrustedAIProviders />
+                        </Tab.Container>
                     </Tab>
                 </Tabs>
                 <div className="dimension-chart">
                     <ResponsiveRadar
                         data={radarChartData}
-                        keys={[ "score" ]}
+                        keys={["score"]}
                         indexBy="dimension"
                         maxValue={100}
                         margin={{ top: 70, right: 80, bottom: 40, left: 80 }}
@@ -124,7 +169,7 @@ export default class Results extends Component {
                         colors="rgb(31, 119, 180)"
                         isInteractive={true}
                         dotSize={8}
-                    /> 
+                    />
                 </div>
                 <p>
                     As‌ ‌AI‌ ‌continues‌ ‌to‌ ‌evolve‌ ‌so‌ ‌will‌ ‌the‌ ‌Design‌ ‌Assistant.‌ ‌
@@ -145,7 +190,7 @@ export default class Results extends Component {
                     Since‌ ‌we‌ ‌want‌ ‌you‌ ‌to‌ ‌use‌ ‌the‌ ‌Design‌ ‌Assistant‌ ‌early‌ ‌and‌ ‌often,‌ ‌you‌ ‌can‌ ‌click‌ ‌the‌ ‌button‌ below‌ ‌to‌ ‌start‌ ‌over‌ ‌again!‌
                 </p>
                 <Link to='/'>
-                    <Button id="restartButton">Start Again</Button>
+                    <Button id="restartButton" onClick={StartAgainHandler}>Start Again</Button>
                 </Link>
             </main>
         );

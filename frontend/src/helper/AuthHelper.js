@@ -17,6 +17,7 @@ export function getLoggedInUser(){
     }).catch(err => {
         localStorage.removeItem(key);
         sessionStorage.removeItem(key);
+        return err;
     })
     .then(response => {
         if(response){
@@ -42,6 +43,11 @@ export function isLoggedIn(){
         return false;
     }).then(response =>{return true});
 
+}
+
+export function getAuthToken(){
+    let authToken = localStorage.getItem(key) ?? sessionStorage.getItem(key);
+    return authToken;
 }
 
 export function setAuthToken(){

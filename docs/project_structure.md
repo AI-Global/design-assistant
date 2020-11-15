@@ -31,7 +31,7 @@ Renderd the administration panel for users with valid admin credentials. It rend
 ### Components
 
 #### QuestionTable.js
-Renders a table of all the questions in the database. Gets question and other metadata from a get request to ```/questions/all```, which returns them in pure JSON format (not formatted for SurveyJS). For each question, the function renders a ```QuestionRow```. Rows can be re-ordered by dragging and dropping.
+Renders a table of all the questions in the database. Gets question and other metadata from a get request to ```/questions/all```, which returns them in pure JSON format (not formatted for SurveyJS). For each question, the function renders a ```QuestionRow```. Rows can be re-ordered by dragging and dropping with the mouse, or space bar and arrow keys. If a question is rearranged, the ```ChildModal.js``` component renders and prompts the admin if they would like to create a new parent-child relationship. If the question reordering is saved, question numbers are updated by the ```questions/:startNumber/:endNumber/``` put request, where ```startNumber``` is the dragged questions starting number, and ```endNumber``` is the the table index that it was dropped at.
 
 #### QuestionRow.js
 Creates a single row in the ```QuestionTable``` to display the basic information for each question: Number, Question, Dimension, and a button to allow for editing questions. Clicking the edit button renders the ```QuestionModal```
@@ -44,3 +44,6 @@ Changes to a question is stored in the database by sending the data to the backe
 A new question is stored in the database by sending the data to the backend through the ```/questions/``` post request.
 
 When a question is deleted (by clicking the delete button, and then confirming), it is removed from the database  by sending the data to the backend through the ```/questions/:question_id``` delete request.
+
+#### ChildModal.js
+Manages the creation of hierarchy questions. When a question is dragged and dropped below another in ```QuesionTable.js```, modal is triggered and admin can select whether or not to form the relationship (*option: yes*), simply re-order the questions (*option: no*), or *cancel* to return all questions to their original positions. If *no* is selected, modal closes and ```QuestionTable.js``` updates the question numbers in the database. If *yes* is selected, the admin can select which response(s) trigger the child question, and the data is saved to the database through ```/questions/:question_id``` put request. 

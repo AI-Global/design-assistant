@@ -3,7 +3,8 @@ const router = express.Router();
 const Question = require('../models/question.model');
 const Dimension = require('../models/dimension.model');
 const fs = require('fs');
-const { create } = require('../models/question.model');
+const { create, findOne } = require('../models/question.model');
+const mongoose = require('mongoose');
 
 async function getDimensions() {
     // Get Lookup of Dimensions from DB
@@ -13,15 +14,15 @@ async function getDimensions() {
     for (let d of dimensions) {
         Dimensions[d.dimensionID] = { label: d.label, name: d.name, page: d.name.replace(/\s+/g, '') }
     }
-
     return Dimensions
 }
 
 function formatTrigger(trigger) {
     // Formats the triggers into a string for SurveyJS
     triggerList = [];
+
     for (let t of trigger.responses) {
-        triggerList.push("{" + trigger.parent + "} == " + String(t));
+        triggerList.push("{" + trigger.parent + "} contains " + "'" + t + "'");
     }
 
     return triggerList.join(" or ");
@@ -29,11 +30,12 @@ function formatTrigger(trigger) {
 
 async function getChildren() {
     // Get Lookup of child questions
-    let questions = await Question.find({ "trigger": { $ne: null } })
+    let questions = await Question.find({ "child": true })
     let children = {}
     for (let q of questions) {
         children[q.trigger.parent] = {};
         children[q.trigger.parent].question = q;
+
         children[q.trigger.parent].trigger = formatTrigger(q.trigger);
     }
 
@@ -45,15 +47,18 @@ function formatQuestion(q, Dimensions, Triggers = null) {
 
     // All questions have a title, name, and type
     var question = {};
+
     question.title = {};
     question.title.default = q.question;
     question.title.fr = "";
     question.name = q.id;
     question.type = q.responseType;
 
+
     // Set conditions for when the question is visiable
     if (Triggers) {
         question.visibleIf = Triggers;
+
     }
 
     // The rest of these properties are dependant on the question
@@ -83,7 +88,7 @@ function formatQuestion(q, Dimensions, Triggers = null) {
         question.choices = [];
         for (let c of q.responses) {
             var choice = {};
-            choice.value = c.responseNumber;
+            choice.value = c.id;
             choice.text = {};
             choice.text.default = c.indicator;
             choice.text.fr = "";
@@ -94,7 +99,7 @@ function formatQuestion(q, Dimensions, Triggers = null) {
         if (q.pointsAvailable) {
 
             question.score = {};
-            question.score.dimension = Dimensions[q.trustIndexDimension].name;
+            question.score.dimension = Dimensions[q.trustIndexDimension].label;
             question.score.max = q.pointsAvailable * q.weighting;
 
             // Add score to the choices
@@ -109,14 +114,19 @@ function formatQuestion(q, Dimensions, Triggers = null) {
         question.choices = [];
         for (let c of q.responses) {
             var choice = {};
-            choice.value = c.responseNumber;
+            choice.value = c.id;
             choice.text = {};
             choice.text.default = c.indicator;
             choice.text.fr = "";
             question.choices.push(choice);
         }
 
-    }//TODO: else if (question.type == slider)
+    } else if (question.type == "bootstrapslider") {
+        // Low Medium and High
+        question.step = 1;
+        question.rangeMin = 1;
+        question.rangeMax = 3;
+    }
 
     return question;
 }
@@ -131,7 +141,7 @@ function chainChildren(q, Children) {
     if (Children[q.id].question.id in Children) {
         childChain = childChain.concat(chainChildren(Children[q.id].question, Children))
     }
-    
+
     return childChain;
 }
 
@@ -139,7 +149,7 @@ function createHierarchy(questions, Children) {
     // Given a list of questions, check for any child questions and build the heirarchy
     var heirarchy = [];
 
-    questions.forEach( q => {
+    questions.forEach(q => {
         heirarchy.push(q);
 
         // If the questions has children
@@ -157,7 +167,7 @@ function createPage(questions, pageName, pageTitle, Dimensions, Children) {
     var page = {};
 
     // Build Heirachy
-    
+
     var questionHeiarchy = createHierarchy(questions, Children)
 
     page.name = pageName;
@@ -166,13 +176,13 @@ function createPage(questions, pageName, pageTitle, Dimensions, Children) {
     page.title.fr = "";
     // Map MongoDB questions to surveyJS format
     page.elements = questionHeiarchy.map(function (q) {
-        if (q.child){
-            console.log(q.trigger)
+        if (q.child) {
+
             return formatQuestion(q, Dimensions, Children[q.trigger.parent].trigger);
 
-        }else{
-
+        } else {
             return formatQuestion(q, Dimensions);
+
         }
     });
 
@@ -192,6 +202,7 @@ async function createPages(q) {
     page.showProgressBar = "top";
     page.firstPageIsStarted = "false";
     page.showNavigationButtons = "false";
+    page.clearInvisibleValues = "onHidden";
 
     // Separate the questions by dimension 
     // TODO: we might want to make tombstone questions a dimension too for cleaner code
@@ -210,6 +221,12 @@ async function createPages(q) {
             dimQuestions[question.trustIndexDimension].push(question)
         }
     }
+
+    tombQuestions["tombstone"].sort((a, b) => (a.questionNumber > b.questionNumber) ? 1 : -1);
+    for (let i = 0; i < dimQuestions.length; i++) {
+        dimQuestions.sort((a, b) => (a.questionNumber > b.questionNumber) ? 1 : -1);
+    }
+
 
     // Add Other question to tombstone and create page 
     tombQuestions["tombstone"].push({ responseType: "comment", id: "otherTombstone", question: "Other:", alt_text: "If possible, support the feedback with specific recommendations \/ suggestions to improve the tool. Feedback can include:\n - Refinement to existing questions, like suggestions on how questions can be simplified or clarified further\n - Additions of new questions for specific scenarios that may be missed\n - Feedback on whether the listed AI risk domains are fulsome and complete\n - What types of response indicators should be included for your context?" });
@@ -251,7 +268,8 @@ async function createPages(q) {
 // Get all questions. Assemble SurveyJS JSON here
 router.get('/', async (req, res) => {
     // Only request parent questions from DB
-    Question.find({ "trigger": null })
+    Question.find({ "child": false })
+        .sort({ questionNumber: 1 })
         .then(async (questions) => {
             pages = await createPages(questions);
             res.status(200).send(pages);
@@ -259,6 +277,14 @@ router.get('/', async (req, res) => {
         .catch((err) => res.status(400).send(err));
 
 });
+
+// Get all questions as JSON from DB. No Assembly for SurveyJS
+router.get('/all', async (req, res) => {
+    let Dimensions = await getDimensions()
+    Question.find()
+        .then((questions) => res.status(200).send({ questions, Dimensions }))
+        .catch((err) => res.status(400).send(err));
+})
 
 
 // Get question by id
@@ -291,12 +317,27 @@ router.post('/', async (req, res) => {
 router.delete('/:questionId', async (req, res) => {
     try {
         // Delete existing question in DB
-        var response = await Question.remove({ _id: req.params.questionId }, req.body);
 
-        res.json(response);
+        const session = await mongoose.startSession();
+        session.withTransaction(async () => {
+            var number;
+            var question = await Question.findOne({_id: req.params.questionId})
+            var number = question.questionNumber
+            await Question.deleteOne({ _id: req.params.questionId })
+            var maxQ = await Question.find().sort({ questionNumber: -1 }).limit(1)
+            var maxNumber = maxQ[0].questionNumber
+            console.log(number, maxNumber)
+
+            for (let i = number + 1; i <= maxNumber; i++) {
+                await Question.findOneAndUpdate({ questionNumber: i }, { questionNumber: i - 1 });
+            }
+
+        })
+        res.json(doc);
     } catch (err) {
         res.json({ message: err });
     }
+
 });
 
 router.put('/:questionId', async (req, res) => {
@@ -309,6 +350,45 @@ router.put('/:questionId', async (req, res) => {
         res.json({ message: err });
     }
 });
+
+router.put('/:startNumber/:endNumber', async (req, res) => {
+    let startNum = parseInt(req.params.startNumber);
+    let endNum = parseInt(req.params.endNumber);
+
+    try {
+
+        const session = await mongoose.startSession();
+        session.withTransaction(async () => {
+
+            startQuestion = await Question.findOne({ questionNumber: startNum }).exec();
+            startQuestion.questionNumber = 0;
+            await startQuestion.save();
+
+            // shift questions down
+            if (startNum < endNum) {
+                for (let i = startNum + 1; i <= endNum; i++) {
+                    await Question.findOneAndUpdate({ questionNumber: i }, { questionNumber: i - 1 });
+                }
+            } else {
+                for (let i = startNum - 1; i >= endNum; i--) {
+                    await Question.findOneAndUpdate({ questionNumber: i }, { questionNumber: i + 1 });
+                }
+            }
+            startQuestion.questionNumber = endNum;
+            await startQuestion.save();
+
+        })
+
+        // free up starting question number (unique)
+        res.json({ message: "Transaction Complete" })
+
+    } catch (err) {
+        res.json({ message: err, part: 4 });
+    }
+
+});
+
+
 
 
 

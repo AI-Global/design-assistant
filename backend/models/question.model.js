@@ -5,8 +5,7 @@ const QuestionSchema = mongoose.Schema({
     // numbered 0 to n-1
     questionNumber: {
         type: Number,
-        required: true,
-        unique: true
+        required: true
     },
 
     // 5 possible dimensions
@@ -75,7 +74,7 @@ const QuestionSchema = mongoose.Schema({
     roles: [Number],
 
     // Question can belong to multiple lifecycles
-    lifecycle: Number,
+    lifecycle: [Number],
 
     // Which Question and Response determine whether this question should be displayed
     child:Boolean,
@@ -83,7 +82,10 @@ const QuestionSchema = mongoose.Schema({
         parent: {
             type: String
         },
-        responses: [Number]
+        responses: [String],
+        parentQuestion: {
+            type: String
+        }
     }
 
     // TODO: Add test of schema to model
