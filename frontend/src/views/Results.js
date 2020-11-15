@@ -48,8 +48,6 @@ export default class Results extends Component {
     render() {
         var json = this?.props?.location?.state?.questions;
         var surveyResults = this?.props?.location?.state?.responses;
-        console.log(json);
-        console.log(surveyResults);
         if (json === undefined || surveyResults === undefined) {
             this.props.history.push({
                 pathname: '/'

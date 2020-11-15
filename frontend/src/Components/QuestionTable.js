@@ -101,8 +101,6 @@ export default class QuestionTable extends Component {
                 })
             
         }
-        console.log("Source:", result.source.index)
-        console.log("Parent:", result.destination.index - 1)
     }
 
     addQuestion() {
@@ -122,8 +120,6 @@ export default class QuestionTable extends Component {
 
     updateQuestionNumbers() {
         this.setChildModalShow(false);
-        console.log("in make relationship");
-        console.log(this.state.newNumber);
         var endPoint = '/questions/' + this.state.previousNumber.toString() + '/'+ this.state.newNumber.toString();
         axios.put(process.env.REACT_APP_SERVER_ADDR + endPoint, this.state.currentQuestion.questionNumber)
             .then(() => {
@@ -151,7 +147,6 @@ export default class QuestionTable extends Component {
 
     makeRelationship(){
         this.setChildModalShow(false);
-        console.log("in make relationship");
         // TODO: Add functionality to make question child of parent
     }
 
