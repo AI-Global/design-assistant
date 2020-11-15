@@ -6,6 +6,7 @@ import { getLoggedInUser, expireAuthToken, getAuthToken } from '../helper/AuthHe
 import "../css/usersettings.css";
 import axios from 'axios';
 import ReactGa from 'react-ga';
+import { withRouter } from 'react-router-dom';
 
 const LogoutHandler = () => {
     ReactGa.event({
@@ -14,8 +15,8 @@ const LogoutHandler = () => {
     })
 }
 
-export default class UserSettings extends Component {
-    constructor(props) {
+class UserSettings extends Component {
+    constructor(props){
         super(props);
         this.state = {
             showEmailSettings: false,
@@ -161,23 +162,31 @@ export default class UserSettings extends Component {
         });
     }
 
-    render() {
-        const handleClose = () => this.setState({ showEmailSettings: false, showUserNameSettings: false, showPasswordSettings: false });
+    navAdmin() {
+        this.props.history.push({
+          pathname: '/Admin/',  
+          state: {userRole: this.state.user.role}
+        })
+      }
 
+    render(){
+        const handleClose = () => this.setState({showEmailSettings: false, showUserNameSettings: false, showPasswordSettings: false});
         return (
             <span>
                 <DropdownButton className="usersettings-dropdown"
-                    title={
-                        <span>
-                            <FontAwesomeIcon icon={faUserCog} size="lg" className="mr-2" cursor="pointer" aria-label="Settings Dropdown" />
-                        </span>
-                    }>
+                title={
+                    <span>
+                    <FontAwesomeIcon icon={faUserCog} size="lg" className="mr-2" cursor="pointer" aria-label="Settings Dropdown"/>
+                    </span>
+                }>
+                    {this.state.user ? 
+                        this.state.user.role === "admin" ? <Dropdown.Item onClick={() => this.navAdmin()}><i className="fa fa-database fa-fw"></i> Admin Panel</Dropdown.Item> : null 
+                    : null}
                     <Dropdown.Item onClick={() => this.changeEmailModal()}><i className="fa fa-envelope fa-fw"></i> Change Email</Dropdown.Item>
                     <Dropdown.Item onClick={() => this.changeUsernameModal()}><i className="fa fa-user fa-fw"></i> Change Username</Dropdown.Item>
                     <Dropdown.Item onClick={() => this.changePasswordModal()}><i className="fa fa-key fa-fw"></i> Change Password</Dropdown.Item>
                     <Dropdown.Item onClick={() => this.handleLogout()}><i className="fa fa-sign-out fa-fw"></i> Log Out</Dropdown.Item>
                 </DropdownButton>
-
 
                 <Modal show={this.state.showEmailSettings}
                     onHide={handleClose}
@@ -292,3 +301,5 @@ export default class UserSettings extends Component {
         )
     }
 }
+
+export default withRouter(UserSettings);

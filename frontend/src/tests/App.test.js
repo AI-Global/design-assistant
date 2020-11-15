@@ -3,7 +3,6 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import axios from 'axios';
 import App from '../App';
 import { BrowserRouter as Router } from 'react-router-dom';
-import survey from '../survey-enrf.json';
 
 jest.mock('axios');
 
