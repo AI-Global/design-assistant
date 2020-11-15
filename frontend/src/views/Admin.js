@@ -107,7 +107,7 @@ export default class AdminPanel extends Component {
                     <td>{currentsubmission.projectName}</td>
                     <td>{convertedDate}</td>
                     <td>{currentsubmission.lifecycle}</td>
-                    <td>{String(currentsubmission.completed) ? "Yes": "No"}</td>
+                    <td>{currentsubmission.completed ? "Yes": "No"}</td>
                     <td>
                         <Button size="sm" onClick={() => this.nextPath('/Results/', currentsubmission.submission ?? {})}>View Responses</Button>
                     </td>
