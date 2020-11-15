@@ -13,7 +13,7 @@ export default function Router() {
           <Switch>
             <Route exact path="/" component={App}/>
             <Route path="/Results" component={Results}/>
-            <PrivateRoute path="/Admin" component={Admin} />
+            <PrivateRoute path="/Admin" component={Admin}/>
           </Switch>
         </BrowserRouter>
       </div>

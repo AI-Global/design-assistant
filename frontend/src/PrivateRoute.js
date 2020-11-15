@@ -1,18 +1,25 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { getLoggedInUser } from './helper/AuthHelper';
 import { Route, Redirect } from "react-router-dom";
 
 function PrivateRoute({ component: Component, ...rest }) {
-    const isAuthenticated = rest.location.state ? rest.location.state.userRole : false
-    console.log(isAuthenticated)
-    
+    const [u, setUser] = useState('')
+
+    useEffect(() => {
+        getLoggedInUser().then(user => {
+            setUser(user)
+        })
+    }, [])
+
+    console.log("u:", u)
+
     return (
         <Route
             {...rest}
             render={props =>
-                isAuthenticated ? (
-                    <Component {...props} />
-                ) : (
-                        <Redirect to="/" />
+                u === '' ? null : (
+                    u === undefined ? <Redirect to="/" /> :
+                        u.role === "admin" ? <Component {...props} /> : <Redirect to="/" /> 
                     )
             }
         />
