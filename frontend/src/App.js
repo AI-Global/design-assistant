@@ -176,6 +176,8 @@ class App extends Component {
   }
 
   resetSurvey() {
+    // do we need to delete submission object here?
+    // because we would need to call the database here
     this.state.model.clear()
     this.handleCloseModal()
     this.setState({ isSurveyStarted: false })
@@ -191,37 +193,27 @@ class App extends Component {
     this.setState(this.state)   // force re-render to update buttons and % complete
   }
 
-  // Save needs to take 
   save() {
-    // axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
-    //   .then(res => {
-    //     var submissions = res.data;
-    //     this.setState(submissions);
-    // });
-
     // when we click save, we should already have a model saved to the database
     // i.e. the index will always point to a valid submission
     // so just make an update call
 
-    console.log("Saving survey");
-    console.log("CURRENT SUBMISSION STATE")
-    console.log(this.state.submissions);
-    console.log(this.state.currentSubmissionIdx);
+    // console.log("Saving survey");
+    // console.log("CURRENT SUBMISSION STATE")
+    // console.log(this.state.submissions);
+    // console.log(this.state.currentSubmissionIdx);
 
-    console.log(this.state.submissions[this.state.currentSubmissionIdx]);
+    // console.log(this.state.submissions[this.state.currentSubmissionIdx]);
 
     axios.post(process.env.REACT_APP_SERVER_ADDR + '/submissions/update/' + this.state.submissions[this.state.currentSubmissionIdx]._id, {
       submission: this.state.model.data
     });
-
-    // how to get projectName of the survey?
-    // and if we get project name 
   }
 
   finish() {
     this.state.model.doComplete();
 
-    // reset point to current submission?
+    // reset pointer to current submission?
 
     this.nextPath('/Results/');
   }
@@ -238,6 +230,9 @@ class App extends Component {
     // initialize and save new submission (blank)
     // append to state.submissions
     // set index to point to this submission
+
+    // how to get projectName of the survey?
+    // and if we get project name 
 
     let user = this.state.user;
     let submission = this.state.model.data ?? {};
@@ -293,8 +288,9 @@ class App extends Component {
 
   resumeSurvey(index) {
 
+    // This is important because save relies on this index being updated
     this.state.currentSubmissionIdx = index;
-    console.log("INDEX:", this.state.currentSubmissionIdx);
+    // console.log("INDEX:", this.state.currentSubmissionIdx);
 
     let submission = this.state.submissions[index];
     this.state.model.data = submission.submission;
@@ -382,6 +378,24 @@ class App extends Component {
             </ModalBody>
             <ModalFooter>
               <Button onClick={this.handleCloseModal}>No</Button>
+              <Button id="resetButton" onClick={() => this.resetSurvey()}>Yes</Button>
+            </ModalFooter>
+          </Modal>
+          <Modal
+            size="md"
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+            show={this.state.showProjectModal}>
+            <ModalHeader closeButton>
+              <ModalTitle id="contained-modal-title-vcenter">
+                Project Title
+              </ModalTitle>
+            </ModalHeader>
+            <ModalBody>
+              <p>Please enter the name of your project.</p>
+            </ModalBody>
+            <ModalFooter>
+              <Button onClick={this.handleCloseProjectModal}>No</Button>
               <Button id="resetButton" onClick={() => this.resetSurvey()}>Yes</Button>
             </ModalFooter>
           </Modal>

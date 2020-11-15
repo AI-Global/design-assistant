@@ -20,13 +20,13 @@ router.get('/', async (req,res) => {
 
 router.get('/user/:userId',  async (req,res) => {
     try{
-        console.log("returning user submissions for: ", req.params.userId);
+        // console.log("returning user submissions for: ", req.params.userId);
         await Submission.find({userId : req.params.userId}).then(submissions => {
             console.log(submissions);
             res.json({submissions: submissions});
         });
     } catch(err){
-        console.log("error returning user submissions", err)
+        // console.log("error returning user submissions", err)
         res.json({message: err});
     }   
 });
@@ -46,7 +46,7 @@ router.post('/update/:submissionId', async (req, res) => {
         // }, {upsert:true, runValidators: true});
         res.json(submissions);
     } catch(err){
-        console.log("error updating", err);
+        // console.log("error updating", err);
         res.json({message: err});
     }
 });
@@ -65,11 +65,11 @@ router.post('/', async (req, res) => {
 
     try{
         const savedSubmission = await submission.save();
-        console.log("inserting");
+        // console.log("inserting");
         res.json(savedSubmission);
     } catch(err){
         res.json({message: err});
-        console.log("error to insert", err);
+        // console.log("error to insert", err);
     }
 
 });
