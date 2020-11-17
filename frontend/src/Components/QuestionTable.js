@@ -175,7 +175,7 @@ export default class QuestionTable extends Component {
             "trustIndexDimension": null,
             "weighting": 0,
             "trigger": null,
-            "child": false
+            "child": false,
         }
 
         return (

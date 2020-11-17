@@ -5,7 +5,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import QuestionModal from './QuestionModal';
 import '../css/admin.css';
 
-
 const useRowStyles = makeStyles({
     tablecell: {
         fontSize: '16px'
