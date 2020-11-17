@@ -63,7 +63,8 @@ class UserSettings extends Component {
     handleLogout() {
         expireAuthToken();
         LogoutHandler();
-        window.location.reload();
+        // redirect to home page when user logs out
+        window.location.pathname='/'
     }
 
     /**

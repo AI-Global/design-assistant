@@ -5,6 +5,8 @@ import AnalyticsDashboard from '../Components/AnalyticsDashboard';
 import { Tabs, Tab, Button, Table as BootStrapTable } from 'react-bootstrap';
 import ReactGa from 'react-ga';
 import axios from 'axios';
+import Login from './Login';
+
 
 ReactGa.initialize(process.env.REACT_APP_GAID, { testMode: process.env.NODE_ENV === 'test' });
 
@@ -194,8 +196,8 @@ export default class AdminPanel extends Component {
                         <AnalyticsDashboard/>
                     </Tab>
                 </Tabs>
+                <Login />
             </main>
-
         )
     }
 }

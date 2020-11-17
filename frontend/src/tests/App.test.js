@@ -9,6 +9,7 @@ jest.mock('axios');
 const startSurveyButton = "Start New Survey";
 const emptyQuestionData = "There is no visible page or question in the survey.";
 const surveyWelcomeText = "Welcome";
+const loginButton = "Log in"
 
 const mockResponse = {
     data: {
@@ -37,6 +38,7 @@ test('Welcome Page renders', async () => {
     axios.post.mockResolvedValue(mockSubmission);
     await render(<Router><App/></Router>);
     expect(screen.getByText(surveyWelcomeText)).toBeTruthy();
+    expect(screen.getByText(loginButton)).toBeTruthy();
 })
 
 test('Welcome Page renders with no data', async () => {
