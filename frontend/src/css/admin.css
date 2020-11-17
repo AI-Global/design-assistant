@@ -3,7 +3,7 @@
   background-color: #d0e0e3;
 }
 
-.modal-60w{
+#question-modal{
   width: 60%;
   max-width: none !important;
 }
@@ -17,7 +17,7 @@
   font-weight: 600;
 }
 
-.modal-60w .modal-body {
+#question-modal .modal-body {
   padding-left: 6em;
   padding-right: 6em;
 }

@@ -17,6 +17,7 @@ export default function QuestionRow(props) {
     return (
         <React.Fragment>
             <QuestionModal
+                id="question-modal"
                 show={modalShow}
                 onHide={() => {setModalShow(false); props.onDelete()}}
                 question={question}

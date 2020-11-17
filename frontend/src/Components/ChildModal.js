@@ -64,6 +64,7 @@ export default function ChildModal(props) {
             centered
             dialogClassName="modal-60w"
             backdrop="static"
+            id="question-modal"
         >
             <Modal.Header>
                 <Modal.Title id="contained-modal-title-vcenter">
