@@ -1,4 +1,4 @@
-import '../css/theme.css';
+import '../css/admin.css';
 import axios from 'axios';
 import React, { useState } from 'react';
 import Add from '@material-ui/icons/Add';
@@ -215,9 +215,8 @@ export default function QuestionModal(props) {
                 {...props}
                 aria-labelledby="contained-modal-title-vcenter"
                 centered
-                dialogClassName="modal-60w"
+                dialogClassName="modal-question"
                 backdrop="static"
-                id="question-modal"
             >
                 <Modal.Header>
                     <Modal.Title id="contained-modal-title-vcenter">

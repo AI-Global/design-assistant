@@ -3,6 +3,8 @@ import { Button } from 'react-bootstrap';
 import TableCell from '@material-ui/core/TableCell';
 import { makeStyles } from '@material-ui/core/styles';
 import QuestionModal from './QuestionModal';
+import '../css/admin.css';
+
 
 const useRowStyles = makeStyles({
     tablecell: {
@@ -17,7 +19,6 @@ export default function QuestionRow(props) {
     return (
         <React.Fragment>
             <QuestionModal
-                id="question-modal"
                 show={modalShow}
                 onHide={() => {setModalShow(false); props.onDelete()}}
                 question={question}

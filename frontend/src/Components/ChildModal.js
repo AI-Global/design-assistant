@@ -62,9 +62,8 @@ export default function ChildModal(props) {
             onHide={props.onHide}
             aria-labelledby="contained-modal-title-vcenter"
             centered
-            dialogClassName="modal-60w"
+            dialogClassName="modal-question"
             backdrop="static"
-            id="question-modal"
         >
             <Modal.Header>
                 <Modal.Title id="contained-modal-title-vcenter">
