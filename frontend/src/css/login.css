@@ -2,6 +2,11 @@
     width: 350px;
 }
 
+.modal-login .modal-body {
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
 .modal-login .modal-content {
     padding: 20px;
     border-radius: 5px;

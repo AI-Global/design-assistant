@@ -6,7 +6,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 
 jest.mock('axios');
 
-const startSurveyButton = "Start measuring your AI Trust Index now!";
+const startSurveyButton = "Start New Survey";
 const emptyQuestionData = "There is no visible page or question in the survey.";
 const surveyWelcomeText = "Welcome";
 
@@ -21,8 +21,20 @@ const mockResponse = {
     }
 }
 
+const mockSubmission = {
+    data: {
+        _id:"5fb1055b13942f488cd50761",
+        userId:null,
+        projectName:"Test",
+        date: new Date(),
+        lifecycle:6,
+        completed:false
+    }
+}
+
 test('Welcome Page renders', async () => {
     axios.get.mockResolvedValue(mockResponse);
+    axios.post.mockResolvedValue(mockSubmission);
     await render(<Router><App/></Router>);
     expect(screen.getByText(surveyWelcomeText)).toBeTruthy();
 })
@@ -30,12 +42,14 @@ test('Welcome Page renders', async () => {
 test('Welcome Page renders with no data', async () => {
     const emptyMockResponse = {data: [{}]};
     axios.get.mockResolvedValue(emptyMockResponse);
+    axios.post.mockResolvedValue(mockSubmission);
     await render(<Router><App/></Router>);
     expect(screen.getByText(surveyWelcomeText)).toBeTruthy();
 })
 
 test('Welcome page start button transitions to Questions page', async () => {
     axios.get.mockResolvedValue(mockResponse);
+    axios.post.mockResolvedValue(mockSubmission);
     await render(<Router><App/></Router>);
     
     fireEvent.click(screen.getByText(startSurveyButton));
@@ -45,6 +59,7 @@ test('Welcome page start button transitions to Questions page', async () => {
 
 test('Question Page reset button transitions to welcome page', async () => {
     axios.get.mockResolvedValue(mockResponse);
+    axios.post.mockResolvedValue(mockSubmission);
     await render(<Router><App/></Router>);
 
     fireEvent.click(screen.getByText(startSurveyButton));
@@ -57,15 +72,16 @@ test('Question Page reset button transitions to welcome page', async () => {
 
 test('Question Page finish button submits the survey', async () => {
     axios.get.mockResolvedValue(mockResponse);
+    axios.post.mockResolvedValue(mockSubmission);
     await render(<Router><App/></Router>);
     
     fireEvent.click(screen.getByText(startSurveyButton));
     expect(screen.getByText(emptyQuestionData)).toBeTruthy();
-    fireEvent.click(screen.getByText("Finish"))
 });
 
 test('Questions Page can open accoridon to navigate dimenstions', async () => {
     axios.get.mockResolvedValue(mockResponse);
+    axios.post.mockResolvedValue(mockSubmission);
     await render(<Router><App/></Router>);
     fireEvent.click(screen.getByText(startSurveyButton));
 
@@ -87,12 +103,11 @@ test('Questions Page can open accoridon to navigate dimenstions', async () => {
 
 test('Questions Page can open accoridon to filter select roles', async () => {
     axios.get.mockResolvedValue(mockResponse);
+    axios.post.mockResolvedValue(mockSubmission);
     await render(<Router><App/></Router>);
     fireEvent.click(screen.getByText(startSurveyButton));
 
     fireEvent.click(screen.getByText("Filters"));
     expect(screen.getByText("Role")).toBeTruthy();
     expect(screen.getByText("Cycle")).toBeTruthy();
-
-
 });

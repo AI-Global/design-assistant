@@ -111,7 +111,7 @@ export default function ChildModal(props) {
                                         <Form.Check type="checkbox" key={index} id={response.responseNumber} label={response.indicator} checked={checkedBoxes[response.responseNumber]}
                                             onChange={() => {
                                                 let temp = checkedBoxes;
-                                                temp[response.responseNumber] = !checkedBoxes[response.responseNumber];
+                                                temp[response._id] = !checkedBoxes[response._id];
                                                 setCheckedBoxes(temp);
                                             }} />
                                     )

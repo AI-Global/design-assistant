@@ -8,7 +8,12 @@
 
 [Admin Panel Guide](docs/admin_guide.md)
 
+### Admin Account 
 
-## License
+Username: admin\
+Password: admin
+
+
+### License
 
 [MIT License](LICENSE)

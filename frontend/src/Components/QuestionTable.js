@@ -30,11 +30,13 @@ const getItemStyle = (isDragging, draggableStyle) => ({
 })
 
 export default class QuestionTable extends Component {
+
     constructor(props) {
         super(props);
         this.state = {
             questions: {},
             dimensions: {},
+            metadata: {},
             previousQuestion: null,
             currentQuestion: null,
             previousNumber: null,
@@ -47,6 +49,11 @@ export default class QuestionTable extends Component {
     }
 
     componentDidMount() {
+        var endPoint = '/metadata';
+        axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
+            .then(res => {
+                this.setState({metadata: res.data})
+            })
         this.getQuestions();
     }
 
@@ -94,8 +101,6 @@ export default class QuestionTable extends Component {
                 })
             
         }
-        console.log("Source:", result.source.index)
-        console.log("Parent:", result.destination.index - 1)
     }
 
     addQuestion() {
@@ -112,14 +117,9 @@ export default class QuestionTable extends Component {
         this.getQuestions();
     }
 
-    setChildModalShow(val) {
-        this.setState({ showChildModal: val });
-    }
 
     updateQuestionNumbers() {
         this.setChildModalShow(false);
-        console.log("in make relationship");
-        console.log(this.state.newNumber);
         var endPoint = '/questions/' + this.state.previousNumber.toString() + '/'+ this.state.newNumber.toString();
         axios.put(process.env.REACT_APP_SERVER_ADDR + endPoint, this.state.currentQuestion.questionNumber)
             .then(() => {
@@ -139,6 +139,15 @@ export default class QuestionTable extends Component {
         })
 
         this.setChildModalShow(false);
+    }
+
+    setChildModalShow(val){
+        this.setState({showChildModal: val});
+    }
+
+    makeRelationship(){
+        this.setChildModalShow(false);
+        // TODO: Add functionality to make question child of parent
     }
 
     render() {
@@ -192,6 +201,7 @@ export default class QuestionTable extends Component {
                                     question={newQuestion}
                                     mode={"new"}
                                     dimensions={this.state.dimensions}
+                                    metadata={this.state.metadata}
                                 />
                             </TableCell>
                             <TableCell>No.</TableCell>
@@ -208,6 +218,7 @@ export default class QuestionTable extends Component {
                                     dimensions={this.state.dimensions}
                                     index={index}
                                     onDelete={this.getQuestions}
+                                    metadata={this.state.metadata}
                                 />
                             </TableRow>
                         ))}

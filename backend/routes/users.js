@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/user.model');
 const jwt = require("jsonwebtoken");
-const { json } = require('express');
 require('dotenv').config();
+const { json } = require('express');
 const auth = require('../middleware/auth');
 const mailService = require('../middleware/mailService');
 const owasp = require('owasp-password-strength-test');
@@ -115,9 +115,39 @@ router.get('/isLoggedIn', auth, (req, res) => {
     if(req.user){
         res.json({isLoggedIn: "true"});
     }
-})
+});
 
-// changed user fields
+
+// Get all users
+router.get('/', async (req, res) => {
+    User.find()
+        .then(users => res.status(200).send(users))
+        .catch((err) => res.status(400).send(err));
+});
+
+// Get user by id
+router.get('/:userId', (req, res) => {
+    User.findOne({ _id: req.params.userId })
+        .select('-hashedPassword -salt')
+        .then(user => res.status(200).send(user))
+        .catch((err) => res.status(400).send(err));
+});
+
+
+router.route('/:id').get((req, res) => {
+    User.findById(req.params.id)
+      .then(user => res.json(user))
+      .catch(err => res.status(400).json('Error: ' + err));
+  });
+
+router.route('/:id').delete((req, res) => {
+    User.findByIdAndDelete(req.params.id)
+      .then(() => res.json('User deleted.'))
+      .catch(err => res.status(400).json('Error: ' + err));
+  });
+  
+
+// update email of current user
 router.post('/updateEmail', auth, (req, res) => {
     // error with authentication token
     if(!req.user){
@@ -149,7 +179,7 @@ router.post('/updateEmail', auth, (req, res) => {
     
 })
 
-// changed user fields
+// update username of current user
 router.post('/updateUsername', auth, (req, res) => {
     // error with authentication token
     if(!req.user){
@@ -180,7 +210,7 @@ router.post('/updateUsername', auth, (req, res) => {
         })
 })
 
-// // changed user fields
+// /update password of current user
 router.post('/updatePassword', auth, (req, res) => {
     // error with authentication token
     if(!req.user){
