@@ -1,5 +1,5 @@
 .modal-signup {  
-    width: 400px;
+    width: 400px !important;
 }
 
 .modal-signup .modal-body {
