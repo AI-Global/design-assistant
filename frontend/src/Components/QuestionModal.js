@@ -156,20 +156,20 @@ export default function QuestionModal(props) {
                     })
                 // need to clear question metadata before closing for adding action
                 props.question.alt_text = null
-                props.question.lifecycle = 6
+                props.question.lifecycle = [6]
                 props.question.pointsAvailable = 0
                 props.question.question = null
                 props.question.reference = null
                 props.question.responseType = "text"
                 props.question.questionType = "tombstone"
                 props.question.responses = []
-                props.question.roles = [12]
+                props.question.roles = [13]
                 props.question.trustIndexDimension = null
                 props.question.weighting = 0
                 props.question.child = child
                 props.question.trigger = trigger
-                props.question.questionDomain = null
-                props.question.questionRegion = null
+                props.question.questionDomain = [6]
+                props.question.questionRegion = [8]
                 // TODO: uncomment this when db changes made
                 // props.question.questionLink = null
                 close()
