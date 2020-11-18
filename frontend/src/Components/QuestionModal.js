@@ -407,9 +407,9 @@ export default function QuestionModal(props) {
                                 <Col xs={2} md={3}>
                                     <Form.Group controlId="roles">
                                         <Form.Label>Role</Form.Label>
-                                        <Form.Control as="select" multiple onChange={(event) => updateRole(event.target.selectedIndex+1)}>
+                                        <Form.Control value={questionRole} as="select" multiple onChange={(event) => updateRole(event.target.selectedIndex+1)}>
                                             {roles.map((role, index) =>
-                                                <option key={index} value={role.name}>{role.name}</option>
+                                                <option key={index} value={index+1}>{role.name}</option>
                                             )}
                                         </Form.Control>
                                     </Form.Group>
@@ -417,9 +417,9 @@ export default function QuestionModal(props) {
                                 <Col xs={2} md={3}>
                                     <Form.Group controlId="domains">
                                         <Form.Label>Domain</Form.Label>
-                                        <Form.Control as="select" multiple onChange={(event) => updateDomain(event.target.selectedIndex+1)}>
+                                        <Form.Control value={questionDomain} as="select" multiple onChange={(event) => updateDomain(event.target.selectedIndex+1)}>
                                             {domains.map((domain, index) =>
-                                                <option key={index} value={domain.name}>{domain.name}</option>
+                                                <option key={index} value={index+1}>{domain.name}</option>
                                             )}
                                         </Form.Control>
                                     </Form.Group>
@@ -427,9 +427,9 @@ export default function QuestionModal(props) {
                                 <Col xs={2} md={3}>
                                     <Form.Group controlId="regions">
                                         <Form.Label>Region</Form.Label>
-                                        <Form.Control as="select" multiple onChange={(event) => updateRegion(event.target.selectedIndex+1)}>
+                                        <Form.Control value={questionRegion} as="select" multiple onChange={(event) => updateRegion(event.target.selectedIndex+1)}>
                                             {regions.map((region, index) =>
-                                                <option key={index} value={region.name}>{region.name}</option>
+                                                <option key={index} value={index+1}>{region.name}</option>
                                             )}
                                         </Form.Control>
                                     </Form.Group>
@@ -437,9 +437,9 @@ export default function QuestionModal(props) {
                                 <Col xs={2} md={3}>
                                     <Form.Group controlId="lifecycles">
                                         <Form.Label>Life-Cycle</Form.Label>
-                                        <Form.Control as="select" multiple onChange={(event) => updateLifecycle(event.target.selectedIndex+1)}>
+                                        <Form.Control value={questionLifecycle} as="select" multiple onChange={(event) => updateLifecycle(event.target.selectedIndex+1)}>
                                             {lifecycles.map((lifecycle, index) =>
-                                                <option key={index} value={lifecycle.name}>{lifecycle.name}</option>
+                                                <option key={index} value={index+1}>{lifecycle.name}</option>
                                             )}
                                         </Form.Control>
                                     </Form.Group>
