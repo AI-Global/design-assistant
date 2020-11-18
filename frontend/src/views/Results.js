@@ -10,6 +10,7 @@ import ReportCard from "./ReportCard";
 import DimensionScore from "./DimensionScore";
 import TrustedAIProviders from './TrustedAIProviders';
 import ReactGa from 'react-ga';
+import Login from './Login';
 
 ReactGa.initialize(process.env.REACT_APP_GAID, { testMode: process.env.NODE_ENV === 'test' });
 
@@ -185,6 +186,7 @@ export default class Results extends Component {
                 <Link to='/'>
                     <Button id="restartButton" onClick={StartAgainHandler}>Start Again</Button>
                 </Link>
+                <Login />
             </main>
         );
     }

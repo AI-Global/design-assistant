@@ -418,6 +418,7 @@ class App extends Component {
               <Button id="resetButton" onClick={() => this.resetSurvey()}>Yes</Button>
             </ModalFooter>
           </Modal>
+          <Login />
         </div>
       );
     } else if (this.state.model) {

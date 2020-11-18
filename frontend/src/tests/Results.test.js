@@ -8,6 +8,7 @@ jest.mock('axios');
 
 const data = [];
 const response = {data: data};
+const loginButton = "Log in"
 
 const mockElements = [{
     "type": "radiogroup",
@@ -67,6 +68,7 @@ test('Results successfully renders', () => {
     }
     axios.get.mockResolvedValue(response);
     render(<Router><Results location={mockLocation}/></Router>)
+    expect(screen.getByText(loginButton)).toBeTruthy();
     expect(screen.queryByText("Results")).toBeTruthy();
 });
 
@@ -79,6 +81,7 @@ test('Results renders with no data', () => {
     }}
     axios.get.mockResolvedValue(response);
     render(<Router><Results location={mockLocation}/></Router>)
+    expect(screen.getByText(loginButton)).toBeTruthy();
     expect(screen.queryByText("Results")).toBeTruthy();
 
 });

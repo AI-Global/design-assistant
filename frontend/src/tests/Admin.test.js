@@ -10,6 +10,7 @@ const adminWelcomeText = "Administration Panel";
 const surveyManagmentText = "Survey Management"
 const usersText = "Users"
 const analyticsText = "Analytics"
+const loginButton = "Log in"
 
 const mockDB = {
     data: {
@@ -36,7 +37,8 @@ test('Admin Page renders', async () => {
     axios.get.mockResolvedValue(emptyMockDB);
 
     await render(<Router><Admin/></Router>);
-    
+    expect(screen.getByText(loginButton)).toBeTruthy();
+
     expect(screen.getByText(adminWelcomeText)).toBeTruthy();
     expect(screen.getByText(surveyManagmentText)).toBeTruthy();
     expect(screen.getByText(usersText)).toBeTruthy();
@@ -48,6 +50,7 @@ test('Admin Page renders survey management', async () => {
     axios.get.mockResolvedValue(mockDB);
     await render(<Router><Admin/></Router>);
 
+    expect(screen.getByText(loginButton)).toBeTruthy();
     expect(screen.getByText(adminWelcomeText)).toBeTruthy();
     expect(screen.getByText(surveyManagmentText)).toBeTruthy();
     expect(screen.getByText(usersText)).toBeTruthy();
