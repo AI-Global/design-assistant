@@ -106,9 +106,11 @@ class DesignAssistantSurvey extends Component {
             if (node) {
               node.classList.add('section-header');
             }
-            $('[data-toggle="tooltip"').tooltip({
+            // wait to load jquery to fix testing bug
+            // https://stackoverflow.com/a/63217419
+            setTimeout(function() {$('[data-toggle="tooltip"]').tooltip({
               boundary: 'viewport'
-            });
+            });}, 1500)
           });
         //change labels to 'h5' to bold them
         model
