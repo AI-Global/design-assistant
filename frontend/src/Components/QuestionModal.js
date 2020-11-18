@@ -193,9 +193,53 @@ export default function QuestionModal(props) {
         props.onHide()
     }
 
-    function deleteParent(){
+    function deleteParent() {
         setTrigger(null);
         setChild(false);
+    }
+
+    function updateRole(index) {
+        if (questionRole.includes(index)) {
+            const i = questionRole.indexOf(index)
+            questionRole.splice(i, 1)        
+        }
+        else {
+            questionRole.push(index)
+        }
+        setRole(questionRole)
+    }
+
+    function updateDomain(index) {
+        if (questionDomain.includes(index)) {
+            const i = questionDomain.indexOf(index)
+            questionDomain.splice(i, 1)        
+        }
+        else {
+            questionDomain.push(index)
+        }
+        setRole(questionDomain)
+    }
+
+    function updateRegion(index) {
+        if (questionRegion.includes(index)) {
+            const i = questionRegion.indexOf(index)
+            questionRegion.splice(i, 1)        
+        }
+        else {
+            questionRegion.push(index)
+        }
+        setRole(questionRegion)
+    }
+
+    function updateLifecycle(index) {
+        if (questionLifecycle.includes(index)) {
+            const i = questionLifecycle.indexOf(index)
+            questionLifecycle.splice(i, 1)        
+        }
+        else {
+            questionLifecycle.push(index)
+        }
+        setRole(questionLifecycle)
     }
 
     if (!dimensions) {
@@ -360,40 +404,40 @@ export default function QuestionModal(props) {
                         }
                         {questionType === "tombstone" ? null :
                             <Row>
-                                <Col xs={2} md={2}>
+                                <Col xs={2} md={3}>
                                     <Form.Group controlId="roles">
                                         <Form.Label>Role</Form.Label>
-                                        <Form.Control value={roles?.length ? roles[questionRole-1].name : ''} as="select" onChange={(event) => setRole(event.target.selectedIndex+1)}>
+                                        <Form.Control as="select" multiple onChange={(event) => updateRole(event.target.selectedIndex+1)}>
                                             {roles.map((role, index) =>
                                                 <option key={index} value={role.name}>{role.name}</option>
                                             )}
                                         </Form.Control>
                                     </Form.Group>
                                 </Col>
-                                <Col xs={2} md={2}>
+                                <Col xs={2} md={3}>
                                     <Form.Group controlId="domains">
                                         <Form.Label>Domain</Form.Label>
-                                        <Form.Control value={questionDomain?.length ? domains[questionDomain-1].name : ''} as="select" onChange={(event) => setDomain(event.target.selectedIndex+1)}>
+                                        <Form.Control as="select" multiple onChange={(event) => updateDomain(event.target.selectedIndex+1)}>
                                             {domains.map((domain, index) =>
                                                 <option key={index} value={domain.name}>{domain.name}</option>
                                             )}
                                         </Form.Control>
                                     </Form.Group>
                                 </Col>
-                                <Col xs={2} md={2}>
+                                <Col xs={2} md={3}>
                                     <Form.Group controlId="regions">
                                         <Form.Label>Region</Form.Label>
-                                        <Form.Control value={questionRegion?.length ? regions[questionRegion-1].name : ''} as="select" onChange={(event) => setRegion(event.target.selectedIndex+1)}>
+                                        <Form.Control as="select" multiple onChange={(event) => updateRegion(event.target.selectedIndex+1)}>
                                             {regions.map((region, index) =>
                                                 <option key={index} value={region.name}>{region.name}</option>
                                             )}
                                         </Form.Control>
                                     </Form.Group>
                                 </Col>
-                                <Col xs={2} md={2}>
+                                <Col xs={2} md={3}>
                                     <Form.Group controlId="lifecycles">
                                         <Form.Label>Life-Cycle</Form.Label>
-                                        <Form.Control value={lifecycles?.length ? lifecycles[questionLifecycle-1].name : ''} as="select" onChange={(event) => setLifecycle(event.target.selectedIndex+1)}>
+                                        <Form.Control as="select" multiple onChange={(event) => updateLifecycle(event.target.selectedIndex+1)}>
                                             {lifecycles.map((lifecycle, index) =>
                                                 <option key={index} value={lifecycle.name}>{lifecycle.name}</option>
                                             )}
