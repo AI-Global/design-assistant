@@ -10,8 +10,8 @@ const QuestionSchema = mongoose.Schema({
 
     // 5 possible dimensions
     trustIndexDimension: Number,
-    domainApplicability: Number,
-    regionalApplicability: Number,
+    domainApplicability: [Number],
+    regionalApplicability: [Number],
 
     // mandatory or optional
     mandatory: Boolean,

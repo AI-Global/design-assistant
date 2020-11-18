@@ -25,19 +25,21 @@ export default function QuestionModal(props) {
 
     // Set all question properties as hooks for rendering and updating
     const [altText, setAltText] = useState(props.question.alt_text)
-    // const [questionDomain, setDomain] = useState(domainJSON[props.question.domainApplicability].name)
+    const [questionDomain, setDomain] = useState(props.question.domainApplicability)
     const [questionLifecycle, setLifecycle] = useState(props.question.lifecycle)
     const [points, setPoints] = useState(props.question.pointsAvailable)
     const [question, setQuestion] = useState(props.question.question)
     const [questionRef, setRef] = useState(props.question.reference)
-    // const [questionRegion setRegion] = useState(regionJSON[props.question.regionalApplicability].name)
+    const [questionRegion, setRegion] = useState(props.question.regionalApplicability)
     const [responseType, setType] = useState(props.question.responseType)
     const [responses, setResponses] = useState(responsesA)
     const [questionRole, setRole] = useState(props.question.roles)
     const [dimension, setDimension] = useState(props.question.trustIndexDimension)
     const [weight, setWeight] = useState(props.question.weighting)
     const [questionType, setQType] = useState(props.question.questionType)
-    const [questionLink, setLink] = useState("")
+    // TODO: change this to props value when DB set up
+    const [questionLink, setLink] = useState('')
+    // const [questionLink, setLink] = useState(props.question.questionLink)
 
     // Hook for showing delet quesiton warning
     const [warningShow, setWarningShow] = useState(false)
@@ -95,6 +97,10 @@ export default function QuestionModal(props) {
         setWeight(props.question.weighting)
         setChild(props.question.child)
         setTrigger(props.question.trigger)
+        setDomain(props.question.questionDomain)
+        setRegion(props.question.questionRegion)
+        // TODO: uncomment this when db changes made
+        // setLink(props.question.questionLink)
         setInvalid(false)
         props.onHide()
     }
@@ -118,6 +124,10 @@ export default function QuestionModal(props) {
             props.question.weighting = weight
             props.question.child = child
             props.question.trigger = trigger
+            props.question.questionDomain = questionDomain
+            props.question.questionRegion = questionRegion
+            // TODO: uncomment this when db changes made
+            // props.question.questionLink = questionLink
 
             if (props.mode === "edit") {
                 endPoint = '/questions/' + props.question._id;
@@ -146,18 +156,22 @@ export default function QuestionModal(props) {
                     })
                 // need to clear question metadata before closing for adding action
                 props.question.alt_text = null
-                props.question.lifecycle = 6
+                props.question.lifecycle = [6]
                 props.question.pointsAvailable = 0
                 props.question.question = null
-                props.question.reference = questionRef
+                props.question.reference = null
                 props.question.responseType = "text"
                 props.question.questionType = "tombstone"
                 props.question.responses = []
-                props.question.roles = [12]
+                props.question.roles = [13]
                 props.question.trustIndexDimension = null
                 props.question.weighting = 0
                 props.question.child = child
                 props.question.trigger = trigger
+                props.question.questionDomain = [6]
+                props.question.questionRegion = [8]
+                // TODO: uncomment this when db changes made
+                // props.question.questionLink = null
                 close()
             }
         }
@@ -179,9 +193,53 @@ export default function QuestionModal(props) {
         props.onHide()
     }
 
-    function deleteParent(){
+    function deleteParent() {
         setTrigger(null);
         setChild(false);
+    }
+
+    function updateRole(index) {
+        if (questionRole.includes(index)) {
+            const i = questionRole.indexOf(index)
+            questionRole.splice(i, 1)        
+        }
+        else {
+            questionRole.push(index)
+        }
+        setRole(questionRole)
+    }
+
+    function updateDomain(index) {
+        if (questionDomain.includes(index)) {
+            const i = questionDomain.indexOf(index)
+            questionDomain.splice(i, 1)        
+        }
+        else {
+            questionDomain.push(index)
+        }
+        setDomain(questionDomain)
+    }
+
+    function updateRegion(index) {
+        if (questionRegion.includes(index)) {
+            const i = questionRegion.indexOf(index)
+            questionRegion.splice(i, 1)        
+        }
+        else {
+            questionRegion.push(index)
+        }
+        setRegion(questionRegion)
+    }
+
+    function updateLifecycle(index) {
+        if (questionLifecycle.includes(index)) {
+            const i = questionLifecycle.indexOf(index)
+            questionLifecycle.splice(i, 1)        
+        }
+        else {
+            questionLifecycle.push(index)
+        }
+        setLifecycle(questionLifecycle)
     }
 
     if (!dimensions) {
@@ -346,44 +404,42 @@ export default function QuestionModal(props) {
                         }
                         {questionType === "tombstone" ? null :
                             <Row>
-                                <Col xs={2} md={2}>
+                                <Col xs={2} md={3}>
                                     <Form.Group controlId="roles">
                                         <Form.Label>Role</Form.Label>
-                                        <Form.Control value={roles.length ? roles[questionRole-1].name : ''} as="select" onChange={(event) => setRole(event.target.selectedIndex+1)}>
+                                        <Form.Control value={questionRole} as="select" multiple onChange={(event) => updateRole(event.target.selectedIndex+1)}>
                                             {roles.map((role, index) =>
-                                                <option key={index} value={role.name}>{role.name}</option>
+                                                <option key={index} value={index+1}>{role.name}</option>
                                             )}
                                         </Form.Control>
                                     </Form.Group>
                                 </Col>
-                                <Col xs={2} md={2}>
+                                <Col xs={2} md={3}>
                                     <Form.Group controlId="domains">
                                         <Form.Label>Domain</Form.Label>
-                                        {/* TODO: update default value when questions have domain */}
-                                        <Form.Control defaultValue="Other" as="select">
+                                        <Form.Control value={questionDomain} as="select" multiple onChange={(event) => updateDomain(event.target.selectedIndex+1)}>
                                             {domains.map((domain, index) =>
-                                                <option key={index} value={domain.name}>{domain.name}</option>
+                                                <option key={index} value={index+1}>{domain.name}</option>
                                             )}
                                         </Form.Control>
                                     </Form.Group>
                                 </Col>
-                                <Col xs={2} md={2}>
+                                <Col xs={2} md={3}>
                                     <Form.Group controlId="regions">
                                         <Form.Label>Region</Form.Label>
-                                        {/* TODO: update default value when questions have region */}
-                                        <Form.Control defaultValue="Other" as="select">
+                                        <Form.Control value={questionRegion} as="select" multiple onChange={(event) => updateRegion(event.target.selectedIndex+1)}>
                                             {regions.map((region, index) =>
-                                                <option key={index} value={region.name}>{region.name}</option>
+                                                <option key={index} value={index+1}>{region.name}</option>
                                             )}
                                         </Form.Control>
                                     </Form.Group>
                                 </Col>
-                                <Col xs={2} md={2}>
+                                <Col xs={2} md={3}>
                                     <Form.Group controlId="lifecycles">
                                         <Form.Label>Life-Cycle</Form.Label>
-                                        <Form.Control value={lifecycles.length ? lifecycles[questionLifecycle-1].name : ''} as="select" onChange={(event) => setLifecycle(event.target.selectedIndex+1)}>
+                                        <Form.Control value={questionLifecycle} as="select" multiple onChange={(event) => updateLifecycle(event.target.selectedIndex+1)}>
                                             {lifecycles.map((lifecycle, index) =>
-                                                <option key={index} value={lifecycle.name}>{lifecycle.name}</option>
+                                                <option key={index} value={index+1}>{lifecycle.name}</option>
                                             )}
                                         </Form.Control>
                                     </Form.Group>
@@ -408,14 +464,14 @@ export default function QuestionModal(props) {
                                         </Form.Group>
                                     </Col>
                                 </Row>
-                                {/* <Row>
+                                <Row>
                                     <Col xs={12} md={12}>
                                         <Form.Group controlId="Link">
                                             <Form.Label>Link</Form.Label>
                                             <Form.Control placeholder="Link" value={questionLink || ""} onChange={(event) => setLink(event.target.value)}/>
                                         </Form.Group>
                                     </Col>
-                                </Row> */}
+                                </Row>
                             </React.Fragment>
                         }
                         <div id="modal-footer-border" />

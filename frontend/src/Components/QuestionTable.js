@@ -159,8 +159,8 @@ export default class QuestionTable extends Component {
             "questionNumber": this.state.questions.length + 1,
             "__v": 0,
             "alt_text": null,
-            "domainApplicability": null,
-            "lifecycle": 6,
+            "domainApplicability": [6],
+            "lifecycle": [6],
             "mandatory": true,
             "parent": null,
             "pointsAvailable": 0,
@@ -168,14 +168,14 @@ export default class QuestionTable extends Component {
             "question": null,
             "questionType": "tombstone",
             "reference": null,
-            "regionalApplicability": null,
+            "regionalApplicability": [8],
             "responseType": "text",
             "responses": [],
             "roles": [13],
             "trustIndexDimension": null,
             "weighting": 0,
             "trigger": null,
-            "child": false
+            "child": false,
         }
 
         return (
