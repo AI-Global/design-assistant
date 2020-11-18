@@ -217,7 +217,7 @@ export default function QuestionModal(props) {
         else {
             questionDomain.push(index)
         }
-        setRole(questionDomain)
+        setDomain(questionDomain)
     }
 
     function updateRegion(index) {
@@ -228,7 +228,7 @@ export default function QuestionModal(props) {
         else {
             questionRegion.push(index)
         }
-        setRole(questionRegion)
+        setRegion(questionRegion)
     }
 
     function updateLifecycle(index) {
@@ -239,7 +239,7 @@ export default function QuestionModal(props) {
         else {
             questionLifecycle.push(index)
         }
-        setRole(questionLifecycle)
+        setLifecycle(questionLifecycle)
     }
 
     if (!dimensions) {
