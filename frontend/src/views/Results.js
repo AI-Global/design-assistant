@@ -87,7 +87,9 @@ export default class Results extends Component {
         var questions = allQuestions.filter((question) => Object.keys(surveyResults).includes(question.name))
 
         var radarChartData = [];
-        return (
+        if(this.state.Dimensions.length === 0){
+            return null;
+        } else return (
             <main id="wb-cont" role="main" property="mainContentOfPage" className="container" style={{ paddingBottom: "1rem" }}>
                 <h1 className="section-header">
                     Results
