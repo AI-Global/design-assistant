@@ -217,7 +217,6 @@ function applyFitlers(questions, filters) {
         }
     }
 
-    console.log(questions)
     return questions
 }
 
@@ -267,7 +266,7 @@ async function createPages(q, filters) {
 
 
     // Apply domain, region, role, lifecycle filter to questions
-    dimQuestions = applyFitlers(dimQuestions, filters)
+    dimQuestions = applyFilters(dimQuestions, filters)
 
     // Create pages for the dimensions
     var pageCount = 1;
