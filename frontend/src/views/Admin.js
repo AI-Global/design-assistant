@@ -3,31 +3,27 @@ import React, { Component } from 'react';
 import QuestionTable from '../Components/QuestionTable';
 import AnalyticsDashboard from '../Components/AnalyticsDashboard';
 import { Tabs, Tab, Button, Table as BootStrapTable, DropdownButton, Dropdown } from 'react-bootstrap';
+import { getLoggedInUser } from '../helper/AuthHelper';
 import ReactGa from 'react-ga';
 import axios from 'axios';
 
 ReactGa.initialize(process.env.REACT_APP_GAID, { testMode: process.env.NODE_ENV === 'test' });
-/*
-
-<DropdownButton id="dropdown-item-button" title={props.user.role}>
-                <Dropdown.Item onClick = {props.changeRole(props.user._id)} >Member</Dropdown.Item>
-                <Dropdown.Item >Mod</Dropdown.Item>
-                <Dropdown.Item >Admin</Dropdown.Item>
-                <Dropdown.Item >Super Admin</Dropdown.Item>
-            </DropdownButton>
-*/
 
 const User = props => (
     <tr>
         <td>{props.user.email}</td>
         <td>{props.user.username}</td>
         <td>
-            <DropdownButton id="dropdown-item-button" title={props.user.role}>
-                <Dropdown.Item onClick={props.changeRole.bind(this, props.user._id, "member")} >Member</Dropdown.Item>
-                <Dropdown.Item onClick={props.changeRole.bind(this, props.user._id, "mod")} >Mod</Dropdown.Item>
-                <Dropdown.Item onClick={props.changeRole.bind(this, props.user._id, "admin")} >Admin</Dropdown.Item>
-                <Dropdown.Item onClick={props.changeRole.bind(this, props.user._id, "superadmin")} >Super Admin</Dropdown.Item>
-            </DropdownButton>
+
+            {(props.role === "superadmin") ?
+                <DropdownButton id="dropdown-item-button" title={props.user.role}>
+                    <Dropdown.Item onClick={props.changeRole.bind(this, props.user._id, "member")} >Member</Dropdown.Item>
+                    <Dropdown.Item onClick={props.changeRole.bind(this, props.user._id, "mod")} >Mod</Dropdown.Item>
+                    <Dropdown.Item onClick={props.changeRole.bind(this, props.user._id, "admin")} >Admin</Dropdown.Item>
+                    <Dropdown.Item onClick={props.changeRole.bind(this, props.user._id, "superadmin")} >Super Admin</Dropdown.Item>
+                </DropdownButton>
+                : props.user.role}
+
         </td>
         <td>
             <a href="#" onClick={() => { if (window.confirm('Are you sure you want to delete the user?')) { (props.deleteUser(props.user._id)) } }}>Delete User</a>
@@ -42,15 +38,20 @@ export default class AdminPanel extends Component {
 
         this.deleteUser = this.deleteUser.bind(this)
         this.changeRole = this.changeRole.bind(this)
+        this.role = undefined
 
         this.state = {
             users: [],
             submissions: []
-
+            
         };
     }
 
     componentDidMount() {
+        getLoggedInUser().then(user => {
+            this.role = user.role;
+        })
+
         ReactGa.pageview(window.location.pathname + window.location.search);
         var endPoint = '/questions';
         axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
@@ -123,7 +124,7 @@ export default class AdminPanel extends Component {
     userList() {
         if (Array.isArray(this.state.users)) {
             return this.state.users.map(currentuser => {
-                return <User user={currentuser} deleteUser={this.deleteUser} changeRole={this.changeRole} key={currentuser._id} />;
+                return <User user={currentuser} deleteUser={this.deleteUser} changeRole={this.changeRole} role={this.role} key={currentuser._id} />;
             })
         }
     }
