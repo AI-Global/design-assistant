@@ -99,7 +99,6 @@ export default class AdminPanel extends Component {
     }
 
     deleteUser(id) {
-        console.log(id + "TEST")
         let endPoint = '/users/' + id;
         axios.delete(process.env.REACT_APP_SERVER_ADDR + endPoint)
             .then(response => { console.log(response.data) });
