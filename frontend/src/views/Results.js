@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import { Link } from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "font-awesome/css/font-awesome.css";
@@ -13,14 +14,6 @@ import ReactGa from 'react-ga';
 import Login from './Login';
 
 ReactGa.initialize(process.env.REACT_APP_GAID, { testMode: process.env.NODE_ENV === 'test' });
-
-const Dimensions = {
-    Accountability: { label: "A", name: "Accountability" },
-    Explainability: { label: "EI", name: "Explainability" },
-    Data: { label: "D", name: "Data quality and rights" },
-    Bias: { label: "B", name: "Bias and fairness" },
-    Robustness: { label: "R", name: "Robustness" },
-}
 
 const StartAgainHandler = () => {
     ReactGa.event({
@@ -41,9 +34,19 @@ const ExportHandler = () => {
  * renders the results to the user in various different ways.
  */
 export default class Results extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+          Dimensions: []
+        }
+    }
 
     componentDidMount() {
+        
         ReactGa.pageview(window.location.pathname + window.location.search);
+        axios.get(process.env.REACT_APP_SERVER_ADDR +'/dimensions').then((res) => {
+            this.setState({Dimensions: res.data});
+          });
     }
 
     render() {
@@ -82,7 +85,9 @@ export default class Results extends Component {
         var questions = allQuestions.filter((question) => Object.keys(surveyResults).includes(question.name))
 
         var radarChartData = [];
-        return (
+        if(this.state.Dimensions.length === 0){
+            return null;
+        } else return (
             <main id="wb-cont" role="main" property="mainContentOfPage" className="container" style={{ paddingBottom: "1rem" }}>
                 <h1 className="section-header">
                     Results
@@ -109,10 +114,10 @@ export default class Results extends Component {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {Object.keys(Dimensions).map((dimension, idx) => {
+                                    {this.state.Dimensions.map((dimension, idx) => {
                                         return (
-                                            <DimensionScore key={idx} radarChartData={radarChartData} dimensionName={Dimensions[dimension]?.name}
-                                                results={surveyResults} questions={allQuestions.filter(x => x.score?.dimension === Dimensions[dimension]?.label)} />
+                                            <DimensionScore key={idx} radarChartData={radarChartData} dimensionName={dimension.name}
+                                                results={surveyResults} questions={allQuestions.filter(x => x.score?.dimension === dimension.label)} />
                                         )
                                     })}
                                 </tbody>
@@ -120,22 +125,22 @@ export default class Results extends Component {
                         </div>
                     </Tab>
                     <Tab eventKey="report-card" title="Report Card">
-                        <Tab.Container id="left-tabs-example" defaultActiveKey={Object.values(Dimensions)[0]?.label}>
+                        <Tab.Container id="left-tabs-example" defaultActiveKey={this.state.Dimensions[0].label}>
                             <Tab.Content>
-                                {Object.keys(Dimensions).map((dimension, idx) => {
+                                {this.state.Dimensions.map((dimension, idx) => {
                                     return (
-                                        <Tab.Pane key={idx} eventKey={Dimensions[dimension]?.label}>
-                                            <ReportCard dimension={Dimensions[dimension]?.label} results={surveyResults} questions={questions.filter(x => x.score?.dimension === Dimensions[dimension]?.label)} />
+                                        <Tab.Pane key={idx} eventKey={dimension.label}>
+                                            <ReportCard dimension={dimension.label} results={surveyResults} questions={questions.filter(x => x.score?.dimension === dimension.label)} />
                                         </Tab.Pane>
                                     );
                                 })}
                             </Tab.Content>
                             <Nav variant="tabs" className="report-card-nav" defaultActiveKey="accountability">
-                                {Object.keys(Dimensions).map((dimension, idx) => {
+                                {this.state.Dimensions.map((dimension, idx) => {
                                     return (
                                         <Nav.Item key={idx} >
-                                            <Nav.Link eventKey={Dimensions[dimension]?.label}>
-                                                {Dimensions[dimension]?.name}
+                                            <Nav.Link eventKey={dimension.label}>
+                                                {dimension.name}
                                             </Nav.Link>
                                         </Nav.Item>
                                     );
@@ -144,7 +149,7 @@ export default class Results extends Component {
                         </Tab.Container>
                     </Tab>
                     <Tab eventKey="ai-providers" title="Trusted AI Providers">
-                        <Tab.Container id="left-tabs-example" defaultActiveKey={Object.values(Dimensions)[0]?.label}>
+                        <Tab.Container id="left-tabs-example" defaultActiveKey={this.state.Dimensions[0].label}>
                             <TrustedAIProviders />
                         </Tab.Container>
                     </Tab>
