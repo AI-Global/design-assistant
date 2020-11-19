@@ -1,4 +1,5 @@
 import axios from 'axios';
+import '../css/admin.css';
 import React, { Component } from 'react';
 import Add from '@material-ui/icons/Add';
 import Table from '@material-ui/core/Table';
@@ -101,8 +102,6 @@ export default class QuestionTable extends Component {
                 })
             
         }
-        console.log("Source:", result.source.index)
-        console.log("Parent:", result.destination.index - 1)
     }
 
     addQuestion() {
@@ -122,8 +121,6 @@ export default class QuestionTable extends Component {
 
     updateQuestionNumbers() {
         this.setChildModalShow(false);
-        console.log("in make relationship");
-        console.log(this.state.newNumber);
         var endPoint = '/questions/' + this.state.previousNumber.toString() + '/'+ this.state.newNumber.toString();
         axios.put(process.env.REACT_APP_SERVER_ADDR + endPoint, this.state.currentQuestion.questionNumber)
             .then(() => {
@@ -151,7 +148,6 @@ export default class QuestionTable extends Component {
 
     makeRelationship(){
         this.setChildModalShow(false);
-        console.log("in make relationship");
         // TODO: Add functionality to make question child of parent
     }
 
@@ -163,8 +159,8 @@ export default class QuestionTable extends Component {
             "questionNumber": this.state.questions.length + 1,
             "__v": 0,
             "alt_text": null,
-            "domainApplicability": null,
-            "lifecycle": 6,
+            "domainApplicability": [6],
+            "lifecycle": [6],
             "mandatory": true,
             "parent": null,
             "pointsAvailable": 0,
@@ -172,14 +168,14 @@ export default class QuestionTable extends Component {
             "question": null,
             "questionType": "tombstone",
             "reference": null,
-            "regionalApplicability": null,
+            "regionalApplicability": [8],
             "responseType": "text",
             "responses": [],
             "roles": [13],
             "trustIndexDimension": null,
             "weighting": 0,
             "trigger": null,
-            "child": false
+            "child": false,
         }
 
         return (

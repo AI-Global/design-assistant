@@ -73,7 +73,8 @@ describe('GET /questions/{QID}', () => {
 
     // TODO: make post. Dont hardcode qID
     it('Getting question by question ID ', (done) => {
-        request(app).get('/questions/5f85d5e4157a3b15fcc8e18d')
+        //text question
+        request(app).get('/questions/5fafa2fdd17b20d5d48c38e6')
         .then((res) => {
             const body = res.body;
             expect(body).to.contain.property('title');
@@ -82,13 +83,13 @@ describe('GET /questions/{QID}', () => {
         })
         .catch((err) => done(err));
 
-        request(app).get('/questions/5f85d5e6157a3b15fcc8e33c')
+        // radio question
+        request(app).get('/questions/5fafa305d17b20d5d48c3e13')
         .then((res) => {
             const body = res.body;
             expect(body).to.contain.property('title');
             expect(body).to.contain.property('name');
             expect(body).to.contain.property('type');
-            expect(body).to.contain.property('description');
             expect(body).to.contain.property('recommendation');
             expect(body).to.contain.property('score');
             expect(body).to.contain.property('choices');

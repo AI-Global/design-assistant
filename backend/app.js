@@ -30,6 +30,8 @@ const usersRouter = require("./routes/users");
 const submissionsRouter = require("./routes/submissions");
 const metaDataRouter = require("./routes/metadata");
 const dimensionsRouter = require("./routes/dimensions");
+const analyticsRouter = require("./routes/analytics");
+
 
 app.use("/questions", questionsRouter);
 app.use("/responses", responsesRouter);
@@ -38,6 +40,8 @@ app.use("/users", usersRouter);
 app.use("/submissions", submissionsRouter);
 app.use("/metadata", metaDataRouter);
 app.use("/dimensions", dimensionsRouter);
+app.use("/analytics", analyticsRouter);
+
 
 // Listen on port
 app.listen(port, '0.0.0.0',  () => {

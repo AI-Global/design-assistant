@@ -10,6 +10,7 @@ import ReportCard from "./ReportCard";
 import DimensionScore from "./DimensionScore";
 import TrustedAIProviders from './TrustedAIProviders';
 import ReactGa from 'react-ga';
+import Login from './Login';
 
 ReactGa.initialize(process.env.REACT_APP_GAID, { testMode: process.env.NODE_ENV === 'test' });
 
@@ -44,7 +45,7 @@ export default class Results extends Component {
     componentDidMount() {
         ReactGa.pageview(window.location.pathname + window.location.search);
     }
-    
+
     render() {
         var json = this?.props?.location?.state?.questions;
         var surveyResults = this?.props?.location?.state?.responses;
@@ -61,28 +62,21 @@ export default class Results extends Component {
             return allQuestions
         });
 
-        var projectTitle = surveyResults[(allQuestions[0]?.name)];
-        var projectDescription = surveyResults[(allQuestions[1]?.name)];
-        var projectIndustry;
-        var projectRegion;
+        var titleQuestion = allQuestions.find(question => question.title.default === "Title of project");
+        var descriptionQuestion = allQuestions.find(question => question.title.default === "Project Description");
+        var industryQuestion = allQuestions.find(question => question.title.default === "Industry");
+        var regionQuestion = allQuestions.find(question => question.title.default === "Country");
 
-        try {
-            projectIndustry = allQuestions[3].choices
-                .filter((choice) => {
-                    return choice.value === surveyResults[(allQuestions[3]?.name)]
-                })[0].text.default
-        } catch {
-            projectIndustry = null;
-        }
+        var projectTitle = surveyResults[titleQuestion?.name];
+        var projectDescription = surveyResults[descriptionQuestion?.name];
 
-        try {
-            projectRegion = allQuestions[4].choices
-                .filter((choice) => {
-                    return choice.value === surveyResults[(allQuestions[4]?.name)]
-                })[0].text.default
-        } catch {
-            projectRegion = null;
-        }
+        var projectIndustry = industryQuestion?.choices?.find(
+            (choice) => choice.value === surveyResults[industryQuestion?.name]
+        )?.text?.default
+
+        var projectRegion = regionQuestion?.choices?.find(
+            (choice) => choice.value === surveyResults[regionQuestion?.name]
+        )?.text?.default
 
 
         var questions = allQuestions.filter((question) => Object.keys(surveyResults).includes(question.name))
@@ -93,7 +87,7 @@ export default class Results extends Component {
                 <h1 className="section-header">
                     Results
                 </h1>
-                <button id="exportButton" type="button" className="btn btn-save mr-2 btn btn-primary export-button" onClick={() => exportReport(projectTitle, projectDescription, projectIndustry, projectRegion)}>Export</button>
+                <button id="exportButton" type="button" className="btn btn-save mr-2 btn btn-primary export-button" onClick={() => {ExportHandler(); exportReport(projectTitle, projectDescription, projectIndustry, projectRegion)}}>Export</button>
                 <Tabs defaultActiveKey="score">
                     <Tab eventKey="score" title="Score">
                         <div className="table-responsive mt-3">
@@ -192,6 +186,7 @@ export default class Results extends Component {
                 <Link to='/'>
                     <Button id="restartButton" onClick={StartAgainHandler}>Start Again</Button>
                 </Link>
+                <Login />
             </main>
         );
     }

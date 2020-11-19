@@ -3,21 +3,20 @@
   background-color: #d0e0e3;
 }
 
-.modal-60w{
-  width: 60%;
+.modal-question {
+  width: 60% !important;
   max-width: none !important;
 }
 
-.modal-30w{
-  width: 30%;
-  max-width: none !important;
+.modal {
+  z-index: 1040 !important;
 }
 
 .form-label {
   font-weight: 600;
 }
 
-.modal-60w .modal-body {
+.modal-question .modal-body {
   padding-left: 6em;
   padding-right: 6em;
 }
@@ -51,10 +50,6 @@ input[type=number]
 {
   -moz-appearance: textfield;
   border-radius: 5%;
-}
-
-.modal {
-  z-index: 1040;
 }
 
 .form-label {

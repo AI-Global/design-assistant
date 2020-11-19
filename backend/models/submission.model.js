@@ -4,11 +4,9 @@ const SubmissionSchema = mongoose.Schema({
 
     // user ID that owns this 
     userId: {
-        type: String,
-        unique: true
+        type: mongoose.Types.ObjectId
     },
 
-    // name for a project that owns this submission
     projectName: {
         type: String
     },
@@ -23,7 +21,6 @@ const SubmissionSchema = mongoose.Schema({
     lifecycle: {
         type: Number
     },
-
 
     // json file that gets output from survey.js
     submission: {

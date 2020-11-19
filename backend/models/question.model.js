@@ -10,8 +10,8 @@ const QuestionSchema = mongoose.Schema({
 
     // 5 possible dimensions
     trustIndexDimension: Number,
-    domainApplicability: Number,
-    regionalApplicability: Number,
+    domainApplicability: [Number],
+    regionalApplicability: [Number],
 
     // mandatory or optional
     mandatory: Boolean,
@@ -49,7 +49,7 @@ const QuestionSchema = mongoose.Schema({
     responseType: {
         type: String,
         required: true,
-        enum: [null, 'text', 'comment', 'checkbox', 'radiogroup', 'dropdown']
+        enum: [null, 'text', 'comment', 'checkbox', 'radiogroup', 'dropdown', 'bootstrapslider']
     },
 
     // -1 to 1
