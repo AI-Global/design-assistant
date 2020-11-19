@@ -15,4 +15,20 @@ router.get('/', async (req,res) => {
     }
 });
 
+router.get('/names', async (req,res) => {
+    try{
+        const dimensions = await Dimension.find({}, 'name');
+        let dimensionNames = [];
+        dimensions.forEach(function (item, index) {
+            dimensionNames.push(item.name);
+        })
+        res.json(dimensionNames);
+        // print debug message
+        console.log("Incoming dimensions request");
+    } catch(err){
+        res.json({message: err});
+
+    }
+});
+
 module.exports = router;
