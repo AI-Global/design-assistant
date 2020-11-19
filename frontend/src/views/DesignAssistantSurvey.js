@@ -53,8 +53,8 @@ class DesignAssistantSurvey extends Component {
     this.state = {
       metadata: {},
       roleFilters: [13],
-      domainFilters: [6],
-      regionFilters: [8],
+      domainFilters: [],
+      regionFilters: [],
       lifecycleFilters: [6],
       showModal: false,
       A: 1,
@@ -103,6 +103,13 @@ class DesignAssistantSurvey extends Component {
 
         if (this?.props?.location?.state?.prevResponses) {
           model.data = this.props.location.state.prevResponses
+        }
+
+        if (this?.props?.location?.state?.filters) {
+          this.setState({roleFilters: this.props.location.state.filters.roles})
+          this.setState({domainFilters: this.props.location.state.filters.domain})
+          this.setState({regionFilters: this.props.location.state.filters.region})
+          this.setState({lifecycleFilters: this.props.location.state.filters.lifecycle})
         }
 
         if (submissions) {
@@ -223,7 +230,11 @@ class DesignAssistantSurvey extends Component {
       submission: this.state.model.data,
       date: dateTime,
       projectName: projectName,
-      completed: completed
+      completed: completed,
+      domain: this.state.domainFilters,
+      region: this.state.regionFilters,
+      roles: this.state.roleFilters,
+      lifecycle: this.state.lifecycleFilters
     }).then(res => console.log(res.data));
   }
 
