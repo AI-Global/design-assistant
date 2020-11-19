@@ -19,7 +19,7 @@ function PrivateRoute({ component: Component, ...rest }) {
             render={props =>
                 u === '' ? null : (
                     u === undefined ? <Redirect to="/" /> :
-                        u.role === "admin" ? <Component {...props} /> : <Redirect to="/" /> 
+                        (u.role === "admin" ||u.role === "superadmin" ) ? <Component {...props} /> : <Redirect to="/" /> 
                     )
             }
         />
