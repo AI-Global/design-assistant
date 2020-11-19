@@ -190,7 +190,7 @@ function createPage(questions, pageName, pageTitle, Dimensions, Children) {
     return page
 }
 
-function applyFitlers(questions, filters) {
+function applyFilters(questions, filters) {
     // This function applies the filters to list of questions 
 
     if (filters.roles) {
