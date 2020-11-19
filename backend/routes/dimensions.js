@@ -6,7 +6,7 @@ const Dimension = require('../models/dimension.model');
 router.get('/', async (req,res) => {
     try{
         const dimensions = await Dimension.find();
-        res.json(submissions);
+        res.json(dimensions);
         // print debug message
         console.log("Incoming dimensions request");
     } catch(err){
