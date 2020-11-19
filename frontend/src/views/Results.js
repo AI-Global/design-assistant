@@ -45,8 +45,6 @@ export default class Results extends Component {
         
         ReactGa.pageview(window.location.pathname + window.location.search);
         axios.get(process.env.REACT_APP_SERVER_ADDR +'/dimensions').then((res) => {
-            
-            console.log(res.data)
             this.setState({Dimensions: res.data});
           });
     }
