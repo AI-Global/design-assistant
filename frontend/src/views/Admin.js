@@ -43,7 +43,7 @@ export default class AdminPanel extends Component {
         this.state = {
             users: [],
             submissions: []
-            
+
         };
     }
 
@@ -114,7 +114,7 @@ export default class AdminPanel extends Component {
         let endPoint = '/users/' + id;
         axios.put(process.env.REACT_APP_SERVER_ADDR + endPoint, { "role": role })
             .then(response => {
-                this.state.users.find(user => user.id === response.id).role = role
+                this.state.users.find(user => user._id === response.data._id).role = role
                 this.setState({
                     users: this.state.users
                 })
