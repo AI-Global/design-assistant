@@ -116,13 +116,36 @@ class App extends Component {
         })
     }
     else {
-      // If survey is not completed, pass previous submissions so SruveyJS can load them into the model
+      // If survey is not completed, pass previous submissions so SurveyJS can load them into the model
       // so user can continue 
       this.props.history.push({
         pathname: '/DesignAssistantSurvey',
         state: { prevResponses: submission.submission, submission_id: submission._id }
       })
     }
+  }
+
+  cloneSurvey(index){
+    let submission = this.state.submissions[index];
+    let user = this.state.user;
+    let dateTime = new Date();
+    var endPoint = '/submissions/';
+    axios.post(process.env.REACT_APP_SERVER_ADDR + endPoint, {
+      userId: user?._id ?? null,
+      projectName: submission?.projectName,
+      date: dateTime,
+      lifecycle: 6,
+      submission: submission?.submission,
+      completed: false
+    })
+      .then(res => {
+        // update this.state.submissions object here
+        let newSubmission = res.data;
+        let submissions = this.state.submissions;
+        submissions.unshift(newSubmission);
+        this.setState({ submissions: submissions })
+        this.setState({ currentSubmissionIdx: this.state.submissions.length - 1 });
+      });
   }
 
   render() {
@@ -158,6 +181,7 @@ class App extends Component {
                     <th>
                       Last Updated
                       </th>
+                    <th width="175px"></th>
                     <th width="192px"></th>
                   </tr>
                 </thead>
@@ -176,6 +200,9 @@ class App extends Component {
                             <Button block onClick={() => { this.resumeSurvey(index); StartSurveyHandler() }} >Resume Survey</Button>}
                           {value.completed &&
                             <Button id="ResultsButton" block onClick={() => { this.resumeSurvey(index); StartSurveyHandler() }} >Survey Results</Button>}
+                        </td>
+                        <td width="175px">
+                            <Button block onClick={() => {this.cloneSurvey(index)}}>Clone</Button>
                         </td>
                       </tr>
                     )
