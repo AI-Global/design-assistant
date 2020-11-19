@@ -301,6 +301,7 @@ class DesignAssistantSurvey extends Component {
   }
 
   applyFilters() {
+    this.setState({ mount: false })
     var submissions = this.state.model.data
     this.getQuestions(submissions)
   }

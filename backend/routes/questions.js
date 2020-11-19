@@ -303,10 +303,9 @@ async function createPages(q, filters) {
 // Get all questions. Assemble SurveyJS JSON here
 router.get('/', async (req, res) => {
     // Optional filters in req body
-    filters = req.body;
+    filters = req.query;
 
     // Only request parent questions from DB
-    console.log(req.query)
     Question.find({ "child": false })
         .sort({ questionNumber: 1 })
         .then(async (questions) => {
