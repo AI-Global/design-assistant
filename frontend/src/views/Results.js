@@ -125,7 +125,7 @@ export default class Results extends Component {
                         </div>
                     </Tab>
                     <Tab eventKey="report-card" title="Report Card">
-                        <Tab.Container id="left-tabs-example" >
+                        <Tab.Container id="left-tabs-example" defaultActiveKey={this.state.Dimensions[0].label}>
                             <Tab.Content>
                                 {this.state.Dimensions.map((dimension, idx) => {
                                     return (
@@ -149,7 +149,7 @@ export default class Results extends Component {
                         </Tab.Container>
                     </Tab>
                     <Tab eventKey="ai-providers" title="Trusted AI Providers">
-                        <Tab.Container id="left-tabs-example" >
+                        <Tab.Container id="left-tabs-example" defaultActiveKey={this.state.Dimensions[0].label}>
                             <TrustedAIProviders />
                         </Tab.Container>
                     </Tab>
