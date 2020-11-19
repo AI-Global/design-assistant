@@ -87,6 +87,7 @@ class DesignAssistantSurvey extends Component {
     var endPoint = '/questions';
     axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint, {params: { roles: this.state.roleFilters, domains: this.state.domainFilters, regions: this.state.regionFilters, lifecycles: this.state.lifecycleFilters}})
       .then(res => {
+        this.setState({ mount: false })
         var json = res.data;
         // replace double escaped characters so showdown correctly renders markdown frontslashes and newlines
         var stringified = JSON.stringify(json);
@@ -301,7 +302,6 @@ class DesignAssistantSurvey extends Component {
   }
 
   applyFilters() {
-    this.setState({ mount: false })
     var submissions = this.state.model.data
     this.getQuestions(submissions)
   }
