@@ -5,12 +5,11 @@ import ReactGa from 'react-ga';
 import showdown from 'showdown';
 import * as Survey from "survey-react";
 import Card from 'react-bootstrap/Card';
-import { Button } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 import React, { Component } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import * as widgets from "surveyjs-widgets";
 import { withRouter } from 'react-router-dom';
-import Dropdown from 'react-bootstrap/Dropdown';
 import Accordion from 'react-bootstrap/Accordion';
 import ModalBody from 'react-bootstrap/ModalBody';
 import ModalTitle from 'react-bootstrap/ModalTitle';
@@ -52,6 +51,11 @@ class DesignAssistantSurvey extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      metadata: {},
+      roleFilters: [13],
+      domainFilters: [6],
+      regionFilters: [8],
+      lifecycleFilters: [6],
       showModal: false,
       A: 1,
       B: 9,
@@ -71,8 +75,17 @@ class DesignAssistantSurvey extends Component {
 
     ReactGa.pageview(window.location.pathname + window.location.search);
 
-    var endPoint = '/questions';
+    var endPoint = '/metadata';
     axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
+      .then(res => {
+        this.setState({ metadata: res.data })
+      })
+    this.getQuestions()
+  }
+
+  async getQuestions(submissions) {
+    var endPoint = '/questions';
+    axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint, {params: { roles: this.state.roleFilters, domains: this.state.domainFilters, regions: this.state.regionFilters, lifecycles: this.state.lifecycleFilters}})
       .then(res => {
         var json = res.data;
         // replace double escaped characters so showdown correctly renders markdown frontslashes and newlines
@@ -91,6 +104,10 @@ class DesignAssistantSurvey extends Component {
           model.data = this.props.location.state.prevResponses
         }
 
+        if (submissions) {
+          model.data = submissions
+        }
+        
         model
           .onTextMarkdown
           .add(function (model, options) {
@@ -108,9 +125,11 @@ class DesignAssistantSurvey extends Component {
             }
             // wait to load jquery to fix testing bug
             // https://stackoverflow.com/a/63217419
-            setTimeout(function() {$('[data-toggle="tooltip"]').tooltip({
-              boundary: 'viewport'
-            });}, 1500)
+            setTimeout(function () {
+              $('[data-toggle="tooltip"]').tooltip({
+                boundary: 'viewport'
+              });
+            }, 1500)
           });
         //change labels to 'h5' to bold them
         model
@@ -241,8 +260,52 @@ class DesignAssistantSurvey extends Component {
     this.setState(this.state)
   }
 
+  addRole(e) {
+    const v = parseInt(e)
+    if (this.state.roleFilters.includes(v)) {
+      const i = this.state.roleFilters.indexOf(v)
+      this.state.roleFilters.splice(i, 1)
+    }
+    else { this.state.roleFilters.push(v) }
+    this.setState({ roleFilters: this.state.roleFilters })
+  }
+
+  addDomain(e) {
+    const v = parseInt(e)
+    if (this.state.domainFilters.includes(v)) {
+      const i = this.state.domainFilters.indexOf(v)
+      this.state.domainFilters.splice(i, 1)
+    }
+    else { this.state.domainFilters.push(v) }
+    this.setState({ domainFilters: this.state.domainFilters })
+  }
+
+  addRegion(e) {
+    const v = parseInt(e)
+    if (this.state.regionFilters.includes(v)) {
+      const i = this.state.regionFilters.indexOf(v)
+      this.state.regionFilters.splice(i, 1)
+    }
+    else { this.state.regionFilters.push(v) }
+    this.setState({ regionFilters: this.state.regionFilters })
+  }
+
+  addLifecycle(e) {
+    const v = parseInt(e)
+    if (this.state.lifecycleFilters.includes(v)) {
+      const i = this.state.lifecycleFilters.indexOf(v)
+      this.state.lifecycleFilters.splice(i, 1)
+    }
+    else { this.state.lifecycleFilters.push(v) }
+    this.setState({ lifecycleFilters: this.state.lifecycleFilters })
+  }
+
+  applyFilters() {
+    var submissions = this.state.model.data
+    this.getQuestions(submissions)
+  }
+
   render() {
-    console.log('render')
     return (
       this.state.model ?
         <div>
@@ -267,16 +330,43 @@ class DesignAssistantSurvey extends Component {
                 </Accordion.Toggle>
                 <Accordion.Collapse eventKey='9'>
                   <Card.Body className="cardBody">
-                    <DropdownButton title="Role" className="filterDrop" style={{ "marginRight": "1em" }}>
-                      <Dropdown.Item>Role 1</Dropdown.Item>
-                      <Dropdown.Item>Role 2</Dropdown.Item>
-                      <Dropdown.Item>Role 3</Dropdown.Item>
+                    <DropdownButton title="Roles" className="filterDrop">
+                      <Form>
+                        {this.state.metadata.roles.map((role, index) => {
+                          return (
+                            <Form.Check type='checkbox' checked={this.state.roleFilters.includes(index + 1)} label={role.name} id={index} key={index} value={index + 1} onChange={(e) => this.addRole(e.target.value)} />
+                          )
+                        })}
+                      </Form>
                     </DropdownButton>
-                    <DropdownButton title="Cycle" className="filterDrop">
-                      <Dropdown.Item>Life Cycle 1</Dropdown.Item>
-                      <Dropdown.Item>Life Cycle 2</Dropdown.Item>
-                      <Dropdown.Item>Life Cycle 3</Dropdown.Item>
+                    <DropdownButton title="Industry" className="filterDrop">
+                      <Form>
+                        {this.state.metadata.domain.map((domain, index) => {
+                          return (
+                            <Form.Check type='checkbox' checked={this.state.domainFilters.includes(index + 1)} label={domain.name} id={index} key={index} value={index + 1} onChange={(e) => this.addDomain(e.target.value)} />
+                          )
+                        })}
+                      </Form>
                     </DropdownButton>
+                    <DropdownButton title="Regions" className="filterDrop">
+                      <Form>
+                        {this.state.metadata.region.map((region, index) => {
+                          return (
+                            <Form.Check type='checkbox' checked={this.state.regionFilters.includes(index + 1)} label={region.name} id={index} key={index} value={index + 1} onChange={(e) => this.addRegion(e.target.value)} />
+                          )
+                        })}
+                      </Form>
+                    </DropdownButton>
+                    <DropdownButton title="Life Cycles" className="filterDrop">
+                      <Form>
+                        {this.state.metadata.lifecycle.map((lifecycle, index) => {
+                          return (
+                            <Form.Check type='checkbox' checked={this.state.lifecycleFilters.includes(index + 1)} label={lifecycle.name} id={index} key={index} value={index + 1} onChange={(e) => this.addLifecycle(e.target.value)} />
+                          )
+                        })}
+                      </Form>
+                    </DropdownButton>
+                    <Button id="saveButton" className="filterApply" onClick={() => this.applyFilters()}>Apply Filters</Button>
                   </Card.Body>
                 </Accordion.Collapse>
               </Card>
@@ -285,16 +375,16 @@ class DesignAssistantSurvey extends Component {
           <div className="container" style={{ "paddingTop": "2em" }}>
             <div className="d-flex justify-content-center col">{this.percent()}%</div>
           </div>
-          {this.state.mount ? <Survey.Survey model={this.state.model} onComplete={this.onComplete} /> : null }
+          {this.state.mount ? <Survey.Survey model={this.state.model} onComplete={this.onComplete} /> : null}
           <div id="navCon" className="container">
             <div id="navCard" className="card">
               <div className="row no-gutters">
                 <div className="d-flex justify-content-start col">
-                  <Button className="btn btn-primary mr-2" onClick={this.handleOpenModal}>Reset</Button>
+                  <Button id='resetButton' className="btn btn-primary mr-2" onClick={this.handleOpenModal}>Reset</Button>
                 </div>
                 <div className="d-flex justify-content-center col">
-                  <Button className="btn btn-primary mr-2" onClick={() => this.prevPage()} disabled={this.state.model.isFirstPage}>Prev</Button>
-                  <Button className="btn btn-primary mr-2" onClick={() => this.nextPage()} disabled={this.state.model.isLastPage}>Next</Button>
+                  <Button id='surveyNav' className="btn btn-primary mr-2" onClick={() => this.prevPage()} disabled={this.state.model.isFirstPage}>Prev</Button>
+                  <Button id='surveyNav' className="btn btn-primary mr-2" onClick={() => this.nextPage()} disabled={this.state.model.isLastPage}>Next</Button>
                 </div>
                 <div className="d-flex justify-content-end col">
                   <Button className="btn btn-save mr-2" id="saveButton" onClick={() => this.save()}>Save</Button>
