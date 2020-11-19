@@ -190,14 +190,35 @@ function createPage(questions, pageName, pageTitle, Dimensions, Children) {
     return page
 }
 
-function applyFitlers(questions, filters){
-    console.log(filters)
-    console.log(filters.domains)
-    console.log(filters.roles)
-    console.log(filters.region)
-    console.log(filters.lifecycle)
+function applyFitlers(questions, filters) {
+    // This function applies the filters to list of questions 
+
+    if (filters.roles) {
+        for (let dim of Object.keys(questions)) {
+            questions[dim] = questions[dim].filter(q => filters.roles.some(role => q.roles.includes(role)))
+        }
+    }
+
+    if (filters.regions) {
+        for (let dim of Object.keys(questions)) {
+            questions[dim] = questions[dim].filter(q => filters.regions.some(region => q.regionalApplicability.includes(region)))
+        }
+    }
+
+    if (filters.lifecycles) {
+        for (let dim of Object.keys(questions)) {
+            questions[dim] = questions[dim].filter(q => filters.lifecycles.some(lifecycle => q.lifecycle.includes(lifecycle)))
+        }
+    }
+
+    if (filters.domains) {
+        for (let dim of Object.keys(questions)) {
+            questions[dim] = questions[dim].filter(q => filters.domains.some(domain => q.domainApplicability.includes(domain)))
+        }
+    }
 
     console.log(questions)
+    return questions
 }
 
 async function createPages(q, filters) {
@@ -284,7 +305,7 @@ async function createPages(q, filters) {
 router.get('/', async (req, res) => {
     // Optional filters in req body
     filters = req.body;
-    
+
     // Only request parent questions from DB
     Question.find({ "child": false })
         .sort({ questionNumber: 1 })
@@ -339,7 +360,7 @@ router.delete('/:questionId', async (req, res) => {
         const session = await mongoose.startSession();
         session.withTransaction(async () => {
             var number;
-            var question = await Question.findOne({_id: req.params.questionId})
+            var question = await Question.findOne({ _id: req.params.questionId })
             var number = question.questionNumber
             await Question.deleteOne({ _id: req.params.questionId })
             var maxQ = await Question.find().sort({ questionNumber: -1 }).limit(1)
