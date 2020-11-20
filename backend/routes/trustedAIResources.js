@@ -13,4 +13,44 @@ router.get('/', async (req,res) => {
     }
 });
 
+// add a new resource
+router.put('/', async (req, res) => {
+    try {
+        const resource = new TrustedAIResources(
+            req.body
+        );
+
+        const savedResource = await resource.save();
+        res.json(savedResource);
+    } catch (err) {
+        res.json({ message: err });
+    }
+
+});
+
+
+// delete a resource
+router.delete('/:id', async (req, res) => {
+    try {
+        // Delete existing question in DB
+        let doc = await TrustedAIResources.findOneAndDelete({ _id: req.params.id })
+        res.json(doc);
+    } catch (err) {
+        res.json({ message: err });
+    }
+
+});
+
+// update a resource
+router.put('/:id', async (req, res) => {
+    try{
+        const ret = await TrustedAIResources.findOneAndUpdate({'_id' : req.params.id}, req.body
+        , {upsert:true, runValidators: true});
+        res.json(ret);
+    } catch(err){
+        // console.log("error updating", err);
+        res.json({message: err});
+    }
+});
+
 module.exports = router;

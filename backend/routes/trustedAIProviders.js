@@ -13,4 +13,42 @@ router.get('/', async (req,res) => {
     }
 });
 
+// add a new provider
+router.put('/', async (req, res) => {
+    try {
+        const provider = new TrustedAIProviders(
+            req.body
+        );
+
+        const savedProvider = await provider.save();
+        res.json(savedProvider);
+    } catch (err) {
+        res.json({ message: err });
+    }
+
+});
+
+// delete a provider
+router.delete('/:id', async (req, res) => {
+    try {
+        // Delete existing question in DB
+        let doc = await TrustedAIProviders.findOneAndDelete({ _id: req.params.id })
+        res.json(doc);
+    } catch (err) {
+        res.json({ message: err });
+    }
+
+});
+
+// update a provider
+router.put('/:id', async (req, res) => {
+    try{
+        const ret = await TrustedAIProviders.findOneAndUpdate({'_id' : req.params.id}, req.body
+        , {upsert:true, runValidators: true});
+        res.json(ret);
+    } catch(err){
+        // console.log("error updating", err);
+        res.json({message: err});
+    }
+});
 module.exports = router;

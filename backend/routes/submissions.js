@@ -31,7 +31,6 @@ router.get('/user/:userId',  async (req,res) => {
 
 router.post('/update/:submissionId', async (req, res) => {
     try{
-        console.log("updating");
         const submissions = await Submission.findOneAndUpdate({'_id' : req.params.submissionId}, {
             submission: req.body.submission,
             date: req.body.date,
