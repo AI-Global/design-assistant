@@ -22,7 +22,7 @@ router.get('/names', async (req,res) => {
         dimensions.forEach(function (item, index) {
             dimensionNames.push(item.name);
         })
-        res.json(dimensionNames);
+        res.json({ dimensions: dimensionNames });
         // print debug message
         console.log("Incoming dimensions request");
     } catch(err){
