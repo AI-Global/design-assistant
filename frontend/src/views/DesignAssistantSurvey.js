@@ -183,6 +183,7 @@ class DesignAssistantSurvey extends Component {
             }
           });
         this.setState({ mount: true })
+        console.log(this.state.json)
       })
   }
 
@@ -330,6 +331,7 @@ class DesignAssistantSurvey extends Component {
   }
 
   render() {
+    console.log(this?.state?.model?.data)
     var number = 1
     return (
       this.state.model ?
