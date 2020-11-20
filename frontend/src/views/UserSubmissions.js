@@ -79,7 +79,6 @@ class UserSubmissions extends Component {
         // This is important because save relies on this index being updated
         this.setState({ currentSubmissionIdx: index });
         let submission = this.state.submissions[index];
-
         if (submission.completed) {
             // If survey is completed we need to pass submission repsonses and questions to results page
             // so we need to make a API call to get questions here
@@ -96,10 +95,9 @@ class UserSubmissions extends Component {
                     stringified = stringified.replace(/\\\//g, "/");
                     json = JSON.parse(stringified);
                     //
-
                     this.props.history.push({
                         pathname: '/Results',
-                        state: { questions: json, responses: submission.submission }
+                        state: { questions: json, responses: submission.submission ?? []}
                     })
                 })
         }
