@@ -24,6 +24,7 @@ class UserSubmissions extends Component {
 
 
     componentDidMount() {
+        // get the logged in user and their submissions from backend
         getLoggedInUser().then(user => {
             if (user) {
                 var endPoint = '/submissions/user/' + user._id;
@@ -111,6 +112,7 @@ class UserSubmissions extends Component {
         }
     }
 
+    // clone an existing survey into a new one
     cloneSurvey(index) {
         let submission = this.state.submissions[index];
         let user = this.state.user;
@@ -133,6 +135,17 @@ class UserSubmissions extends Component {
                 this.setState({ currentSubmissionIdx: this.state.submissions.length - 1 });
             });
     }
+
+    // edit a survey that has already been completed
+    editSurvey(index){
+        this.setState({ currentSubmissionIdx: index });
+        let submission = this.state.submissions[index];
+        this.props.history.push({
+            pathname: '/DesignAssistantSurvey',
+            state: { prevResponses: submission.submission, submission_id: submission._id }
+        })
+    }
+    
     render() {
         return (
             <div>
@@ -149,27 +162,33 @@ class UserSubmissions extends Component {
                                         <th>
                                             Last Updated
                                         </th>
-                                        <th width="175px"></th>
-                                        <th width="192px"></th>
+                                        <th width="170px"></th>
+                                        <th width="100px"></th>
+                                        <th width="117px"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {this.state.submissions.map((value, index) => {
+                                    {this.state.submissions.map((submission, index) => {
                                         return (
                                             <tr key={index}>
                                                 <td>
-                                                    {value?.projectName ? value?.projectName : "No Project Name"}
+                                                    {submission?.projectName ? submission?.projectName : "No Project Name"}
                                                 </td>
                                                 <td>
-                                                    {new Date(value.date).toLocaleString('en-US', { timeZone: Intl?.DateTimeFormat()?.resolvedOptions()?.timeZone ?? 'UTC' })}
+                                                    {new Date(submission.date).toLocaleString('en-US', { timeZone: Intl?.DateTimeFormat()?.resolvedOptions()?.timeZone ?? 'UTC' })}
                                                 </td>
-                                                <td width="175px" className="text-center">
-                                                    {!value.completed &&
+                                                <td width="170px" className="text-center">
+                                                    {!submission.completed &&
                                                         <Button block onClick={() => { this.resumeSurvey(index); StartSurveyHandler() }} >Resume Survey</Button>}
-                                                    {value.completed &&
+                                                    {submission.completed &&
                                                         <Button id="ResultsButton" block onClick={() => { this.resumeSurvey(index); StartSurveyHandler() }} >Survey Results</Button>}
                                                 </td>
-                                                <td width="175px">
+                                                <td width="100px">
+                                                    {submission.completed &&
+                                                        <Button block onClick={() => { this.editSurvey(index) }}>Edit</Button>
+                                                    }
+                                                </td>
+                                                <td width="100px">
                                                     <Button block onClick={() => { this.cloneSurvey(index) }}>Clone</Button>
                                                 </td>
                                             </tr>
