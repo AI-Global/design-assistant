@@ -130,3 +130,12 @@ input:disabled {
   pointer-events: none;
 }
 
+#answered {
+  background-color: #097AE8 !important;
+  width: 58px !important;
+}
+
+#unanswered {
+  background-color: #404040 !important;
+  width: 58px !important;
+}

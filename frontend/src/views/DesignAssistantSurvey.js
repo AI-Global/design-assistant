@@ -77,8 +77,8 @@ class DesignAssistantSurvey extends Component {
 
     ReactGa.pageview(window.location.pathname + window.location.search);
 
-    axios.get(process.env.REACT_APP_SERVER_ADDR +'/dimensions/names').then((res) => {
-      this.setState({dimArray: res.data.dimensions});
+    axios.get(process.env.REACT_APP_SERVER_ADDR + '/dimensions/names').then((res) => {
+      this.setState({ dimArray: res.data.dimensions });
     });
 
     var endPoint = '/metadata';
@@ -91,7 +91,7 @@ class DesignAssistantSurvey extends Component {
 
   async getQuestions(submissions) {
     var endPoint = '/questions';
-    axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint, {params: { roles: this.state.roleFilters, domains: this.state.domainFilters, regions: this.state.regionFilters, lifecycles: this.state.lifecycleFilters}})
+    axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint, { params: { roles: this.state.roleFilters, domains: this.state.domainFilters, regions: this.state.regionFilters, lifecycles: this.state.lifecycleFilters } })
       .then(res => {
         this.setState({ mount: false })
         var json = res.data;
@@ -112,16 +112,16 @@ class DesignAssistantSurvey extends Component {
         }
 
         if (this?.props?.location?.state?.filters) {
-          this.setState({roleFilters: this.props.location.state.filters.roles})
-          this.setState({domainFilters: this.props.location.state.filters.domain})
-          this.setState({regionFilters: this.props.location.state.filters.region})
-          this.setState({lifecycleFilters: this.props.location.state.filters.lifecycle})
+          this.setState({ roleFilters: this.props.location.state.filters.roles })
+          this.setState({ domainFilters: this.props.location.state.filters.domain })
+          this.setState({ regionFilters: this.props.location.state.filters.region })
+          this.setState({ lifecycleFilters: this.props.location.state.filters.lifecycle })
         }
 
         if (submissions) {
           model.data = submissions
         }
-        
+
         model
           .onTextMarkdown
           .add(function (model, options) {
@@ -183,7 +183,6 @@ class DesignAssistantSurvey extends Component {
             }
           });
         this.setState({ mount: true })
-        console.log(this.state.json.pages)
       })
   }
 
@@ -324,8 +323,14 @@ class DesignAssistantSurvey extends Component {
     this.getQuestions(submissions)
   }
 
+  navPage(pageNumber) {
+    const survey = this.state.model
+    survey.currentPage = survey.pages[pageNumber]
+    this.setState(this.state)
+  }
+
   render() {
-    console.log("answered questions: ", this?.state?.model?.data)
+    var number = 1
     return (
       this.state.model ?
         <div>
@@ -340,8 +345,14 @@ class DesignAssistantSurvey extends Component {
                     <Accordion.Collapse eventKey={index + 1}>
                       <Card.Body>
                         {this?.state?.json?.pages?.map((page, index) => {
-                          return (page.name.includes(dimension[0]) ? <Button key={index}>{index}</Button> : null ) } )
-                          }
+                          return (page.name.includes(dimension[0]) ? page.elements.map((question, i) => {
+                            return ((question.type !== "comment" && !question.visibleIf) ?
+                              <Button style={{ margin: "0.75em"}} key={i} id={ this.state.model.data[question.name] ? "answered" : "unanswered"} onClick={() => this.navPage(index)}>{number++}</Button>
+                              : null)
+                          })
+                            : null)
+                        })
+                        }
                       </Card.Body>
                     </Accordion.Collapse>
                   </Card>)
