@@ -199,7 +199,7 @@ class UserSettings extends Component {
                     </span>
                 }>
                     {this.state.user ? 
-                        this.state.user.role === "admin" ? <Dropdown.Item onClick={() => this.navAdmin()}><i className="fa fa-database fa-fw"></i> Admin Panel</Dropdown.Item> : null 
+                        (this.state.user.role === "admin" || this.state.user.role === "superadmin") ? <Dropdown.Item onClick={() => this.navAdmin()}><i className="fa fa-database fa-fw"></i> Admin Panel</Dropdown.Item> : null 
                     : null}
                     <Dropdown.Item onClick={() => this.changeEmailModal()}><i className="fa fa-envelope fa-fw"></i> Change Email</Dropdown.Item>
                     <Dropdown.Item onClick={() => this.changeUsernameModal()}><i className="fa fa-user fa-fw"></i> Change Username</Dropdown.Item>

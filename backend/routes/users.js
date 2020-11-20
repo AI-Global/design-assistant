@@ -133,7 +133,6 @@ router.get('/:userId', (req, res) => {
         .catch((err) => res.status(400).send(err));
 });
 
-
 router.route('/:id').get((req, res) => {
     User.findById(req.params.id)
       .then(user => res.json(user))
@@ -240,6 +239,19 @@ router.post('/updatePassword', auth, (req, res) => {
         });
 })
 
+
+// User Put endpoint
+// note findOneAndUpdate does not support validation
+router.put('/:userId', async (req, res) => {
+    try {
+        // Update existing user in DB
+        var response = await User.findOneAndUpdate({ _id: req.params.userId }, req.body).select('-hashedPassword -salt');
+
+        res.status(200).json(response);
+    } catch (err) {
+        res.status(400).json({ message: err });
+    }
+});
 
 
 module.exports = router;
