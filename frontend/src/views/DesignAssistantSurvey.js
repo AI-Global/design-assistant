@@ -16,6 +16,8 @@ import ModalTitle from 'react-bootstrap/ModalTitle';
 import ModalFooter from 'react-bootstrap/ModalFooter';
 import ModalHeader from 'react-bootstrap/ModalHeader';
 import DropdownButton from 'react-bootstrap/DropdownButton';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // set up survey styles and properties for rendering html
 Survey
@@ -240,7 +242,12 @@ class DesignAssistantSurvey extends Component {
       region: this.state.regionFilters,
       roles: this.state.roleFilters,
       lifecycle: this.state.lifecycleFilters
-    }).then(res => console.log(res.data));
+    }).then(res => {
+      console.log(res.data)
+      toast("Saving Responses", {
+        toastId:"saving"
+      });
+    });
   }
 
   finish() {
@@ -322,33 +329,33 @@ class DesignAssistantSurvey extends Component {
     this.getQuestions(submissions)
   }
 
-    navPage(pageNumber) {
+  navPage(pageNumber) {
     const survey = this.state.model
     survey.currentPage = survey.pages[pageNumber]
     this.setState(this.state)
   }
 
-  shouldDisplayNav(child){
+  shouldDisplayNav(child) {
     let visibleIf = child.visibleIf;
     var parId = visibleIf.split("{")[1].split("}")[0];
     var resId = visibleIf.split("'")[1].split("'")[0];
 
-    if(this.state?.model?.data[parId]){
-      if(Array.isArray(this.state.model.data[parId])){
-        if(this.state.model.data[parId].contains(resId)){
+    if (this.state?.model?.data[parId]) {
+      if (Array.isArray(this.state.model.data[parId])) {
+        if (this.state.model.data[parId].contains(resId)) {
           return true;
         }
-      } else{
-        if(this.state.model.data[parId] === resId){
+      } else {
+        if (this.state.model.data[parId] === resId) {
           return true;
         }
       }
-    } 
+    }
     return false;
   }
 
-    clearFilter(filter) {
-    switch(filter) {
+  clearFilter(filter) {
+    switch (filter) {
       case 'roles':
         this.setState({ roleFilters: [13] })
         break
@@ -359,14 +366,16 @@ class DesignAssistantSurvey extends Component {
         this.setState({ regionFilters: [] })
         break
       case 'lifecycle':
-        this.setState({lifecycleFilters: [6] })
+        this.setState({ lifecycleFilters: [6] })
         break
       default:
         console.log('not a valid filter')
     }
   }
 
+
   render() {
+    const notifySave = () => toast("Saving Responses");
     var number = 1
     return (
       this.state.model ?
@@ -384,7 +393,7 @@ class DesignAssistantSurvey extends Component {
                         {this?.state?.json?.pages?.map((page, index) => {
                           return (page.name.includes(dimension.substring(0, 4)) ? page.elements.map((question, i) => {
                             return ((question.type !== "comment" && (!question.visibleIf || this.shouldDisplayNav(question))) ?
-                              <Button style={{ margin: "0.75em"}} key={i} id={ this.state.model.data[question.name] ? "answered" : "unanswered"} onClick={() => this.navPage(index)}>{number++}</Button>
+                              <Button style={{ margin: "0.75em" }} key={i} id={this.state.model.data[question.name] ? "answered" : "unanswered"} onClick={() => this.navPage(index)}>{number++}</Button>
                               : null)
                           })
                             : null)
@@ -506,6 +515,18 @@ class DesignAssistantSurvey extends Component {
             </ModalFooter>
           </Modal>
           <Login />
+          <ToastContainer
+            position="bottom-right"
+            autoClose={2500}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick={false}
+            rtl={false}
+            pauseOnFocusLoss={false}
+            draggable={false}
+            pauseOnHover={false}
+            closeButton={false}
+          />
         </div>
         : null
     )

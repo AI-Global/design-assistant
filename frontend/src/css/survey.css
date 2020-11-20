@@ -151,3 +151,7 @@ input:disabled {
   color:#404040 !important;
   background-color: #e6e7e8 !important;
 }
+
+.Toastify__progress-bar--default{
+  background: linear-gradient(90deg, #097AE8, #00CDFF, #42d3d4) !important;
+}
