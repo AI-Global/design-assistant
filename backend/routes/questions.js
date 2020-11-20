@@ -304,7 +304,6 @@ async function createPages(q, filters) {
 router.get('/', async (req, res) => {
     // Optional filters in req body
     filters = req.query;
-
     // Only request parent questions from DB
     Question.find({ "child": false })
         .sort({ questionNumber: 1 })
