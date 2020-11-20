@@ -105,6 +105,7 @@ class DesignAssistantSurvey extends Component {
         const converter = new showdown.Converter();
         // Set json and model
         this.setState({ json: json });
+        console.log(this.state.json);
         this.setState({ model });
 
         if (this?.props?.location?.state?.prevResponses) {
@@ -330,8 +331,27 @@ class DesignAssistantSurvey extends Component {
     this.setState(this.state)
   }
 
+  shouldDisplayNav(child){
+    let visibleIf = child.visibleIf;
+    var parId = visibleIf.split("{")[1].split("}")[0];
+    var resId = visibleIf.split("'")[1].split("'")[0];
+
+    if(this.state?.model?.data[parId]){
+      if(Array.isArray(this.state.model.data[parId])){
+        if(this.state.model.data[parId].contains(resId)){
+          return true;
+        }
+      } else{
+        if(this.state.model.data[parId] === resId){
+          console.log("here");
+          return true;
+        }
+      }
+    } 
+    return false;
+  }
+
   render() {
-    console.log(this?.state?.model?.data)
     var number = 1
     return (
       this.state.model ?
@@ -348,7 +368,7 @@ class DesignAssistantSurvey extends Component {
                       <Card.Body>
                         {this?.state?.json?.pages?.map((page, index) => {
                           return (page.name.includes(dimension[0]) ? page.elements.map((question, i) => {
-                            return ((question.type !== "comment" && !question.visibleIf) ?
+                            return ((question.type !== "comment" && (!question.visibleIf || this.shouldDisplayNav(question))) ?
                               <Button style={{ margin: "0.75em"}} key={i} id={ this.state.model.data[question.name] ? "answered" : "unanswered"} onClick={() => this.navPage(index)}>{number++}</Button>
                               : null)
                           })
