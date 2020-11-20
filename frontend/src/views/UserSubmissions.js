@@ -4,6 +4,8 @@ import { getLoggedInUser } from '../helper/AuthHelper'
 import axios from 'axios';
 import ReactGa from 'react-ga';
 import { withRouter } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashAlt, faEdit as faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 
 const StartSurveyHandler = () => {
     ReactGa.event({
@@ -98,7 +100,7 @@ class UserSubmissions extends Component {
                     //
                     this.props.history.push({
                         pathname: '/Results',
-                        state: { questions: json, responses: submission.submission ?? []}
+                        state: { questions: json, responses: submission.submission ?? [] }
                     })
                 })
         }
@@ -110,6 +112,10 @@ class UserSubmissions extends Component {
                 state: { prevResponses: submission.submission, submission_id: submission._id }
             })
         }
+    }
+
+    deleteSurvey(index) {
+
     }
 
     // clone an existing survey into a new one
@@ -137,7 +143,7 @@ class UserSubmissions extends Component {
     }
 
     // edit a survey that has already been completed
-    editSurvey(index){
+    editSurvey(index) {
         this.setState({ currentSubmissionIdx: index });
         let submission = this.state.submissions[index];
         this.props.history.push({
@@ -145,7 +151,7 @@ class UserSubmissions extends Component {
             state: { prevResponses: submission.submission, submission_id: submission._id }
         })
     }
-    
+
     render() {
         return (
             <div>
@@ -164,7 +170,8 @@ class UserSubmissions extends Component {
                                         </th>
                                         <th width="170px"></th>
                                         <th width="100px"></th>
-                                        <th width="117px"></th>
+                                        <th width="75px"></th>
+                                        <th width="92px"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -184,12 +191,17 @@ class UserSubmissions extends Component {
                                                         <Button id="ResultsButton" block onClick={() => { this.resumeSurvey(index); StartSurveyHandler() }} >Survey Results</Button>}
                                                 </td>
                                                 <td width="100px">
+
+                                                    <Button block onClick={() => { this.cloneSurvey(index) }}>Clone</Button>
+                                                </td>
+                                                <td width="75px" className="text-center">
                                                     {submission.completed &&
-                                                        <Button block onClick={() => { this.editSurvey(index) }}>Edit</Button>
+                                                        <FontAwesomeIcon onClick={() => { this.editSurvey(index) }} icon={faPencilAlt} size="lg" className="mt-2" cursor="pointer" title="Edit survey submission" />
                                                     }
                                                 </td>
-                                                <td width="100px">
-                                                    <Button block onClick={() => { this.cloneSurvey(index) }}>Clone</Button>
+                                                <td width="75px" className="text-center">
+                                                    <FontAwesomeIcon onClick={() => { if (window.confirm(`Are you sure you want to delete this survey submission with Project name "${submission?.projectName}"?`)) 
+                                                    { console.log("deleted") } }} icon={faTrashAlt} size="lg" className="mt-2 text-danger" cursor="pointer" title="Delete survey submission" />
                                                 </td>
                                             </tr>
                                         )
