@@ -110,7 +110,7 @@ class DesignAssistantSurvey extends Component {
           model.data = this.props.location.state.prevResponses
         }
 
-        if (this?.props?.location?.state?.filters) {
+        if (this?.props?.location?.state?.filters && !submissions) {
           this.setState({ roleFilters: this.props.location.state.filters.roles })
           this.setState({ domainFilters: this.props.location.state.filters.domain })
           this.setState({ regionFilters: this.props.location.state.filters.region })
@@ -322,19 +322,19 @@ class DesignAssistantSurvey extends Component {
     this.getQuestions(submissions)
   }
 
-  clearFilter(filter) {
+  async clearFilter(filter) {
     switch(filter) {
       case 'roles':
-        this.setState({ roleFilters: [13]})
+        this.setState({ roleFilters: [13] })
         break
       case 'domain':
-        this.setState({ domainFilters: []})
+        this.setState({ domainFilters: [] })
         break
       case 'region':
-        this.setState({ regionFilters: []})
+        this.setState({ regionFilters: [] })
         break
       case 'lifecycle':
-        this.setState({lifecycleFilters: [6]})
+        this.setState({lifecycleFilters: [6] })
         break
       default:
         console.log('not a valid filter')
