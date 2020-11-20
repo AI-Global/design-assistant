@@ -181,7 +181,7 @@ class UserSubmissions extends Component {
                                         <th width="120px"></th>
                                         <th width="100px"></th>
                                         <th width="75px"></th>
-                                        <th width="92px"></th>
+                                        <th width="75px"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
