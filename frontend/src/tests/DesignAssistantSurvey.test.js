@@ -19,7 +19,7 @@ const mockSubmission = {
 
 const mockResponse = {
     data: {
-        dimensionNames:[],
+        dimensions:['Bias and Fairness'],
         roles:[],
         domain:[],
         region:[],
@@ -95,18 +95,15 @@ test('Survey Page can open accoridon to navigate dimenstions', async () => {
 
     fireEvent.click(screen.getByText("Bias and Fairness"));
     fireEvent.click(screen.getByText("Nav to Bias and Fairness"));
-
 });
 
 test('Survey Page can open accoridon to filter select roles', async () => {
     axios.get.mockResolvedValue(mockResponse);
     axios.post.mockResolvedValue(mockSubmission);
     await render(<Router><DesignAssistantSurvey/></Router>);
-
+    
     fireEvent.click(screen.getByText("Filters"));
+
     await expect(screen.getByText("Roles")).toBeTruthy();
-    await expect(screen.getByText("Industry")).toBeTruthy();
-    await expect(screen.getByText("Regions")).toBeTruthy();
-    await expect(screen.getByText("Life Cycles")).toBeTruthy();
     await expect(screen.getByText("Apply Filters")).toBeTruthy();
 });

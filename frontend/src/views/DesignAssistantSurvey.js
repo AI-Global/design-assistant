@@ -77,7 +77,7 @@ class DesignAssistantSurvey extends Component {
     ReactGa.pageview(window.location.pathname + window.location.search);
 
     axios.get(process.env.REACT_APP_SERVER_ADDR +'/dimensions/names').then((res) => {
-      this.setState({dimArray: res.data});
+      this.setState({dimArray: res.data.dimensions});
     });
 
     var endPoint = '/metadata';
@@ -142,7 +142,7 @@ class DesignAssistantSurvey extends Component {
               $('[data-toggle="tooltip"]').tooltip({
                 boundary: 'viewport'
               });
-            }, 1500)
+            }, 2000)
           });
         //change labels to 'h5' to bold them
         model
