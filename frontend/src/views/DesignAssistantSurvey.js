@@ -52,10 +52,10 @@ class DesignAssistantSurvey extends Component {
     super(props);
     this.state = {
       metadata: {},
-      roleFilters: [13],
+      roleFilters: [],
       domainFilters: [],
       regionFilters: [],
-      lifecycleFilters: [6],
+      lifecycleFilters: [],
       dimArray: [],
       showModal: false,
       A: 1,
@@ -325,7 +325,7 @@ class DesignAssistantSurvey extends Component {
   clearFilter(filter) {
     switch(filter) {
       case 'roles':
-        this.setState({ roleFilters: [13] })
+        this.setState({ roleFilters: [] })
         break
       case 'domain':
         this.setState({ domainFilters: [] })
@@ -334,7 +334,7 @@ class DesignAssistantSurvey extends Component {
         this.setState({ regionFilters: [] })
         break
       case 'lifecycle':
-        this.setState({lifecycleFilters: [6] })
+        this.setState({lifecycleFilters: [] })
         break
       default:
         console.log('not a valid filter')
