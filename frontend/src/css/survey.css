@@ -130,3 +130,13 @@ input:disabled {
   pointer-events: none;
 }
 
+#clearFilter {
+  margin-top: 1em;
+  background-color: #404040 !important;
+  width: 100%;
+}
+
+#clearFilter:hover {
+  color:#404040 !important;
+  background-color: #e6e7e8 !important;
+}

@@ -76,8 +76,8 @@ class DesignAssistantSurvey extends Component {
 
     ReactGa.pageview(window.location.pathname + window.location.search);
 
-    axios.get(process.env.REACT_APP_SERVER_ADDR +'/dimensions/names').then((res) => {
-      this.setState({dimArray: res.data.dimensions});
+    axios.get(process.env.REACT_APP_SERVER_ADDR + '/dimensions/names').then((res) => {
+      this.setState({ dimArray: res.data.dimensions });
     });
 
     var endPoint = '/metadata';
@@ -90,7 +90,7 @@ class DesignAssistantSurvey extends Component {
 
   async getQuestions(submissions) {
     var endPoint = '/questions';
-    axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint, {params: { roles: this.state.roleFilters, domains: this.state.domainFilters, regions: this.state.regionFilters, lifecycles: this.state.lifecycleFilters}})
+    axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint, { params: { roles: this.state.roleFilters, domains: this.state.domainFilters, regions: this.state.regionFilters, lifecycles: this.state.lifecycleFilters } })
       .then(res => {
         this.setState({ mount: false })
         var json = res.data;
@@ -111,16 +111,16 @@ class DesignAssistantSurvey extends Component {
         }
 
         if (this?.props?.location?.state?.filters) {
-          this.setState({roleFilters: this.props.location.state.filters.roles})
-          this.setState({domainFilters: this.props.location.state.filters.domain})
-          this.setState({regionFilters: this.props.location.state.filters.region})
-          this.setState({lifecycleFilters: this.props.location.state.filters.lifecycle})
+          this.setState({ roleFilters: this.props.location.state.filters.roles })
+          this.setState({ domainFilters: this.props.location.state.filters.domain })
+          this.setState({ regionFilters: this.props.location.state.filters.region })
+          this.setState({ lifecycleFilters: this.props.location.state.filters.lifecycle })
         }
 
         if (submissions) {
           model.data = submissions
         }
-        
+
         model
           .onTextMarkdown
           .add(function (model, options) {
@@ -322,6 +322,25 @@ class DesignAssistantSurvey extends Component {
     this.getQuestions(submissions)
   }
 
+  clearFilter(filter) {
+    switch(filter) {
+      case 'roles':
+        this.setState({ roleFilters: [13]})
+        break
+      case 'domain':
+        this.setState({ domainFilters: []})
+        break
+      case 'region':
+        this.setState({ regionFilters: []})
+        break
+      case 'lifecycle':
+        this.setState({lifecycleFilters: [6]})
+        break
+      default:
+        console.log('not a valid filter')
+    }
+  }
+
   render() {
     return (
       this.state.model ?
@@ -350,11 +369,12 @@ class DesignAssistantSurvey extends Component {
                     <DropdownButton title="Roles" className="filterDrop">
                       <Form>
                         {this.state.metadata.roles.map((role, index) => {
-                          return (
+                          return (index + 1 !== this.state.metadata.roles.length ?
                             <Form.Check type='checkbox' checked={this.state.roleFilters.includes(index + 1)} label={role.name} id={index} key={index} value={index + 1} onChange={(e) => this.addRole(e.target.value)} />
-                          )
+                            : null)
                         })}
                       </Form>
+                      <Button id="clearFilter" onClick={() => this.clearFilter('roles')}><div>Reset <i className="fa fa-undo fa-fw"></i></div></Button>
                     </DropdownButton>
                     <DropdownButton title="Industry" className="filterDrop">
                       <Form>
@@ -364,6 +384,7 @@ class DesignAssistantSurvey extends Component {
                           )
                         })}
                       </Form>
+                      <Button id="clearFilter" onClick={() => this.clearFilter('domain')}><div>Reset <i className="fa fa-undo fa-fw"></i></div></Button>
                     </DropdownButton>
                     <DropdownButton title="Regions" className="filterDrop">
                       <Form>
@@ -373,15 +394,17 @@ class DesignAssistantSurvey extends Component {
                           )
                         })}
                       </Form>
+                      <Button id="clearFilter" onClick={() => this.clearFilter('region')}><div>Reset <i className="fa fa-undo fa-fw"></i></div></Button>
                     </DropdownButton>
                     <DropdownButton title="Life Cycles" className="filterDrop">
                       <Form>
                         {this.state.metadata.lifecycle.map((lifecycle, index) => {
-                          return (
+                          return (index + 1 !== this.state.metadata.lifecycle.length ?
                             <Form.Check type='checkbox' checked={this.state.lifecycleFilters.includes(index + 1)} label={lifecycle.name} id={index} key={index} value={index + 1} onChange={(e) => this.addLifecycle(e.target.value)} />
-                          )
+                            : null)
                         })}
                       </Form>
+                      <Button id="clearFilter" onClick={() => this.clearFilter('lifecycle')}><div>Reset <i className="fa fa-undo fa-fw"></i></div></Button>
                     </DropdownButton>
                     <Button id="saveButton" className="filterApply" onClick={() => this.applyFilters()}>Apply Filters</Button>
                   </Card.Body>
