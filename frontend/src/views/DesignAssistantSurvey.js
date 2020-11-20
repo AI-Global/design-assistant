@@ -58,6 +58,7 @@ class DesignAssistantSurvey extends Component {
       lifecycleFilters: [6],
       dimArray: [],
       showModal: false,
+      //TODO: Change these from being hardcoded 
       A: 1,
       B: 9,
       E: 19,
@@ -182,6 +183,7 @@ class DesignAssistantSurvey extends Component {
             }
           });
         this.setState({ mount: true })
+        console.log(this.state.json.pages)
       })
   }
 
@@ -323,6 +325,7 @@ class DesignAssistantSurvey extends Component {
   }
 
   render() {
+    console.log("answered questions: ", this?.state?.model?.data)
     return (
       this.state.model ?
         <div>
@@ -335,7 +338,11 @@ class DesignAssistantSurvey extends Component {
                       {dimension}
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey={index + 1}>
-                      <Card.Body><Button aria-label={dimension} onClick={() => this.navDim(index)}>Nav to {dimension}</Button></Card.Body>
+                      <Card.Body>
+                        {this?.state?.json?.pages?.map((page, index) => {
+                          return (page.name.includes(dimension[0]) ? <Button key={index}>{index}</Button> : null ) } )
+                          }
+                      </Card.Body>
                     </Accordion.Collapse>
                   </Card>)
               })}
