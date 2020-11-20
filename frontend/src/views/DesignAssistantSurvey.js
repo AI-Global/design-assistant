@@ -352,7 +352,6 @@ class DesignAssistantSurvey extends Component {
   }
 
   render() {
-    console.log(this.state?.model?.data);
     var number = 1
     return (
       this.state.model ?

@@ -312,3 +312,19 @@ input[type=number]
 #ResultsButton {
   background-color: #007bff !important;
 }
+/* 
+#wb-cont {
+  min-height: 1140px !important;
+}
+
+#root {
+  min-height: 1140px !important;
+}
+
+.sv_main .sv_bootstrapmaterial_css {
+  min-height: 1140px !important;
+} */
+
+.sv_container {
+  min-height: 100vh !important;
+}
