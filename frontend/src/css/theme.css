@@ -233,16 +233,17 @@ form .btn:not(.btn-call-to-action) {
 
 .filterApply {
   width: 90%;
-  margin-top: 10em;
+  margin-top: 14.5em;
 }
 
-.dropdown-menu {
+.filterDrop .dropdown-menu{
   padding: 1em !important;
+  width: 90%;
 }
 
 .cardBody {
   text-align: center;
-  height: 32em;
+  height: 35em;
 }
 
 .MuiTableCell-head {

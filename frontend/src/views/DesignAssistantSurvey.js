@@ -325,7 +325,7 @@ class DesignAssistantSurvey extends Component {
     this.getQuestions(submissions)
   }
 
-  navPage(pageNumber) {
+    navPage(pageNumber) {
     const survey = this.state.model
     survey.currentPage = survey.pages[pageNumber]
     this.setState(this.state)
@@ -351,6 +351,25 @@ class DesignAssistantSurvey extends Component {
     return false;
   }
 
+    clearFilter(filter) {
+    switch(filter) {
+      case 'roles':
+        this.setState({ roleFilters: [13]})
+        break
+      case 'domain':
+        this.setState({ domainFilters: []})
+        break
+      case 'region':
+        this.setState({ regionFilters: []})
+        break
+      case 'lifecycle':
+        this.setState({lifecycleFilters: [6]})
+        break
+      default:
+        console.log('not a valid filter')
+    }
+  }
+
   render() {
     var number = 1
     return (
@@ -367,7 +386,7 @@ class DesignAssistantSurvey extends Component {
                     <Accordion.Collapse eventKey={index + 1}>
                       <Card.Body>
                         {this?.state?.json?.pages?.map((page, index) => {
-                          return (page.name.includes(dimension[0]) ? page.elements.map((question, i) => {
+                          return (page.name.includes(dimension.substring(0, 4)) ? page.elements.map((question, i) => {
                             return ((question.type !== "comment" && (!question.visibleIf || this.shouldDisplayNav(question))) ?
                               <Button style={{ margin: "0.75em"}} key={i} id={ this.state.model.data[question.name] ? "answered" : "unanswered"} onClick={() => this.navPage(index)}>{number++}</Button>
                               : null)
@@ -390,11 +409,12 @@ class DesignAssistantSurvey extends Component {
                     <DropdownButton title="Roles" className="filterDrop">
                       <Form>
                         {this.state.metadata.roles.map((role, index) => {
-                          return (
+                          return (index + 1 !== this.state.metadata.roles.length ?
                             <Form.Check type='checkbox' checked={this.state.roleFilters.includes(index + 1)} label={role.name} id={index} key={index} value={index + 1} onChange={(e) => this.addRole(e.target.value)} />
-                          )
+                            : null)
                         })}
                       </Form>
+                      <Button id="clearFilter" onClick={() => this.clearFilter('roles')}><div>Reset <i className="fa fa-undo fa-fw"></i></div></Button>
                     </DropdownButton>
                     <DropdownButton title="Industry" className="filterDrop">
                       <Form>
@@ -404,6 +424,7 @@ class DesignAssistantSurvey extends Component {
                           )
                         })}
                       </Form>
+                      <Button id="clearFilter" onClick={() => this.clearFilter('domain')}><div>Reset <i className="fa fa-undo fa-fw"></i></div></Button>
                     </DropdownButton>
                     <DropdownButton title="Regions" className="filterDrop">
                       <Form>
@@ -413,15 +434,17 @@ class DesignAssistantSurvey extends Component {
                           )
                         })}
                       </Form>
+                      <Button id="clearFilter" onClick={() => this.clearFilter('region')}><div>Reset <i className="fa fa-undo fa-fw"></i></div></Button>
                     </DropdownButton>
                     <DropdownButton title="Life Cycles" className="filterDrop">
                       <Form>
                         {this.state.metadata.lifecycle.map((lifecycle, index) => {
-                          return (
+                          return (index + 1 !== this.state.metadata.lifecycle.length ?
                             <Form.Check type='checkbox' checked={this.state.lifecycleFilters.includes(index + 1)} label={lifecycle.name} id={index} key={index} value={index + 1} onChange={(e) => this.addLifecycle(e.target.value)} />
-                          )
+                            : null)
                         })}
                       </Form>
+                      <Button id="clearFilter" onClick={() => this.clearFilter('lifecycle')}><div>Reset <i className="fa fa-undo fa-fw"></i></div></Button>
                     </DropdownButton>
                     <Button id="saveButton" className="filterApply" onClick={() => this.applyFilters()}>Apply Filters</Button>
                   </Card.Body>
