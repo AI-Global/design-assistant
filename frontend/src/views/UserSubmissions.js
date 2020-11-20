@@ -114,9 +114,19 @@ class UserSubmissions extends Component {
         }
     }
 
-    deleteSurvey(index) {
+    deleteSurvey(index) {    
+        let submissions = this.state.submissions;
+        let submission = submissions[index]
+        let endPoint = '/submissions/delete/' + submission._id;
+        axios.delete(process.env.REACT_APP_SERVER_ADDR + endPoint)
+            .then(response => { 
+                submissions.splice(index, 1);
+                this.setState({submissions: submissions})
+                alert(`The survey submission with project name "${submission?.projectName}" has been deleted.`)
+            });
 
     }
+
 
     // clone an existing survey into a new one
     cloneSurvey(index) {
@@ -168,7 +178,7 @@ class UserSubmissions extends Component {
                                         <th>
                                             Last Updated
                                         </th>
-                                        <th width="170px"></th>
+                                        <th width="120px"></th>
                                         <th width="100px"></th>
                                         <th width="75px"></th>
                                         <th width="92px"></th>
@@ -184,11 +194,11 @@ class UserSubmissions extends Component {
                                                 <td>
                                                     {new Date(submission.date).toLocaleString('en-US', { timeZone: Intl?.DateTimeFormat()?.resolvedOptions()?.timeZone ?? 'UTC' })}
                                                 </td>
-                                                <td width="170px" className="text-center">
+                                                <td width="120px" className="text-center">
                                                     {!submission.completed &&
-                                                        <Button block onClick={() => { this.resumeSurvey(index); StartSurveyHandler() }} >Resume Survey</Button>}
+                                                        <Button block onClick={() => { this.resumeSurvey(index); StartSurveyHandler() }} >Resume</Button>}
                                                     {submission.completed &&
-                                                        <Button id="ResultsButton" block onClick={() => { this.resumeSurvey(index); StartSurveyHandler() }} >Survey Results</Button>}
+                                                        <Button id="ResultsButton" block onClick={() => { this.resumeSurvey(index); StartSurveyHandler() }} >Results</Button>}
                                                 </td>
                                                 <td width="100px">
 
@@ -201,7 +211,7 @@ class UserSubmissions extends Component {
                                                 </td>
                                                 <td width="75px" className="text-center">
                                                     <FontAwesomeIcon onClick={() => { if (window.confirm(`Are you sure you want to delete this survey submission with Project name "${submission?.projectName}"?`)) 
-                                                    { console.log("deleted") } }} icon={faTrashAlt} size="lg" className="mt-2 text-danger" cursor="pointer" title="Delete survey submission" />
+                                                    { this.deleteSurvey(index) } }} icon={faTrashAlt} size="lg" className="mt-2 text-danger" cursor="pointer" title="Delete survey submission" />
                                                 </td>
                                             </tr>
                                         )
