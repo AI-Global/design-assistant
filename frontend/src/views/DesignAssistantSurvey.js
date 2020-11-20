@@ -105,7 +105,6 @@ class DesignAssistantSurvey extends Component {
         const converter = new showdown.Converter();
         // Set json and model
         this.setState({ json: json });
-        console.log(this.state.json);
         this.setState({ model });
 
         if (this?.props?.location?.state?.prevResponses) {
@@ -184,7 +183,6 @@ class DesignAssistantSurvey extends Component {
             }
           });
         this.setState({ mount: true })
-        console.log(this.state.json)
       })
   }
 
@@ -233,7 +231,6 @@ class DesignAssistantSurvey extends Component {
     let title = this.state.json?.pages[0]?.elements?.find(q => q?.title?.default === "Title of project");
     let dateTime = new Date();
     let projectName = this.state.model.data[title?.name] ?? "";
-    // console.log(this.state.model.data, dateTime, projectName, completed)
     axios.post(process.env.REACT_APP_SERVER_ADDR + '/submissions/update/' + this.state.submission_id, {
       submission: this.state.model.data,
       date: dateTime,
@@ -325,7 +322,6 @@ class DesignAssistantSurvey extends Component {
     this.getQuestions(submissions)
   }
 
-<<<<<<< HEAD
     navPage(pageNumber) {
     const survey = this.state.model
     survey.currentPage = survey.pages[pageNumber]
@@ -344,7 +340,6 @@ class DesignAssistantSurvey extends Component {
         }
       } else{
         if(this.state.model.data[parId] === resId){
-          console.log("here");
           return true;
         }
       }
@@ -353,9 +348,6 @@ class DesignAssistantSurvey extends Component {
   }
 
     clearFilter(filter) {
-=======
-  async clearFilter(filter) {
->>>>>>> 2d60b5ff9dcbc66b44657b9878f6798392214c4c
     switch(filter) {
       case 'roles':
         this.setState({ roleFilters: [13] })
