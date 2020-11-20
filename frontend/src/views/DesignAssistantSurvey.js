@@ -76,12 +76,11 @@ class DesignAssistantSurvey extends Component {
 
     ReactGa.pageview(window.location.pathname + window.location.search);
 
-    var endPoint = '/metadata';
     axios.get(process.env.REACT_APP_SERVER_ADDR +'/dimensions/names').then((res) => {
       this.setState({dimArray: res.data});
     });
 
-    var endPoint = '/questions';
+    var endPoint = '/metadata';
     axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
       .then(res => {
         this.setState({ metadata: res.data })

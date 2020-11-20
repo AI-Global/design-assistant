@@ -19,11 +19,11 @@ const mockSubmission = {
 
 const mockResponse = {
     data: {
+        dimensionNames:[],
         roles:[],
         domain:[],
         region:[],
         lifecycle:[],
-        dimensions:[],
         "pages": [{
             "name":"page1",
             "title":{"default":"Page 1","fr":""},
