@@ -322,7 +322,7 @@ class DesignAssistantSurvey extends Component {
     this.getQuestions(submissions)
   }
 
-  async clearFilter(filter) {
+  clearFilter(filter) {
     switch(filter) {
       case 'roles':
         this.setState({ roleFilters: [13] })
