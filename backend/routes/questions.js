@@ -190,7 +190,37 @@ function createPage(questions, pageName, pageTitle, Dimensions, Children) {
     return page
 }
 
-async function createPages(q) {
+function applyFilters(questions, filters) {
+    // This function applies the filters to list of questions 
+
+    if (filters.roles) {
+        for (let dim of Object.keys(questions)) {
+            questions[dim] = questions[dim].filter(q => filters.roles.some(role => q.roles.includes(role)))
+        }
+    }
+
+    if (filters.regions) {
+        for (let dim of Object.keys(questions)) {
+            questions[dim] = questions[dim].filter(q => filters.regions.some(region => q.regionalApplicability.includes(region)))
+        }
+    }
+
+    if (filters.lifecycles) {
+        for (let dim of Object.keys(questions)) {
+            questions[dim] = questions[dim].filter(q => filters.lifecycles.some(lifecycle => q.lifecycle.includes(lifecycle)))
+        }
+    }
+
+    if (filters.domains) {
+        for (let dim of Object.keys(questions)) {
+            questions[dim] = questions[dim].filter(q => filters.domains.some(domain => q.domainApplicability.includes(domain)))
+        }
+    }
+
+    return questions
+}
+
+async function createPages(q, filters) {
     // Get dimensions from DB
     let Dimensions = await getDimensions()
     // Get child questions from DB
@@ -234,6 +264,10 @@ async function createPages(q) {
     var projectDetails = createPage(tombQuestions["tombstone"], "projectDetails1", "Project Details", Dimensions, Children);
     page.pages.push(projectDetails);
 
+
+    // Apply domain, region, role, lifecycle filter to questions
+    dimQuestions = applyFilters(dimQuestions, filters)
+
     // Create pages for the dimensions
     var pageCount = 1;
     var questions = [];
@@ -268,11 +302,14 @@ async function createPages(q) {
 
 // Get all questions. Assemble SurveyJS JSON here
 router.get('/', async (req, res) => {
+    // Optional filters in req body
+    filters = req.body;
+
     // Only request parent questions from DB
     Question.find({ "child": false })
         .sort({ questionNumber: 1 })
         .then(async (questions) => {
-            pages = await createPages(questions);
+            pages = await createPages(questions, filters);
             res.status(200).send(pages);
         })
         .catch((err) => res.status(400).send(err));
@@ -322,7 +359,7 @@ router.delete('/:questionId', async (req, res) => {
         const session = await mongoose.startSession();
         session.withTransaction(async () => {
             var number;
-            var question = await Question.findOne({_id: req.params.questionId})
+            var question = await Question.findOne({ _id: req.params.questionId })
             var number = question.questionNumber
             await Question.deleteOne({ _id: req.params.questionId })
             var maxQ = await Question.find().sort({ questionNumber: -1 }).limit(1)
