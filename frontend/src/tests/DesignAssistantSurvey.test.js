@@ -23,6 +23,7 @@ const mockResponse = {
         domain:[],
         region:[],
         lifecycle:[],
+        dimensions:[],
         "pages": [{
             "name":"page1",
             "title":{"default":"Page 1","fr":""},

@@ -29,6 +29,7 @@ const trustedAIProvidersRouter = require("./routes/trustedAIProviders");
 const usersRouter = require("./routes/users");
 const submissionsRouter = require("./routes/submissions");
 const metaDataRouter = require("./routes/metadata");
+const dimensionsRouter = require("./routes/dimensions");
 const analyticsRouter = require("./routes/analytics");
 
 
@@ -38,6 +39,7 @@ app.use("/trustedAIProviders", trustedAIProvidersRouter);
 app.use("/users", usersRouter);
 app.use("/submissions", submissionsRouter);
 app.use("/metadata", metaDataRouter);
+app.use("/dimensions", dimensionsRouter);
 app.use("/analytics", analyticsRouter);
 
 

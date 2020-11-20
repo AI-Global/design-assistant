@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const crypto = require('crypto');
 
 const USER_ROLES = [
+    'superadmin',
     'admin',
     'mod',
     'member'

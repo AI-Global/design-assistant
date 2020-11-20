@@ -44,7 +44,7 @@ var localizedStrs = Survey.surveyLocalization.locales[Survey.surveyLocalization.
 localizedStrs.progressText = "";
 
 // array of dimension names used to create navigation cards
-const dimArray = ['Accountabililty', 'Bias and Fairness', 'Explainability and Interpretability', 'Robustness', 'Data Quality']
+
 
 class DesignAssistantSurvey extends Component {
 
@@ -56,6 +56,7 @@ class DesignAssistantSurvey extends Component {
       domainFilters: [],
       regionFilters: [],
       lifecycleFilters: [6],
+      dimArray: [],
       showModal: false,
       A: 1,
       B: 9,
@@ -76,6 +77,11 @@ class DesignAssistantSurvey extends Component {
     ReactGa.pageview(window.location.pathname + window.location.search);
 
     var endPoint = '/metadata';
+    axios.get(process.env.REACT_APP_SERVER_ADDR +'/dimensions/names').then((res) => {
+      this.setState({dimArray: res.data});
+    });
+
+    var endPoint = '/questions';
     axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
       .then(res => {
         this.setState({ metadata: res.data })
@@ -323,7 +329,7 @@ class DesignAssistantSurvey extends Component {
         <div>
           <div className="dimensionNav">
             <Accordion>
-              {dimArray.map((dimension, index) => {
+              {this.state.dimArray.map((dimension, index) => {
                 return (
                   <Card key={index}>
                     <Accordion.Toggle as={Card.Header} eventKey={index + 1}>
