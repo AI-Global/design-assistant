@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Table } from 'react-bootstrap';
+import { Button, Table, Modal } from 'react-bootstrap';
 import { getLoggedInUser } from '../helper/AuthHelper'
 import axios from 'axios';
 import ReactGa from 'react-ga';
@@ -20,7 +20,8 @@ class UserSubmissions extends Component {
         this.state = {
             currentSubmissionIdx: 0,
             authToken: localStorage.getItem("authToken"),
-            submissions: []
+            submissions: [],
+            showDeleteWarning: false
         };
     }
 
@@ -119,16 +120,22 @@ class UserSubmissions extends Component {
         }
     }
 
-    deleteSurvey(index) {
+    showDeleteWarning(index) {
+        this.setState({currentSubmissionIdx: index});
+        this.setState({showDeleteWarning: true})
+    }
+
+    deleteSurvey() {
+        let currentSubmissionIdx = this.state.currentSubmissionIdx;
         let submissions = this.state.submissions;
-        let submission = submissions[index]
+        let submission = submissions[currentSubmissionIdx]
         let endPoint = '/submissions/delete/' + submission._id;
         axios.delete(process.env.REACT_APP_SERVER_ADDR + endPoint)
             .then(response => {
-                submissions.splice(index, 1);
+                submissions.splice(currentSubmissionIdx, 1);
                 this.setState({ submissions: submissions })
-                alert(`The survey submission with project name "${submission?.projectName}" has been deleted.`)
             });
+        this.setState({showDeleteWarning: false})
 
     }
 
@@ -168,8 +175,29 @@ class UserSubmissions extends Component {
     }
 
     render() {
+        const handleClose = () => this.setState({showDeleteWarning: false});
         return (
             <div>
+                <Modal
+                    aria-labelledby="contained-modal-title-vcenter"
+                    centered
+                    show={this.state.showDeleteWarning}
+                    backdrop="static"
+                    keyboard={false}
+                >
+                    <Modal.Header>
+                        <Modal.Title id="contained-modal-title-vcenter">
+                            Warning!
+                    </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        Are you sure you would like to delete this submission?
+                </Modal.Body>
+                    <Modal.Footer>
+                        <Button id="DeleteSurveyButton" onClick={() => this.deleteSurvey()}>Yes</Button>
+                        <Button onClick={() => handleClose()}>Cancel</Button>
+                    </Modal.Footer>
+                </Modal>
                 <div>
                     <div className="card">
                         <div className="card-header">Continue existing survey</div>
@@ -216,7 +244,7 @@ class UserSubmissions extends Component {
                                                 </td>
                                                 <td width="75px" className="text-center">
                                                     <FontAwesomeIcon onClick={() => {
-                                                        if (window.confirm(`Are you sure you want to delete this survey submission with Project name "${submission?.projectName}"?`)) { this.deleteSurvey(index) }
+                                                        this.showDeleteWarning(index)
                                                     }} icon={faTrashAlt} size="lg" className="mt-2 text-danger" cursor="pointer" title="Delete survey submission" />
                                                 </td>
                                             </tr>
