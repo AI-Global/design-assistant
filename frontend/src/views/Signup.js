@@ -49,13 +49,15 @@ export default class Signup extends Component {
         this.setState({email: {isInvalid: false, message: ""},
             username: {isInvalid: false, message: ""},
             password: {isInvalid: false, message: ""},
-            passwordConfirmation: {isInvalid: false, message: ""}});
+            passwordConfirmation: {isInvalid: false, message: ""},
+            organization: {isInvalid: false, message: ""}});
         event.preventDefault();
         let form = event.target.elements;
         let email = form.signupEmail.value;
         let username = form.signupUsername.value;
         let password = form.signupPassword.value;
         let passwordConfirmation = form.signupPasswordConfirmation.value;
+        let organization = form.signupOrganization.value;
         if(password!==passwordConfirmation){
             this.setState({passwordConfirmation: {isInvalid: true, message: "Those passwords didn't match. Please try again."}})
         }
@@ -65,7 +67,8 @@ export default class Signup extends Component {
                 email: email,
                 username: username,
                 password: password,
-                passwordConfirmation: passwordConfirmation
+                passwordConfirmation: passwordConfirmation,
+                organization: organization,
             }).then(response => {
                 const result = response.data;
                 if(result.errors){

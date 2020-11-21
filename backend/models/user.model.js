@@ -34,9 +34,8 @@ const UserSchema = new mongoose.Schema({
         type: String, 
         required: true 
     },
-    orgs: { 
-          type: String, 
-          default: [] 
+    organization: { 
+          type: String,  
         }
 });
 
