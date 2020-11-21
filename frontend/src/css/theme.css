@@ -240,7 +240,7 @@ form .btn:not(.btn-call-to-action) {
   /* margin-top: 14.5em; */
 }
 
-.dropdown-menu {
+.filterDrop .dropdown-menu {
   padding: 1em !important;
   width: 90%;
 }
