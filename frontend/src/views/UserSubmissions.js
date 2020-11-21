@@ -57,7 +57,10 @@ class UserSubmissions extends Component {
             userId: user?._id ?? null,
             projectName: "",
             date: dateTime,
-            lifecycle: 6,
+            lifecycle: [],
+            domain: [],
+            region: [],
+            roles: [],
             submission: submission,
             completed: false
         })
@@ -82,6 +85,7 @@ class UserSubmissions extends Component {
         // This is important because save relies on this index being updated
         this.setState({ currentSubmissionIdx: index });
         let submission = this.state.submissions[index];
+
         if (submission.completed) {
             // If survey is completed we need to pass submission repsonses and questions to results page
             // so we need to make a API call to get questions here
@@ -98,30 +102,31 @@ class UserSubmissions extends Component {
                     stringified = stringified.replace(/\\\//g, "/");
                     json = JSON.parse(stringified);
                     //
+
                     this.props.history.push({
                         pathname: '/Results',
-                        state: { questions: json, responses: submission.submission ?? [] }
+                        state: { questions: json, responses: submission.submission }
                     })
                 })
         }
         else {
-            // If survey is not completed, pass previous submissions so SurveyJS can load them into the model
+            // If survey is not completed, pass previous submissions so SruveyJS can load them into the model
             // so user can continue 
             this.props.history.push({
                 pathname: '/DesignAssistantSurvey',
-                state: { prevResponses: submission.submission, submission_id: submission._id }
+                state: { prevResponses: submission.submission, submission_id: submission._id, filters: { roles: submission.roles, domain: submission.domain, region: submission.region, lifecycle: submission.lifecycle } }
             })
         }
     }
 
-    deleteSurvey(index) {    
+    deleteSurvey(index) {
         let submissions = this.state.submissions;
         let submission = submissions[index]
         let endPoint = '/submissions/delete/' + submission._id;
         axios.delete(process.env.REACT_APP_SERVER_ADDR + endPoint)
-            .then(response => { 
+            .then(response => {
                 submissions.splice(index, 1);
-                this.setState({submissions: submissions})
+                this.setState({ submissions: submissions })
                 alert(`The survey submission with project name "${submission?.projectName}" has been deleted.`)
             });
 
@@ -210,8 +215,9 @@ class UserSubmissions extends Component {
                                                     }
                                                 </td>
                                                 <td width="75px" className="text-center">
-                                                    <FontAwesomeIcon onClick={() => { if (window.confirm(`Are you sure you want to delete this survey submission with Project name "${submission?.projectName}"?`)) 
-                                                    { this.deleteSurvey(index) } }} icon={faTrashAlt} size="lg" className="mt-2 text-danger" cursor="pointer" title="Delete survey submission" />
+                                                    <FontAwesomeIcon onClick={() => {
+                                                        if (window.confirm(`Are you sure you want to delete this survey submission with Project name "${submission?.projectName}"?`)) { this.deleteSurvey(index) }
+                                                    }} icon={faTrashAlt} size="lg" className="mt-2 text-danger" cursor="pointer" title="Delete survey submission" />
                                                 </td>
                                             </tr>
                                         )

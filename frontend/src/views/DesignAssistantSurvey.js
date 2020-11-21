@@ -111,7 +111,7 @@ class DesignAssistantSurvey extends Component {
           model.data = this.props.location.state.prevResponses;
           let questionsAnswered = Object.keys(model.data);
           let lastQuestionAnswered = questionsAnswered[questionsAnswered.length-1];
-          let lastPageAnswered = model.pages.find(page => page.elements.find(question => question.name == lastQuestionAnswered));
+          let lastPageAnswered = model.pages.find(page => page.elements.find(question => question.name === lastQuestionAnswered));
           model.currentPageNo = lastPageAnswered?.visibleIndex ?? 0;
         }
 
