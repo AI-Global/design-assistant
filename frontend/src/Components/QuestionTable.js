@@ -14,6 +14,7 @@ import IconButton from '@material-ui/core/IconButton';
 import TableContainer from '@material-ui/core/TableContainer';
 import ChildModal from './ChildModal';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import CsvDownload from "react-json-to-csv"
 
 const reorder = (list, startIndex, endIndex) => {
     const result = Array.from(list)
@@ -208,7 +209,9 @@ export default class QuestionTable extends Component {
                             <TableCell>No.</TableCell>
                             <TableCell>Question</TableCell>
                             <TableCell align="right">Dimension</TableCell>
-                            <TableCell><button id="exportButton" type="button" className="btn btn-save mr-2 btn btn-primary export-csv">Export</button></TableCell>
+                            <TableCell>
+                                <CsvDownload className="export-csv" data={this.state.questions}>Export</CsvDownload>
+                            </TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody component={DroppableComponent(this.onDragEnd)}>
