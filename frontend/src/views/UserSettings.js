@@ -29,7 +29,6 @@ class UserSettings extends Component {
             username: { isInvalid: false, message: "" },
             newPassword: { isInvalid: false, message: "" },
             passwordConfirmation: { isInvalid: false, message: "" },
-
         }
     }
 
@@ -176,6 +175,32 @@ class UserSettings extends Component {
     }
 
     handleOrganizationSubmit(event){
+        event.preventDefault();
+        this.resetValidations();
+        let form = event.target.elements;
+        let newOrganization = form.newOrganization.value;
+        let password = form.organizationPassword.value;
+        let authToken = getAuthToken();
+        let endPoint = '/users/updateOrganization';
+        return axios.post(process.env.REACT_APP_SERVER_ADDR + endPoint,
+            {
+                newOrganization: newOrganization,
+                password: password
+            },
+            {
+                headers: {
+                    "x-auth-token": authToken
+                }
+            }).then(response => {
+                const result = response.data;
+                if (!result.errors) {
+                    window.location.reload();
+                }
+            }).catch(err => {
+                let result = err.response.data;
+                this.setState(result);
+            });
+
         return;
     }
 
@@ -199,7 +224,7 @@ class UserSettings extends Component {
       }
 
     render(){
-        const handleClose = () => this.setState({showEmailSettings: false, showUserNameSettings: false, showPasswordSettings: false});
+        const handleClose = () => this.setState({showEmailSettings: false, showUserNameSettings: false, showPasswordSettings: false, showOrganizationSettings: false});
         return (
             <span>
                 <DropdownButton className="usersettings-dropdown"
@@ -214,7 +239,7 @@ class UserSettings extends Component {
                     <Dropdown.Item onClick={() => this.changeEmailModal()}><i className="fa fa-envelope fa-fw"></i> Change Email</Dropdown.Item>
                     <Dropdown.Item onClick={() => this.changeUsernameModal()}><i className="fa fa-user fa-fw"></i> Change Username</Dropdown.Item>
                     <Dropdown.Item onClick={() => this.changePasswordModal()}><i className="fa fa-key fa-fw"></i> Change Password</Dropdown.Item>
-                    <Dropdown.Item > <i className="fa fa-users fa-fw"></i> Change Organization</Dropdown.Item> 
+                    <Dropdown.Item onClick={() => this.changeOrganizationModal()}> <i className="fa fa-users fa-fw"></i> Change Organization</Dropdown.Item> 
                     <Dropdown.Item onClick={() => this.handleLogout()}><i className="fa fa-sign-out fa-fw"></i> Log Out</Dropdown.Item>
                     
                 </DropdownButton>
@@ -341,18 +366,21 @@ class UserSettings extends Component {
                     </Modal.Header>
                     <Modal.Body>
                         <Form onSubmit={(e) => this.handleOrganizationSubmit(e)}>
-                            <Form.Group controlId="newPassword">
-                                <i className="fa fa-lock"></i>
-                                <Form.Control type="password" placeholder="New Password" required="required" autoComplete="password" isInvalid={this.state.newPassword?.isInvalid} aria-label="new password" />
-                                <Form.Control.Feedback type="invalid">
-                                    {this.state.newPassword?.message}
-                                </Form.Control.Feedback>
+                            <div style = {{display: 'flex', justifyContent:'center', alignItems:'center'}}>
+                                <u><b>Current Organization</b></u>
+                            </div>
+                            <div style={{display: 'flex', justifyContent:'center', alignItems:'center', wordWrap: "break-word"}}>
+                                {this.state?.user?.organization}
+                            </div>
+                            <Form.Group controlId="newOrganization">
+                                <i className="fa fa-users"></i>
+                                <Form.Control type="text" placeholder={"New Organization"} required="required" autoComplete="organization" aria-label="new organization" />
                             </Form.Group>
-                            <Form.Group controlId="confirmPassword">
+                            <Form.Group controlId="organizationPassword">
                                 <i className="fa fa-lock"></i>
-                                <Form.Control type="password" placeholder="Confirm New Password" required="required" autoComplete="password" isInvalid={this.state.passwordConfirmation?.isInvalid} aria-label="confirm password" />
+                                <Form.Control type="password" placeholder="Password" required="required" autoComplete="current-password" isInvalid={this.state.password?.isInvalid} aria-label="current password" />
                                 <Form.Control.Feedback type="invalid">
-                                    {this.state.passwordConfirmation?.message}
+                                    {this.state.password?.message}
                                 </Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group controlId="formSubmit">
