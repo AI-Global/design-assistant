@@ -14,7 +14,6 @@ import IconButton from '@material-ui/core/IconButton';
 import TableContainer from '@material-ui/core/TableContainer';
 import ChildModal from './ChildModal';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import CsvDownload from "react-json-to-csv"
 
 const reorder = (list, startIndex, endIndex) => {
     const result = Array.from(list)
@@ -54,7 +53,7 @@ export default class QuestionTable extends Component {
         var endPoint = '/metadata';
         axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
             .then(res => {
-                this.setState({metadata: res.data})
+                this.setState({ metadata: res.data })
             })
         this.getQuestions();
     }
@@ -85,23 +84,23 @@ export default class QuestionTable extends Component {
             this.setState({
                 questions,
                 currentQuestion: questions[result.destination.index],
-                previousQuestion: questions[result.destination.index -1],
+                previousQuestion: questions[result.destination.index - 1],
                 previousNumber: result.source.index + 1,
                 newNumber: result.destination.index + 1,
                 showChildModal: true
             })
-            
+
         } else {
             // do not ask to make a child-parent relationship
             var endPoint = '/questions/' + (result.source.index + 1).toString() + '/1';
             await axios.put(process.env.REACT_APP_SERVER_ADDR + endPoint)
                 .then(() => {
-                    console.log("Question: " + result.source.index.toString() + "is now question: " + result.destination.index.toString() );
+                    console.log("Question: " + result.source.index.toString() + "is now question: " + result.destination.index.toString());
                     this.setState({
                         questions
                     })
                 })
-            
+
         }
     }
 
@@ -122,10 +121,10 @@ export default class QuestionTable extends Component {
 
     updateQuestionNumbers() {
         this.setChildModalShow(false);
-        var endPoint = '/questions/' + this.state.previousNumber.toString() + '/'+ this.state.newNumber.toString();
+        var endPoint = '/questions/' + this.state.previousNumber.toString() + '/' + this.state.newNumber.toString();
         axios.put(process.env.REACT_APP_SERVER_ADDR + endPoint, this.state.currentQuestion.questionNumber)
             .then(() => {
-                console.log("Question: " + this.state.previousNumber.toString() + "is now question: " + this.state.newNumber.toString() );
+                console.log("Question: " + this.state.previousNumber.toString() + "is now question: " + this.state.newNumber.toString());
             })
         // TODO: Add functionality to make question child of parent
     }
@@ -133,23 +132,38 @@ export default class QuestionTable extends Component {
     cancelQuestionUpdate() {
         const questions = reorder(
             this.state.questions,
-            this.state.newNumber-1,
-            this.state.previousNumber-1
+            this.state.newNumber - 1,
+            this.state.previousNumber - 1
         )
         this.setState({
-                questions,
+            questions,
         })
 
         this.setChildModalShow(false);
     }
 
-    setChildModalShow(val){
-        this.setState({showChildModal: val});
+    setChildModalShow(val) {
+        this.setState({ showChildModal: val });
     }
 
-    makeRelationship(){
+    makeRelationship() {
         this.setChildModalShow(false);
         // TODO: Add functionality to make question child of parent
+    }
+
+    async export() {
+        await axios({
+            url: process.env.REACT_APP_SERVER_ADDR + '/questions/all',
+            method: 'GET',
+            responseType: 'blob',
+        }).then(res => {
+            const url = window.URL.createObjectURL(new Blob([res.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'questions.json'); //or any other extension
+            document.body.appendChild(link);
+            link.click();
+        })
     }
 
     render() {
@@ -209,9 +223,7 @@ export default class QuestionTable extends Component {
                             <TableCell>No.</TableCell>
                             <TableCell>Question</TableCell>
                             <TableCell align="right">Dimension</TableCell>
-                            <TableCell>
-                                <CsvDownload className="export-csv" data={this.state.questions}>Export</CsvDownload>
-                            </TableCell>
+                            <TableCell><button id="exportButton" type="button" className="btn btn-save mr-2 btn btn-primary export-csv" onClick={() => this.export()}>Export</button></TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody component={DroppableComponent(this.onDragEnd)}>
