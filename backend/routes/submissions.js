@@ -36,7 +36,11 @@ router.post('/update/:submissionId', async (req, res) => {
             submission: req.body.submission,
             date: req.body.date,
             projectName: req.body.projectName,
-            completed: req.body.completed
+            completed: req.body.completed,
+            lifecycle: req.body.lifecycle,
+            domain: req.body.domain,
+            region: req.body.region,
+            roles: req.body.roles,
         }, {upsert:true, runValidators: true});
         // const submissions = await Submission.findOneAndUpdate({'_id' : req.params.submissionId}, {
         //     userId: req.body.userId,
@@ -60,6 +64,9 @@ router.post('/', async (req, res) => {
         projectName: req.body.projectName,
         date: req.body.date,
         lifecycle: req.body.lifecycle,
+        domain: req.body.domain,
+        region: req.body.region,
+        roles: req.body.roles,
         submission: req.body.submission,
         completed: req.body.completed ? req.body.completed : false
     });

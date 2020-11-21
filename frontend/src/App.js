@@ -66,7 +66,10 @@ class App extends Component {
       userId: user?._id ?? null,
       projectName: "",
       date: dateTime,
-      lifecycle: 6,
+      lifecycle: [6],
+      domain:[],
+      region:[],
+      roles:[13],
       submission: submission,
       completed: false
     })
@@ -80,7 +83,7 @@ class App extends Component {
         // push to survey route and pass new submission_is so progress can be saved
         this.props.history.push({ 
           pathname: '/DesignAssistantSurvey',
-          state: {submission_id: res.data._id }
+          state: {submission_id: res.data._id}
          })
 
       });
@@ -120,7 +123,7 @@ class App extends Component {
       // so user can continue 
       this.props.history.push({
         pathname: '/DesignAssistantSurvey',
-        state: { prevResponses: submission.submission, submission_id: submission._id }
+        state: { prevResponses: submission.submission, submission_id: submission._id, filters: {roles: submission.roles, domain: submission.domain, region: submission.region , lifecycle: submission.lifecycle}}
       })
     }
   }

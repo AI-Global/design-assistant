@@ -12,7 +12,7 @@ import { Button, Form, Row, Col, Card } from 'react-bootstrap';
 
 
 export default function QuestionModal(props) {
-    const responseTypes = ["text", "comment", "dropdown", "radiogroup", "checkbox", "bootstrapslider"]
+    const responseTypes = ["text", "comment", "dropdown", "radiogroup", "checkbox", "slider"]
 
     const dimensions = props.dimensions
     const domains = props.metadata.domain
