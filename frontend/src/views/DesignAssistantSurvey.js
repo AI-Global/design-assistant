@@ -375,7 +375,6 @@ class DesignAssistantSurvey extends Component {
 
 
   render() {
-    const notifySave = () => toast("Saving Responses");
     var number = 1
     return (
       this.state.model ?
