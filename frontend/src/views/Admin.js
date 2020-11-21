@@ -3,12 +3,12 @@ import React, { Component } from 'react';
 import QuestionTable from '../Components/QuestionTable';
 import AnalyticsDashboard from '../Components/AnalyticsDashboard';
 import AdminProviders from '../Components/AdminProviders';
+import AdminResources from '../Components/AdminResources';
 import { Tabs, Tab, Button, Table as BootStrapTable, DropdownButton, Dropdown } from 'react-bootstrap';
 import { getLoggedInUser } from '../helper/AuthHelper';
 import ReactGa from 'react-ga';
 import axios from 'axios';
 import Login from './Login';
-
 
 ReactGa.initialize(process.env.REACT_APP_GAID, { testMode: process.env.NODE_ENV === 'test' });
 
@@ -225,6 +225,9 @@ export default class AdminPanel extends Component {
                     </Tab>
                     <Tab eventKey="trustedAIProviders" title="Trusted AI Providers">
                         <AdminProviders/>
+                    </Tab>
+                    <Tab eventKey="trustedAIResources" title="Trusted AI Resources">
+                        <AdminResources/>
                     </Tab>
                     <Tab eventKey="analytics" title="Analytics">
                         <AnalyticsDashboard />

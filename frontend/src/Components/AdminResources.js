@@ -1,44 +1,43 @@
 import axios from 'axios';
 import React, { Component } from 'react';
-import {Table, Button} from 'react-bootstrap';
-import EditModal from './EditModal';
+import {Table, Button, Container} from 'react-bootstrap';
 
 
   
-export default class AdminProviders extends Component {
+export default class AdminResources extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            trustedAIProviders: []
+            trustedAIResources: []
         }
     }
     componentDidMount(){
-        let endPoint = '/trustedAIProviders'
+        let endPoint = '/trustedAIResources'
         axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint).then(res => {
-            this.setState({trustedAIProviders: res.data});
+            this.setState({trustedAIResources: res.data});
         }).catch(err => {
             console.log(err);
         })
     }
 
     render(){
-        var trustedAIProviders = this.state.trustedAIProviders;
+        var trustedAIResources = this.state.trustedAIResources;
         return (
             <Table bordered hover responsive className="mt-3">
                 <thead>
                     <tr>
-                        <th width="33%">Trusted AI Provider</th>
+                        <th width="33%">Trusted AI Resource</th>
                         <th>Description</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    {trustedAIProviders.map(provider => {
+                    {trustedAIResources.map(resource => {
                         return (
                             <tr>
-                                <td><a href={provider?.source}>{provider?.resource}</a></td>
-                                <td>{provider?.description}</td>
-                                <td><EditModal/></td>
+                                <td><a href={resource?.source}>{resource?.resource}</a></td>
+                                <td>{resource?.description}</td>
+                                <td><Button>Edit</Button></td>
                             </tr>
                         )
                     })}
