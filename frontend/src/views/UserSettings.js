@@ -22,6 +22,7 @@ class UserSettings extends Component {
             showEmailSettings: false,
             showUserNameSettings: false,
             showPasswordSettings: false,
+            showOrganizationSettings: false,
             user: undefined,
             password: { isInvalid: false, message: "" },
             email: { isInvalid: false, message: "" },
@@ -54,6 +55,11 @@ class UserSettings extends Component {
     changePasswordModal() {
         this.resetValidations();
         this.setState({ showPasswordSettings: true })
+    }
+
+    changeOrganizationModal() {
+        this.resetValidations();
+        this.setState({ showOrganizationSettings: true});
     }
 
     /**
@@ -169,6 +175,10 @@ class UserSettings extends Component {
             });
     }
 
+    handleOrganizationSubmit(event){
+        return;
+    }
+
     // reset validations in state
     resetValidations() {
         this.setState({
@@ -204,7 +214,9 @@ class UserSettings extends Component {
                     <Dropdown.Item onClick={() => this.changeEmailModal()}><i className="fa fa-envelope fa-fw"></i> Change Email</Dropdown.Item>
                     <Dropdown.Item onClick={() => this.changeUsernameModal()}><i className="fa fa-user fa-fw"></i> Change Username</Dropdown.Item>
                     <Dropdown.Item onClick={() => this.changePasswordModal()}><i className="fa fa-key fa-fw"></i> Change Password</Dropdown.Item>
+                    <Dropdown.Item > <i className="fa fa-users fa-fw"></i> Change Organization</Dropdown.Item> 
                     <Dropdown.Item onClick={() => this.handleLogout()}><i className="fa fa-sign-out fa-fw"></i> Log Out</Dropdown.Item>
+                    
                 </DropdownButton>
 
                 <Modal show={this.state.showEmailSettings}
@@ -315,6 +327,41 @@ class UserSettings extends Component {
                         </Form>
                     </Modal.Body>
                 </Modal>
+                
+                <Modal show={this.state.showOrganizationSettings}
+                    onHide={handleClose}
+                    backdrop="static"
+                    keyboard={false}
+                    dialogClassName="modal-login modal-dialog-centered">
+                    <Modal.Header closeButton>
+                        <Modal.Title>
+                            Change Organization
+                        </Modal.Title>
+
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Form onSubmit={(e) => this.handleOrganizationSubmit(e)}>
+                            <Form.Group controlId="newPassword">
+                                <i className="fa fa-lock"></i>
+                                <Form.Control type="password" placeholder="New Password" required="required" autoComplete="password" isInvalid={this.state.newPassword?.isInvalid} aria-label="new password" />
+                                <Form.Control.Feedback type="invalid">
+                                    {this.state.newPassword?.message}
+                                </Form.Control.Feedback>
+                            </Form.Group>
+                            <Form.Group controlId="confirmPassword">
+                                <i className="fa fa-lock"></i>
+                                <Form.Control type="password" placeholder="Confirm New Password" required="required" autoComplete="password" isInvalid={this.state.passwordConfirmation?.isInvalid} aria-label="confirm password" />
+                                <Form.Control.Feedback type="invalid">
+                                    {this.state.passwordConfirmation?.message}
+                                </Form.Control.Feedback>
+                            </Form.Group>
+                            <Form.Group controlId="formSubmit">
+                            </Form.Group>
+                            <input type="submit" className="btn btn-primary btn-block btn-lg" value="Submit" />
+                        </Form>
+                    </Modal.Body>
+                </Modal>
+
 
             </span>
         )

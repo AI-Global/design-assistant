@@ -158,6 +158,9 @@ export default class Signup extends Component {
                                     {this.state.passwordConfirmation.message}
                                 </Form.Control.Feedback>
                             </Form.Group>
+                            <Form.Group controlId="signupOrganization">
+                            <Form.Control type="text" placeholder="Organization (Optional)" aria-label="organization"/>
+                            </Form.Group>
                             <input type="submit" className="btn btn-primary btn-block btn-lg" value="Create My Account" />
 
 

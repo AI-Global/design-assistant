@@ -34,13 +34,10 @@ const UserSchema = new mongoose.Schema({
         type: String, 
         required: true 
     },
-    orgs: [
-        { 
-          type: mongoose.Schema.Types.ObjectId, 
-          ref: 'Organization', 
+    orgs: { 
+          type: String, 
           default: [] 
-        },
-    ],
+        }
 });
 
 UserSchema.virtual('password')
