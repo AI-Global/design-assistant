@@ -6,7 +6,7 @@ const TrustedAIResources = require('../models/trustedAIResource.model');
 // Get all Trusted AI Providers
 router.get('/', async (req,res) => {
     try{
-        const trustedResources = await TrustedAIResources.find();
+        const trustedResources = await TrustedAIResources.find().sort('resource');
         res.json(trustedResources);
     }catch(err){
         res.json({message: err});
