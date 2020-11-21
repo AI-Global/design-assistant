@@ -2,6 +2,7 @@ import '../css/admin.css';
 import React, { Component } from 'react';
 import QuestionTable from '../Components/QuestionTable';
 import AnalyticsDashboard from '../Components/AnalyticsDashboard';
+import AdminProviders from '../Components/AdminProviders';
 import { Tabs, Tab, Button, Table as BootStrapTable, DropdownButton, Dropdown } from 'react-bootstrap';
 import { getLoggedInUser } from '../helper/AuthHelper';
 import ReactGa from 'react-ga';
@@ -221,6 +222,9 @@ export default class AdminPanel extends Component {
                                 </tbody>
                             </BootStrapTable>
                         </div>
+                    </Tab>
+                    <Tab eventKey="trustedAIProviders" title="Trusted AI Providers">
+                        <AdminProviders/>
                     </Tab>
                     <Tab eventKey="analytics" title="Analytics">
                         <AnalyticsDashboard />
