@@ -189,7 +189,7 @@ class App extends Component {
           </div>
         </div>
         <div className="float-right mr-3 mt-2">
-          <Button onClick={() => this.startSurvey()}>Start New Survey</Button>
+          <Button id="newSurvey" onClick={() => this.startSurvey()}>Start New Survey</Button>
         </div>
         <Login />
       </div>
