@@ -54,10 +54,10 @@ class DesignAssistantSurvey extends Component {
     super(props);
     this.state = {
       metadata: {},
-      roleFilters: [13],
+      roleFilters: [],
       domainFilters: [],
       regionFilters: [],
-      lifecycleFilters: [6],
+      lifecycleFilters: [],
       dimArray: [],
       showModal: false,
       //TODO: Change these from being hardcoded 
@@ -329,6 +329,7 @@ class DesignAssistantSurvey extends Component {
     this.getQuestions(submissions)
   }
 
+<<<<<<< HEAD
   navPage(pageNumber) {
     const survey = this.state.model
     survey.currentPage = survey.pages[pageNumber]
@@ -356,8 +357,12 @@ class DesignAssistantSurvey extends Component {
 
   clearFilter(filter) {
     switch (filter) {
+=======
+  clearFilter(filter) {
+    switch(filter) {
+>>>>>>> 5a4765c97e43957de9ea7f06e9bf639912bf1a53
       case 'roles':
-        this.setState({ roleFilters: [13] })
+        this.setState({ roleFilters: [] })
         break
       case 'domain':
         this.setState({ domainFilters: [] })
@@ -366,7 +371,11 @@ class DesignAssistantSurvey extends Component {
         this.setState({ regionFilters: [] })
         break
       case 'lifecycle':
+<<<<<<< HEAD
         this.setState({ lifecycleFilters: [6] })
+=======
+        this.setState({lifecycleFilters: [] })
+>>>>>>> 5a4765c97e43957de9ea7f06e9bf639912bf1a53
         break
       default:
         console.log('not a valid filter')

@@ -223,6 +223,10 @@ form .btn:not(.btn-call-to-action) {
   }
 }
 
+.questionFilter .card {
+  overflow: visible !important;
+}
+
 .filterDrop{
   padding-bottom: 1em;
 }
@@ -233,17 +237,16 @@ form .btn:not(.btn-call-to-action) {
 
 .filterApply {
   width: 90%;
-  margin-top: 14.5em;
+  /* margin-top: 14.5em; */
 }
 
-.filterDrop .dropdown-menu{
+.filterDrop .dropdown-menu {
   padding: 1em !important;
   width: 90%;
 }
 
 .cardBody {
   text-align: center;
-  height: 35em;
 }
 
 .MuiTableCell-head {
@@ -291,7 +294,6 @@ input[type=number]
   flex-flow: column;
   width: 100%;
 }
-
 
 .survey-results-table tbody {
   display: block;
