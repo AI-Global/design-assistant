@@ -208,7 +208,7 @@ export default class QuestionTable extends Component {
                             <TableCell>No.</TableCell>
                             <TableCell>Question</TableCell>
                             <TableCell align="right">Dimension</TableCell>
-                            <TableCell />
+                            <TableCell><button id="exportButton" type="button" className="btn btn-save mr-2 btn btn-primary export-csv">Export</button></TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody component={DroppableComponent(this.onDragEnd)}>

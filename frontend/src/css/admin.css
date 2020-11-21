@@ -55,3 +55,10 @@ input[type=number]
 .form-label {
   min-height: 40px !important;
 }
+
+.export-csv{
+  float: right;
+  background-color: #007bff !important;
+  padding: .5em!important;
+  font-size: 14px !important;
+}
