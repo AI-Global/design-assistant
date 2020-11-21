@@ -366,15 +366,19 @@ class UserSettings extends Component {
                     </Modal.Header>
                     <Modal.Body>
                         <Form onSubmit={(e) => this.handleOrganizationSubmit(e)}>
-                            <div style = {{display: 'flex', justifyContent:'center', alignItems:'center'}}>
-                                <u><b>Current Organization</b></u>
+                            {!this.state?.user?.organization ? null : 
+                            <div>
+                                <div style = {{display: 'flex', justifyContent:'center', alignItems:'center'}}>
+                                    <u><b>Current Organization</b></u>
+                                </div>
+                                <div style={{display: 'flex', justifyContent:'center', alignItems:'center', wordWrap: "break-word"}}>
+                                    {this.state?.user?.organization}
+                                </div>
                             </div>
-                            <div style={{display: 'flex', justifyContent:'center', alignItems:'center', wordWrap: "break-word"}}>
-                                {this.state?.user?.organization}
-                            </div>
+                            }
                             <Form.Group controlId="newOrganization">
                                 <i className="fa fa-users"></i>
-                                <Form.Control type="text" placeholder={"New Organization"} required="required" autoComplete="organization" aria-label="new organization" />
+                                <Form.Control type="text" placeholder={"New Organization"} autoComplete="organization" aria-label="new organization" />
                             </Form.Group>
                             <Form.Group controlId="organizationPassword">
                                 <i className="fa fa-lock"></i>
