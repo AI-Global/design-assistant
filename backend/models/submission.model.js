@@ -19,7 +19,19 @@ const SubmissionSchema = mongoose.Schema({
     // Possible life cycles
     // reference to the id of the lifecycle
     lifecycle: {
-        type: Number
+        type: [Number]
+    },
+
+    domain: {
+        type: [Number]
+    },
+
+    region: {
+        type: [Number]
+    },
+
+    roles: {
+        type: [Number]
     },
 
     // json file that gets output from survey.js

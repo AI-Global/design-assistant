@@ -3,6 +3,10 @@ const router = express.Router();
 const Question = require('../models/question.model');
 
 const Dimension = require('../models/dimension.model');
+const Lifecycles = require('../models/lifecycle.model');
+const Roles = require('../models/role.model');
+const Domain = require('../models/domain.model');
+const Region = require('../models/region.model');
 const fs = require('fs');
 const { create, findOne } = require('../models/question.model');
 const mongoose = require('mongoose');
@@ -190,7 +194,78 @@ function createPage(questions, pageName, pageTitle, Dimensions, Children) {
     return page
 }
 
-async function createPages(q) {
+async function applyFilters(questions, filters) {
+    // This function takes a list of questions and filter
+    // The questions will be filtered out based filters passed in 
+
+    // Query DB for the "All" roleID
+    let allRoles = await Roles.find()
+    allRoles = allRoles.filter(r => r.name  == "All")[0]?.roleID
+
+    // Query DB for the "All" lifecycleID
+    let allLifecycles = await Lifecycles.find()
+    allLifecycles = allLifecycles.filter(l => l.name  == "All")[0]?.lifecycleID
+
+    // Query DB for the "All" regionID
+    let allRegions = await Region.find()
+    allRegions = allRegions.filter(r => r.name  == "All")[0]?.regionID
+
+    // Query DB for the "All" domainID
+    let allDomains = await Domain.find()
+    allDomains = allDomains.filter(d => d.name  == "All")[0]?.domainID
+
+    // Filter roles if passed in
+    if (filters.roles) {
+        // Add "all" to role filters
+        if(allRoles){
+            filters.roles.push(allRoles)
+        }
+
+        for (let dim of Object.keys(questions)) {
+            questions[dim] = questions[dim].filter(q => filters.roles.some(role => q.roles.includes(role)))
+        }
+    }
+
+    // Filter regions if passed in
+    if (filters.regions) {
+        // Add "all" to regions filters
+        if(allRegions){
+            filters.regions.push(allRegions)
+        }
+
+        for (let dim of Object.keys(questions)) {
+            questions[dim] = questions[dim].filter(q => filters.regions.some(region => q.regionalApplicability.includes(region)))
+        }
+    }
+
+    // Filter lifecycles if passed in
+    if (filters.lifecycles) {
+        // Add "all" to lifecycles filters
+        if(allLifecycles){
+            filters.lifecycles.push(allLifecycles)
+        }
+
+        for (let dim of Object.keys(questions)) {
+            questions[dim] = questions[dim].filter(q => filters.lifecycles.some(lifecycle => q.lifecycle.includes(lifecycle)))
+        }
+    }
+
+    // Filter domains if passed in
+    if (filters.domains) {
+        // Add "all" to domains filters
+        if(allDomains){
+            filters.domains.push(allDomains)
+        }
+
+        for (let dim of Object.keys(questions)) {
+            questions[dim] = questions[dim].filter(q => filters.domains.some(domain => q.domainApplicability.includes(domain)))
+        }
+    }
+
+    return questions
+}
+
+async function createPages(q, filters) {
     // Get dimensions from DB
     let Dimensions = await getDimensions()
     // Get child questions from DB
@@ -234,6 +309,10 @@ async function createPages(q) {
     var projectDetails = createPage(tombQuestions["tombstone"], "projectDetails1", "Project Details", Dimensions, Children);
     page.pages.push(projectDetails);
 
+
+    // Apply domain, region, role, lifecycle filter to questions
+    dimQuestions = await applyFilters(dimQuestions, filters)
+
     // Create pages for the dimensions
     var pageCount = 1;
     var questions = [];
@@ -268,11 +347,13 @@ async function createPages(q) {
 
 // Get all questions. Assemble SurveyJS JSON here
 router.get('/', async (req, res) => {
+    // Optional filters in req body
+    filters = req.query;
     // Only request parent questions from DB
     Question.find({ "child": false })
         .sort({ questionNumber: 1 })
         .then(async (questions) => {
-            pages = await createPages(questions);
+            pages = await createPages(questions, filters);
             res.status(200).send(pages);
         })
         .catch((err) => res.status(400).send(err));
@@ -322,7 +403,7 @@ router.delete('/:questionId', async (req, res) => {
         const session = await mongoose.startSession();
         session.withTransaction(async () => {
             var number;
-            var question = await Question.findOne({_id: req.params.questionId})
+            var question = await Question.findOne({ _id: req.params.questionId })
             var number = question.questionNumber
             await Question.deleteOne({ _id: req.params.questionId })
             var maxQ = await Question.find().sort({ questionNumber: -1 }).limit(1)

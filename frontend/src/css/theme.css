@@ -1,5 +1,5 @@
 html {
-  background-color: #252525;
+  background-color: #262626;
 }
 .banner {
   padding-top: .5rem;
@@ -55,7 +55,7 @@ html {
   position: relative; 
   bottom: 0px; 
   width: 100%; 
-  background-color: #252525;
+  background-color: #262626;
 }
 
 .copyright {
@@ -205,7 +205,7 @@ form .btn:not(.btn-call-to-action) {
   .dimensionNav {
     position: absolute;
     left: 3em;
-    top: 12em;
+    top: 14.5em;
     z-index: 5;
     max-width: 18em;
     min-width: 18em;
@@ -217,24 +217,36 @@ form .btn:not(.btn-call-to-action) {
     z-index: 5;
     max-width: 18em;
     min-width: 18em;
-    min-height: 18em;
+    min-height: 30em;
     margin-left:auto;
     margin-right:auto;
   }
+}
 
-  .filterDrop{
-    width: 40%;
-    display: inline-block;
-  }
+.questionFilter .card {
+  overflow: visible !important;
+}
 
-  .filterDrop .btn {
-    width: 100%;
-  }
+.filterDrop{
+  padding-bottom: 1em;
+}
 
-  .cardBody {
-    text-align: center;
-    height: 12em;
-  }
+.filterDrop .btn {
+  width: 90%;
+}
+
+.filterApply {
+  width: 90%;
+  /* margin-top: 14.5em; */
+}
+
+.filterDrop .dropdown-menu {
+  padding: 1em !important;
+  width: 90%;
+}
+
+.cardBody {
+  text-align: center;
 }
 
 .MuiTableCell-head {
@@ -282,7 +294,6 @@ input[type=number]
   flex-flow: column;
   width: 100%;
 }
-
 
 .survey-results-table tbody {
   display: block;
