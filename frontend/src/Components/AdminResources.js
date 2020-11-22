@@ -1,7 +1,8 @@
 import axios from 'axios';
 import React, { Component } from 'react';
 import { Table, Button, Form, Col, Modal } from 'react-bootstrap';
-
+import IconButton from '@material-ui/core/IconButton';
+import Add from '@material-ui/icons/Add';
 
 
 export default class AdminResources extends Component {
@@ -33,7 +34,7 @@ export default class AdminResources extends Component {
         let form = event.target.elements;
         let trustedAIResources = this.state.trustedAIResources;
         let currentIndex = this.state.currentIndex;
-        let endPoint = "/trustedAIResources/" + trustedAIResources[currentIndex]?._id;
+        let endPoint = "/trustedAIResources/" + (trustedAIResources[currentIndex]?._id ?? "");
         let body = {
             resource: form.title.value,
             description: form.description.value,
@@ -141,13 +142,15 @@ export default class AdminResources extends Component {
                         <tr>
                             <th width="33%">Trusted AI Resource</th>
                             <th>Description</th>
-                            <th></th>
+                            <th className="text-center">
+                                <IconButton aria-label="add resource" size="small" onClick={() => { handleEditShow(-1) }}><Add/></IconButton>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         {trustedAIResources.map((resource, index) => {
                             return (
-                                <tr>
+                                <tr key={index}>
                                     <td><a href={resource?.source}>{resource?.resource}</a></td>
                                     <td>{resource?.description}</td>
                                     <td><Button onClick={() => { handleEditShow(index) }}>Edit</Button></td>
