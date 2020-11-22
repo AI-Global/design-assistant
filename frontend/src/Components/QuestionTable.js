@@ -14,6 +14,7 @@ import IconButton from '@material-ui/core/IconButton';
 import TableContainer from '@material-ui/core/TableContainer';
 import ChildModal from './ChildModal';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { DropdownButton, Dropdown } from 'react-bootstrap';
 
 const reorder = (list, startIndex, endIndex) => {
     const result = Array.from(list)
@@ -151,19 +152,39 @@ export default class QuestionTable extends Component {
         // TODO: Add functionality to make question child of parent
     }
 
-    async export() {
-        await axios({
-            url: process.env.REACT_APP_SERVER_ADDR + '/questions/all',
-            method: 'GET',
-            responseType: 'blob',
-        }).then(res => {
-            const url = window.URL.createObjectURL(new Blob([res.data]));
+    async export(fileExt) {
+        var endPoint = '/questions/all/export'
+        var fileName = fileExt === 'json' ? 'json' : 'csv_delimiter=;'
+
+        if (fileExt === 'json') {
+            await axios({
+                url: process.env.REACT_APP_SERVER_ADDR + endPoint,
+                method: 'GET',
+                responseType: 'blob',
+            }).then(res => {
+                const url = window.URL.createObjectURL(new Blob([res.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'questions_' + fileName + '.' + fileExt);
+                document.body.appendChild(link);
+                link.click();
+            })
+        }
+        else {
+            // convert json to csv: https://stackoverflow.com/a/31536517
+            // need to deliminate with ; or it will screw the whole file up
+            const replacer = (key, value) => value === null ? '' : value
+            const header = Object.keys(this.state.questions[0])
+            let csv = this.state.questions.map(row => header.map(fieldName => JSON.stringify(row[fieldName], replacer)).join(';'))
+            csv.unshift(header.join(';'))
+            csv = csv.join('\r\n')
+            const url = window.URL.createObjectURL(new Blob([csv]));
             const link = document.createElement('a');
             link.href = url;
-            link.setAttribute('download', 'questions.json'); //or any other extension
+            link.setAttribute('download', 'questions_' + fileName + '.' + fileExt);
             document.body.appendChild(link);
             link.click();
-        })
+        }
     }
 
     render() {
@@ -223,7 +244,12 @@ export default class QuestionTable extends Component {
                             <TableCell>No.</TableCell>
                             <TableCell>Question</TableCell>
                             <TableCell align="right">Dimension</TableCell>
-                            <TableCell><button id="exportButton" type="button" className="btn btn-save mr-2 btn btn-primary export-csv" onClick={() => this.export()}>Export</button></TableCell>
+                            <TableCell>
+                                <DropdownButton className="export-dropdown" title={<i class="fas fa-file-export fa-lg"/>}>
+                                    <Dropdown.Item onClick={() => this.export('json')}>.json</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => this.export('csv')}>.csv</Dropdown.Item>
+                                </DropdownButton>
+                            </TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody component={DroppableComponent(this.onDragEnd)}>
