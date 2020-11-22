@@ -33,7 +33,7 @@ router.put('/', async (req, res) => {
 router.delete('/:id', async (req, res) => {
     try {
         // Delete existing question in DB
-        let doc = await TrustedAIResources.findOneAndDelete({ _id: req.params.id })
+        let doc = await TrustedAIResources.findByIdAndDelete(req.params.id);
         res.json(doc);
     } catch (err) {
         res.json({ message: err });
@@ -45,7 +45,7 @@ router.delete('/:id', async (req, res) => {
 router.put('/:id', async (req, res) => {
     try{
         const ret = await TrustedAIResources.findOneAndUpdate({'_id' : req.params.id}, req.body
-        , {upsert:true, runValidators: true});
+        , {upsert:true, runValidators: true, new: true});
         res.json(ret);
     } catch(err){
         // console.log("error updating", err);
