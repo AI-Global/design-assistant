@@ -106,8 +106,13 @@ class DesignAssistantSurvey extends Component {
         this.setState({ json: json });
         this.setState({ model });
 
+        // Set survey responses to survey model
         if (this?.props?.location?.state?.prevResponses) {
-          model.data = this.props.location.state.prevResponses
+          model.data = this.props.location.state.prevResponses;
+          let questionsAnswered = Object.keys(model.data);
+          let lastQuestionAnswered = questionsAnswered[questionsAnswered.length-1];
+          let lastPageAnswered = model.pages.find(page => page.elements.find(question => question.name === lastQuestionAnswered));
+          model.currentPageNo = lastPageAnswered?.visibleIndex ?? 0;
         }
 
         if (this?.props?.location?.state?.filters && !submissions) {

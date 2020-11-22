@@ -315,3 +315,7 @@ input[type=number]
 #ResultsButton {
   background-color: #007bff !important;
 }
+
+#DeleteSurveyButton {
+  background-color: #dc3545!important
+}

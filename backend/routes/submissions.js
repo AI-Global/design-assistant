@@ -4,35 +4,35 @@ const auth = require('../middleware/auth');
 const Submission = require('../models/submission.model');
 
 // Get all submissions
-router.get('/', async (req,res) => {
-    try{
+router.get('/', async (req, res) => {
+    try {
         const submissions = await Submission.find();
         res.json(submissions);
         // print debug message
         console.log("Incoming submissions request");
-    } catch(err){
-        res.json({message: err});
+    } catch (err) {
+        res.json({ message: err });
 
     }
 });
 
 // Get submissions by user id
 
-router.get('/user/:userId',  async (req,res) => {
-    try{
-        await Submission.find({userId : req.params.userId}).sort({date: -1}).then(submissions => {
-            res.json({submissions: submissions});
+router.get('/user/:userId', async (req, res) => {
+    try {
+        await Submission.find({ userId: req.params.userId }).sort({ date: -1 }).then(submissions => {
+            res.json({ submissions: submissions });
         });
-    } catch(err){
+    } catch (err) {
         // console.log("error returning user submissions", err)
-        res.json({message: err});
-    }   
+        res.json({ message: err });
+    }
 });
 
 router.post('/update/:submissionId', async (req, res) => {
-    try{
+    try {
         console.log("updating");
-        const submissions = await Submission.findOneAndUpdate({'_id' : req.params.submissionId}, {
+        const submissions = await Submission.findOneAndUpdate({ '_id': req.params.submissionId }, {
             submission: req.body.submission,
             date: req.body.date,
             projectName: req.body.projectName,
@@ -50,10 +50,15 @@ router.post('/update/:submissionId', async (req, res) => {
         //     completed: req.body.completed
         // }, {upsert:true, runValidators: true});
         res.json(submissions);
-    } catch(err){
-        // console.log("error updating", err);
-        res.json({message: err});
+    } catch (err) {
+        res.json({ message: err });
     }
+});
+
+router.delete('/delete/:id', async (req, res) => {
+    await Submission.findByIdAndDelete(req.params.id)
+        .then(() => res.json('User submission deleted.'))
+        .catch(err => res.status(400).json('Error: ' + err));
 });
 
 
@@ -71,12 +76,12 @@ router.post('/', async (req, res) => {
         completed: req.body.completed ? req.body.completed : false
     });
 
-    try{
+    try {
         const savedSubmission = await submission.save();
         // console.log("inserting");
         res.json(savedSubmission);
-    } catch(err){
-        res.json({message: err});
+    } catch (err) {
+        res.json({ message: err });
         // console.log("error to insert", err);
     }
 
