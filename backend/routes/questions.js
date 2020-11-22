@@ -127,9 +127,13 @@ function formatQuestion(q, Dimensions, Triggers = null) {
         }
 
     } else if (question.type == "slider") {
-        // Set type to bootstrap slider 
+        if(q.trustIndexDimension){
+            question.score.dimension = Dimensions[q.trustIndexDimension].label
+        }
         
+        // Set type to bootstrap slider 
         question.type = "bootstrapslider"
+
         // Low Medium and High
         question.step = 1;
         question.rangeMin = 0;
