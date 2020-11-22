@@ -188,6 +188,14 @@ class UserSettings extends Component {
         })
       }
 
+    // navigation to home page
+    navHome() {
+        this.props.history.push({
+          pathname: '/',  
+          state: {userRole: this.state.user.role}
+        })
+      }
+
     render(){
         const handleClose = () => this.setState({showEmailSettings: false, showUserNameSettings: false, showPasswordSettings: false});
         return (
@@ -198,6 +206,7 @@ class UserSettings extends Component {
                     <FontAwesomeIcon icon={faUserCog} size="lg" className="mr-2" cursor="pointer" aria-label="Settings Dropdown"/>
                     </span>
                 }>
+                    <Dropdown.Item onClick={() => this.navHome()}><i className="fa fa-home fa-fw"></i> Home</Dropdown.Item>
                     {this.state.user ? 
                         (this.state.user.role === "admin" || this.state.user.role === "superadmin") ? <Dropdown.Item onClick={() => this.navAdmin()}><i className="fa fa-database fa-fw"></i> Admin Panel</Dropdown.Item> : null 
                     : null}
