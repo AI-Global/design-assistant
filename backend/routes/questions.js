@@ -129,8 +129,8 @@ function formatQuestion(q, Dimensions, Triggers = null) {
     } else if (question.type == "bootstrapslider") {
         // Low Medium and High
         question.step = 1;
-        question.rangeMin = 1;
-        question.rangeMax = 3;
+        question.rangeMin = 0;
+        question.rangeMax = 100;
     }
 
     return question;
