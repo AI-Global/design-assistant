@@ -245,7 +245,7 @@ export default class QuestionTable extends Component {
                             <TableCell>Question</TableCell>
                             <TableCell align="right">Dimension</TableCell>
                             <TableCell>
-                                <DropdownButton className="export-dropdown" title={<i class="fas fa-file-export fa-lg"/>}>
+                                <DropdownButton className="export-dropdown" title={<i className="fas fa-file-export fa-lg"/>}>
                                     <Dropdown.Item onClick={() => this.export('json')}>.json</Dropdown.Item>
                                     <Dropdown.Item onClick={() => this.export('csv')}>.csv</Dropdown.Item>
                                 </DropdownButton>
