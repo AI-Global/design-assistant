@@ -3,6 +3,10 @@ const router = express.Router();
 const Question = require('../models/question.model');
 
 const Dimension = require('../models/dimension.model');
+const Lifecycles = require('../models/lifecycle.model');
+const Roles = require('../models/role.model');
+const Domain = require('../models/domain.model');
+const Region = require('../models/region.model');
 const fs = require('fs');
 const { create, findOne } = require('../models/question.model');
 const mongoose = require('mongoose');
@@ -190,28 +194,69 @@ function createPage(questions, pageName, pageTitle, Dimensions, Children) {
     return page
 }
 
-function applyFilters(questions, filters) {
-    // This function applies the filters to list of questions 
+async function applyFilters(questions, filters) {
+    // This function takes a list of questions and filter
+    // The questions will be filtered out based filters passed in 
 
+    // Query DB for the "All" roleID
+    let allRoles = await Roles.find()
+    allRoles = allRoles.filter(r => r.name  == "All")[0]?.roleID
+
+    // Query DB for the "All" lifecycleID
+    let allLifecycles = await Lifecycles.find()
+    allLifecycles = allLifecycles.filter(l => l.name  == "All")[0]?.lifecycleID
+
+    // Query DB for the "All" regionID
+    let allRegions = await Region.find()
+    allRegions = allRegions.filter(r => r.name  == "All")[0]?.regionID
+
+    // Query DB for the "All" domainID
+    let allDomains = await Domain.find()
+    allDomains = allDomains.filter(d => d.name  == "All")[0]?.domainID
+
+    // Filter roles if passed in
     if (filters.roles) {
+        // Add "all" to role filters
+        if(allRoles){
+            filters.roles.push(allRoles)
+        }
+
         for (let dim of Object.keys(questions)) {
             questions[dim] = questions[dim].filter(q => filters.roles.some(role => q.roles.includes(role)))
         }
     }
 
+    // Filter regions if passed in
     if (filters.regions) {
+        // Add "all" to regions filters
+        if(allRegions){
+            filters.regions.push(allRegions)
+        }
+
         for (let dim of Object.keys(questions)) {
             questions[dim] = questions[dim].filter(q => filters.regions.some(region => q.regionalApplicability.includes(region)))
         }
     }
 
+    // Filter lifecycles if passed in
     if (filters.lifecycles) {
+        // Add "all" to lifecycles filters
+        if(allLifecycles){
+            filters.lifecycles.push(allLifecycles)
+        }
+
         for (let dim of Object.keys(questions)) {
             questions[dim] = questions[dim].filter(q => filters.lifecycles.some(lifecycle => q.lifecycle.includes(lifecycle)))
         }
     }
 
+    // Filter domains if passed in
     if (filters.domains) {
+        // Add "all" to domains filters
+        if(allDomains){
+            filters.domains.push(allDomains)
+        }
+
         for (let dim of Object.keys(questions)) {
             questions[dim] = questions[dim].filter(q => filters.domains.some(domain => q.domainApplicability.includes(domain)))
         }
@@ -266,7 +311,7 @@ async function createPages(q, filters) {
 
 
     // Apply domain, region, role, lifecycle filter to questions
-    dimQuestions = applyFilters(dimQuestions, filters)
+    dimQuestions = await applyFilters(dimQuestions, filters)
 
     // Create pages for the dimensions
     var pageCount = 1;

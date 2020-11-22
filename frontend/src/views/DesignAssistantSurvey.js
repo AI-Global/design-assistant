@@ -54,10 +54,10 @@ class DesignAssistantSurvey extends Component {
     super(props);
     this.state = {
       metadata: {},
-      roleFilters: [13],
+      roleFilters: [],
       domainFilters: [],
       regionFilters: [],
-      lifecycleFilters: [6],
+      lifecycleFilters: [],
       dimArray: [],
       showModal: false,
       //TODO: Change these from being hardcoded 
@@ -109,8 +109,13 @@ class DesignAssistantSurvey extends Component {
         this.setState({ json: json });
         this.setState({ model });
 
+        // Set survey responses to survey model
         if (this?.props?.location?.state?.prevResponses) {
-          model.data = this.props.location.state.prevResponses
+          model.data = this.props.location.state.prevResponses;
+          let questionsAnswered = Object.keys(model.data);
+          let lastQuestionAnswered = questionsAnswered[questionsAnswered.length-1];
+          let lastPageAnswered = model.pages.find(page => page.elements.find(question => question.name === lastQuestionAnswered));
+          model.currentPageNo = lastPageAnswered?.visibleIndex ?? 0;
         }
 
         if (this?.props?.location?.state?.filters && !submissions) {
@@ -357,7 +362,7 @@ class DesignAssistantSurvey extends Component {
   clearFilter(filter) {
     switch (filter) {
       case 'roles':
-        this.setState({ roleFilters: [13] })
+        this.setState({ roleFilters: [] })
         break
       case 'domain':
         this.setState({ domainFilters: [] })
@@ -366,7 +371,7 @@ class DesignAssistantSurvey extends Component {
         this.setState({ regionFilters: [] })
         break
       case 'lifecycle':
-        this.setState({ lifecycleFilters: [6] })
+        this.setState({lifecycleFilters: [] })
         break
       default:
         console.log('not a valid filter')

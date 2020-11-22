@@ -135,3 +135,16 @@ test('Results switches to Trusted AI Providers Tab', async () => {
     fireEvent.click(screen.getAllByText("Trusted AI Providers")[0]);
     expect(screen.queryAllByText).toBeTruthy();
 })
+
+test('Results switches to Trusted AI Resources Tab', async () => {
+    const mockPages = [{elements: []}];
+    const mockLocation = {
+        state: {
+            questions: {"pages": mockPages},
+            responses: {}
+    }}
+    axios.get.mockResolvedValue(response);
+    await render(<Router><Results location={mockLocation}/></Router>)
+    fireEvent.click(screen.getAllByText("Trusted AI Resources")[0]);
+    expect(screen.queryAllByText).toBeTruthy();
+})

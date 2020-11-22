@@ -223,6 +223,10 @@ form .btn:not(.btn-call-to-action) {
   }
 }
 
+.questionFilter .card {
+  overflow: visible !important;
+}
+
 .filterDrop{
   padding-bottom: 1em;
 }
@@ -233,17 +237,16 @@ form .btn:not(.btn-call-to-action) {
 
 .filterApply {
   width: 90%;
-  margin-top: 14.5em;
+  /* margin-top: 14.5em; */
 }
 
-.filterDrop .dropdown-menu{
+.filterDrop .dropdown-menu {
   padding: 1em !important;
   width: 90%;
 }
 
 .cardBody {
   text-align: center;
-  height: 35em;
 }
 
 .MuiTableCell-head {
@@ -292,7 +295,6 @@ input[type=number]
   width: 100%;
 }
 
-
 .survey-results-table tbody {
   display: block;
   overflow-y: auto;
@@ -313,6 +315,7 @@ input[type=number]
 #ResultsButton {
   background-color: #007bff !important;
 }
+
 /* 
 #wb-cont {
   min-height: 1140px !important;
@@ -328,4 +331,9 @@ input[type=number]
 
 .sv_container {
   min-height: 100vh !important;
+}
+
+#DeleteSurveyButton {
+  background-color: #dc3545!important
+
 }
