@@ -59,7 +59,7 @@ function formatQuestion(q, Dimensions, Triggers = null) {
     question.name = q.id;
     question.type = q.responseType;
 
-    
+
     // Set conditions for when the question is visiable
     if (Triggers) {
         question.visibleIf = Triggers;
@@ -84,7 +84,7 @@ function formatQuestion(q, Dimensions, Triggers = null) {
         question.recommendation.default = q.reference;
         question.recommendation.fr = "";
     }
-    
+
     if (question.type == "dropdown") {
         question.hasOther = true;
         question.choice = [];
@@ -99,30 +99,30 @@ function formatQuestion(q, Dimensions, Triggers = null) {
             choice.text.fr = "";
             question.choices.push(choice);
         }
-        
+
     } else if (question.type == "radiogroup" || question.type == "checkbox") {
         if (q.pointsAvailable) {
-            
+
             question.score = {};
 
-            if(q.trustIndexDimension){
+            if (q.trustIndexDimension) {
                 question.score.dimension = Dimensions[q.trustIndexDimension].label
             }
 
             question.score.max = q.pointsAvailable * q.weighting;
-            
+
             // Add score to the choices
             question.score.choices = {};
             for (let c of q.responses) {
                 question.score.choices[c.id] = c.score * q.weighting;
-                
+
             }
-            
+
         }
 
         // Add choices to question
         question.choices = [];
-        
+
         for (let c of q.responses) {
             var choice = {};
             choice.value = c.id;
@@ -131,18 +131,30 @@ function formatQuestion(q, Dimensions, Triggers = null) {
             choice.text.fr = "";
             question.choices.push(choice);
         }
-      
+
     } else if (question.type == "bootstrapslider") {
-        if(q.trustIndexDimension){
-            question.score.dimension = Dimensions[q.trustIndexDimension].label
+        // Set type to bootstrap slider 
+        question.type = "bootstrapslider"
+
+        if (q.pointsAvailable) {
+            question.score = {};
+
+            if (q.trustIndexDimension) {
+                question.score.dimension = Dimensions[q.trustIndexDimension].label
+            }
+
+            question.score.max = q.pointsAvailable * q.weighting;
+            question.score.weight = q.weighting;
+
+            question.choices = [];
         }
-        
+
         // Low Medium and High
         question.step = 1;
         question.rangeMin = 1;
         question.rangeMax = 3;
     }
-    
+
     return question;
 }
 
@@ -194,13 +206,13 @@ function createPage(questions, pageName, pageTitle, Dimensions, Children) {
         if (q.child) {
 
             return formatQuestion(q, Dimensions, Children[q.trigger.parent].trigger);
-            
+
         } else {
             return formatQuestion(q, Dimensions);
 
         }
     });
-    
+
     return page
 }
 
@@ -210,24 +222,24 @@ async function applyFilters(questions, filters) {
 
     // Query DB for the "All" roleID
     let allRoles = await Roles.find()
-    allRoles = allRoles.filter(r => r.name  == "All")[0]?.roleID
+    allRoles = allRoles.filter(r => r.name == "All")[0]?.roleID
 
     // Query DB for the "All" lifecycleID
     let allLifecycles = await Lifecycles.find()
-    allLifecycles = allLifecycles.filter(l => l.name  == "All")[0]?.lifecycleID
+    allLifecycles = allLifecycles.filter(l => l.name == "All")[0]?.lifecycleID
 
     // Query DB for the "All" regionID
     let allRegions = await Region.find()
-    allRegions = allRegions.filter(r => r.name  == "All")[0]?.regionID
+    allRegions = allRegions.filter(r => r.name == "All")[0]?.regionID
 
     // Query DB for the "All" domainID
     let allDomains = await Domain.find()
-    allDomains = allDomains.filter(d => d.name  == "All")[0]?.domainID
+    allDomains = allDomains.filter(d => d.name == "All")[0]?.domainID
 
     // Filter roles if passed in
     if (filters.roles) {
         // Add "all" to role filters
-        if(allRoles){
+        if (allRoles) {
             filters.roles.push(allRoles)
         }
 
@@ -239,7 +251,7 @@ async function applyFilters(questions, filters) {
     // Filter regions if passed in
     if (filters.regions) {
         // Add "all" to regions filters
-        if(allRegions){
+        if (allRegions) {
             filters.regions.push(allRegions)
         }
 
@@ -251,7 +263,7 @@ async function applyFilters(questions, filters) {
     // Filter lifecycles if passed in
     if (filters.lifecycles) {
         // Add "all" to lifecycles filters
-        if(allLifecycles){
+        if (allLifecycles) {
             filters.lifecycles.push(allLifecycles)
         }
 
@@ -263,7 +275,7 @@ async function applyFilters(questions, filters) {
     // Filter domains if passed in
     if (filters.domains) {
         // Add "all" to domains filters
-        if(allDomains){
+        if (allDomains) {
             filters.domains.push(allDomains)
         }
 
@@ -318,7 +330,7 @@ async function createPages(q, filters) {
         dimQuestions.sort((a, b) => (a.questionNumber > b.questionNumber) ? 1 : -1);
     }
 
-    
+
     // Add Other question to tombstone and create page 
     tombQuestions["tombstone"].push({ responseType: "comment", id: "otherTombstone", question: "Other:", alt_text: "If possible, support the feedback with specific recommendations \/ suggestions to improve the tool. Feedback can include:\n - Refinement to existing questions, like suggestions on how questions can be simplified or clarified further\n - Additions of new questions for specific scenarios that may be missed\n - Feedback on whether the listed AI risk domains are fulsome and complete\n - What types of response indicators should be included for your context?" });
     var projectDetails = createPage(tombQuestions["tombstone"], "projectDetails1", "Project Details", Dimensions, Children);
@@ -329,7 +341,7 @@ async function createPages(q, filters) {
     var riskEvaluation = createPage(riskQuestions["risk"], "riskEvaluation1", "Risk Evaluation", Dimensions, Children);
     page.pages.push(riskEvaluation);
 
-    
+
     // Apply domain, region, role, lifecycle filter to questions
     dimQuestions = await applyFilters(dimQuestions, filters)
 
