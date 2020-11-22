@@ -23,6 +23,9 @@ router.put('/', async (req, res) => {
         const savedProvider = await provider.save();
         res.json(savedProvider);
     } catch (err) {
+        if (err.code === 11000){
+            res.status(400).json({source: {isInvalid: true, message: "Trusted AI Provider with source already exists."}})
+        }
         res.json({ message: err });
     }
 

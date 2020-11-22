@@ -32,11 +32,13 @@ export default class AdminProviders extends Component {
         let trustedAIProviders = this.state.trustedAIProviders;
         let currentIndex = this.state.currentIndex;
         let endPoint = "/trustedAIProviders/" + trustedAIProviders[currentIndex]?._id;
-        axios.delete(process.env.REACT_APP_SERVER_ADDR + endPoint)
-            .then(response => {
-                trustedAIProviders.splice(currentIndex, 1);
-                this.setState({ trustedAIProviders: trustedAIProviders });
-            });
+        if (currentIndex !== -1) {
+            axios.delete(process.env.REACT_APP_SERVER_ADDR + endPoint)
+                .then(response => {
+                    trustedAIProviders.splice(currentIndex, 1);
+                    this.setState({ trustedAIProviders: trustedAIProviders });
+                });
+        }
         this.setState({ showDeleteWarning: false })
         this.setState({ showEditModal: false });
     }
@@ -143,7 +145,7 @@ export default class AdminProviders extends Component {
 
                 <Table bordered hover responsive className="mt-3">
                     <thead>
-                        <tr>
+                        <tr className="edit-trusted-headers">
                             <th width="33%">Trusted AI Provider</th>
                             <th>Description</th>
                             <th className="text-center">

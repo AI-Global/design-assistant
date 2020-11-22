@@ -32,11 +32,13 @@ export default class AdminResources extends Component {
         let trustedAIResources = this.state.trustedAIResources;
         let currentIndex = this.state.currentIndex;
         let endPoint = "/trustedAIResources/" + trustedAIResources[currentIndex]?._id;
-        axios.delete(process.env.REACT_APP_SERVER_ADDR + endPoint)
-            .then(response => {
-                trustedAIResources.splice(currentIndex, 1);
-                this.setState({ trustedAIResources: trustedAIResources });
-            });
+        if (currentIndex !== -1) {
+            axios.delete(process.env.REACT_APP_SERVER_ADDR + endPoint)
+                .then(response => {
+                    trustedAIResources.splice(currentIndex, 1);
+                    this.setState({ trustedAIResources: trustedAIResources });
+                });
+        }
         this.setState({ showDeleteWarning: false })
         this.setState({ showEditModal: false });
     }
@@ -140,9 +142,10 @@ export default class AdminResources extends Component {
                         </Modal.Footer>
                     </Form>
                 </Modal>
+
                 <Table bordered hover responsive className="mt-3">
                     <thead>
-                        <tr>
+                        <tr className="edit-trusted-headers">
                             <th width="33%">Trusted AI Resource</th>
                             <th>Description</th>
                             <th className="text-center">
