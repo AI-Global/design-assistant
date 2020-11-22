@@ -143,20 +143,22 @@ export default class AdminResources extends Component {
                             <th width="33%">Trusted AI Resource</th>
                             <th>Description</th>
                             <th className="text-center">
-                                <IconButton aria-label="add resource" size="small" onClick={() => { handleEditShow(-1) }}><Add/></IconButton>
+                                <IconButton aria-label="add resource" size="small" onClick={() => { handleEditShow(-1) }}><Add /></IconButton>
                             </th>
                         </tr>
                     </thead>
                     <tbody>
-                        {trustedAIResources.map((resource, index) => {
-                            return (
-                                <tr key={index}>
-                                    <td><a href={resource?.source}>{resource?.resource}</a></td>
-                                    <td>{resource?.description}</td>
-                                    <td><Button onClick={() => { handleEditShow(index) }}>Edit</Button></td>
-                                </tr>
-                            )
-                        })}
+                        {Array.isArray(trustedAIResources) &&
+                            trustedAIResources.map((resource, index) => {
+                                return (
+                                    <tr key={index}>
+                                        <td><a href={resource?.source}>{resource?.resource}</a></td>
+                                        <td>{resource?.description}</td>
+                                        <td><Button onClick={() => { handleEditShow(index) }}>Edit</Button></td>
+                                    </tr>
+                                )
+                            })
+                        }
                     </tbody>
                 </Table>
             </div>

@@ -147,15 +147,17 @@ export default class AdminProviders extends Component {
                         </tr>
                     </thead>
                     <tbody>
-                        {trustedAIProviders.map((provider, index) => {
-                            return (
-                                <tr key={index}>
-                                    <td><a href={provider?.source}>{provider?.resource}</a></td>
-                                    <td>{provider?.description}</td>
-                                    <td><Button onClick={() => { handleEditShow(index) }}>Edit</Button></td>
-                                </tr>
-                            )
-                        })}
+                        {Array.isArray(trustedAIProviders) &&
+                            trustedAIProviders.map((provider, index) => {
+                                return (
+                                    <tr key={index}>
+                                        <td><a href={provider?.source}>{provider?.resource}</a></td>
+                                        <td>{provider?.description}</td>
+                                        <td><Button onClick={() => { handleEditShow(index) }}>Edit</Button></td>
+                                    </tr>
+                                )
+                            })
+                        }
                     </tbody>
                 </Table>
             </div >
