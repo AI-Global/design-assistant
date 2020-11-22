@@ -1,8 +1,3 @@
-.report-card{
-    max-height: 350px;
-    overflow-y: auto;
-  }
-
 .report-card-nav{
     border-bottom: 0;
 }
@@ -12,10 +7,24 @@
     background-color: #d0e0e3;
 }
 
-.report-card-table{
+.report-card-table {
+    display: flex;
+    flex-flow: column;
+    width: 100%;
+  }
+  
+  
+.report-card-table tbody {
+    display: block;
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: 300px;
+}
+  
+.report-card-table tr {
+    width: 100%;
+    display: table;
     table-layout: fixed;
-    position: relative;
-    border-collapse: collapse;
 }
 
 .score-card-dheader{

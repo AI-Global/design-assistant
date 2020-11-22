@@ -315,6 +315,7 @@ input[type=number]
 #ResultsButton {
   background-color: #007bff !important;
 }
+
 /* 
 #wb-cont {
   min-height: 1140px !important;
@@ -330,4 +331,9 @@ input[type=number]
 
 .sv_container {
   min-height: 100vh !important;
+
+
+#DeleteSurveyButton {
+  background-color: #dc3545!important
+
 }
