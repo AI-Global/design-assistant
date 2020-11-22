@@ -1,5 +1,8 @@
 import '../css/admin.css';
 import React, { Component } from 'react';
+import DeleteIcon from '@material-ui/icons/Delete';
+import IconButton from '@material-ui/core/IconButton';
+import { red } from '@material-ui/core/colors';
 import QuestionTable from '../Components/QuestionTable';
 import AnalyticsDashboard from '../Components/AnalyticsDashboard';
 import { Tabs, Tab, Button, Table as BootStrapTable, DropdownButton, Dropdown } from 'react-bootstrap';
@@ -27,9 +30,9 @@ const User = props => (
                 : props.user.role}
 
         </td>
-        <td>
-            <a href="#" onClick={() => { if (window.confirm('Are you sure you want to delete the user?')) { (props.deleteUser(props.user._id)) } }}>Delete User</a>
-
+        <td>{props.user?.organization}</td>
+        <td align="center">
+            <IconButton size="small" color="secondary" onClick={() => { if (window.confirm('Are you sure you want to delete the user?')) { (props.deleteUser(props.user._id)) } }}><DeleteIcon style={{ color: red[500] }}/></IconButton>
         </td>
     </tr>
 )
@@ -66,7 +69,6 @@ export default class AdminPanel extends Component {
                 json = JSON.parse(stringified);
                 this.setState({ json: json });
             })
-
 
         endPoint = '/users';
         axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
@@ -169,11 +171,12 @@ export default class AdminPanel extends Component {
                                         <th className="score-card-headers">
                                             User Name
                                         </th>
-
                                         <th className="score-card-headers">
                                             User Role
                                         </th>
-
+                                        <th className="score-card-headers">
+                                            User Organization
+                                        </th>
                                         <th className="score-card-headers">
                                             Action
                                         </th>
@@ -198,7 +201,6 @@ export default class AdminPanel extends Component {
                                         <th className="score-card-headers">
                                             Project Name
                                         </th>
-
                                         <th className="score-card-headers">
                                             Date
                                         </th>
