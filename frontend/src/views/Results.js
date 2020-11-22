@@ -50,10 +50,10 @@ export default class Results extends Component {
           });
     }
 
-    downloadCSV(surveyResults, questions) {
+    downloadCSV(surveyResults, questionsObj) {
         console.log("downloading csv");
-        console.log(questions);
-        console.log(surveyResults);
+        // console.log(questions);
+        // console.log(surveyResults);
 
         // <Tab.Content>
         //     {this.state.Dimensions.map((dimension, idx) => {
@@ -68,9 +68,79 @@ export default class Results extends Component {
         // iterate over dimensions, then iterate over questions in each dimension
         // then map choices to question and create row in csv file
 
-        this.state.Dimensions.map((dimension, idx) => {
+        var results = surveyResults;
+
+        for (let i = 0; i < questionsObj.length; ++i) {
+            var question = questionsObj[i];
+            var pos_responses = question.choices ?? [];
+            var act_responses = [];
+            // console.log(question);
+            // console.log(responses);
+
+            // question, response, recommendation (if exists)
+
+            var user_response_ids;
+
+            var result = results[question.name];
+
+            if (Array.isArray(result)) {
+                user_response_ids = question?.choices?.filter((choice) => result?.includes(choice?.value));
+            } else {
+                user_response_ids = question?.choices?.filter((choice) => result === choice?.value);
+            }
+
+
+
+            // console.log("user_response_ids: " + user_response_ids);
+            if (user_response_ids) {
+                for (let j = 0; j < user_response_ids.length; ++j) {
+                    console.log(question?.title?.default + " | " + user_response_ids[j]?.text?.default + " | " + question?.recommendation?.default);
+                }
+            }
+
             
-        })
+
+            // // iterate through all possible responses for the question and see if id matches
+            // for (let j = 0; j < pos_responses.length; ++j) {
+            //     if (user_response_ids.includes(pos_responses[j].value)) {
+            //         act_responses.push(pos_responses[i]);
+            //     }
+            // }
+
+            // console.log(questionsObj[i].title.default + " | " + results[questionsObj[i].name]);
+
+
+
+        }
+        
+        // this.state.Dimensions.forEach((dimensionObj, idx) => {
+        //     var dimension = dimensionObj.label;
+        //     console.log(questionsObj.length);
+        //     console.log(questionsObj);
+        //     var questions = questionsObj.filter(x => x.score?.dimension === dimension.label);
+        //     console.log(questions);
+        //     console.log(questions.length);
+
+        //     console.log(dimension);
+
+        //     // questions.forEach(question => {
+        //     //     console.log("Question ----");
+        //     //     console.log(results[question?.name], question);
+                
+
+        //     //     var result = results[question?.name];
+        //     //     var choices;
+        //     //     if (Array.isArray(result)) {
+        //     //         choices = question?.choices?.filter((choice) => result?.includes(choice?.value));
+        //     //     } else {
+        //     //         choices = question?.choices?.filter((choice) => result === choice?.value);
+        //     //     }
+
+        //     //     console.log(choices)
+        //     //     console.log("----");
+
+        //     // });
+        // });
 
 
 
