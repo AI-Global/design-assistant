@@ -1,5 +1,6 @@
 import '../css/admin.css';
 import React, { Component } from 'react';
+import { saveAs } from 'file-saver';
 import QuestionTable from '../Components/QuestionTable';
 import AnalyticsDashboard from '../Components/AnalyticsDashboard';
 import { Tabs, Tab, Button, Table as BootStrapTable, DropdownButton, Dropdown } from 'react-bootstrap';
@@ -133,6 +134,21 @@ export default class AdminPanel extends Component {
     // Download CSV of the current submission indicated by the submissionIdx
     downloadCSV(submissionIdx) {
         console.log("downloading csv: " + submissionIdx);
+
+        // var content = "test content";
+        var content = JSON.stringify(this.state.submissions[submissionIdx].submission);
+
+        console.log(this.state.submissions[submissionIdx].submission);
+
+        // any kind of extension (.txt,.cpp,.cs,.bat)
+        // var filename = "hello.txt";
+        var filename = this.state.submissions[submissionIdx].userId + "_" + this.state.submissions[submissionIdx].projectName + ".json";
+
+        var blob = new Blob([content], {
+            type: "text/plain;charset=utf-8"
+        });
+
+        saveAs(blob, filename);
     }
 
     submissionList() {
