@@ -5,11 +5,14 @@ import IconButton from '@material-ui/core/IconButton';
 import { red } from '@material-ui/core/colors';
 import QuestionTable from '../Components/QuestionTable';
 import AnalyticsDashboard from '../Components/AnalyticsDashboard';
-import { Tabs, Tab, Button, Table as BootStrapTable, DropdownButton, Dropdown } from 'react-bootstrap';
+import { Tabs, Tab, Button, Table as BootStrapTable, DropdownButton, Dropdown, Form } from 'react-bootstrap';
 import { getLoggedInUser } from '../helper/AuthHelper';
 import ReactGa from 'react-ga';
 import axios from 'axios';
 import Login from './Login';
+import Accordion from 'react-bootstrap/Accordion';
+import Card from 'react-bootstrap/Card';
+
 
 
 ReactGa.initialize(process.env.REACT_APP_GAID, { testMode: process.env.NODE_ENV === 'test' });
@@ -19,7 +22,6 @@ const User = props => (
         <td>{props.user.email}</td>
         <td>{props.user.username}</td>
         <td>
-
             {(props.role === "superadmin") ?
                 <DropdownButton id="dropdown-item-button" title={props.user.role}>
                     <Dropdown.Item onClick={props.changeRole.bind(this, props.user._id, "member")} >Member</Dropdown.Item>
@@ -32,7 +34,7 @@ const User = props => (
         </td>
         <td>{props.user?.organization}</td>
         <td align="center">
-            <IconButton size="small" color="secondary" onClick={() => { if (window.confirm('Are you sure you want to delete the user?')) { (props.deleteUser(props.user._id)) } }}><DeleteIcon style={{ color: red[500] }}/></IconButton>
+            <IconButton size="small" color="secondary" onClick={() => { if (window.confirm('Are you sure you want to delete the user?')) { (props.deleteUser(props.user._id)) } }}><DeleteIcon style={{ color: red[500] }} /></IconButton>
         </td>
     </tr>
 )
@@ -47,9 +49,13 @@ export default class AdminPanel extends Component {
 
         this.state = {
             users: [],
-            submissions: []
+            submissions: [],
+            showFilter: false,
+            orgFilter: "",
+            roleFilter: ""
 
         };
+        this.handleTabChange = this.handleTabChange.bind(this);
     }
 
     componentDidMount() {
@@ -126,8 +132,12 @@ export default class AdminPanel extends Component {
 
     userList() {
         if (Array.isArray(this.state.users)) {
+
             return this.state.users.map(currentuser => {
-                return <User user={currentuser} deleteUser={this.deleteUser} changeRole={this.changeRole} role={this.role} key={currentuser._id} />;
+                if (this.state.roleFilter === "" || currentuser.role === this.state.roleFilter)
+                    if (this.state.orgFilter === "" || currentuser.organization === this.state.orgFilter)
+                        return <User user={currentuser} deleteUser={this.deleteUser} changeRole={this.changeRole} role={this.role} key={currentuser._id} />;
+                return null;
             })
         }
     }
@@ -150,86 +160,142 @@ export default class AdminPanel extends Component {
         })
     }
 
+    handleTabChange(key) {
+        if (key === "userManagement") {
+            this.setState({ showFilter: true });
+        } else {
+            this.setState({ showFilter: false });
+        }
+    }
+
+    resetFilters(event) {
+        this.setState({ orgFilter: "", roleFilter: "" });
+        event.target.reset();
+    }
+
+    handleFilters(event) {
+        event.preventDefault();
+        let form = event.target.elements;
+        let orgFilter = form.orgFilter.value;
+        let roleFilter = form.roleFilter.value;
+        this.setState({ orgFilter: orgFilter, roleFilter: roleFilter });
+
+
+    }
+
     render() {
         return (
-            <main id="wb-cont" role="main" property="mainContentOfPage" className="container" style={{ paddingBottom: "1rem" }}>
-                <h1 className="section-header">
-                    Administration Panel
+            <div>
+                <div className="dimensionNav">
+                    {!this.state.showFilter ? null :
+                        <Accordion>
+                            <Card>
+                                <Accordion.Toggle as={Card.Header} eventKey='1'>
+                                    Filters
+                    </Accordion.Toggle>
+                                <Accordion.Collapse eventKey='1'>
+                                    <Card.Body className="cardBody">
+                                        <Form onSubmit={(e) => this.handleFilters(e)} onReset={(e) => this.resetFilters(e)}>
+                                            <Form.Group controlId="roleFilter">
+                                                <Form.Label>Role</Form.Label>
+                                                <Form.Control type="text" placeholder="Role Name" />
+                                            </Form.Group>
+                                            <Form.Group controlId="orgFilter">
+                                                <Form.Label>Organization</Form.Label>
+                                                <Form.Control type="text" placeholder="Organization Name" />
+                                            </Form.Group>
+                                            <Form.Group controlId="formSubmit">
+                                            </Form.Group>
+                                            <input type="submit" className="btn btn-primary btn-block btn-lg" value="Submit" />
+                                            <Button type="reset" id="clearFilter"><div>Reset <i className="fa fa-undo fa-fw"></i></div></Button>
+                                        </Form>
+
+                                    </Card.Body>
+
+                                </Accordion.Collapse>
+
+                            </Card>
+                        </Accordion>
+                    }
+                </div>
+                <main id="wb-cont" role="main" property="mainContentOfPage" className="container" style={{ paddingBottom: "1rem" }}>
+                    <h1 className="section-header">
+                        Administration Panel
                 </h1>
-                <Tabs defaultActiveKey="surveyManagement">
-                    <Tab eventKey="surveyManagement" title="Survey Management">
-                        <QuestionTable />
-                    </Tab>
-                    <Tab eventKey="userManagement" title="Users">
-                        <div className="table-responsive mt-3">
-                            <BootStrapTable id="users" bordered hover responsive className="user-table">
-                                <thead>
-                                    <tr>
-                                        <th className="score-card-headers">
-                                            Email
+                    <Tabs defaultActiveKey="surveyManagement" onSelect={this.handleTabChange}>
+                        <Tab eventKey="surveyManagement" title="Survey Management">
+                            <QuestionTable />
+                        </Tab>
+                        <Tab eventKey="userManagement" title="Users">
+                            <div className="table-responsive mt-3">
+                                <BootStrapTable id="users" bordered hover responsive className="user-table">
+                                    <thead>
+                                        <tr>
+                                            <th className="score-card-headers">
+                                                Email
                                         </th>
-                                        <th className="score-card-headers">
-                                            User Name
+                                            <th className="score-card-headers">
+                                                User Name
                                         </th>
-                                        <th className="score-card-headers">
-                                            User Role
+                                            <th className="score-card-headers">
+                                                User Role
                                         </th>
-                                        <th className="score-card-headers">
-                                            User Organization
+                                            <th className="score-card-headers">
+                                                User Organization
                                         </th>
-                                        <th className="score-card-headers">
-                                            Action
+                                            <th className="score-card-headers">
+                                                Action
+                                        </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {this.userList()}
+
+                                    </tbody>
+                                </BootStrapTable>
+                            </div>
+                        </Tab>
+                        <Tab eventKey="submissions" title="Submissions">
+                            <div className="table-responsive mt-3">
+                                <BootStrapTable id="submissions" bordered hover responsive className="submission-table">
+                                    <thead>
+                                        <tr>
+                                            <th className="score-card-headers">
+                                                User Name
+                                        </th>
+                                            <th className="score-card-headers">
+                                                Project Name
+                                        </th>
+                                            <th className="score-card-headers">
+                                                Date
                                         </th>
 
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {this.userList()}
-
-                                </tbody>
-                            </BootStrapTable>
-                        </div>
-                    </Tab>
-                    <Tab eventKey="submissions" title="Submissions">
-                        <div className="table-responsive mt-3">
-                            <BootStrapTable id="submissions" bordered hover responsive className="submission-table">
-                                <thead>
-                                    <tr>
-                                        <th className="score-card-headers">
-                                            User Name
+                                            <th className="score-card-headers">
+                                                Lifecycle
                                         </th>
-                                        <th className="score-card-headers">
-                                            Project Name
+                                            <th className="score-card-headers">
+                                                Completed
                                         </th>
-                                        <th className="score-card-headers">
-                                            Date
+                                            <th className="score-card-headers">
+                                                Submissions
                                         </th>
 
-                                        <th className="score-card-headers">
-                                            Lifecycle
-                                        </th>
-                                        <th className="score-card-headers">
-                                            Completed
-                                        </th>
-                                        <th className="score-card-headers">
-                                            Submissions
-                                        </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {this.submissionList()}
 
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {this.submissionList()}
-
-                                </tbody>
-                            </BootStrapTable>
-                        </div>
-                    </Tab>
-                    <Tab eventKey="analytics" title="Analytics">
-                        <AnalyticsDashboard />
-                    </Tab>
-                </Tabs>
-                <Login />
-            </main>
+                                    </tbody>
+                                </BootStrapTable>
+                            </div>
+                        </Tab>
+                        <Tab eventKey="analytics" title="Analytics">
+                            <AnalyticsDashboard />
+                        </Tab>
+                    </Tabs>
+                    <Login />
+                </main>
+            </div>
         )
     }
 }
