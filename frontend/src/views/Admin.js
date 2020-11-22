@@ -129,6 +129,11 @@ export default class AdminPanel extends Component {
             })
         }
     }
+    
+    // Download CSV of the current submission indicated by the submissionIdx
+    downloadCSV(submissionIdx) {
+        console.log("downloading csv: " + submissionIdx);
+    }
 
     submissionList() {
         return this.state.submissions.map((currentsubmission, idx) => {
@@ -142,6 +147,9 @@ export default class AdminPanel extends Component {
                     <td>{currentsubmission.completed ? "Yes" : "No"}</td>
                     <td>
                         <Button size="sm" onClick={() => this.nextPath('/Results/', currentsubmission.submission ?? {})}>View Responses</Button>
+                    </td>
+                    <td>
+                        <Button size="sm" onClick={() => this.downloadCSV(idx)}>Download as CSV</Button>
                     </td>
                 </tr>
             )
@@ -211,6 +219,9 @@ export default class AdminPanel extends Component {
                                         </th>
                                         <th className="score-card-headers">
                                             Submissions
+                                        </th>
+                                        <th className="score-card-headers">
+                                            Downloads
                                         </th>
 
                                     </tr>
