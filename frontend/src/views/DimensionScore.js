@@ -56,9 +56,9 @@ export default class DimensionScore extends Component {
             // Map slider results
             // <25 = Low(-1), 25-74 = Medium(0), >75 = High(1) 
             if(selectedChoices !== undefined){
-                if(selectedChoices < 25){
+                if(selectedChoices < 33){
                     questionScore = -1 * scores.weight;
-                }else if (selectedChoices >= 75){
+                }else if (selectedChoices >= 66){
                     questionScore = 1 * scores.weight;
                 }
             }
