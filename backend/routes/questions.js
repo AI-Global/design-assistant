@@ -104,7 +104,10 @@ function formatQuestion(q, Dimensions, Triggers = null) {
         if (q.pointsAvailable) {
             
             question.score = {};
-     
+            
+            if(q.trustIndexDimension){
+                question.score.dimension = Dimensions[q.trustIndexDimension].label
+            }
 
             question.score.max = q.pointsAvailable * q.weighting;
             
