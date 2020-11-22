@@ -1,38 +1,39 @@
 const express = require('express');
 const router = express.Router();
-const TrustedAIProviders = require('../models/trustedAIProvider.model');
+const TrustedAIResources = require('../models/trustedAIResource.model');
 
 
 // Get all Trusted AI Providers
 router.get('/', async (req,res) => {
     try{
-        const trustedProviders = await TrustedAIProviders.find();
-        res.json(trustedProviders);
+        const trustedResources = await TrustedAIResources.find();
+        res.json(trustedResources);
     }catch(err){
         res.json({message: err});
     }
 });
 
-// add a new provider
+// add a new resource
 router.put('/', async (req, res) => {
     try {
-        const provider = new TrustedAIProviders(
+        const resource = new TrustedAIResources(
             req.body
         );
 
-        const savedProvider = await provider.save();
-        res.json(savedProvider);
+        const savedResource = await resource.save();
+        res.json(savedResource);
     } catch (err) {
         res.json({ message: err });
     }
 
 });
 
-// delete a provider
+
+// delete a resource
 router.delete('/:id', async (req, res) => {
     try {
         // Delete existing question in DB
-        let doc = await TrustedAIProviders.findOneAndDelete({ _id: req.params.id })
+        let doc = await TrustedAIResources.findOneAndDelete({ _id: req.params.id })
         res.json(doc);
     } catch (err) {
         res.json({ message: err });
@@ -40,10 +41,10 @@ router.delete('/:id', async (req, res) => {
 
 });
 
-// update a provider
+// update a resource
 router.put('/:id', async (req, res) => {
     try{
-        const ret = await TrustedAIProviders.findOneAndUpdate({'_id' : req.params.id}, req.body
+        const ret = await TrustedAIResources.findOneAndUpdate({'_id' : req.params.id}, req.body
         , {upsert:true, runValidators: true});
         res.json(ret);
     } catch(err){
@@ -51,4 +52,5 @@ router.put('/:id', async (req, res) => {
         res.json({message: err});
     }
 });
+
 module.exports = router;

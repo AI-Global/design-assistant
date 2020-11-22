@@ -6,24 +6,6 @@ import { BrowserRouter as Router } from 'react-router-dom';
 
 jest.mock('axios');
 
-const mockResponse = {
-    data: {
-        "pages": [{
-            "name":"projectDetails1",
-            "title":{"default":"Project Details","fr":""},
-            "elements":[
-                {"title":
-                {"default":"undefined","fr":""},
-                "name":"5fafa2fdd17b20d5d48c38e6","type":"text"}
-            ]}]
-        ,
-        "showQuestionNumbers": "false",
-        "showProgressBar": "top",
-        "firstPageIsStarted": "false",
-        "showNavigationButtons": "false"
-    }
-}
-
 const mockSubmission = {
     data: {
         _id:"5fb1055b13942f488cd50761",
@@ -35,20 +17,49 @@ const mockSubmission = {
     }
 }
 
+const mockResponse = {
+    data: {
+        dimensions:['Bias and Fairness'],
+        roles:[],
+        domain:[],
+        region:[],
+        lifecycle:[],
+        "pages": [{
+            "name":"page1",
+            "title":{"default":"Page 1","fr":""},
+            "elements":[
+                {"title":
+                {"default":"","fr":""},
+                "name":"5fafa2fdd17b20d5d48c38e6","type":"text"}
+            ]},
+            {
+                "name":"page2",
+                "title":{"default":"Page 2","fr":""},
+                "elements":[
+                    {"title":
+                    {"default":"","fr":""},
+                    "name":"5fafa2fdd17b20d5d48c38e6","type":"text"}
+                ]}],
+        "showQuestionNumbers": "false",
+        "showProgressBar": "top",
+        "firstPageIsStarted": "false",
+        "showNavigationButtons": "false"
+    }
+}
+
 test('Survey Renders', async () => {
     axios.get.mockResolvedValue(mockResponse);
     axios.post.mockResolvedValue(mockSubmission);
     await render(<Router><DesignAssistantSurvey/></Router>);
-    expect(screen.getByText('Project Details')).toBeTruthy();
-    expect(screen.getByText('undefined')).toBeTruthy();
+    expect(screen.getByText('Page 1')).toBeTruthy();
+
 });
 
 test('Survey Page reset button pops modal to return to Home page', async () => {
     axios.get.mockResolvedValue(mockResponse);
     axios.post.mockResolvedValue(mockSubmission);
     await render(<Router><DesignAssistantSurvey/></Router>);
-    expect(screen.getByText('Project Details')).toBeTruthy();
-    expect(screen.getByText('undefined')).toBeTruthy();
+    expect(screen.getByText('Page 1')).toBeTruthy();
 
     fireEvent.click(screen.getByText("Reset"));
     expect(screen.getByText("Please Confirm"));
@@ -59,17 +70,18 @@ test('Survey Page Next button renders page 2', async () => {
     axios.get.mockResolvedValue(mockResponse);
     axios.post.mockResolvedValue(mockSubmission);
     await render(<Router><DesignAssistantSurvey/></Router>);
-    expect(screen.getByText('Project Details')).toBeTruthy();
-    expect(screen.getByText('undefined')).toBeTruthy();
+    expect(screen.getByText('Page 1')).toBeTruthy();
 
     fireEvent.click(screen.getByText("Next"));    
+
+    expect(screen.getByText('Page 2')).toBeTruthy();
 });
 
 test('Survey Page finish button submits the survey', async () => {
     axios.get.mockResolvedValue(mockResponse);
     axios.post.mockResolvedValue(mockSubmission);
     await render(<Router><DesignAssistantSurvey/></Router>);
-    expect(screen.getByText('Project Details')).toBeTruthy();
+    expect(screen.getByText('Page 1')).toBeTruthy();
     expect(screen.getByText('undefined')).toBeTruthy();
 
     fireEvent.click(screen.getByText("Finish"));
@@ -82,24 +94,15 @@ test('Survey Page can open accoridon to navigate dimenstions', async () => {
     await render(<Router><DesignAssistantSurvey/></Router>);
 
     fireEvent.click(screen.getByText("Bias and Fairness"));
-    fireEvent.click(screen.getByText("Nav to Bias and Fairness"));
-
-    fireEvent.click(screen.getByText("Explainability and Interpretability"));
-    fireEvent.click(screen.getByText("Nav to Explainability and Interpretability"));
-
-    fireEvent.click(screen.getByText("Robustness"));
-    fireEvent.click(screen.getByText("Nav to Robustness"));
-
-    fireEvent.click(screen.getByText("Data Quality"));
-    fireEvent.click(screen.getByText("Nav to Data Quality"));
 });
 
 test('Survey Page can open accoridon to filter select roles', async () => {
     axios.get.mockResolvedValue(mockResponse);
-    // axios.post.mockResolvedValue(mockSubmiss/ion);
+    axios.post.mockResolvedValue(mockSubmission);
     await render(<Router><DesignAssistantSurvey/></Router>);
-
+    
     fireEvent.click(screen.getByText("Filters"));
-    expect(screen.getByText("Role")).toBeTruthy();
-    expect(screen.getByText("Cycle")).toBeTruthy();
+
+    await expect(screen.getByText("Roles")).toBeTruthy();
+    await expect(screen.getByText("Apply Filters")).toBeTruthy();
 });
