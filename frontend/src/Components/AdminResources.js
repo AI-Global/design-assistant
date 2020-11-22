@@ -17,6 +17,17 @@ export default class AdminResources extends Component {
         }
     }
 
+    // retrieves the list of trusted ai resources that can be edited
+    componentDidMount() {
+        let endPoint = '/trustedAIResources'
+        axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint).then(res => {
+            this.setState({ trustedAIResources: res.data });
+        }).catch(err => {
+            console.log(err);
+        })
+    }
+
+    // upon confirmation of delete, sends the id of the trusted ai resource to backend to be deleted
     deleteResource() {
         let trustedAIResources = this.state.trustedAIResources;
         let currentIndex = this.state.currentIndex;
@@ -30,6 +41,10 @@ export default class AdminResources extends Component {
         this.setState({ showEditModal: false });
     }
 
+    /**
+     * upon submission of the form, sends updated/new trusted ai resource to backend to
+     * be validated and saved in DB then updates the list of trusted ai resources for admin view
+    */
     saveResource(event) {
         event.preventDefault();
         let form = event.target.elements;
@@ -55,15 +70,6 @@ export default class AdminResources extends Component {
             }).catch(err => {
                 this.setState(err.response.data);
             });
-    }
-
-    componentDidMount() {
-        let endPoint = '/trustedAIResources'
-        axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint).then(res => {
-            this.setState({ trustedAIResources: res.data });
-        }).catch(err => {
-            console.log(err);
-        })
     }
 
     render() {

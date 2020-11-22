@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import { Table, Button, Modal, Form, Col } from 'react-bootstrap';
 import IconButton from '@material-ui/core/IconButton';
 import Add from '@material-ui/icons/Add';
+
+
 export default class AdminProviders extends Component {
     constructor(props) {
         super(props);
@@ -15,6 +17,7 @@ export default class AdminProviders extends Component {
         }
     }
 
+    // retrieves the list of trusted ai providers that can be edited
     componentDidMount() {
         let endPoint = '/trustedAIProviders'
         axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint).then(res => {
@@ -24,6 +27,7 @@ export default class AdminProviders extends Component {
         })
     }
 
+    // upon confirmation of delete, sends the id of the trusted ai provider to backend to be deleted
     deleteProvider() {
         let trustedAIProviders = this.state.trustedAIProviders;
         let currentIndex = this.state.currentIndex;
@@ -37,6 +41,10 @@ export default class AdminProviders extends Component {
         this.setState({ showEditModal: false });
     }
 
+    /**
+     *  upon submission of the form, sends updated/new trusted ai provider to backend to
+     *  be validated and saved in DB then updates the list of trusted ai providers for admin view
+    */
     saveProvider(event) {
         event.preventDefault();
         let form = event.target.elements;
