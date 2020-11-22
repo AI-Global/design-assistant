@@ -16,6 +16,8 @@ import ModalTitle from 'react-bootstrap/ModalTitle';
 import ModalFooter from 'react-bootstrap/ModalFooter';
 import ModalHeader from 'react-bootstrap/ModalHeader';
 import DropdownButton from 'react-bootstrap/DropdownButton';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // set up survey styles and properties for rendering html
 Survey
@@ -58,6 +60,7 @@ class DesignAssistantSurvey extends Component {
       lifecycleFilters: [],
       dimArray: [],
       showModal: false,
+      //TODO: Change these from being hardcoded 
       A: 1,
       B: 9,
       E: 19,
@@ -235,7 +238,6 @@ class DesignAssistantSurvey extends Component {
     let title = this.state.json?.pages[0]?.elements?.find(q => q?.title?.default === "Title of project");
     let dateTime = new Date();
     let projectName = this.state.model.data[title?.name] ?? "";
-    // console.log(this.state.model.data, dateTime, projectName, completed)
     axios.post(process.env.REACT_APP_SERVER_ADDR + '/submissions/update/' + this.state.submission_id, {
       submission: this.state.model.data,
       date: dateTime,
@@ -245,7 +247,12 @@ class DesignAssistantSurvey extends Component {
       region: this.state.regionFilters,
       roles: this.state.roleFilters,
       lifecycle: this.state.lifecycleFilters
-    }).then(res => console.log(res.data));
+    }).then(res => {
+      console.log(res.data)
+      toast("Saving Responses", {
+        toastId:"saving"
+      });
+    });
   }
 
   finish() {
@@ -327,8 +334,33 @@ class DesignAssistantSurvey extends Component {
     this.getQuestions(submissions)
   }
 
+  navPage(pageNumber) {
+    const survey = this.state.model
+    survey.currentPage = survey.pages[pageNumber]
+    this.setState(this.state)
+  }
+
+  shouldDisplayNav(child) {
+    let visibleIf = child.visibleIf;
+    var parId = visibleIf.split("{")[1].split("}")[0];
+    var resId = visibleIf.split("'")[1].split("'")[0];
+
+    if (this.state?.model?.data[parId]) {
+      if (Array.isArray(this.state.model.data[parId])) {
+        if (this.state.model.data[parId].contains(resId)) {
+          return true;
+        }
+      } else {
+        if (this.state.model.data[parId] === resId) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   clearFilter(filter) {
-    switch(filter) {
+    switch (filter) {
       case 'roles':
         this.setState({ roleFilters: [] })
         break
@@ -346,7 +378,9 @@ class DesignAssistantSurvey extends Component {
     }
   }
 
+
   render() {
+    var number = 1
     return (
       this.state.model ?
         <div>
@@ -359,7 +393,17 @@ class DesignAssistantSurvey extends Component {
                       {dimension}
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey={index + 1}>
-                      <Card.Body><Button aria-label={dimension} onClick={() => this.navDim(index)}>Nav to {dimension}</Button></Card.Body>
+                      <Card.Body>
+                        {this?.state?.json?.pages?.map((page, index) => {
+                          return (page.name.includes(dimension.substring(0, 4)) ? page.elements.map((question, i) => {
+                            return ((question.type !== "comment" && (!question.visibleIf || this.shouldDisplayNav(question))) ?
+                              <Button style={{ margin: "0.75em" }} key={i} id={this.state.model.data[question.name] ? "answered" : "unanswered"} onClick={() => this.navPage(index)}>{number++}</Button>
+                              : null)
+                          })
+                            : null)
+                        })
+                        }
+                      </Card.Body>
                     </Accordion.Collapse>
                   </Card>)
               })}
@@ -475,6 +519,18 @@ class DesignAssistantSurvey extends Component {
             </ModalFooter>
           </Modal>
           <Login />
+          <ToastContainer
+            position="bottom-right"
+            autoClose={2500}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick={false}
+            rtl={false}
+            pauseOnFocusLoss={false}
+            draggable={false}
+            pauseOnHover={false}
+            closeButton={false}
+          />
         </div>
         : null
     )
