@@ -126,11 +126,27 @@ function formatQuestion(q, Dimensions, Triggers = null) {
             question.choices.push(choice);
         }
 
-    } else if (question.type == "bootstrapslider") {
+    } else if (question.type == "slider") {
+        // Set type to bootstrap slider 
+        question.type = "bootstrapslider"
+
+        if (q.pointsAvailable) {
+            question.score = {};
+
+            if (q.trustIndexDimension) {
+                question.score.dimension = Dimensions[q.trustIndexDimension].label
+            }
+
+            question.score.max = q.pointsAvailable * q.weighting;
+            question.score.weight = q.weighting;
+            
+            question.choices = [];
+        }
+
         // Low Medium and High
         question.step = 1;
-        question.rangeMin = 1;
-        question.rangeMax = 3;
+        question.rangeMin = 0;
+        question.rangeMax = 100;
     }
 
     return question;
