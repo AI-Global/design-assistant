@@ -31,8 +31,8 @@ router.put('/', async (req, res) => {
 // delete a provider
 router.delete('/:id', async (req, res) => {
     try {
-        // Delete existing question in DB
-        let doc = await TrustedAIProviders.findOneAndDelete({ _id: req.params.id })
+        // Delete existing provider in DB
+        let doc = await TrustedAIProviders.findByIdAndDelete(req.params.id)
         res.json(doc);
     } catch (err) {
         res.json({ message: err });
@@ -44,7 +44,7 @@ router.delete('/:id', async (req, res) => {
 router.put('/:id', async (req, res) => {
     try{
         const ret = await TrustedAIProviders.findOneAndUpdate({'_id' : req.params.id}, req.body
-        , {upsert:true, runValidators: true});
+        , {upsert:true, runValidators: true, new: true});
         res.json(ret);
     } catch(err){
         // console.log("error updating", err);
