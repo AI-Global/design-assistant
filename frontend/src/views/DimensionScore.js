@@ -7,7 +7,7 @@ const QuestionTypes =
 {
     checkbox: "checkbox",
     radiogroup: "radiogroup",
-    slider: "slider"
+    slider: "bootstrapslider"
 }
 
 /**
@@ -46,34 +46,31 @@ export default class DimensionScore extends Component {
                 }
                 if(choice[1] > maxQuestionScore){
                     maxQuestionScore = choice[1];
-                    //console.log(maxQuestionScore)
                 }
                 return questionScore;
             });
         }
         else if(question.type === QuestionTypes.slider){
-            maxQuestionScore += 1;
+            maxQuestionScore += scores.max;
 
             // Map slider results
             // <25 = Low(-1), 25-74 = Medium(0), >75 = High(1) 
             if(selectedChoices !== undefined){
                 if(selectedChoices < 25){
-                    questionScore = -1;
+                    questionScore = -1 * scores.weight;
                 }else if (selectedChoices >= 75){
-                    questionScore = 1;
+                    questionScore = 1 * scores.weight;
                 }
             }
         }
-
+        
         return {score: questionScore, maxScore: maxQuestionScore};
     }
     render() {
         var radarChartData = this.props.radarChartData;
         var dimensionName = this.props.dimensionName;
         var results = this.props.results;
-        console.log(results)
         var questions = this.props.questions;
-        console.log(questions)
         var dimensionScore = 0;
         var maxDimensionScore = 0;
         questions.map(question => {
