@@ -127,12 +127,21 @@ function formatQuestion(q, Dimensions, Triggers = null) {
         }
 
     } else if (question.type == "slider") {
-        if(q.trustIndexDimension){
-            question.score.dimension = Dimensions[q.trustIndexDimension].label
-        }
-        
         // Set type to bootstrap slider 
         question.type = "bootstrapslider"
+
+        if (q.pointsAvailable) {
+            question.score = {};
+
+            if (q.trustIndexDimension) {
+                question.score.dimension = Dimensions[q.trustIndexDimension].label
+            }
+
+            question.score.max = q.pointsAvailable * q.weighting;
+            question.score.weight = q.weighting;
+            
+            question.choices = [];
+        }
 
         // Low Medium and High
         question.step = 1;
@@ -207,24 +216,24 @@ async function applyFilters(questions, filters) {
 
     // Query DB for the "All" roleID
     let allRoles = await Roles.find()
-    allRoles = allRoles.filter(r => r.name  == "All")[0]?.roleID
+    allRoles = allRoles.filter(r => r.name == "All")[0]?.roleID
 
     // Query DB for the "All" lifecycleID
     let allLifecycles = await Lifecycles.find()
-    allLifecycles = allLifecycles.filter(l => l.name  == "All")[0]?.lifecycleID
+    allLifecycles = allLifecycles.filter(l => l.name == "All")[0]?.lifecycleID
 
     // Query DB for the "All" regionID
     let allRegions = await Region.find()
-    allRegions = allRegions.filter(r => r.name  == "All")[0]?.regionID
+    allRegions = allRegions.filter(r => r.name == "All")[0]?.regionID
 
     // Query DB for the "All" domainID
     let allDomains = await Domain.find()
-    allDomains = allDomains.filter(d => d.name  == "All")[0]?.domainID
+    allDomains = allDomains.filter(d => d.name == "All")[0]?.domainID
 
     // Filter roles if passed in
     if (filters.roles) {
         // Add "all" to role filters
-        if(allRoles){
+        if (allRoles) {
             filters.roles.push(allRoles)
         }
 
@@ -236,7 +245,7 @@ async function applyFilters(questions, filters) {
     // Filter regions if passed in
     if (filters.regions) {
         // Add "all" to regions filters
-        if(allRegions){
+        if (allRegions) {
             filters.regions.push(allRegions)
         }
 
@@ -248,7 +257,7 @@ async function applyFilters(questions, filters) {
     // Filter lifecycles if passed in
     if (filters.lifecycles) {
         // Add "all" to lifecycles filters
-        if(allLifecycles){
+        if (allLifecycles) {
             filters.lifecycles.push(allLifecycles)
         }
 
@@ -260,7 +269,7 @@ async function applyFilters(questions, filters) {
     // Filter domains if passed in
     if (filters.domains) {
         // Add "all" to domains filters
-        if(allDomains){
+        if (allDomains) {
             filters.domains.push(allDomains)
         }
 
