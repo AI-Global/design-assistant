@@ -58,4 +58,14 @@ input[type=number]
 
 .edit-trusted-form-label {
   min-height: 0px !important
+
+}
+
+.export-dropdown .btn {
+  background-color: #007bff !important;
+  width: 100%;
+}
+
+.export-dropdown .dropdown-toggle::after {
+  display: none;
 }

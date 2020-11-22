@@ -200,24 +200,24 @@ async function applyFilters(questions, filters) {
 
     // Query DB for the "All" roleID
     let allRoles = await Roles.find()
-    allRoles = allRoles.filter(r => r.name  == "All")[0]?.roleID
+    allRoles = allRoles.filter(r => r.name == "All")[0]?.roleID
 
     // Query DB for the "All" lifecycleID
     let allLifecycles = await Lifecycles.find()
-    allLifecycles = allLifecycles.filter(l => l.name  == "All")[0]?.lifecycleID
+    allLifecycles = allLifecycles.filter(l => l.name == "All")[0]?.lifecycleID
 
     // Query DB for the "All" regionID
     let allRegions = await Region.find()
-    allRegions = allRegions.filter(r => r.name  == "All")[0]?.regionID
+    allRegions = allRegions.filter(r => r.name == "All")[0]?.regionID
 
     // Query DB for the "All" domainID
     let allDomains = await Domain.find()
-    allDomains = allDomains.filter(d => d.name  == "All")[0]?.domainID
+    allDomains = allDomains.filter(d => d.name == "All")[0]?.domainID
 
     // Filter roles if passed in
     if (filters.roles) {
         // Add "all" to role filters
-        if(allRoles){
+        if (allRoles) {
             filters.roles.push(allRoles)
         }
 
@@ -229,7 +229,7 @@ async function applyFilters(questions, filters) {
     // Filter regions if passed in
     if (filters.regions) {
         // Add "all" to regions filters
-        if(allRegions){
+        if (allRegions) {
             filters.regions.push(allRegions)
         }
 
@@ -241,7 +241,7 @@ async function applyFilters(questions, filters) {
     // Filter lifecycles if passed in
     if (filters.lifecycles) {
         // Add "all" to lifecycles filters
-        if(allLifecycles){
+        if (allLifecycles) {
             filters.lifecycles.push(allLifecycles)
         }
 
@@ -253,7 +253,7 @@ async function applyFilters(questions, filters) {
     // Filter domains if passed in
     if (filters.domains) {
         // Add "all" to domains filters
-        if(allDomains){
+        if (allDomains) {
             filters.domains.push(allDomains)
         }
 
@@ -378,6 +378,11 @@ router.get('/:questionId', async (req, res) => {
         .catch((err) => res.status(400).send(err));
 });
 
+router.get('/all/export', async (req, res) => {
+    Question.find()
+        .then((questions) => res.status(200).send(questions))
+        .catch((err) => res.status(400).send(err));
+})
 
 // Add new question
 // TODO: Should be restricted to admin role
