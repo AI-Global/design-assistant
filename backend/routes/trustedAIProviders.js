@@ -47,8 +47,10 @@ router.put('/:id', async (req, res) => {
         , {upsert:true, runValidators: true, new: true});
         res.json(ret);
     } catch(err){
-        // console.log("error updating", err);
-        res.json({message: err});
+        if (err.code === 11000){
+            res.status(400).json({source: {isInvalid: true, message: "Trusted AI Provider with source already exists."}})
+        }
+        res.status(400).json({message: err});
     }
 });
 module.exports = router;

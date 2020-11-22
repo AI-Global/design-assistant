@@ -12,7 +12,8 @@ export default class AdminResources extends Component {
             trustedAIResources: [],
             showEditModal: false,
             currentIndex: undefined,
-            showDeleteWarning: false
+            showDeleteWarning: false,
+            source: {}
         }
     }
 
@@ -50,8 +51,10 @@ export default class AdminResources extends Component {
                     trustedAIResources.unshift(newResource);
                 }
                 this.setState({ trustedAIResources: trustedAIResources });
+                this.setState({ showEditModal: false });
+            }).catch(err => {
+                this.setState(err.response.data);
             });
-        this.setState({ showEditModal: false });
     }
 
     componentDidMount() {
@@ -69,7 +72,7 @@ export default class AdminResources extends Component {
         const showEdit = this.state.showEditModal;
         const handleClose = () => this.setState({ showDeleteWarning: false });
         const handleEditClose = () => this.setState({ showEditModal: false });
-        const handleEditShow = (index) => this.setState({ showEditModal: true, currentIndex: index });
+        const handleEditShow = (index) => this.setState({ showEditModal: true, currentIndex: index, source: {} });
         return (
             <div>
                 <Modal
@@ -106,24 +109,18 @@ export default class AdminResources extends Component {
                     <Form onSubmit={(e) => this.saveResource(e)}>
                         <Modal.Body className="p-4">
                             <Form.Group controlId="title">
-                                <Form.Label>Title</Form.Label>
-                                <Form.Control type="text" placeholder="Title" required="required" autoComplete="text" isInvalid={false} aria-label="Title" defaultValue={trustedAIResources[currentIndex]?.resource} />
-                                <Form.Control.Feedback type="invalid">
-                                    { }
-                                </Form.Control.Feedback>
+                                <Form.Label className="edit-trusted-form-label">Title</Form.Label>
+                                <Form.Control type="text" placeholder="Title" required="required" autoComplete="text" aria-label="Title" defaultValue={trustedAIResources[currentIndex]?.resource} />
                             </Form.Group>
                             <Form.Group controlId="description">
-                                <Form.Label>Description</Form.Label>
-                                <Form.Control as="textarea" placeholder="Description" autoComplete="text" isInvalid={false} aria-label="Description" defaultValue={trustedAIResources[currentIndex]?.description} />
-                                <Form.Control.Feedback type="invalid">
-                                    { }
-                                </Form.Control.Feedback>
+                                <Form.Label className="edit-trusted-form-label">Description</Form.Label>
+                                <Form.Control as="textarea" placeholder="Description" autoComplete="text" aria-label="Description" defaultValue={trustedAIResources[currentIndex]?.description} />
                             </Form.Group>
                             <Form.Group controlId="source">
-                                <Form.Label>Source</Form.Label>
-                                <Form.Control type="text" placeholder="Source" required="required" autoComplete="text" isInvalid={false} aria-label="Source" defaultValue={trustedAIResources[currentIndex]?.source} />
+                                <Form.Label className="edit-trusted-form-label">Source</Form.Label>
+                                <Form.Control type="text" placeholder="Source" required="required" autoComplete="text" isInvalid={this.state.source?.isInvalid} aria-label="Source" defaultValue={trustedAIResources[currentIndex]?.source} />
                                 <Form.Control.Feedback type="invalid">
-                                    { }
+                                    {this.state.source?.message}
                                 </Form.Control.Feedback>
                             </Form.Group>
                         </Modal.Body>
