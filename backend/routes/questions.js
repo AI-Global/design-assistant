@@ -104,7 +104,7 @@ function formatQuestion(q, Dimensions, Triggers = null) {
         if (q.pointsAvailable) {
             
             question.score = {};
-            
+
             if(q.trustIndexDimension){
                 question.score.dimension = Dimensions[q.trustIndexDimension].label
             }
@@ -133,6 +133,10 @@ function formatQuestion(q, Dimensions, Triggers = null) {
         }
       
     } else if (question.type == "bootstrapslider") {
+        if(q.trustIndexDimension){
+            question.score.dimension = Dimensions[q.trustIndexDimension].label
+        }
+        
         // Low Medium and High
         question.step = 1;
         question.rangeMin = 1;
