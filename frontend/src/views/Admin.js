@@ -135,6 +135,27 @@ export default class AdminPanel extends Component {
     downloadCSV(submissionIdx) {
         console.log("downloading csv: " + submissionIdx);
 
+
+        // current json structure is formed with IDs and is therefore unreadable
+        // to a person.
+
+        // Need to obtain questions separately, then map responses to the questions
+        // and output this information to the csv
+
+        // does results page already hold all the information I need?
+
+        // I need all the details about the submission itself and then of course all the contents
+        // I can do this by parsing from json or I can do what reportCard.js does?
+
+
+
+
+
+
+
+
+
+
         // var content = "test content";
         var content = JSON.stringify(this.state.submissions[submissionIdx].submission);
 

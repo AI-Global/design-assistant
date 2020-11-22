@@ -50,6 +50,66 @@ export default class Results extends Component {
           });
     }
 
+    downloadCSV(surveyResults, questions) {
+        console.log("downloading csv");
+        console.log(questions);
+        console.log(surveyResults);
+
+        // <Tab.Content>
+        //     {this.state.Dimensions.map((dimension, idx) => {
+        //         return (
+        //             <Tab.Pane key={idx} eventKey={dimension.label}>
+        //                 <ReportCard dimension={dimension.label} results={surveyResults} questions={questions.filter(x => x.score?.dimension === dimension.label)} />
+        //             </Tab.Pane>
+        //         );
+        //     })}
+        // </Tab.Content>
+
+        // iterate over dimensions, then iterate over questions in each dimension
+        // then map choices to question and create row in csv file
+
+        this.state.Dimensions.map((dimension, idx) => {
+            
+        })
+
+
+
+        // current json structure is formed with IDs and is therefore unreadable
+        // to a person.
+
+        // Need to obtain questions separately, then map responses to the questions
+        // and output this information to the csv
+
+        // does results page already hold all the information I need?
+
+        // I need all the details about the submission itself and then of course all the contents
+        // I can do this by parsing from json or I can do what reportCard.js does?
+
+
+
+
+
+
+
+
+
+
+        // // var content = "test content";
+        // var content = JSON.stringify(this.state.submissions[submissionIdx].submission);
+
+        // console.log(this.state.submissions[submissionIdx].submission);
+
+        // // any kind of extension (.txt,.cpp,.cs,.bat)
+        // // var filename = "hello.txt";
+        // var filename = this.state.submissions[submissionIdx].userId + "_" + this.state.submissions[submissionIdx].projectName + ".json";
+
+        // var blob = new Blob([content], {
+        //     type: "text/plain;charset=utf-8"
+        // });
+
+        // saveAs(blob, filename);
+    }
+
     render() {
         var json = this?.props?.location?.state?.questions;
         var surveyResults = this?.props?.location?.state?.responses;
@@ -94,6 +154,7 @@ export default class Results extends Component {
                     Results
                 </h1>
                 <button id="exportButton" type="button" className="btn btn-save mr-2 btn btn-primary export-button" onClick={() => {ExportHandler(); exportReport(projectTitle, projectDescription, projectIndustry, projectRegion)}}>Export</button>
+                <button id="exportButtonCSV" type="button" className="btn btn-save mr-2 btn btn-primary export-button-csv" onClick={() => {this.downloadCSV(surveyResults, questions)}}>Export as CSV</button>
                 <Tabs defaultActiveKey="score">
                     <Tab eventKey="score" title="Score">
                         <div className="table-responsive mt-3">
