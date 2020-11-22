@@ -130,13 +130,28 @@ input:disabled {
   pointer-events: none;
 }
 
+#answered {
+  background-color: #097AE8 !important;
+  width: 58px !important;
+}
+
+#unanswered {
+  background-color: #404040 !important;
+  width: 58px !important;
+
+}
+
 #clearFilter {
   margin-top: 1em;
   background-color: #404040 !important;
   width: 100%;
-}
+} 
 
 #clearFilter:hover {
   color:#404040 !important;
   background-color: #e6e7e8 !important;
+}
+
+.Toastify__progress-bar--default{
+  background: linear-gradient(90deg, #097AE8, #00CDFF, #42d3d4) !important;
 }

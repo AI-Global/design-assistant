@@ -94,7 +94,6 @@ test('Survey Page can open accoridon to navigate dimenstions', async () => {
     await render(<Router><DesignAssistantSurvey/></Router>);
 
     fireEvent.click(screen.getByText("Bias and Fairness"));
-    fireEvent.click(screen.getByText("Nav to Bias and Fairness"));
 });
 
 test('Survey Page can open accoridon to filter select roles', async () => {

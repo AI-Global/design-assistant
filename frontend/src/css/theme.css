@@ -316,7 +316,15 @@ input[type=number]
   background-color: #007bff !important;
 }
 
-
 #newSurvey {
   margin-right: 1rem !important
+}
+
+.sv_container {
+  min-height: 100vh !important;
+}
+
+#DeleteSurveyButton {
+  background-color: #dc3545!important
+
 }
