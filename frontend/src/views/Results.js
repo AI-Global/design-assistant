@@ -10,6 +10,7 @@ import exportReport from "../helper/ExportReport";
 import ReportCard from "./ReportCard";
 import DimensionScore from "./DimensionScore";
 import TrustedAIProviders from './TrustedAIProviders';
+import TrustedAIResources from './TrustedAIResources';
 import ReactGa from 'react-ga';
 import Login from './Login';
 
@@ -151,6 +152,11 @@ export default class Results extends Component {
                     <Tab eventKey="ai-providers" title="Trusted AI Providers">
                         <Tab.Container id="left-tabs-example" defaultActiveKey={this.state.Dimensions[0].label}>
                             <TrustedAIProviders />
+                        </Tab.Container>
+                    </Tab>
+                    <Tab eventKey="ai-resources" title="Trusted AI Resources">
+                        <Tab.Container id="left-tabs-example" defaultActiveKey={this.state.Dimensions[0].label}>
+                            <TrustedAIResources />
                         </Tab.Container>
                     </Tab>
                 </Tabs>
