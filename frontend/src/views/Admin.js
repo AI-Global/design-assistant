@@ -135,7 +135,7 @@ export default class AdminPanel extends Component {
 
             return this.state.users.map(currentuser => {
                 if (this.state.roleFilter === "" || currentuser.role.toLowerCase() === this.state.roleFilter.toLowerCase())
-                    if (this.state.orgFilter === "" || currentuser.organization === this.state.orgFilter)
+                    if (this.state.orgFilter === "" || currentuser.organization.toLowerCase() === this.state.orgFilter.toLowerCase())
                         return <User user={currentuser} deleteUser={this.deleteUser} changeRole={this.changeRole} role={this.role} key={currentuser._id} />;
                 return null;
             })
