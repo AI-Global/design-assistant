@@ -148,10 +148,13 @@ class UserSubmissions extends Component {
         var endPoint = '/submissions/';
         axios.post(process.env.REACT_APP_SERVER_ADDR + endPoint, {
             userId: user?._id ?? null,
-            projectName: submission?.projectName,
+            projectName: submission?.projectName ?? "",
             date: dateTime,
-            lifecycle: 6,
-            submission: submission?.submission,
+            lifecycle: submission?.lifecycle,
+            domain: submission?.domain,
+            region: submission?.region,
+            roles: submission?.roles,
+            submission: submission?.submission ?? {},
             completed: false
         })
             .then(res => {
