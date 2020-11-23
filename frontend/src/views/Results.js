@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { saveAs } from 'file-saver';
 import { Link } from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "font-awesome/css/font-awesome.css";
@@ -70,31 +71,47 @@ export default class Results extends Component {
 
         var results = surveyResults;
 
+
+        // // var content = "test content";
+        // var content = JSON.stringify(this.state.submissions[submissionIdx].submission);
+
+        // console.log(this.state.submissions[submissionIdx].submission);
+
+        // // any kind of extension (.txt,.cpp,.cs,.bat)
+        // // var filename = "hello.txt";
+        // var filename = this.state.submissions[submissionIdx].userId + "_" + this.state.submissions[submissionIdx].projectName + ".json";
+
+        // var blob = new Blob([content], {
+        //     type: "text/plain;charset=utf-8"
+        // });
+
+        // saveAs(blob, filename);
+
+        var contentArr = [];
+
         for (let i = 0; i < questionsObj.length; ++i) {
             var question = questionsObj[i];
-            var pos_responses = question.choices ?? [];
-            var act_responses = [];
-            // console.log(question);
-            // console.log(responses);
-
             // question, response, recommendation (if exists)
 
             var user_response_ids;
-
             var result = results[question.name];
 
+            // If there are more than one response, filter
             if (Array.isArray(result)) {
                 user_response_ids = question?.choices?.filter((choice) => result?.includes(choice?.value));
             } else {
                 user_response_ids = question?.choices?.filter((choice) => result === choice?.value);
             }
 
-
-
-            // console.log("user_response_ids: " + user_response_ids);
+            // if we have any responses left
             if (user_response_ids) {
                 for (let j = 0; j < user_response_ids.length; ++j) {
-                    console.log(question?.title?.default + " | " + user_response_ids[j]?.text?.default + " | " + question?.recommendation?.default);
+                    // console.log(question?.title?.default + " | " + user_response_ids[j]?.text?.default + " | " + question?.recommendation?.default);
+                    contentArr.push(question?.title?.default);
+                    contentArr.push(",");
+                    contentArr.push(user_response_ids[j]?.text?.default);
+                    contentArr.push(",");
+                    contentArr.push(question?.recommendation?.default + "\n");
                 }
             }
 
@@ -112,6 +129,14 @@ export default class Results extends Component {
 
 
         }
+
+        // console.log(contentArr.join(""))
+
+        var filename = "test.csv";
+        var blob = new Blob([contentArr.join("")], {
+            type: "text/plain;charset=utf-8"
+        });
+        saveAs(blob, filename);
         
         // this.state.Dimensions.forEach((dimensionObj, idx) => {
         //     var dimension = dimensionObj.label;
