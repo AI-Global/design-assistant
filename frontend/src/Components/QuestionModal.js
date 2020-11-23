@@ -97,8 +97,8 @@ export default function QuestionModal(props) {
         setWeight(props.question.weighting)
         setChild(props.question.child)
         setTrigger(props.question.trigger)
-        setDomain(props.question.questionDomain)
-        setRegion(props.question.questionRegion)
+        setDomain(props.question.domainApplicability)
+        setRegion(props.question.regionalApplicability)
         // TODO: uncomment this when db changes made
         // setLink(props.question.questionLink)
         setInvalid(false)
@@ -124,8 +124,8 @@ export default function QuestionModal(props) {
             props.question.weighting = weight
             props.question.child = child
             props.question.trigger = trigger
-            props.question.questionDomain = questionDomain
-            props.question.questionRegion = questionRegion
+            props.question.domainApplicability = questionDomain
+            props.question.regionalApplicability = questionRegion
             // TODO: uncomment this when db changes made
             // props.question.questionLink = questionLink
 
@@ -153,23 +153,24 @@ export default function QuestionModal(props) {
                         else {
                             console.log("Added Question: ", result)
                         }
+                        // need to clear question metadata before closing for adding action
+                        props.question.alt_text = null
+                        props.question.lifecycle = []
+                        props.question.pointsAvailable = 0
+                        props.question.question = null
+                        props.question.reference = null
+                        props.question.responseType = "text"
+                        props.question.questionType = "tombstone"
+                        props.question.responses = []
+                        props.question.roles = []
+                        props.question.trustIndexDimension = null
+                        props.question.weighting = 0
+                        props.question.child = child
+                        props.question.trigger = trigger
+                        props.question.domainApplicability = []
+                        props.question.regionalApplicability = []
                     })
-                // need to clear question metadata before closing for adding action
-                props.question.alt_text = null
-                props.question.lifecycle = [6]
-                props.question.pointsAvailable = 0
-                props.question.question = null
-                props.question.reference = null
-                props.question.responseType = "text"
-                props.question.questionType = "tombstone"
-                props.question.responses = []
-                props.question.roles = [13]
-                props.question.trustIndexDimension = null
-                props.question.weighting = 0
-                props.question.child = child
-                props.question.trigger = trigger
-                props.question.questionDomain = [6]
-                props.question.questionRegion = [8]
+
                 // TODO: uncomment this when db changes made
                 // props.question.questionLink = null
                 close()
