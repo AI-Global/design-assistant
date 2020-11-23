@@ -90,7 +90,7 @@ export default class ViewSubmissions extends Component {
                     <td style={{ textAlign: "center" }}>{currentsubmission.projectName}</td>
                     <td style={{ textAlign: "center" }}>{convertedDate}</td>
                     <td style={{ textAlign: "center" }}>{currentsubmission.completed ? "Yes" : "No"}</td>
-                    <td align ="center"> <Button size="sm" onClick={() => this.nextPath('/Results/', currentsubmission.submission ?? {})}>View Responses</Button> </td>
+                    <td align ="center"> <Button size="sm" onClick={() => this.nextPath('/Results/', currentsubmission.submission ?? {})}> Responses</Button> </td>
                     <td align ="center"> <IconButton size="small" color="secondary" onClick={() => { if (window.confirm('Are you sure you want to delete the submission?')) { (this.deleteSubmission(currentsubmission._id)) } }}><DeleteIcon style={{ color: red[500] }}/> </IconButton></td>
                     
 
