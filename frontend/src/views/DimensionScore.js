@@ -6,7 +6,8 @@ import { faCheckCircle, faCircle } from '@fortawesome/free-regular-svg-icons';
 const QuestionTypes = 
 {
     checkbox: "checkbox",
-    radiogroup: "radiogroup"
+    radiogroup: "radiogroup",
+    slider: "bootstrapslider"
 }
 
 /**
@@ -49,6 +50,20 @@ export default class DimensionScore extends Component {
                 return questionScore;
             });
         }
+        else if(question.type === QuestionTypes.slider){
+            maxQuestionScore += scores.max;
+
+            // Map slider results
+            // <25 = Low(-1), 25-74 = Medium(0), >75 = High(1) 
+            if(selectedChoices !== undefined){
+                if(selectedChoices < 33){
+                    questionScore = -1 * scores.weight;
+                }else if (selectedChoices >= 66){
+                    questionScore = 1 * scores.weight;
+                }
+            }
+        }
+        
         return {score: questionScore, maxScore: maxQuestionScore};
     }
     render() {

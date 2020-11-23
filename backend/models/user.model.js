@@ -34,13 +34,9 @@ const UserSchema = new mongoose.Schema({
         type: String, 
         required: true 
     },
-    orgs: [
-        { 
-          type: mongoose.Schema.Types.ObjectId, 
-          ref: 'Organization', 
-          default: [] 
-        },
-    ],
+    organization: { 
+          type: String,  
+        }
 });
 
 UserSchema.virtual('password')
