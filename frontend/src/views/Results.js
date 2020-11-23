@@ -51,44 +51,8 @@ export default class Results extends Component {
           });
     }
 
-    downloadCSV(surveyResults, questionsObj) {
-        console.log("downloading csv");
-        // console.log(questions);
-        // console.log(surveyResults);
-
-        // <Tab.Content>
-        //     {this.state.Dimensions.map((dimension, idx) => {
-        //         return (
-        //             <Tab.Pane key={idx} eventKey={dimension.label}>
-        //                 <ReportCard dimension={dimension.label} results={surveyResults} questions={questions.filter(x => x.score?.dimension === dimension.label)} />
-        //             </Tab.Pane>
-        //         );
-        //     })}
-        // </Tab.Content>
-
-        // iterate over dimensions, then iterate over questions in each dimension
-        // then map choices to question and create row in csv file
-
-        var results = surveyResults;
-
-
-        // // var content = "test content";
-        // var content = JSON.stringify(this.state.submissions[submissionIdx].submission);
-
-        // console.log(this.state.submissions[submissionIdx].submission);
-
-        // // any kind of extension (.txt,.cpp,.cs,.bat)
-        // // var filename = "hello.txt";
-        // var filename = this.state.submissions[submissionIdx].userId + "_" + this.state.submissions[submissionIdx].projectName + ".json";
-
-        // var blob = new Blob([content], {
-        //     type: "text/plain;charset=utf-8"
-        // });
-
-        // saveAs(blob, filename);
-
+    downloadCSV(results, questionsObj) {
         var contentArr = [];
-
         for (let i = 0; i < questionsObj.length; ++i) {
             var question = questionsObj[i];
             // question, response, recommendation (if exists)
@@ -127,113 +91,15 @@ export default class Results extends Component {
                         contentArr.push("\"" + questionRecommendation.replaceAll("\"", "\"\"") + "\"");
                     }
                     contentArr.push("\n");
-
-                    // var questionText = "\"" + question?.title?.default.replaceAll("\"", "\"\"") + "\"" ?? "";
-                    // var questionResponse = "\"" + user_response_ids[j]?.text?.default.replaceAll("\"", "\"\"") + "\"" ?? "";
-                    // var recommendation = question?.recommendation?.default;
-                    // var proc_rec;
-                    // if (recommendation) {
-                    //     console.log(recommendation);
-                    //     proc_rec = "\"" + recommendation.replaceAll("\"", "\"\"") + "\"" + "\n" ?? "\n";
-                    //     console.log(proc_rec);
-                    // }
-                    
-                    // contentArr.push(questionText);
-                    // contentArr.push(",");
-                    // contentArr.push(questionResponse);
-                    // contentArr.push(",");
-                    // contentArr.push(proc_rec);
                 }
             }
-
-            
-
-            // // iterate through all possible responses for the question and see if id matches
-            // for (let j = 0; j < pos_responses.length; ++j) {
-            //     if (user_response_ids.includes(pos_responses[j].value)) {
-            //         act_responses.push(pos_responses[i]);
-            //     }
-            // }
-
-            // console.log(questionsObj[i].title.default + " | " + results[questionsObj[i].name]);
-
-
-
         }
-
-        // console.log(contentArr.join(""))
 
         var filename = "test.csv";
         var blob = new Blob([contentArr.join("")], {
             type: "text/plain;charset=utf-8"
         });
         saveAs(blob, filename);
-        
-        // this.state.Dimensions.forEach((dimensionObj, idx) => {
-        //     var dimension = dimensionObj.label;
-        //     console.log(questionsObj.length);
-        //     console.log(questionsObj);
-        //     var questions = questionsObj.filter(x => x.score?.dimension === dimension.label);
-        //     console.log(questions);
-        //     console.log(questions.length);
-
-        //     console.log(dimension);
-
-        //     // questions.forEach(question => {
-        //     //     console.log("Question ----");
-        //     //     console.log(results[question?.name], question);
-                
-
-        //     //     var result = results[question?.name];
-        //     //     var choices;
-        //     //     if (Array.isArray(result)) {
-        //     //         choices = question?.choices?.filter((choice) => result?.includes(choice?.value));
-        //     //     } else {
-        //     //         choices = question?.choices?.filter((choice) => result === choice?.value);
-        //     //     }
-
-        //     //     console.log(choices)
-        //     //     console.log("----");
-
-        //     // });
-        // });
-
-
-
-        // current json structure is formed with IDs and is therefore unreadable
-        // to a person.
-
-        // Need to obtain questions separately, then map responses to the questions
-        // and output this information to the csv
-
-        // does results page already hold all the information I need?
-
-        // I need all the details about the submission itself and then of course all the contents
-        // I can do this by parsing from json or I can do what reportCard.js does?
-
-
-
-
-
-
-
-
-
-
-        // // var content = "test content";
-        // var content = JSON.stringify(this.state.submissions[submissionIdx].submission);
-
-        // console.log(this.state.submissions[submissionIdx].submission);
-
-        // // any kind of extension (.txt,.cpp,.cs,.bat)
-        // // var filename = "hello.txt";
-        // var filename = this.state.submissions[submissionIdx].userId + "_" + this.state.submissions[submissionIdx].projectName + ".json";
-
-        // var blob = new Blob([content], {
-        //     type: "text/plain;charset=utf-8"
-        // });
-
-        // saveAs(blob, filename);
     }
 
     render() {
