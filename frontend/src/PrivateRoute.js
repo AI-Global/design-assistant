@@ -10,9 +10,7 @@ function PrivateRoute({ component: Component, ...rest }) {
             setUser(user)
         })
     }, [])
-
-    console.log("u:", u)
-
+    
     return (
         <Route
             {...rest}

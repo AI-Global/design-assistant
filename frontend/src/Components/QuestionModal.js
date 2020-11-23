@@ -170,7 +170,6 @@ export default function QuestionModal(props) {
                         props.question.domainApplicability = []
                         props.question.regionalApplicability = []
                     })
-
                 // TODO: uncomment this when db changes made
                 // props.question.questionLink = null
                 close()
@@ -207,7 +206,7 @@ export default function QuestionModal(props) {
         else {
             questionRole.push(index)
         }
-        setRole(questionRole)
+        setRole([...questionRole])
     }
 
     function updateDomain(index) {
@@ -218,7 +217,7 @@ export default function QuestionModal(props) {
         else {
             questionDomain.push(index)
         }
-        setDomain(questionDomain)
+        setDomain([...questionDomain])
     }
 
     function updateRegion(index) {
@@ -229,7 +228,7 @@ export default function QuestionModal(props) {
         else {
             questionRegion.push(index)
         }
-        setRegion(questionRegion)
+        setRegion([...questionRegion])
     }
 
     function updateLifecycle(index) {
@@ -240,7 +239,7 @@ export default function QuestionModal(props) {
         else {
             questionLifecycle.push(index)
         }
-        setLifecycle(questionLifecycle)
+        setLifecycle([...questionLifecycle])
     }
 
     if (!dimensions) {
@@ -410,41 +409,41 @@ export default function QuestionModal(props) {
                                 <Col xs={2} md={3}>
                                     <Form.Group controlId="roles">
                                         <Form.Label>Role</Form.Label>
-                                        <Form.Control value={questionRole} as="select" multiple onChange={(event) => updateRole(event.target.selectedIndex + 1)}>
+                                        <Card className="select-list-box">
                                             {roles.map((role, index) =>
-                                                <option key={index} value={index + 1}>{role.name}</option>
+                                                <Form.Check type='checkbox' checked={questionRole.includes(index + 1)} label={role.name} id={index} key={index} value={index + 1} onChange={(e) => updateRole(parseInt(e.target.value))} />
                                             )}
-                                        </Form.Control>
+                                        </Card>
                                     </Form.Group>
                                 </Col>
                                 <Col xs={2} md={3}>
                                     <Form.Group controlId="domains">
                                         <Form.Label>Domain</Form.Label>
-                                        <Form.Control value={questionDomain} as="select" multiple onChange={(event) => updateDomain(event.target.selectedIndex + 1)}>
+                                        <Card className="select-list-box">
                                             {domains.map((domain, index) =>
-                                                <option key={index} value={index + 1}>{domain.name}</option>
+                                                <Form.Check type='checkbox' checked={questionDomain.includes(index + 1)} label={domain.name} id={index} key={index} value={index + 1} onChange={(e) => updateDomain(parseInt(e.target.value))} />
                                             )}
-                                        </Form.Control>
+                                        </Card>
                                     </Form.Group>
                                 </Col>
                                 <Col xs={2} md={3}>
                                     <Form.Group controlId="regions">
                                         <Form.Label>Region</Form.Label>
-                                        <Form.Control value={questionRegion} as="select" multiple onChange={(event) => updateRegion(event.target.selectedIndex + 1)}>
+                                        <Card className="select-list-box">
                                             {regions.map((region, index) =>
-                                                <option key={index} value={index + 1}>{region.name}</option>
+                                                <Form.Check type='checkbox' checked={questionRegion.includes(index + 1)} label={region.name} id={index} key={index} value={index + 1} onChange={(e) => updateRegion(parseInt(e.target.value))} />
                                             )}
-                                        </Form.Control>
+                                        </Card>
                                     </Form.Group>
                                 </Col>
                                 <Col xs={2} md={3}>
                                     <Form.Group controlId="lifecycles">
                                         <Form.Label>Life-Cycle</Form.Label>
-                                        <Form.Control value={questionLifecycle} as="select" multiple onChange={(event) => updateLifecycle(event.target.selectedIndex + 1)}>
+                                        <Card className="select-list-box">
                                             {lifecycles.map((lifecycle, index) =>
-                                                <option key={index} value={index + 1}>{lifecycle.name}</option>
+                                                <Form.Check type='checkbox' checked={questionLifecycle.includes(index + 1)} label={lifecycle.name} id={index} key={index} value={index + 1} onChange={(e) => updateLifecycle(parseInt(e.target.value))} />
                                             )}
-                                        </Form.Control>
+                                        </Card>
                                     </Form.Group>
                                 </Col>
                             </Row>
