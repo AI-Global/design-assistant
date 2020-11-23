@@ -49,7 +49,7 @@ const QuestionSchema = mongoose.Schema({
     responseType: {
         type: String,
         required: true,
-        enum: [null, 'text', 'comment', 'checkbox', 'radiogroup', 'dropdown', 'bootstrapslider']
+        enum: [null, 'text', 'comment', 'checkbox', 'radiogroup', 'dropdown', 'slider']
     },
 
     // -1 to 1
