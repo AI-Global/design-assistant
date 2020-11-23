@@ -207,6 +207,7 @@ export default function QuestionModal(props) {
         else {
             questionRole.push(index)
         }
+        console.log(questionRole)
         setRole([...questionRole])
     }
 
@@ -412,7 +413,7 @@ export default function QuestionModal(props) {
                                         <Form.Label>Role</Form.Label>
                                         <Card className="select-list-box">
                                             {roles.map((role, index) =>
-                                                <Form.Check type='checkbox' checked={questionRole.includes(index + 1)} label={role.name} id={index} key={index} value={index + 1} onChange={(e) => updateRole(parseInt(e.target.value))} />
+                                                <Form.Check type='checkbox' checked={questionRole.includes(index + 1)} label={role.name} id={'role'+role.name} key={index} value={index + 1} onChange={(e) => updateRole(parseInt(e.target.value))} />
                                             )}
                                         </Card>
                                     </Form.Group>
@@ -422,7 +423,7 @@ export default function QuestionModal(props) {
                                         <Form.Label>Domain</Form.Label>
                                         <Card className="select-list-box">
                                             {domains.map((domain, index) =>
-                                                <Form.Check type='checkbox' checked={questionDomain.includes(index + 1)} label={domain.name} id={index} key={index} value={index + 1} onChange={(e) => updateDomain(parseInt(e.target.value))} />
+                                                <Form.Check type='checkbox' checked={questionDomain.includes(index + 1)} label={domain.name} id={'domain-'+domain.name} key={index} value={index + 1} onChange={(e) => updateDomain(parseInt(e.target.value))} />
                                             )}
                                         </Card>
                                     </Form.Group>
@@ -432,7 +433,7 @@ export default function QuestionModal(props) {
                                         <Form.Label>Region</Form.Label>
                                         <Card className="select-list-box">
                                             {regions.map((region, index) =>
-                                                <Form.Check type='checkbox' checked={questionRegion.includes(index + 1)} label={region.name} id={index} key={index} value={index + 1} onChange={(e) => updateRegion(parseInt(e.target.value))} />
+                                                <Form.Check type='checkbox' checked={questionRegion.includes(index + 1)} label={region.name} id={'region-'+region.name} key={index} value={index + 1} onChange={(e) => updateRegion(parseInt(e.target.value))} />
                                             )}
                                         </Card>
                                     </Form.Group>
@@ -442,7 +443,7 @@ export default function QuestionModal(props) {
                                         <Form.Label>Life-Cycle</Form.Label>
                                         <Card className="select-list-box">
                                             {lifecycles.map((lifecycle, index) =>
-                                                <Form.Check type='checkbox' checked={questionLifecycle.includes(index + 1)} label={lifecycle.name} id={index} key={index} value={index + 1} onChange={(e) => updateLifecycle(parseInt(e.target.value))} />
+                                                <Form.Check type='checkbox' checked={questionLifecycle.includes(index + 1)} label={lifecycle.name} id={'lifecycle-'+lifecycle.name} key={index} value={index + 1} onChange={(e) => updateLifecycle(parseInt(e.target.value))} />
                                             )}
                                         </Card>
                                     </Form.Group>
