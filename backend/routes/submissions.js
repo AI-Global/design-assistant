@@ -21,7 +21,7 @@ router.get('/', async (req, res) => {
 router.get('/user/:userId', async (req, res) => {
     try {
         await Submission.find({ userId: req.params.userId }).sort({ date: -1 }).then(submissions => {
-            res.json(submissions);
+            res.json({submissions: submissions});
         });
     } catch (err) {
         // console.log("error returning user submissions", err)

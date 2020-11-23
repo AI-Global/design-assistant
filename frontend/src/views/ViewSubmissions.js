@@ -47,7 +47,7 @@ export default class ViewSubmissions extends Component {
                     endPoint = '/submissions/user/' + id
                     axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
                         .then(response => {
-                            var resp = response.data;
+                            var resp = response.data.submissions;
                             resp = resp.map(submission => {
                                 submission.userId = this.state.users.find(user => user._id === submission.userId)?.username ?? "No User";
                                 return submission
