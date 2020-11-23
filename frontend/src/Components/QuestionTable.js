@@ -1,5 +1,6 @@
 import axios from 'axios';
 import '../css/admin.css';
+import ChildModal from './ChildModal';
 import React, { Component } from 'react';
 import Add from '@material-ui/icons/Add';
 import Table from '@material-ui/core/Table';
@@ -11,10 +12,9 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import QuestionRow from '../Components/QuestionRow';
 import IconButton from '@material-ui/core/IconButton';
-import TableContainer from '@material-ui/core/TableContainer';
-import ChildModal from './ChildModal';
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { DropdownButton, Dropdown } from 'react-bootstrap';
+import TableContainer from '@material-ui/core/TableContainer';
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 const reorder = (list, startIndex, endIndex) => {
     const result = Array.from(list)
@@ -67,7 +67,6 @@ export default class QuestionTable extends Component {
                 this.setState({ questions: res.data.questions.sort((a, b) => (a.questionNumber > b.questionNumber) ? 1 : -1) });
             })
     }
-
 
     async onDragEnd(result) {
         // dropped outside the list
