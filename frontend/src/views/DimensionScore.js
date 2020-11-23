@@ -7,7 +7,7 @@ const QuestionTypes =
 {
     checkbox: "checkbox",
     radiogroup: "radiogroup",
-    slider: "bootstrapslider"
+    slider: "nouislider"
 }
 
 /**
@@ -71,6 +71,7 @@ export default class DimensionScore extends Component {
         var dimensionName = this.props.dimensionName;
         var results = this.props.results;
         var questions = this.props.questions;
+        console.log(results)
         var dimensionScore = 0;
         var maxDimensionScore = 0;
         questions.map(question => {
