@@ -75,7 +75,7 @@ class DesignAssistantSurvey extends Component {
 
   // Request questions JSON from backend 
   componentDidMount() {
-    widgets.bootstrapslider(Survey);
+    widgets.nouislider(Survey);
 
     ReactGa.pageview(window.location.pathname + window.location.search);
 

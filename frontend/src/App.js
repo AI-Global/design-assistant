@@ -6,7 +6,7 @@ import Login from './views/Login';
 import UserSubmissions from './views/UserSubmissions';
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import "bootstrap-slider/dist/css/bootstrap-slider.min.css";
+import "nouislider/distribute/nouislider.min.css";
 
 require('dotenv').config();
 

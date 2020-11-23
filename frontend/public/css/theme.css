@@ -194,3 +194,13 @@ html {
     border-top: 1px solid #ddd;
 
   }
+
+  .noUi-target, noUi-ltr, noUi-horizontal{
+    width:500px;
+  }
+
+  .noUi-value::before, noUi-value-horizontal::before, noUi-value-large::before{
+    font-weight: bold;
+    color: navy;
+    content: "Low "!important;
+  }
