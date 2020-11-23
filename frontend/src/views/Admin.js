@@ -36,8 +36,8 @@ const User = props => (
         </td>
         <td style={{textAlign:"center"}}>{props.user?.organization}</td>
         <td align ="center">
-        <Link to={"/ViewSubmissions/"+props.user._id}> <Button size="sm">View Submissions</Button> </Link>
-        <IconButton size="small" color="secondary" onClick={() => 
+        <Link to={"/ViewSubmissions/"+props.user._id}> <Button size="sm">Submissions</Button> </Link> </td>
+        <td align ="center"> <IconButton size="small" color="secondary" onClick={() => 
             { var conf = window.confirm('Are you sure you want to delete the user?');
                 if (conf == true) 
             { var conf = window.confirm('Would you like to delete all the submissions from this user?');
@@ -58,8 +58,7 @@ const User = props => (
                     }
                 }
             }
-            }}><DeleteIcon style={{ color: red[500] }}/> </IconButton>
-        </td>
+            }}><DeleteIcon style={{ color: red[500] }}/> </IconButton></td>
     </tr>
 )
 
@@ -283,7 +282,10 @@ export default class AdminPanel extends Component {
                                                 User Organization
                                         </th>
                                             <th className="score-card-headers" style={{textAlign:"center"}}>
-                                                Action
+                                               
+                                        </th>
+                                        <th className="score-card-headers" style={{textAlign:"center"}}>
+                                               
                                         </th>
                                         </tr>
                                     </thead>
