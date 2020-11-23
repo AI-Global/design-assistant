@@ -55,6 +55,9 @@ export default class Results extends Component {
         // stores our responses, faster than a string
         var contentArr = [];
 
+        // push headers into the csv
+        contentArr.push("Question,Response,Recommendation\n");
+
         // iterate through all questions that user has answered
         for (let i = 0; i < questionsObj.length; ++i) {
             var question = questionsObj[i];
@@ -103,7 +106,7 @@ export default class Results extends Component {
             }
         }
 
-        var filename = "test.csv";
+        var filename = "ReportCard.csv";
         var blob = new Blob([contentArr.join("")], {
             type: "text/plain;charset=utf-8"
         });
