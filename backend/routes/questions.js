@@ -145,9 +145,7 @@ function formatQuestion(q, Dimensions, Triggers = null) {
 
         // Low Medium and High
         question.pipsValues = [0,100] 
-        question.pipsText = ["Low","High"]
         question.pipsDensity = 100
-        //question.orientation = "vertical"
         question.tooltips = false
     }
 
