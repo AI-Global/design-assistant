@@ -201,7 +201,7 @@ export default function QuestionModal(props) {
     function updateRole(index) {
         if (questionRole.includes(index)) {
             const i = questionRole.indexOf(index)
-            questionRole.splice(i, 1)        
+            questionRole.splice(i, 1)
         }
         else {
             questionRole.push(index)
@@ -212,7 +212,7 @@ export default function QuestionModal(props) {
     function updateDomain(index) {
         if (questionDomain.includes(index)) {
             const i = questionDomain.indexOf(index)
-            questionDomain.splice(i, 1)        
+            questionDomain.splice(i, 1)
         }
         else {
             questionDomain.push(index)
@@ -223,7 +223,7 @@ export default function QuestionModal(props) {
     function updateRegion(index) {
         if (questionRegion.includes(index)) {
             const i = questionRegion.indexOf(index)
-            questionRegion.splice(i, 1)        
+            questionRegion.splice(i, 1)
         }
         else {
             questionRegion.push(index)
@@ -234,7 +234,7 @@ export default function QuestionModal(props) {
     function updateLifecycle(index) {
         if (questionLifecycle.includes(index)) {
             const i = questionLifecycle.indexOf(index)
-            questionLifecycle.splice(i, 1)        
+            questionLifecycle.splice(i, 1)
         }
         else {
             questionLifecycle.push(index)
@@ -289,11 +289,11 @@ export default function QuestionModal(props) {
                         {!child ? null :
                             <Row style={{ paddingBottom: "1em" }}>
                                 <Col md={12}>
-                                    <Card style={{ padding: "1em", backgroundColor: "#f5f5f5", paddingTop: "0"}}>
-                                    <Row style={{alignItems: "center", paddingBottom:"0.5em"}}>
-                                        <IconButton size="small" color="secondary" onClick={() => { deleteParent()}}><DeleteIcon style={{ color: red[500] }}/></IconButton>
-                                        <div style={{ fontSize: "12px", fontStyle: "italic", position: "relative" }}>Parent</div>
-                                    </Row>
+                                    <Card style={{ padding: "1em", backgroundColor: "#f5f5f5", paddingTop: "0" }}>
+                                        <Row style={{ alignItems: "center", paddingBottom: "0.5em" }}>
+                                            <IconButton size="small" color="secondary" onClick={() => { deleteParent() }}><DeleteIcon style={{ color: red[500] }} /></IconButton>
+                                            <div style={{ fontSize: "12px", fontStyle: "italic", position: "relative" }}>Parent</div>
+                                        </Row>
                                         {props.question.trigger.parentQuestion}
                                     </Card>
                                 </Col>
@@ -331,16 +331,18 @@ export default function QuestionModal(props) {
                                     </Form.Control>
                                 </Form.Group>
                             </Col>
-                            {(responseType === "radiogroup" || responseType === "checkbox" || responseType === "bootstrapslider") ?
+                            {(responseType === "radiogroup" || responseType === "checkbox" || responseType === "slider") ?
                                 <React.Fragment>
-                                    <Col xs={4} md={2}>
-                                        <Form.Label>Points</Form.Label>
-                                        <Form.Control value={points} as="select" onChange={(event) => setPoints(event.target.value)}>
-                                            <option value={-1}>-1</option>
-                                            <option value={0}>0</option>
-                                            <option value={1}>1</option>
-                                        </Form.Control>
-                                    </Col>
+                                    {responseType === "slider" ? null :
+                                        <Col xs={4} md={2}>
+                                            <Form.Label>Points</Form.Label>
+                                            <Form.Control value={points} as="select" onChange={(event) => setPoints(event.target.value)}>
+                                                <option value={-1}>-1</option>
+                                                <option value={0}>0</option>
+                                                <option value={1}>1</option>
+                                            </Form.Control>
+                                        </Col>
+                                    }
                                     <Col xs={4} md={2}>
                                         <Form.Label>Weight</Form.Label>
                                         <Form.Control value={weight} as="select" onChange={(event) => setWeight(event.target.value)}>
@@ -407,9 +409,9 @@ export default function QuestionModal(props) {
                                 <Col xs={2} md={3}>
                                     <Form.Group controlId="roles">
                                         <Form.Label>Role</Form.Label>
-                                        <Form.Control value={questionRole} as="select" multiple onChange={(event) => updateRole(event.target.selectedIndex+1)}>
+                                        <Form.Control value={questionRole} as="select" multiple onChange={(event) => updateRole(event.target.selectedIndex + 1)}>
                                             {roles.map((role, index) =>
-                                                <option key={index} value={index+1}>{role.name}</option>
+                                                <option key={index} value={index + 1}>{role.name}</option>
                                             )}
                                         </Form.Control>
                                     </Form.Group>
@@ -417,9 +419,9 @@ export default function QuestionModal(props) {
                                 <Col xs={2} md={3}>
                                     <Form.Group controlId="domains">
                                         <Form.Label>Domain</Form.Label>
-                                        <Form.Control value={questionDomain} as="select" multiple onChange={(event) => updateDomain(event.target.selectedIndex+1)}>
+                                        <Form.Control value={questionDomain} as="select" multiple onChange={(event) => updateDomain(event.target.selectedIndex + 1)}>
                                             {domains.map((domain, index) =>
-                                                <option key={index} value={index+1}>{domain.name}</option>
+                                                <option key={index} value={index + 1}>{domain.name}</option>
                                             )}
                                         </Form.Control>
                                     </Form.Group>
@@ -427,9 +429,9 @@ export default function QuestionModal(props) {
                                 <Col xs={2} md={3}>
                                     <Form.Group controlId="regions">
                                         <Form.Label>Region</Form.Label>
-                                        <Form.Control value={questionRegion} as="select" multiple onChange={(event) => updateRegion(event.target.selectedIndex+1)}>
+                                        <Form.Control value={questionRegion} as="select" multiple onChange={(event) => updateRegion(event.target.selectedIndex + 1)}>
                                             {regions.map((region, index) =>
-                                                <option key={index} value={index+1}>{region.name}</option>
+                                                <option key={index} value={index + 1}>{region.name}</option>
                                             )}
                                         </Form.Control>
                                     </Form.Group>
@@ -437,9 +439,9 @@ export default function QuestionModal(props) {
                                 <Col xs={2} md={3}>
                                     <Form.Group controlId="lifecycles">
                                         <Form.Label>Life-Cycle</Form.Label>
-                                        <Form.Control value={questionLifecycle} as="select" multiple onChange={(event) => updateLifecycle(event.target.selectedIndex+1)}>
+                                        <Form.Control value={questionLifecycle} as="select" multiple onChange={(event) => updateLifecycle(event.target.selectedIndex + 1)}>
                                             {lifecycles.map((lifecycle, index) =>
-                                                <option key={index} value={index+1}>{lifecycle.name}</option>
+                                                <option key={index} value={index + 1}>{lifecycle.name}</option>
                                             )}
                                         </Form.Control>
                                     </Form.Group>
@@ -468,7 +470,7 @@ export default function QuestionModal(props) {
                                     <Col xs={12} md={12}>
                                         <Form.Group controlId="Link">
                                             <Form.Label>Link</Form.Label>
-                                            <Form.Control placeholder="Link" value={questionLink || ""} onChange={(event) => setLink(event.target.value)}/>
+                                            <Form.Control placeholder="Link" value={questionLink || ""} onChange={(event) => setLink(event.target.value)} />
                                         </Form.Group>
                                     </Col>
                                 </Row>
