@@ -252,6 +252,7 @@ class DesignAssistantSurvey extends Component {
       toast("Saving Responses", {
         toastId:"saving"
       });
+      this.setState(this.state);
     });
   }
 

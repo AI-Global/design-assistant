@@ -22,13 +22,13 @@ class UserSettings extends Component {
             showEmailSettings: false,
             showUserNameSettings: false,
             showPasswordSettings: false,
+            showOrganizationSettings: false,
             user: undefined,
             password: { isInvalid: false, message: "" },
             email: { isInvalid: false, message: "" },
             username: { isInvalid: false, message: "" },
             newPassword: { isInvalid: false, message: "" },
             passwordConfirmation: { isInvalid: false, message: "" },
-
         }
     }
 
@@ -54,6 +54,11 @@ class UserSettings extends Component {
     changePasswordModal() {
         this.resetValidations();
         this.setState({ showPasswordSettings: true })
+    }
+
+    changeOrganizationModal() {
+        this.resetValidations();
+        this.setState({ showOrganizationSettings: true});
     }
 
     /**
@@ -169,6 +174,34 @@ class UserSettings extends Component {
             });
     }
 
+    handleOrganizationSubmit(event){
+        event.preventDefault();
+        this.resetValidations();
+        let form = event.target.elements;
+        let newOrganization = form.newOrganization.value;
+        let password = form.organizationPassword.value;
+        let authToken = getAuthToken();
+        let endPoint = '/users/updateOrganization';
+        return axios.post(process.env.REACT_APP_SERVER_ADDR + endPoint,
+            {
+                newOrganization: newOrganization,
+                password: password
+            },
+            {
+                headers: {
+                    "x-auth-token": authToken
+                }
+            }).then(response => {
+                const result = response.data;
+                if (!result.errors) {
+                    window.location.reload();
+                }
+            }).catch(err => {
+                let result = err.response.data;
+                this.setState(result);
+            });
+    }
+
     // reset validations in state
     resetValidations() {
         this.setState({
@@ -197,7 +230,7 @@ class UserSettings extends Component {
       }
 
     render(){
-        const handleClose = () => this.setState({showEmailSettings: false, showUserNameSettings: false, showPasswordSettings: false});
+        const handleClose = () => this.setState({showEmailSettings: false, showUserNameSettings: false, showPasswordSettings: false, showOrganizationSettings: false});
         return (
             <span>
                 <DropdownButton className="usersettings-dropdown"
@@ -213,7 +246,9 @@ class UserSettings extends Component {
                     <Dropdown.Item onClick={() => this.changeEmailModal()}><i className="fa fa-envelope fa-fw"></i> Change Email</Dropdown.Item>
                     <Dropdown.Item onClick={() => this.changeUsernameModal()}><i className="fa fa-user fa-fw"></i> Change Username</Dropdown.Item>
                     <Dropdown.Item onClick={() => this.changePasswordModal()}><i className="fa fa-key fa-fw"></i> Change Password</Dropdown.Item>
+                    <Dropdown.Item onClick={() => this.changeOrganizationModal()}> <i className="fa fa-users fa-fw"></i> Change Organization</Dropdown.Item> 
                     <Dropdown.Item onClick={() => this.handleLogout()}><i className="fa fa-sign-out fa-fw"></i> Log Out</Dropdown.Item>
+                    
                 </DropdownButton>
 
                 <Modal show={this.state.showEmailSettings}
@@ -324,6 +359,48 @@ class UserSettings extends Component {
                         </Form>
                     </Modal.Body>
                 </Modal>
+                
+                <Modal show={this.state.showOrganizationSettings}
+                    onHide={handleClose}
+                    backdrop="static"
+                    keyboard={false}
+                    dialogClassName="modal-login modal-dialog-centered">
+                    <Modal.Header closeButton>
+                        <Modal.Title>
+                            Change Organization
+                        </Modal.Title>
+
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Form onSubmit={(e) => this.handleOrganizationSubmit(e)}>
+                            {!this.state?.user?.organization ? null : 
+                            <div>
+                                <div style = {{display: 'flex', justifyContent:'center', alignItems:'center'}}>
+                                    <u><b>Current Organization</b></u>
+                                </div>
+                                <div style={{display: 'flex', justifyContent:'center', alignItems:'center', wordWrap: "break-word"}}>
+                                    {this.state?.user?.organization}
+                                </div>
+                            </div>
+                            }
+                            <Form.Group controlId="newOrganization">
+                                <i className="fa fa-users"></i>
+                                <Form.Control type="text" placeholder={"New Organization"} autoComplete="organization" aria-label="new organization" />
+                            </Form.Group>
+                            <Form.Group controlId="organizationPassword">
+                                <i className="fa fa-lock"></i>
+                                <Form.Control type="password" placeholder="Password" required="required" autoComplete="current-password" isInvalid={this.state.password?.isInvalid} aria-label="current password" />
+                                <Form.Control.Feedback type="invalid">
+                                    {this.state.password?.message}
+                                </Form.Control.Feedback>
+                            </Form.Group>
+                            <Form.Group controlId="formSubmit">
+                            </Form.Group>
+                            <input type="submit" className="btn btn-primary btn-block btn-lg" value="Submit" />
+                        </Form>
+                    </Modal.Body>
+                </Modal>
+
 
             </span>
         )
