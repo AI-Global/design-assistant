@@ -200,8 +200,6 @@ class UserSettings extends Component {
                 let result = err.response.data;
                 this.setState(result);
             });
-
-        return;
     }
 
     // reset validations in state
