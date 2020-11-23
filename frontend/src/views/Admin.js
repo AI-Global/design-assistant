@@ -14,15 +14,16 @@ import axios from 'axios';
 import Login from './Login';
 import Accordion from 'react-bootstrap/Accordion';
 import Card from 'react-bootstrap/Card';
+import {Link} from 'react-router-dom';
 
 
 ReactGa.initialize(process.env.REACT_APP_GAID, { testMode: process.env.NODE_ENV === 'test' });
 
 const User = props => (
     <tr>
-        <td>{props.user.email}</td>
-        <td>{props.user.username}</td>
-        <td>
+        <td style={{textAlign:"center"}}>{props.user.email}</td>
+        <td style={{textAlign:"center"}}>{props.user.username}</td>
+        <td style={{textAlign:"center"}}>
             {(props.role === "superadmin") ?
                 <DropdownButton id="dropdown-item-button" title={props.user.role}>
                     <Dropdown.Item onClick={props.changeRole.bind(this, props.user._id, "member")} >Member</Dropdown.Item>
@@ -33,9 +34,31 @@ const User = props => (
                 : props.user.role}
 
         </td>
-        <td>{props.user?.organization}</td>
-        <td align="center">
-            <IconButton size="small" color="secondary" onClick={() => { if (window.confirm('Are you sure you want to delete the user?')) { (props.deleteUser(props.user._id)) } }}><DeleteIcon style={{ color: red[500] }} /></IconButton>
+        <td style={{textAlign:"center"}}>{props.user?.organization}</td>
+        <td align ="center">
+        <Link to={"/ViewSubmissions/"+props.user._id}> <Button size="sm">View Submissions</Button> </Link>
+        <IconButton size="small" color="secondary" onClick={() => 
+            { var conf = window.confirm('Are you sure you want to delete the user?');
+                if (conf == true) 
+            { var conf = window.confirm('Would you like to delete all the submissions from this user?');
+                if(conf == true)
+                {
+                    {(props.deleteUserSubmission(props.user._id))}
+                    {(props.deleteUser(props.user._id))}
+                    window.alert("User and their submissions are deleted.")
+                }
+                else
+                {
+                    var conf = window.confirm('Would you just like to delete the user and keep their submission?');
+
+                    if (conf == true)
+                    {
+                    (props.deleteUser(props.user._id))
+                    window.alert("User deleted.")
+                    }
+                }
+            }
+            }}><DeleteIcon style={{ color: red[500] }}/> </IconButton>
         </td>
     </tr>
 )
@@ -118,7 +141,24 @@ export default class AdminPanel extends Component {
             users: this.state.users.filter(ul => ul._id !== id)
         })
     }
+    deleteSubmission(id) {
+        let endPoint = '/submissions/delete/' + id;
+        axios.delete(process.env.REACT_APP_SERVER_ADDR + endPoint)
+            .then(response => { console.log(response.data) });
 
+        this.setState({
+            submissions: this.state.submissions.filter(ul => ul._id !== id)
+        })
+    }
+    deleteUserSubmission(id) {
+        let endPoint = '/submissions/deleteAll/' + id;
+        axios.delete(process.env.REACT_APP_SERVER_ADDR + endPoint)
+            .then(response => { console.log(response.data) });
+
+        this.setState({
+            submissions: this.state.submissions.filter(ul => ul._id !== id)
+        })
+    }
 
     changeRole(id, role) {
         let endPoint = '/users/' + id;
@@ -137,7 +177,7 @@ export default class AdminPanel extends Component {
             return this.state.users.map(currentuser => {
                 if (this.state.roleFilter === "" || currentuser.role?.toLowerCase() === this.state.roleFilter?.toLowerCase())
                     if (this.state.orgFilter === "" || currentuser.organization?.toLowerCase() === this.state.orgFilter?.toLowerCase())
-                        return <User user={currentuser} deleteUser={this.deleteUser} changeRole={this.changeRole} role={this.role} key={currentuser._id} />;
+                        return <User user={currentuser} deleteUser={this.deleteUser} deleteUserSubmission={this.deleteUserSubmission} changeRole={this.changeRole} role={this.role} key={currentuser._id} />;
                 return null;
             })
         }
@@ -148,14 +188,12 @@ export default class AdminPanel extends Component {
             let convertedDate = new Date(currentsubmission.date).toLocaleString("en-US", { timeZone: Intl.DateTimeFormat()?.resolvedOptions()?.timeZone ?? "UTC" });
             return (
                 <tr key={idx}>
-                    <td>{currentsubmission.userId}</td>
-                    <td>{currentsubmission.projectName}</td>
-                    <td>{convertedDate}</td>
-                    <td>{currentsubmission.lifecycle}</td>
-                    <td>{currentsubmission.completed ? "Yes" : "No"}</td>
-                    <td>
-                        <Button size="sm" onClick={() => this.nextPath('/Results/', currentsubmission.submission ?? {})}>View Responses</Button>
-                    </td>
+                    <td style={{textAlign:"center"}}>{currentsubmission.userId}</td>
+                    <td style={{textAlign:"center"}}>{currentsubmission.projectName}</td>
+                    <td style={{textAlign:"center"}}>{convertedDate}</td>
+                    <td style={{textAlign:"center"}}>{currentsubmission.completed ? "Yes" : "No"}</td>
+                    <td style={{textAlign:"center"}}><Button size="sm" onClick={() => this.nextPath('/Results/', currentsubmission.submission ?? {})}>View Responses</Button></td> 
+                    <td align ="center"> <IconButton size="small" color="secondary" onClick={() => { if (window.confirm('Are you sure you want to delete the submission?')) { (this.deleteSubmission(currentsubmission._id)) } }}><DeleteIcon style={{ color: red[500] }}/> </IconButton></td>
                 </tr>
             )
         })
@@ -232,19 +270,19 @@ export default class AdminPanel extends Component {
                                 <BootStrapTable id="users" bordered hover responsive className="user-table">
                                     <thead>
                                         <tr>
-                                            <th className="score-card-headers">
+                                            <th className="score-card-headers" style={{textAlign:"center"}}>
                                                 Email
                                         </th>
-                                            <th className="score-card-headers">
+                                            <th className="score-card-headers" style={{textAlign:"center"}}>
                                                 User Name
                                         </th>
-                                            <th className="score-card-headers">
+                                            <th className="score-card-headers" style={{textAlign:"center"}}>
                                                 User Role
                                         </th>
-                                            <th className="score-card-headers">
+                                            <th className="score-card-headers" style={{textAlign:"center"}}>
                                                 User Organization
                                         </th>
-                                            <th className="score-card-headers">
+                                            <th className="score-card-headers" style={{textAlign:"center"}}>
                                                 Action
                                         </th>
                                         </tr>
@@ -261,24 +299,24 @@ export default class AdminPanel extends Component {
                                 <BootStrapTable id="submissions" bordered hover responsive className="submission-table">
                                     <thead>
                                         <tr>
-                                            <th className="score-card-headers">
+                                            <th className="score-card-headers" style={{textAlign:"center"}}>
                                                 User Name
                                         </th>
-                                            <th className="score-card-headers">
+                                            <th className="score-card-headers" style={{textAlign:"center"}}>
                                                 Project Name
                                         </th>
-                                            <th className="score-card-headers">
+                                            <th className="score-card-headers" style={{textAlign:"center"}}>
                                                 Date
                                         </th>
 
-                                            <th className="score-card-headers">
-                                                Lifecycle
-                                        </th>
-                                            <th className="score-card-headers">
+                                            <th className="score-card-headers" style={{textAlign:"center"}}>
                                                 Completed
                                         </th>
-                                            <th className="score-card-headers">
-                                                Submissions
+                                            <th className="score-card-headers" style={{textAlign:"center"}}>
+                                                Responses
+                                        </th>
+                                        <th className="score-card-headers" style={{textAlign:"center"}}>
+                                                Action
                                         </th>
 
                                         </tr>
