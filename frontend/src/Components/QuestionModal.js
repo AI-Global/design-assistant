@@ -364,7 +364,7 @@ export default function QuestionModal(props) {
                                 </Form.Group>
                             </Col>
                         </Row>
-                        {(responseType === "comment" || responseType === "text" || responseType === "dropdown" || responseType === "slider") ? null :
+                        {(responseType === "comment" || responseType === "text" || responseType === "slider") ? null :
                             <Row>
                                 <Col xs={11} md={11} style={{ display: "inline-block" }}>
                                     <Form.Group controlId="responses">
