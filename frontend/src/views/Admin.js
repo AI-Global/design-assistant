@@ -1,6 +1,5 @@
 import '../css/admin.css';
 import React, { Component } from 'react';
-import { saveAs } from 'file-saver';
 import QuestionTable from '../Components/QuestionTable';
 import AnalyticsDashboard from '../Components/AnalyticsDashboard';
 import { Tabs, Tab, Button, Table as BootStrapTable, DropdownButton, Dropdown } from 'react-bootstrap';
@@ -130,47 +129,6 @@ export default class AdminPanel extends Component {
             })
         }
     }
-    
-    // Download CSV of the current submission indicated by the submissionIdx
-    downloadCSV(submissionIdx) {
-        console.log("downloading csv: " + submissionIdx);
-
-
-        // current json structure is formed with IDs and is therefore unreadable
-        // to a person.
-
-        // Need to obtain questions separately, then map responses to the questions
-        // and output this information to the csv
-
-        // does results page already hold all the information I need?
-
-        // I need all the details about the submission itself and then of course all the contents
-        // I can do this by parsing from json or I can do what reportCard.js does?
-
-
-
-
-
-
-
-
-
-
-        // var content = "test content";
-        var content = JSON.stringify(this.state.submissions[submissionIdx].submission);
-
-        console.log(this.state.submissions[submissionIdx].submission);
-
-        // any kind of extension (.txt,.cpp,.cs,.bat)
-        // var filename = "hello.txt";
-        var filename = this.state.submissions[submissionIdx].userId + "_" + this.state.submissions[submissionIdx].projectName + ".json";
-
-        var blob = new Blob([content], {
-            type: "text/plain;charset=utf-8"
-        });
-
-        saveAs(blob, filename);
-    }
 
     submissionList() {
         return this.state.submissions.map((currentsubmission, idx) => {
@@ -184,9 +142,6 @@ export default class AdminPanel extends Component {
                     <td>{currentsubmission.completed ? "Yes" : "No"}</td>
                     <td>
                         <Button size="sm" onClick={() => this.nextPath('/Results/', currentsubmission.submission ?? {})}>View Responses</Button>
-                    </td>
-                    <td>
-                        <Button size="sm" onClick={() => this.downloadCSV(idx)}>Download as CSV</Button>
                     </td>
                 </tr>
             )
@@ -257,10 +212,6 @@ export default class AdminPanel extends Component {
                                         <th className="score-card-headers">
                                             Submissions
                                         </th>
-                                        <th className="score-card-headers">
-                                            Downloads
-                                        </th>
-
                                     </tr>
                                 </thead>
                                 <tbody>
