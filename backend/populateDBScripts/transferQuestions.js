@@ -175,6 +175,15 @@ function getDropdownChoices(jsonPath){
 		choices.push({"responseNumber":value, "indicator":text});
 		i++;
 	}
+
+	choices.sort(function(a,b){
+		if (a.indicator < b.indicator)
+		   return -1;
+		if (a.indicator > b.indicator)
+		  return 1;
+		return 0;
+	  })
+	  console.log(choices);
 	return choices;
 }
 
