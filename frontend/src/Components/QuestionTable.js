@@ -154,8 +154,7 @@ export default class QuestionTable extends Component {
 
     async export(fileExt) {
         var endPoint = '/questions/all/export'
-        var fileName = fileExt === 'json' ? 'json' : 'csv_delimiter=;'
-
+        var fileName = fileExt === 'json' ? 'json' : 'csv'
         if (fileExt === 'json') {
             await axios({
                 url: process.env.REACT_APP_SERVER_ADDR + endPoint,
@@ -171,19 +170,41 @@ export default class QuestionTable extends Component {
             })
         }
         else {
-            // convert json to csv: https://stackoverflow.com/a/31536517
-            // need to deliminate with ; or it will screw the whole file up
-            const replacer = (key, value) => value === null ? '' : value
-            const header = Object.keys(this.state.questions[0])
-            let csv = this.state.questions.map(row => header.map(fieldName => JSON.stringify(row[fieldName], replacer)).join(';'))
-            csv.unshift(header.join(';'))
-            csv = csv.join('\r\n')
-            const url = window.URL.createObjectURL(new Blob([csv]));
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', 'questions_' + fileName + '.' + fileExt);
-            document.body.appendChild(link);
-            link.click();
+            var contentArr = []
+            // push headers into the contentArray
+            const headers = Object.keys(this.state.questions[0])
+            contentArr.push(headers)
+
+            // push question values into contentArray
+            this.state.questions.map(question => {
+                var field = Object.values(question)
+                
+                for (let i in field) {
+                    if (typeof field[i] === 'object' && field[i] !== null) { 
+                        field[i] = JSON.stringify(field[i])
+                    }
+                    if (typeof field[i] === 'string' ) {
+                        field[i] = '"' + field[i].replaceAll("\"", "''").replaceAll("#", "") + '"'
+                    }
+                }
+                contentArr.push(field)
+            })
+
+            let csvContent = "data:text/csv;charset=utf-8,";
+
+            contentArr.forEach(function (rowArray) {
+                let row = rowArray.join(",");
+                csvContent += row + "\r\n";
+            });
+
+            var encodedUri = encodeURI(csvContent);
+            var link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", 'questions_' + fileName + '.' + fileExt);
+            document.body.appendChild(link); // Required for FF
+            
+            link.click(); // This will download the data file named "my_data.csv".
+
         }
     }
 
@@ -245,7 +266,7 @@ export default class QuestionTable extends Component {
                             <TableCell>Question</TableCell>
                             <TableCell align="right">Dimension</TableCell>
                             <TableCell>
-                                <DropdownButton className="export-dropdown" title={<i className="fas fa-file-export fa-lg"/>}>
+                                <DropdownButton className="export-dropdown" title={<i className="fas fa-file-export fa-lg" />}>
                                     <Dropdown.Item onClick={() => this.export('json')}>.json</Dropdown.Item>
                                     <Dropdown.Item onClick={() => this.export('csv')}>.csv</Dropdown.Item>
                                 </DropdownButton>
