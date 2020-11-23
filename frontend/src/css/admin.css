@@ -56,6 +56,15 @@ input[type=number]
   min-height: 40px !important;
 }
 
+.edit-trusted-form-label {
+  min-height: 0px !important
+
+}
+
+.edit-trusted-headers {
+  background-color: #d0e0e3;
+}
+
 .export-dropdown .btn {
   background-color: #007bff !important;
   width: 100%;
