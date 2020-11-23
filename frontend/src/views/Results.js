@@ -107,11 +107,42 @@ export default class Results extends Component {
             if (user_response_ids) {
                 for (let j = 0; j < user_response_ids.length; ++j) {
                     // console.log(question?.title?.default + " | " + user_response_ids[j]?.text?.default + " | " + question?.recommendation?.default);
-                    contentArr.push(question?.title?.default);
+
+                    // make column safe, if it exists, otherwise append nothing
+                    // make last column safe, if it exists, otherwise append "\n"
+
+                    var questionText = question?.title?.default;
+                    var questionResponse = user_response_ids[j]?.text?.default;
+                    var questionRecommendation = question?.recommendation?.default;
+
+                    if (questionText) {
+                        contentArr.push("\"" + questionText.replaceAll("\"", "\"\"") + "\"");
+                    }
                     contentArr.push(",");
-                    contentArr.push(user_response_ids[j]?.text?.default);
+                    if (questionResponse) {
+                        contentArr.push("\"" + questionResponse.replaceAll("\"", "\"\"") + "\"");
+                    }
                     contentArr.push(",");
-                    contentArr.push(question?.recommendation?.default + "\n");
+                    if (questionRecommendation) {
+                        contentArr.push("\"" + questionRecommendation.replaceAll("\"", "\"\"") + "\"");
+                    }
+                    contentArr.push("\n");
+
+                    // var questionText = "\"" + question?.title?.default.replaceAll("\"", "\"\"") + "\"" ?? "";
+                    // var questionResponse = "\"" + user_response_ids[j]?.text?.default.replaceAll("\"", "\"\"") + "\"" ?? "";
+                    // var recommendation = question?.recommendation?.default;
+                    // var proc_rec;
+                    // if (recommendation) {
+                    //     console.log(recommendation);
+                    //     proc_rec = "\"" + recommendation.replaceAll("\"", "\"\"") + "\"" + "\n" ?? "\n";
+                    //     console.log(proc_rec);
+                    // }
+                    
+                    // contentArr.push(questionText);
+                    // contentArr.push(",");
+                    // contentArr.push(questionResponse);
+                    // contentArr.push(",");
+                    // contentArr.push(proc_rec);
                 }
             }
 
