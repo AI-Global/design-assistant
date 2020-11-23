@@ -53,3 +53,12 @@
     margin-bottom: -3rem!important;
     padding: .5em!important;
 }
+
+.export-button-csv {
+    float: right;
+    background-color: #007bff !important;
+    margin-top: -.2rem;
+    margin-bottom: -3rem!important;
+    margin-right: 5rem!important;
+    padding: .5em!important;
+}
