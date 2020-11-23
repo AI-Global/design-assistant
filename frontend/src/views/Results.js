@@ -52,33 +52,41 @@ export default class Results extends Component {
     }
 
     downloadCSV(results, questionsObj) {
+        // stores our responses, faster than a string
         var contentArr = [];
+
+        // iterate through all questions that user has answered
         for (let i = 0; i < questionsObj.length; ++i) {
             var question = questionsObj[i];
-            // question, response, recommendation (if exists)
 
+            // csv format: 3 columns
+            // question, response, recommendation
+
+            // user responses here
             var user_response_ids;
-            var result = results[question.name];
+
+            // the
+            var response = results[question.name];
 
             // If there are more than one response, filter
-            if (Array.isArray(result)) {
-                user_response_ids = question?.choices?.filter((choice) => result?.includes(choice?.value));
+            if (Array.isArray(response)) {
+                user_response_ids = question?.choices?.filter((choice) => response?.includes(choice?.value));
             } else {
-                user_response_ids = question?.choices?.filter((choice) => result === choice?.value);
+                user_response_ids = question?.choices?.filter((choice) => response === choice?.value);
             }
 
             // if we have any responses left
             if (user_response_ids) {
                 for (let j = 0; j < user_response_ids.length; ++j) {
-                    // console.log(question?.title?.default + " | " + user_response_ids[j]?.text?.default + " | " + question?.recommendation?.default);
-
-                    // make column safe, if it exists, otherwise append nothing
-                    // make last column safe, if it exists, otherwise append "\n"
 
                     var questionText = question?.title?.default;
                     var questionResponse = user_response_ids[j]?.text?.default;
                     var questionRecommendation = question?.recommendation?.default;
 
+                    // we need to check that the field exists, and if it does,
+                    // replace quotes with double quotes, and surround with quotes
+                    // this will make the string csv safe
+                    // if no field, append nothing, a column will still populate
                     if (questionText) {
                         contentArr.push("\"" + questionText.replaceAll("\"", "\"\"") + "\"");
                     }
@@ -99,6 +107,8 @@ export default class Results extends Component {
         var blob = new Blob([contentArr.join("")], {
             type: "text/plain;charset=utf-8"
         });
+
+        // save to client!
         saveAs(blob, filename);
     }
 
