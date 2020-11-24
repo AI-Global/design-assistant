@@ -66,6 +66,7 @@ export default class AdminPanel extends Component {
     constructor(props) {
         super(props);
 
+        this.deleteUserSubmission = this.deleteUserSubmission.bind(this)
         this.deleteUser = this.deleteUser.bind(this)
         this.changeRole = this.changeRole.bind(this)
         this.role = undefined
@@ -146,7 +147,7 @@ export default class AdminPanel extends Component {
             .then(response => { console.log(response.data) });
 
         this.setState({
-            submissions: this.state.submissions.filter(ul => ul._id !== id)
+            submissions: this.state.submissions.filter(ul => ul.userId !== id)
         })
     }
     deleteUserSubmission(id) {
