@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
-import { Button, Form, Card } from 'react-bootstrap';
-import { Row, Col } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 import '../css/theme.css';
 
 
 export default function DeleteUserModal(props) {
-    const user = props.user;
     const [deleteSubmissions, setDeleteSubmissions] = useState(false);
 
     return (
@@ -20,9 +17,9 @@ export default function DeleteUserModal(props) {
             <Modal.Body>
                 <Form>
                     <Form.Group>
-                        <div class="container">
-                            <div class="row">
-                                <div class="col text-center">
+                        <div className="container">
+                            <div className="row">
+                                <div className="col text-center">
                                 <Form.Label> Delete {props.user?.username}'s Submissions?</Form.Label>
                                     <div key='inline-radio' className="mb-3" style={{ paddingTop: "1.5em" }}>
                                         <Form.Check inline label="Yes" type='radio' id='inline-radio-1' checked={deleteSubmissions} onChange={() => setDeleteSubmissions(true)} />
