@@ -25,20 +25,21 @@ export default function QuestionModal(props) {
 
     // Set all question properties as hooks for rendering and updating
     const [altText, setAltText] = useState(props.question.alt_text)
-    const [questionDomain, setDomain] = useState(props.question.domainApplicability)
-    const [questionLifecycle, setLifecycle] = useState(props.question.lifecycle)
+    const [questionDomain, setDomain] = useState(props.question.domainApplicability ? props.question.domainApplicability : [])
+    const [questionLifecycle, setLifecycle] = useState(props.question.lifecycle ? props.question.lifecycle : [])
     const [points, setPoints] = useState(props.question.pointsAvailable)
     const [question, setQuestion] = useState(props.question.question)
     const [questionRef, setRef] = useState(props.question.reference)
-    const [questionRegion, setRegion] = useState(props.question.regionalApplicability)
+    const [questionRegion, setRegion] = useState(props.question.regionalApplicability ? props.question.regionalApplicability : [])
     const [responseType, setType] = useState(props.question.responseType)
     const [responses, setResponses] = useState(responsesA)
-    const [questionRole, setRole] = useState(props.question.roles)
+    const [questionRole, setRole] = useState(props.question.roles ? props.question.roles : [])
     const [dimension, setDimension] = useState(props.question.trustIndexDimension)
     const [weight, setWeight] = useState(props.question.weighting)
     const [questionType, setQType] = useState(props.question.questionType)
     const [questionLink, setLink] = useState(props.question?.rec_links?.join(", "))
 
+    console.log(questionLink)
     // Hook for showing delet quesiton warning
     const [warningShow, setWarningShow] = useState(false)
     const [questionValid, setInvalid] = useState(false)
@@ -95,8 +96,8 @@ export default function QuestionModal(props) {
         setWeight(props.question.weighting)
         setChild(props.question.child)
         setTrigger(props.question.trigger)
-        setDomain(props.question.questionDomain)
-        setRegion(props.question.questionRegion)
+        setDomain(props.question.domainApplicability)
+        setRegion(props.question.regionalApplicability)
         setLink(props.question.rec_links)
         setInvalid(false)
         props.onHide()
@@ -121,13 +122,14 @@ export default function QuestionModal(props) {
             props.question.weighting = weight
             props.question.child = child
             props.question.trigger = trigger
-            props.question.questionDomain = questionDomain
-            props.question.questionRegion = questionRegion
-            props.question.rec_links = questionLink.split(",")
-            for (let i in props.question.rec_links){
-                props.question.rec_links[i] = props.question.rec_links[i].trim()
+            props.question.domainApplicability = questionDomain
+            props.question.regionalApplicability = questionRegion
+            if (questionLink.length) {
+                props.question.rec_links = questionLink.split(",")
+                for (let i in props.question.rec_links) {
+                    props.question.rec_links[i] = props.question.rec_links[i]?.trim()
+                }
             }
-
             if (props.mode === "edit") {
                 endPoint = '/questions/' + props.question._id;
                 axios.put(process.env.REACT_APP_SERVER_ADDR + endPoint, props.question)
@@ -152,23 +154,24 @@ export default function QuestionModal(props) {
                         else {
                             console.log("Added Question: ", result)
                         }
+
                     })
                 // need to clear question metadata before closing for adding action
                 props.question.alt_text = null
-                props.question.lifecycle = [6]
+                props.question.lifecycle = []
                 props.question.pointsAvailable = 0
                 props.question.question = null
                 props.question.reference = null
                 props.question.responseType = "text"
                 props.question.questionType = "tombstone"
                 props.question.responses = []
-                props.question.roles = [13]
+                props.question.roles = []
                 props.question.trustIndexDimension = null
                 props.question.weighting = 0
                 props.question.child = child
                 props.question.trigger = trigger
-                props.question.questionDomain = [6]
-                props.question.questionRegion = [8]
+                props.question.domainApplicability = []
+                props.question.regionalApplicability = []
                 props.question.rec_links = []
                 close()
             }
@@ -197,53 +200,54 @@ export default function QuestionModal(props) {
     }
 
     function updateRole(index) {
-        if (questionRole.includes(index)) {
+        if (questionRole?.includes(index)) {
             const i = questionRole.indexOf(index)
-            questionRole.splice(i, 1)        
+            questionRole.splice(i, 1)
         }
         else {
             questionRole.push(index)
         }
-        setRole(questionRole)
+        console.log(questionRole)
+        setRole([...questionRole])
     }
 
     function updateDomain(index) {
-        if (questionDomain.includes(index)) {
+        if (questionDomain?.includes(index)) {
             const i = questionDomain.indexOf(index)
-            questionDomain.splice(i, 1)        
+            questionDomain.splice(i, 1)
         }
         else {
             questionDomain.push(index)
         }
-        setDomain(questionDomain)
+        setDomain([...questionDomain])
     }
 
     function updateRegion(index) {
-        if (questionRegion.includes(index)) {
+        if (questionRegion?.includes(index)) {
             const i = questionRegion.indexOf(index)
-            questionRegion.splice(i, 1)        
+            questionRegion.splice(i, 1)
         }
         else {
             questionRegion.push(index)
         }
-        setRegion(questionRegion)
+        setRegion([...questionRegion])
     }
 
     function updateLifecycle(index) {
-        if (questionLifecycle.includes(index)) {
+        if (questionLifecycle?.includes(index)) {
             const i = questionLifecycle.indexOf(index)
-            questionLifecycle.splice(i, 1)        
+            questionLifecycle.splice(i, 1)
         }
         else {
             questionLifecycle.push(index)
         }
-        setLifecycle(questionLifecycle)
+        setLifecycle([...questionLifecycle])
     }
 
     if (!dimensions) {
         return null;
     }
-    
+
     return (
         <React.Fragment>
             <Modal
@@ -287,11 +291,11 @@ export default function QuestionModal(props) {
                         {!child ? null :
                             <Row style={{ paddingBottom: "1em" }}>
                                 <Col md={12}>
-                                    <Card style={{ padding: "1em", backgroundColor: "#f5f5f5", paddingTop: "0"}}>
-                                    <Row style={{alignItems: "center", paddingBottom:"0.5em"}}>
-                                        <IconButton size="small" color="secondary" onClick={() => { deleteParent()}}><DeleteIcon style={{ color: red[500] }}/></IconButton>
-                                        <div style={{ fontSize: "12px", fontStyle: "italic", position: "relative" }}>Parent</div>
-                                    </Row>
+                                    <Card style={{ padding: "1em", backgroundColor: "#f5f5f5", paddingTop: "0" }}>
+                                        <Row style={{ alignItems: "center", paddingBottom: "0.5em" }}>
+                                            <IconButton size="small" color="secondary" onClick={() => { deleteParent() }}><DeleteIcon style={{ color: red[500] }} /></IconButton>
+                                            <div style={{ fontSize: "12px", fontStyle: "italic", position: "relative" }}>Parent</div>
+                                        </Row>
                                         {props.question.trigger.parentQuestion}
                                     </Card>
                                 </Col>
@@ -329,16 +333,18 @@ export default function QuestionModal(props) {
                                     </Form.Control>
                                 </Form.Group>
                             </Col>
-                            {(responseType === "radiogroup" || responseType === "checkbox" || responseType === "bootstrapslider") ?
+                            {(responseType === "radiogroup" || responseType === "checkbox" || responseType === "slider") ?
                                 <React.Fragment>
-                                    <Col xs={4} md={2}>
-                                        <Form.Label>Points</Form.Label>
-                                        <Form.Control value={points} as="select" onChange={(event) => setPoints(event.target.value)}>
-                                            <option value={-1}>-1</option>
-                                            <option value={0}>0</option>
-                                            <option value={1}>1</option>
-                                        </Form.Control>
-                                    </Col>
+                                    {responseType === "slider" ? null :
+                                        <Col xs={4} md={2}>
+                                            <Form.Label>Points</Form.Label>
+                                            <Form.Control value={points} as="select" onChange={(event) => setPoints(event.target.value)}>
+                                                <option value={-1}>-1</option>
+                                                <option value={0}>0</option>
+                                                <option value={1}>1</option>
+                                            </Form.Control>
+                                        </Col>
+                                    }
                                     <Col xs={4} md={2}>
                                         <Form.Label>Weight</Form.Label>
                                         <Form.Control value={weight} as="select" onChange={(event) => setWeight(event.target.value)}>
@@ -360,7 +366,7 @@ export default function QuestionModal(props) {
                                 </Form.Group>
                             </Col>
                         </Row>
-                        {(responseType === "comment" || responseType === "text" || responseType === "dropdown" || responseType === "bootstrapslider") ? null :
+                        {(responseType === "comment" || responseType === "text" || responseType === "slider") ? null :
                             <Row>
                                 <Col xs={11} md={11} style={{ display: "inline-block" }}>
                                     <Form.Group controlId="responses">
@@ -405,41 +411,41 @@ export default function QuestionModal(props) {
                                 <Col xs={2} md={3}>
                                     <Form.Group controlId="roles">
                                         <Form.Label>Role</Form.Label>
-                                        <Form.Control value={questionRole} as="select" multiple onChange={(event) => updateRole(event.target.selectedIndex+1)}>
+                                        <Card className="select-list-box">
                                             {roles.map((role, index) =>
-                                                <option key={index} value={index+1}>{role.name}</option>
+                                                <Form.Check type='checkbox' checked={questionRole?.includes(index + 1)} label={role.name} id={'role' + role.name} key={index} value={index + 1} onChange={(e) => updateRole(parseInt(e.target.value))} />
                                             )}
-                                        </Form.Control>
+                                        </Card>
                                     </Form.Group>
                                 </Col>
                                 <Col xs={2} md={3}>
                                     <Form.Group controlId="domains">
                                         <Form.Label>Domain</Form.Label>
-                                        <Form.Control value={questionDomain} as="select" multiple onChange={(event) => updateDomain(event.target.selectedIndex+1)}>
+                                        <Card className="select-list-box">
                                             {domains.map((domain, index) =>
-                                                <option key={index} value={index+1}>{domain.name}</option>
+                                                <Form.Check type='checkbox' checked={questionDomain?.includes(index + 1)} label={domain.name} id={'domain-' + domain.name} key={index} value={index + 1} onChange={(e) => updateDomain(parseInt(e.target.value))} />
                                             )}
-                                        </Form.Control>
+                                        </Card>
                                     </Form.Group>
                                 </Col>
                                 <Col xs={2} md={3}>
                                     <Form.Group controlId="regions">
                                         <Form.Label>Region</Form.Label>
-                                        <Form.Control value={questionRegion} as="select" multiple onChange={(event) => updateRegion(event.target.selectedIndex+1)}>
+                                        <Card className="select-list-box">
                                             {regions.map((region, index) =>
-                                                <option key={index} value={index+1}>{region.name}</option>
+                                                <Form.Check type='checkbox' checked={questionRegion?.includes(index + 1)} label={region.name} id={'region-' + region.name} key={index} value={index + 1} onChange={(e) => updateRegion(parseInt(e.target.value))} />
                                             )}
-                                        </Form.Control>
+                                        </Card>
                                     </Form.Group>
                                 </Col>
                                 <Col xs={2} md={3}>
                                     <Form.Group controlId="lifecycles">
                                         <Form.Label>Life-Cycle</Form.Label>
-                                        <Form.Control value={questionLifecycle} as="select" multiple onChange={(event) => updateLifecycle(event.target.selectedIndex+1)}>
+                                        <Card className="select-list-box">
                                             {lifecycles.map((lifecycle, index) =>
-                                                <option key={index} value={index+1}>{lifecycle.name}</option>
+                                                <Form.Check type='checkbox' checked={questionLifecycle?.includes(index + 1)} label={lifecycle.name} id={'lifecycle-' + lifecycle.name} key={index} value={index + 1} onChange={(e) => updateLifecycle(parseInt(e.target.value))} />
                                             )}
-                                        </Form.Control>
+                                        </Card>
                                     </Form.Group>
                                 </Col>
                             </Row>
@@ -465,8 +471,8 @@ export default function QuestionModal(props) {
                                 <Row>
                                     <Col xs={12} md={12}>
                                         <Form.Group controlId="Link">
-                                            <Form.Label>Links</Form.Label>
-                                            <Form.Control placeholder="Link" value={questionLink || ""} onChange={(event) => setLink(event.target.value)}/>
+                                            <Form.Label>Link</Form.Label>
+                                            <Form.Control placeholder="Link" value={questionLink || ""} onChange={(event) => setLink(event.target.value)} />
                                         </Form.Group>
                                     </Col>
                                 </Row>
