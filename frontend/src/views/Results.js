@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { saveAs } from 'file-saver';
 import { Link } from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "font-awesome/css/font-awesome.css";
@@ -50,6 +51,70 @@ export default class Results extends Component {
           });
     }
 
+    downloadCSV(results, questionsObj) {
+        // stores our responses, faster than a string
+        var contentArr = [];
+
+        // push headers into the csv
+        contentArr.push("Question,Response,Recommendation\n");
+
+        // iterate through all questions that user has answered
+        for (let i = 0; i < questionsObj.length; ++i) {
+            var question = questionsObj[i];
+
+            // csv format: 3 columns
+            // question, response, recommendation
+
+            // user responses here
+            var user_response_ids;
+
+            // the
+            var response = results[question.name];
+
+            // If there are more than one response, filter
+            if (Array.isArray(response)) {
+                user_response_ids = question?.choices?.filter((choice) => response?.includes(choice?.value));
+            } else {
+                user_response_ids = question?.choices?.filter((choice) => response === choice?.value);
+            }
+
+            // if we have any responses left
+            if (user_response_ids) {
+                for (let j = 0; j < user_response_ids.length; ++j) {
+
+                    var questionText = question?.title?.default;
+                    var questionResponse = user_response_ids[j]?.text?.default;
+                    var questionRecommendation = question?.recommendation?.default;
+
+                    // we need to check that the field exists, and if it does,
+                    // replace quotes with double quotes, and surround with quotes
+                    // this will make the string csv safe
+                    // if no field, append nothing, a column will still populate
+                    if (questionText) {
+                        contentArr.push("\"" + questionText.replaceAll("\"", "\"\"") + "\"");
+                    }
+                    contentArr.push(",");
+                    if (questionResponse) {
+                        contentArr.push("\"" + questionResponse.replaceAll("\"", "\"\"") + "\"");
+                    }
+                    contentArr.push(",");
+                    if (questionRecommendation) {
+                        contentArr.push("\"" + questionRecommendation.replaceAll("\"", "\"\"") + "\"");
+                    }
+                    contentArr.push("\n");
+                }
+            }
+        }
+
+        var filename = "ReportCard.csv";
+        var blob = new Blob([contentArr.join("")], {
+            type: "text/plain;charset=utf-8"
+        });
+
+        // save to client!
+        saveAs(blob, filename);
+    }
+
     render() {
         var json = this?.props?.location?.state?.questions;
         var surveyResults = this?.props?.location?.state?.responses;
@@ -94,6 +159,7 @@ export default class Results extends Component {
                     Results
                 </h1>
                 <button id="exportButton" type="button" className="btn btn-save mr-2 btn btn-primary export-button" onClick={() => {ExportHandler(); exportReport(projectTitle, projectDescription, projectIndustry, projectRegion)}}>Export</button>
+                <button id="exportButtonCSV" type="button" className="btn btn-save mr-2 btn btn-primary export-button-csv" onClick={() => {this.downloadCSV(surveyResults, questions)}}>Export as CSV</button>
                 <Tabs defaultActiveKey="score">
                     <Tab eventKey="score" title="Score">
                         <div className="table-responsive mt-3">
