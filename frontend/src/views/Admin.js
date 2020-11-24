@@ -14,16 +14,17 @@ import axios from 'axios';
 import Login from './Login';
 import Accordion from 'react-bootstrap/Accordion';
 import Card from 'react-bootstrap/Card';
-import {Link} from 'react-router-dom';
+import DeleteUserModal from '../Components/DeleteUserModal';
 
 
 ReactGa.initialize(process.env.REACT_APP_GAID, { testMode: process.env.NODE_ENV === 'test' });
 
 const User = props => (
     <tr>
-        <td style={{textAlign:"center"}}>{props.user.email}</td>
-        <td style={{textAlign:"center"}}>{props.user.username}</td>
-        <td style={{textAlign:"center"}}>
+        <td style={{ textAlign: "center" }}>{props.user.email}</td>
+        <td style={{ textAlign: "center" }}>{props.user.username}</td>
+        <td style={{ textAlign: "center" }}>
+
             {(props.role === "superadmin") ?
                 <DropdownButton id="dropdown-item-button" title={props.user.role}>
                     <Dropdown.Item onClick={props.changeRole.bind(this, props.user._id, "member")} >Member</Dropdown.Item>
@@ -35,33 +36,13 @@ const User = props => (
 
         </td>
         <td style={{textAlign:"center"}}>{props.user?.organization}</td>
-        <td align ="center">
-        <Link to={"/ViewSubmissions/"+props.user._id}> <Button size="sm">Submissions</Button> </Link> </td>
-        <td align ="center"> <IconButton size="small" color="secondary" onClick={() => 
-            { var conf = window.confirm('Are you sure you want to delete the user?');
-                if (conf === true) 
-             var confirm = window.confirm('Would you like to delete all the submissions from this user?');
-                if(confirm === true)
-                
-                {
-                // eslint-disable-next-line
-                {(props.deleteUserSubmission(props.user._id))} 
-                // eslint-disable-next-line
-                {(props.deleteUser(props.user._id))} 
-                window.alert("User and their submissions are deleted.")
-                }
-                else
-                {
-                    var con = window.confirm('Would you just like to delete the user and keep their submission?');
-
-                    if (con === true)
-                    {
-                    (props.deleteUser(props.user._id))
-                    window.alert("User deleted.")
-                    }
-                }
-            
-            }}><DeleteIcon style={{ color: red[500] }}/> </IconButton></td>
+        <td align="center">
+            <Button size="sm" onClick={() => props.nextPath("/ViewSubmissions/" + props.user._id)}>View</Button>
+        </td>
+        <td align="center">
+            <IconButton size="small" color="secondary" onClick={() => props.showModal(props.user)
+            }><DeleteIcon style={{ color: red[500] }} /> </IconButton>
+        </td>
     </tr>
 )
 
@@ -69,9 +50,14 @@ export default class AdminPanel extends Component {
     constructor(props) {
         super(props);
 
-        this.deleteUserSubmission = this.deleteUserSubmission.bind(this)
         this.deleteUser = this.deleteUser.bind(this)
+        this.deleteUserSubmission = this.deleteUserSubmission.bind(this)
+        this.deleteSubmission = this.deleteSubmission.bind(this)
         this.changeRole = this.changeRole.bind(this)
+        this.nextPath = this.nextPath.bind(this)
+        this.showModal = this.showModal.bind(this)
+        this.hideModal = this.hideModal.bind(this)
+        this.confirmDelete = this.confirmDelete.bind(this)
         this.role = undefined
 
         this.state = {
@@ -79,7 +65,9 @@ export default class AdminPanel extends Component {
             submissions: [],
             showFilter: false,
             orgFilter: "",
-            roleFilter: ""
+            roleFilter: "",
+            showDeleteUserModal: false,
+            userToDelete: null
 
         };
         this.handleTabChange = this.handleTabChange.bind(this);
@@ -180,7 +168,7 @@ export default class AdminPanel extends Component {
             return this.state.users.map(currentuser => {
                 if (this.state.roleFilter === "" || currentuser.role?.toLowerCase() === this.state.roleFilter?.toLowerCase())
                     if (this.state.orgFilter === "" || currentuser.organization?.toLowerCase() === this.state.orgFilter?.toLowerCase())
-                        return <User user={currentuser} deleteUser={this.deleteUser} deleteUserSubmission={this.deleteUserSubmission} changeRole={this.changeRole} role={this.role} key={currentuser._id} />;
+                        return <User user={currentuser} nextPath={this.nextPath} changeRole={this.changeRole} showModal={this.showModal} role={this.role} key={currentuser._id} />;
                 return null;
             })
         }
@@ -221,14 +209,31 @@ export default class AdminPanel extends Component {
         let orgFilter = form.orgFilter.value;
         let roleFilter = form.roleFilter.value;
         this.setState({ orgFilter: orgFilter, roleFilter: roleFilter });
-
-
     }
+
+    showModal(user) {
+        this.setState({ userToDelete: user, showDeleteUserModal: true });
+    }
+
+    hideModal() {
+        this.setState({ userToDelete: null, showDeleteUserModal: false });
+    }
+
+    confirmDelete(deleteSubmissions) {
+        if (deleteSubmissions) {
+            this.deleteUserSubmission(this.state.userToDelete._id)
+        }
+        this.deleteUser(this.state.userToDelete._id)
+        this.hideModal();
+    }
+
+    
 
     render() {
         return (
             <div>
                 <div className="dimensionNav">
+                <DeleteUserModal onHide={this.hideModal} confirmDelete={this.confirmDelete} show={this.state.showDeleteUserModal} user={this.state?.userToDelete} />
                     {!this.state.showFilter ? null :
                         <Accordion>
                             <Card>
@@ -277,16 +282,16 @@ export default class AdminPanel extends Component {
                                                 Email
                                         </th>
                                             <th className="score-card-headers" style={{textAlign:"center"}}>
-                                                User Name
+                                                Name
                                         </th>
                                             <th className="score-card-headers" style={{textAlign:"center"}}>
-                                                User Role
+                                                Role
                                         </th>
                                             <th className="score-card-headers" style={{textAlign:"center"}}>
-                                                User Organization
+                                                Organization
                                         </th>
                                             <th className="score-card-headers" style={{textAlign:"center"}}>
-                                               
+                                                Submissions
                                         </th>
                                         <th className="score-card-headers" style={{textAlign:"center"}}>
                                                
