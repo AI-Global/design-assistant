@@ -41,7 +41,7 @@ const User = props => (
             <Button size="sm" onClick={() => props.nextPath("/ViewSubmissions/" + props.user._id)}>View</Button>
         </td>
         <td align="center">
-            <IconButton size="small" color="secondary" onClick={() => props.showModal(props.user)
+            <IconButton size="small" style={{paddingTop: "0.60em" }} color="secondary" onClick={() => props.showModal(props.user)
             }><DeleteIcon style={{ color: red[500] }} /> </IconButton>
         </td>
     </tr>
@@ -188,7 +188,7 @@ export default class AdminPanel extends Component {
                     <td style={{textAlign:"center"}}>{convertedDate}</td>
                     <td style={{textAlign:"center"}}>{currentsubmission.completed ? "Yes" : "No"}</td>
                     <td style={{textAlign:"center"}}><Button size="sm" onClick={() => this.nextPath('/Results/', currentsubmission.submission ?? {})}> Responses</Button></td> 
-                    <td align ="center"> <IconButton size="small" color="secondary" onClick={() => { this.showDeleteSubmisionModal(currentsubmission)}}><DeleteIcon style={{ color: red[500] }}/> </IconButton></td>
+                    <td align ="center"> <IconButton size="small" style={{paddingTop: "0.60em" }} color="secondary" onClick={() => { this.showDeleteSubmisionModal(currentsubmission)}}><DeleteIcon style={{ color: red[500]}}/> </IconButton></td>
                 </tr>
             )
         })
