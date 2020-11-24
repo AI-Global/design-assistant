@@ -37,9 +37,8 @@ export default function QuestionModal(props) {
     const [dimension, setDimension] = useState(props.question.trustIndexDimension)
     const [weight, setWeight] = useState(props.question.weighting)
     const [questionType, setQType] = useState(props.question.questionType)
-    // TODO: change this to props value when DB set up
-    const [questionLink, setLink] = useState('')
-    // const [questionLink, setLink] = useState(props.question.questionLink)
+    const [questionLink, setLink] = useState(props.question.rec_links?.join(', '))
+    console.log(questionLink)
 
     // Hook for showing delet quesiton warning
     const [warningShow, setWarningShow] = useState(false)
@@ -99,8 +98,7 @@ export default function QuestionModal(props) {
         setTrigger(props.question.trigger)
         setDomain(props.question.questionDomain)
         setRegion(props.question.questionRegion)
-        // TODO: uncomment this when db changes made
-        // setLink(props.question.questionLink)
+        setLink(props.question.rec_links)
         setInvalid(false)
         props.onHide()
     }
@@ -126,8 +124,7 @@ export default function QuestionModal(props) {
             props.question.trigger = trigger
             props.question.questionDomain = questionDomain
             props.question.questionRegion = questionRegion
-            // TODO: uncomment this when db changes made
-            // props.question.questionLink = questionLink
+            props.question.rec_links = questionLink
 
             if (props.mode === "edit") {
                 endPoint = '/questions/' + props.question._id;
@@ -170,8 +167,7 @@ export default function QuestionModal(props) {
                 props.question.trigger = trigger
                 props.question.questionDomain = [6]
                 props.question.questionRegion = [8]
-                // TODO: uncomment this when db changes made
-                // props.question.questionLink = null
+                props.question.rec_links = []
                 close()
             }
         }
@@ -245,7 +241,7 @@ export default function QuestionModal(props) {
     if (!dimensions) {
         return null;
     }
-
+    
     return (
         <React.Fragment>
             <Modal
@@ -467,7 +463,7 @@ export default function QuestionModal(props) {
                                 <Row>
                                     <Col xs={12} md={12}>
                                         <Form.Group controlId="Link">
-                                            <Form.Label>Link</Form.Label>
+                                            <Form.Label>Links</Form.Label>
                                             <Form.Control placeholder="Link" value={questionLink || ""} onChange={(event) => setLink(event.target.value)}/>
                                         </Form.Group>
                                     </Col>
