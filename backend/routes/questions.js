@@ -85,6 +85,12 @@ function formatQuestion(q, Dimensions, Triggers = null) {
         question.recommendation.fr = "";
     }
 
+    if (q.rec_links){
+        question.recommendedlinks = {};
+        question.recommendedlinks.default = q.rec_links;
+        question.recommendedlinks.fr = "";
+    }
+
     if (question.type == "dropdown") {
         question.hasOther = true;
         question.choice = [];
