@@ -88,7 +88,7 @@ const QuestionSchema = mongoose.Schema({
         }
     },
     rec_links: {
-        type: String
+        type: [String]
     }
 
     // TODO: Add test of schema to model
