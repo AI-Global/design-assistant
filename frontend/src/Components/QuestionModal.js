@@ -37,9 +37,7 @@ export default function QuestionModal(props) {
     const [dimension, setDimension] = useState(props.question.trustIndexDimension)
     const [weight, setWeight] = useState(props.question.weighting)
     const [questionType, setQType] = useState(props.question.questionType)
-    // TODO: change this to props value when DB set up
-    const [questionLink, setLink] = useState('')
-    // const [questionLink, setLink] = useState(props.question.questionLink)
+    const [questionLink, setLink] = useState(props.question?.rec_links?.join(", "))
 
     // Hook for showing delet quesiton warning
     const [warningShow, setWarningShow] = useState(false)
@@ -99,8 +97,7 @@ export default function QuestionModal(props) {
         setTrigger(props.question.trigger)
         setDomain(props.question.domainApplicability)
         setRegion(props.question.regionalApplicability)
-        // TODO: uncomment this when db changes made
-        // setLink(props.question.questionLink)
+        setLink(props.question.rec_links)
         setInvalid(false)
         props.onHide()
     }
@@ -126,8 +123,10 @@ export default function QuestionModal(props) {
             props.question.trigger = trigger
             props.question.domainApplicability = questionDomain
             props.question.regionalApplicability = questionRegion
-            // TODO: uncomment this when db changes made
-            // props.question.questionLink = questionLink
+            props.question.rec_links = questionLink.split(",")
+            for (let i in props.question.rec_links){
+                props.question.rec_links[i] = props.question.rec_links[i].trim()
+            }
 
             if (props.mode === "edit") {
                 endPoint = '/questions/' + props.question._id;
@@ -171,8 +170,7 @@ export default function QuestionModal(props) {
                 props.question.trigger = trigger
                 props.question.domainApplicability = []
                 props.question.regionalApplicability = []
-                // TODO: uncomment this when db changes made
-                // props.question.questionLink = null
+                props.question.rec_links = []
                 close()
             }
         }
@@ -247,7 +245,7 @@ export default function QuestionModal(props) {
     if (!dimensions) {
         return null;
     }
-
+    
     return (
         <React.Fragment>
             <Modal

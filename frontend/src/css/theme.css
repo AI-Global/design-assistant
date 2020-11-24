@@ -116,6 +116,28 @@ main h1, main h2, main .h1, main .h2 {
   margin-bottom: 11.5px !important;
 }
 
+.noUi-target, noUi-ltr, noUi-horizontal{
+  width:50%;
+}
+
+.noUi-value, .noUi-value-horizontal, .noUi-value-large {
+  visibility: hidden;
+}
+
+.noUi-value[style*="left: 100%"]::after, noUi-value-horizontal[style*="left: 100%"]::after, noUi-value-large[style*="left: 100%"]::after{
+  content: "High "!important;
+  color: black;
+  visibility: visible;
+  margin-right: 1.5rem;
+}
+
+.noUi-value[style*="left: 0%"]::after, noUi-value-horizontal[style*="left: 0%"]::after, noUi-value-large[style*="left: 0%"]::after{
+  content: "Low "!important;
+  color: black;
+  visibility: visible;
+  margin-right: 0.4rem;
+}
+
 .info-tooltip {
   color: #007bff;
 }

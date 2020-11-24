@@ -6,24 +6,13 @@ import Login from './views/Login';
 import UserSubmissions from './views/UserSubmissions';
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import "bootstrap-slider/dist/css/bootstrap-slider.min.css";
+import "nouislider/distribute/nouislider.min.css";
 
 require('dotenv').config();
 
 ReactGa.initialize(process.env.REACT_APP_GAID, { testMode: process.env.NODE_ENV === 'test' });
 
-const StartSurveyHandler = () => {
-  ReactGa.event({
-    category: 'Button',
-    action: 'Clicked the Start Survey Button'
-  })
-}
-
 class App extends Component {
-
-  constructor(props) {
-    super(props);
-  }
 
   componentDidMount() {
 

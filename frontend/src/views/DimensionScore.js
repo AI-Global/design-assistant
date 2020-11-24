@@ -7,7 +7,7 @@ const QuestionTypes =
 {
     checkbox: "checkbox",
     radiogroup: "radiogroup",
-    slider: "bootstrapslider"
+    slider: "nouislider"
 }
 
 /**

@@ -85,6 +85,12 @@ function formatQuestion(q, Dimensions, Triggers = null) {
         question.recommendation.fr = "";
     }
 
+    if (q.rec_links){
+        question.recommendedlinks = {};
+        question.recommendedlinks.default = q.rec_links;
+        question.recommendedlinks.fr = "";
+    }
+
     if (question.type == "dropdown") {
         question.hasOther = true;
         question.choice = [];
@@ -127,8 +133,8 @@ function formatQuestion(q, Dimensions, Triggers = null) {
         }
 
     } else if (question.type == "slider") {
-        // Set type to bootstrap slider 
-        question.type = "bootstrapslider"
+        // Set type to nouislider 
+        question.type = "nouislider"
 
         if (q.pointsAvailable) {
             question.score = {};
@@ -144,9 +150,9 @@ function formatQuestion(q, Dimensions, Triggers = null) {
         }
 
         // Low Medium and High
-        question.step = 1;
-        question.rangeMin = 0;
-        question.rangeMax = 100;
+        question.pipsValues = [0,100] 
+        question.pipsDensity = 100
+        question.tooltips = false
     }
 
     return question;

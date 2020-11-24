@@ -42,43 +42,10 @@ class UserSubmissions extends Component {
     }
 
     startSurvey() {
-        // initialize and save new submission (blank)
-        // append to state.submissions
-        // set index to point to this submission
-
-        // how to get projectName of the survey?
-        // and if we get project name 
-
-        let user = this.state.user;
-        let submission = {};
-        let dateTime = new Date();
-
-        var endPoint = '/submissions/';
-        axios.post(process.env.REACT_APP_SERVER_ADDR + endPoint, {
-            userId: user?._id ?? null,
-            projectName: "",
-            date: dateTime,
-            lifecycle: [],
-            domain: [],
-            region: [],
-            roles: [],
-            submission: submission,
-            completed: false
+        this.props.history.push({
+            pathname: '/DesignAssistantSurvey',
+            state: { user_id: this.state?.user?._id }
         })
-            .then(res => {
-                // update this.state.submissions object here
-                let newSubmission = res.data;
-                let submissions = this.state.submissions;
-                submissions.push(newSubmission);
-                this.setState({ submissions: submissions })
-                this.setState({ currentSubmissionIdx: this.state.submissions.length - 1 });
-                // push to survey route and pass new submission_is so progress can be saved
-                this.props.history.push({
-                    pathname: '/DesignAssistantSurvey',
-                    state: { submission_id: res.data._id }
-                })
-
-            });
     }
 
     resumeSurvey(index) {
@@ -148,10 +115,13 @@ class UserSubmissions extends Component {
         var endPoint = '/submissions/';
         axios.post(process.env.REACT_APP_SERVER_ADDR + endPoint, {
             userId: user?._id ?? null,
-            projectName: submission?.projectName,
+            projectName: submission?.projectName ?? "",
             date: dateTime,
-            lifecycle: 6,
-            submission: submission?.submission,
+            lifecycle: submission?.lifecycle,
+            domain: submission?.domain,
+            region: submission?.region,
+            roles: submission?.roles,
+            submission: submission?.submission ?? {},
             completed: false
         })
             .then(res => {
