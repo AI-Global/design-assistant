@@ -15,6 +15,7 @@ import Login from './Login';
 import Accordion from 'react-bootstrap/Accordion';
 import Card from 'react-bootstrap/Card';
 import DeleteUserModal from '../Components/DeleteUserModal';
+import DeleteSubmissionModal from '../Components/DeleteSubmissionModal';
 
 
 ReactGa.initialize(process.env.REACT_APP_GAID, { testMode: process.env.NODE_ENV === 'test' });
@@ -55,9 +56,11 @@ export default class AdminPanel extends Component {
         this.deleteSubmission = this.deleteSubmission.bind(this)
         this.changeRole = this.changeRole.bind(this)
         this.nextPath = this.nextPath.bind(this)
-        this.showModal = this.showModal.bind(this)
+        this.showDeleteUserModal = this.showDeleteUserModal.bind(this)
+        this.showDeleteSubmisionModal = this.showDeleteSubmisionModal.bind(this)
         this.hideModal = this.hideModal.bind(this)
-        this.confirmDelete = this.confirmDelete.bind(this)
+        this.confirmDeleteUser = this.confirmDeleteUser.bind(this)
+        this.confirmDeleteSubmission = this.confirmDeleteSubmission.bind(this)
         this.role = undefined
 
         this.state = {
@@ -66,9 +69,10 @@ export default class AdminPanel extends Component {
             showFilter: false,
             orgFilter: "",
             roleFilter: "",
+            showDeleteSubmissionModal: false,
             showDeleteUserModal: false,
-            userToDelete: null
-
+            userToDelete: null,
+            submissionToDelete: null
         };
         this.handleTabChange = this.handleTabChange.bind(this);
     }
@@ -168,7 +172,7 @@ export default class AdminPanel extends Component {
             return this.state.users.map(currentuser => {
                 if (this.state.roleFilter === "" || currentuser.role?.toLowerCase() === this.state.roleFilter?.toLowerCase())
                     if (this.state.orgFilter === "" || currentuser.organization?.toLowerCase() === this.state.orgFilter?.toLowerCase())
-                        return <User user={currentuser} nextPath={this.nextPath} changeRole={this.changeRole} showModal={this.showModal} role={this.role} key={currentuser._id} />;
+                        return <User user={currentuser} nextPath={this.nextPath} changeRole={this.changeRole} showModal={this.showDeleteUserModal} role={this.role} key={currentuser._id} />;
                 return null;
             })
         }
@@ -184,7 +188,7 @@ export default class AdminPanel extends Component {
                     <td style={{textAlign:"center"}}>{convertedDate}</td>
                     <td style={{textAlign:"center"}}>{currentsubmission.completed ? "Yes" : "No"}</td>
                     <td style={{textAlign:"center"}}><Button size="sm" onClick={() => this.nextPath('/Results/', currentsubmission.submission ?? {})}> Responses</Button></td> 
-                    <td align ="center"> <IconButton size="small" color="secondary" onClick={() => { if (window.confirm('Are you sure you want to delete the submission?')) { (this.deleteSubmission(currentsubmission._id)) } }}><DeleteIcon style={{ color: red[500] }}/> </IconButton></td>
+                    <td align ="center"> <IconButton size="small" color="secondary" onClick={() => { this.showDeleteSubmisionModal(currentsubmission)}}><DeleteIcon style={{ color: red[500] }}/> </IconButton></td>
                 </tr>
             )
         })
@@ -211,20 +215,28 @@ export default class AdminPanel extends Component {
         this.setState({ orgFilter: orgFilter, roleFilter: roleFilter });
     }
 
-    showModal(user) {
+    showDeleteUserModal(user) {
         this.setState({ userToDelete: user, showDeleteUserModal: true });
     }
 
-    hideModal() {
-        this.setState({ userToDelete: null, showDeleteUserModal: false });
+    showDeleteSubmisionModal(submission) {
+        this.setState({ submissionToDelete: submission, showDeleteSubmissionModal: true });
     }
 
-    confirmDelete(deleteSubmissions) {
+    hideModal() {
+        this.setState({ userToDelete: null, submissionToDelete: null, showDeleteUserModal: false, showDeleteSubmissionModal: false });
+    }
+
+    confirmDeleteUser(deleteSubmissions) {
         if (deleteSubmissions) {
             this.deleteUserSubmission(this.state.userToDelete._id)
         }
         this.deleteUser(this.state.userToDelete._id)
         this.hideModal();
+    }
+
+    confirmDeleteSubmission(){
+
     }
 
     
@@ -233,7 +245,8 @@ export default class AdminPanel extends Component {
         return (
             <div>
                 <div className="dimensionNav">
-                <DeleteUserModal onHide={this.hideModal} confirmDelete={this.confirmDelete} show={this.state.showDeleteUserModal} user={this.state?.userToDelete} />
+                <DeleteUserModal onHide={this.hideModal} confirmDelete={this.confirmDeleteUser} show={this.state.showDeleteUserModal} user={this.state?.userToDelete} />
+                <DeleteSubmissionModal onHide={this.hideModal} confirmDelete={this.confirmDelete} show={this.state.showDeleteSubmissionModal} submission={this.state?.submissionToDelete} />
                     {!this.state.showFilter ? null :
                         <Accordion>
                             <Card>
