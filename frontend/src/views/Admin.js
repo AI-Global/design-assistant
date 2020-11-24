@@ -7,7 +7,7 @@ import QuestionTable from '../Components/QuestionTable';
 import AnalyticsDashboard from '../Components/AnalyticsDashboard';
 import AdminProviders from '../Components/AdminProviders';
 import AdminResources from '../Components/AdminResources';
-import { Tabs, Tab, Button, Table as BootStrapTable, DropdownButton, Dropdown, Form } from 'react-bootstrap';
+import { Tabs, Tab, Button, DropdownButton, Dropdown, Form } from 'react-bootstrap';
 import { getLoggedInUser } from '../helper/AuthHelper';
 import ReactGa from 'react-ga';
 import axios from 'axios';
@@ -85,7 +85,10 @@ export default class AdminPanel extends Component {
             submissionToDelete: null,
             usersPage: 0,
             usersRowsPerPage: 10,
-            usersCount: 0
+            usersCount: 0,
+            submissionsPage: 0,
+            submissionsCount: 0,
+            submissionsRowsPerPage: 10
         };
         this.handleTabChange = this.handleTabChange.bind(this);
     }
@@ -179,21 +182,26 @@ export default class AdminPanel extends Component {
             });
     }
 
+    usersList() {
+        return !(Array.isArray(this.state.users)) ? null :
+            this.getFilteredUsers().slice(this.state.usersPage * this.state.usersRowsPerPage, this.state.usersPage * this.state.usersRowsPerPage + this.state.usersRowsPerPage).map(currentuser => {
+                return <User user={currentuser} nextPath={this.nextPath} changeRole={this.changeRole} showModal={this.showDeleteUserModal} role={this.role} key={currentuser._id} />;
+            })
+    }
+
     submissionList() {
-        return this.state.submissions.map((currentsubmission, idx) => {
+        return this.getFilteredSubmissions().slice(this.state.submissionsPage * this.state.submissionsRowsPerPage, this.state.submissionsPage * this.state.submissionsRowsPerPage + this.state.submissionsRowsPerPage).map((currentsubmission, idx) => {
             let convertedDate = new Date(currentsubmission.date).toLocaleString("en-US", { timeZone: Intl.DateTimeFormat()?.resolvedOptions()?.timeZone ?? "UTC" });
-            if (this.state.userFilter === "" || currentsubmission.username?.toLowerCase() === this.state.userFilter?.toLowerCase())
-                if (this.state.projectFilter === "" || currentsubmission.projectName?.toLowerCase() === this.state.projectFilter?.toLowerCase())
-                    return (
-                        <TableRow key={idx}>
-                            <TableCell style={{ textAlign: "center" }}>{currentsubmission.username}</TableCell>
-                            <TableCell style={{ textAlign: "center" }}>{currentsubmission.projectName}</TableCell>
-                            <TableCell style={{ textAlign: "center" }}>{convertedDate}</TableCell>
-                            <TableCell style={{ textAlign: "center" }}>{currentsubmission.completed ? "Yes" : "No"}</TableCell>
-                            <TableCell style={{ textAlign: "center" }}><Button size="sm" onClick={() => this.nextPath('/Results/', currentsubmission.submission ?? {})}> Responses</Button></TableCell>
-                            <TableCell align="center"> <IconButton size="small" style={{ paddingTop: "0.60em" }} color="secondary" onClick={() => { this.showDeleteSubmisionModal(currentsubmission) }}><DeleteIcon style={{ color: red[500] }} /> </IconButton></TableCell>
-                        </TableRow>
-                    )
+            return (
+                <TableRow key={idx}>
+                    <TableCell style={{ textAlign: "center" }}>{currentsubmission.username}</TableCell>
+                    <TableCell style={{ textAlign: "center" }}>{currentsubmission.projectName}</TableCell>
+                    <TableCell style={{ textAlign: "center" }}>{convertedDate}</TableCell>
+                    <TableCell style={{ textAlign: "center" }}>{currentsubmission.completed ? "Yes" : "No"}</TableCell>
+                    <TableCell style={{ textAlign: "center" }}><Button size="sm" onClick={() => this.nextPath('/Results/', currentsubmission.submission ?? {})}> Responses</Button></TableCell>
+                    <TableCell align="center"> <IconButton size="small" style={{ paddingTop: "0.60em" }} color="secondary" onClick={() => { this.showDeleteSubmisionModal(currentsubmission) }}><DeleteIcon style={{ color: red[500] }} /> </IconButton></TableCell>
+                </TableRow>
+            )
         })
     }
 
@@ -217,7 +225,7 @@ export default class AdminPanel extends Component {
         let form = event.target.elements;
         let orgFilter = form.orgFilter.value;
         let roleFilter = form.roleFilter.value;
-        this.setState({ orgFilter: orgFilter, roleFilter: roleFilter });
+        this.setState({ orgFilter: orgFilter, roleFilter: roleFilter, usersPage:0, submissionsPage:0 });
     }
 
     handleSubmissionFilters(event) {
@@ -261,12 +269,30 @@ export default class AdminPanel extends Component {
         this.setState({ usersPage: 0, usersRowsPerPage: event.target.value });
     };
 
+    handleSubmissionsChangePage = (event, submissionsPage) => {
+        this.setState({ submissionsPage });
+    };
+
+    handleSubmissionsChangeRowsPerPage = event => {
+        this.setState({ submissionsPage: 0, submissionsRowsPerPage: event.target.value });
+    };
+
     getFilteredUsers() {
         let filtered = []
         this.state.users.forEach(user => {
             if (this.state.roleFilter === "" || user.role?.toLowerCase() === this.state.roleFilter?.toLowerCase())
                 if (this.state.orgFilter === "" || user.organization?.toLowerCase() === this.state.orgFilter?.toLowerCase())
                     filtered.push(user)
+        })
+        return filtered;
+    }
+
+    getFilteredSubmissions() {
+        let filtered = []
+        this.state.submissions.forEach(currentsubmission => {
+            if (this.state.userFilter === "" || currentsubmission.username?.toLowerCase() === this.state.userFilter?.toLowerCase())
+                if (this.state.projectFilter === "" || currentsubmission.projectName?.toLowerCase() === this.state.projectFilter?.toLowerCase())
+                    filtered.push(currentsubmission)
         })
         return filtered;
     }
@@ -374,19 +400,11 @@ export default class AdminPanel extends Component {
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {!(Array.isArray(this.state.users)) ? null :
-                                            this.getFilteredUsers().slice(this.state.usersPage * this.state.usersRowsPerPage, this.state.usersPage * this.state.usersRowsPerPage + this.state.usersRowsPerPage).map(currentuser => {
-                                                if (this.state.roleFilter === "" || currentuser.role?.toLowerCase() === this.state.roleFilter?.toLowerCase())
-                                                    if (this.state.orgFilter === "" || currentuser.organization?.toLowerCase() === this.state.orgFilter?.toLowerCase()) {
-                                                        return <User user={currentuser} nextPath={this.nextPath} changeRole={this.changeRole} showModal={this.showDeleteUserModal} role={this.role} key={currentuser._id} />;
-                                                    }
-                                                return null;
-                                            })
-                                        }
+                                        {this.usersList()}
                                     </TableBody>
                                     <TableFooter>
                                         <TableRow>
-                                            <TablePagination count={this.getFilteredUsers().length} rowsPerPage={this.state.usersRowsPerPage} page={this.state.usersPage} onChangePage={this.handleUsersChangePage} onChangeRowsPerPage={this.handleUsersChangeRowsPerPage}/>
+                                            <TablePagination count={this.getFilteredUsers().length} rowsPerPage={this.state.usersRowsPerPage} page={this.state.usersPage} onChangePage={this.handleUsersChangePage} onChangeRowsPerPage={this.handleUsersChangeRowsPerPage} />
                                         </TableRow>
                                     </TableFooter>
                                 </Table>
@@ -416,12 +434,16 @@ export default class AdminPanel extends Component {
                                             <TableCell className="score-card-headers" style={{ textAlign: "center" }}>
                                                 Action
                                         </TableCell>
-
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
                                         {this.submissionList()}
                                     </TableBody>
+                                    <TableFooter>
+                                        <TableRow>
+                                            <TablePagination count={this.getFilteredSubmissions().length} rowsPerPage={this.state.submissionsRowsPerPage} page={this.state.submissionsPage} onChangePage={this.handleSubmissionsChangePage} onChangeRowsPerPage={this.handleSubmissionsChangeRowsPerPage} />
+                                        </TableRow>
+                                    </TableFooter>
                                 </Table>
                             </div>
                         </Tab>
