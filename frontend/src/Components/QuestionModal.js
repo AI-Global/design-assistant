@@ -25,15 +25,15 @@ export default function QuestionModal(props) {
 
     // Set all question properties as hooks for rendering and updating
     const [altText, setAltText] = useState(props.question.alt_text)
-    const [questionDomain, setDomain] = useState(props.question.domainApplicability)
-    const [questionLifecycle, setLifecycle] = useState(props.question.lifecycle)
+    const [questionDomain, setDomain] = useState(props.question.domainApplicability ? props.question.domainApplicability : [] )
+    const [questionLifecycle, setLifecycle] = useState(props.question.lifecycle ? props.question.lifecycle : [])
     const [points, setPoints] = useState(props.question.pointsAvailable)
     const [question, setQuestion] = useState(props.question.question)
     const [questionRef, setRef] = useState(props.question.reference)
-    const [questionRegion, setRegion] = useState(props.question.regionalApplicability)
+    const [questionRegion, setRegion] = useState(props.question.regionalApplicability ? props.question.regionalApplicability : [])
     const [responseType, setType] = useState(props.question.responseType)
     const [responses, setResponses] = useState(responsesA)
-    const [questionRole, setRole] = useState(props.question.roles)
+    const [questionRole, setRole] = useState(props.question.roles ? props.question.roles : [])
     const [dimension, setDimension] = useState(props.question.trustIndexDimension)
     const [weight, setWeight] = useState(props.question.weighting)
     const [questionType, setQType] = useState(props.question.questionType)
@@ -198,7 +198,7 @@ export default function QuestionModal(props) {
     }
 
     function updateRole(index) {
-        if (questionRole.includes(index)) {
+        if (questionRole?.includes(index)) {
             const i = questionRole.indexOf(index)
             questionRole.splice(i, 1)
         }
@@ -210,7 +210,7 @@ export default function QuestionModal(props) {
     }
 
     function updateDomain(index) {
-        if (questionDomain.includes(index)) {
+        if (questionDomain?.includes(index)) {
             const i = questionDomain.indexOf(index)
             questionDomain.splice(i, 1)
         }
@@ -221,7 +221,7 @@ export default function QuestionModal(props) {
     }
 
     function updateRegion(index) {
-        if (questionRegion.includes(index)) {
+        if (questionRegion?.includes(index)) {
             const i = questionRegion.indexOf(index)
             questionRegion.splice(i, 1)
         }
@@ -232,7 +232,7 @@ export default function QuestionModal(props) {
     }
 
     function updateLifecycle(index) {
-        if (questionLifecycle.includes(index)) {
+        if (questionLifecycle?.includes(index)) {
             const i = questionLifecycle.indexOf(index)
             questionLifecycle.splice(i, 1)
         }
@@ -411,7 +411,7 @@ export default function QuestionModal(props) {
                                         <Form.Label>Role</Form.Label>
                                         <Card className="select-list-box">
                                             {roles.map((role, index) =>
-                                                <Form.Check type='checkbox' checked={questionRole.includes(index + 1)} label={role.name} id={'role'+role.name} key={index} value={index + 1} onChange={(e) => updateRole(parseInt(e.target.value))} />
+                                                <Form.Check type='checkbox' checked={questionRole?.includes(index + 1)} label={role.name} id={'role'+role.name} key={index} value={index + 1} onChange={(e) => updateRole(parseInt(e.target.value))} />
                                             )}
                                         </Card>
                                     </Form.Group>
@@ -421,7 +421,7 @@ export default function QuestionModal(props) {
                                         <Form.Label>Domain</Form.Label>
                                         <Card className="select-list-box">
                                             {domains.map((domain, index) =>
-                                                <Form.Check type='checkbox' checked={questionDomain.includes(index + 1)} label={domain.name} id={'domain-'+domain.name} key={index} value={index + 1} onChange={(e) => updateDomain(parseInt(e.target.value))} />
+                                                <Form.Check type='checkbox' checked={questionDomain?.includes(index + 1)} label={domain.name} id={'domain-'+domain.name} key={index} value={index + 1} onChange={(e) => updateDomain(parseInt(e.target.value))} />
                                             )}
                                         </Card>
                                     </Form.Group>
@@ -431,7 +431,7 @@ export default function QuestionModal(props) {
                                         <Form.Label>Region</Form.Label>
                                         <Card className="select-list-box">
                                             {regions.map((region, index) =>
-                                                <Form.Check type='checkbox' checked={questionRegion.includes(index + 1)} label={region.name} id={'region-'+region.name} key={index} value={index + 1} onChange={(e) => updateRegion(parseInt(e.target.value))} />
+                                                <Form.Check type='checkbox' checked={questionRegion?.includes(index + 1)} label={region.name} id={'region-'+region.name} key={index} value={index + 1} onChange={(e) => updateRegion(parseInt(e.target.value))} />
                                             )}
                                         </Card>
                                     </Form.Group>
@@ -441,7 +441,7 @@ export default function QuestionModal(props) {
                                         <Form.Label>Life-Cycle</Form.Label>
                                         <Card className="select-list-box">
                                             {lifecycles.map((lifecycle, index) =>
-                                                <Form.Check type='checkbox' checked={questionLifecycle.includes(index + 1)} label={lifecycle.name} id={'lifecycle-'+lifecycle.name} key={index} value={index + 1} onChange={(e) => updateLifecycle(parseInt(e.target.value))} />
+                                                <Form.Check type='checkbox' checked={questionLifecycle?.includes(index + 1)} label={lifecycle.name} id={'lifecycle-'+lifecycle.name} key={index} value={index + 1} onChange={(e) => updateLifecycle(parseInt(e.target.value))} />
                                             )}
                                         </Card>
                                     </Form.Group>
