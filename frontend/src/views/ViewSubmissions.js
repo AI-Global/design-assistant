@@ -5,6 +5,7 @@ import ReactGa from 'react-ga';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { red } from '@material-ui/core/colors';
+import DeleteSubmissionModal from '../Components/DeleteSubmissionModal';
 
 
 ReactGa.initialize(process.env.REACT_APP_GAID, { testMode: process.env.NODE_ENV === 'test' });
@@ -15,11 +16,15 @@ export default class ViewSubmissions extends Component {
     constructor(props) {
         super(props);
         this.deleteSubmission = this.deleteSubmission.bind(this)
+        this.showDeleteSubmisionModal = this.showDeleteSubmisionModal.bind(this)
+        this.hideModal = this.hideModal.bind(this)
+        this.confirmDeleteSubmission = this.confirmDeleteSubmission.bind(this)
 
         this.state = {
             submissions: [],
-            users: []
-
+            users: [],
+            showDeleteSubmissionModal: false,
+            submissionToDelete: null
         };
     }
 
@@ -49,7 +54,7 @@ export default class ViewSubmissions extends Component {
                         .then(response => {
                             var resp = response.data.submissions;
                             resp = resp.map(submission => {
-                                submission.userId = this.state.users.find(user => user._id === submission.userId)?.username ?? "No User";
+                                submission.username = this.state.users.find(user => user._id === submission.userId)?.username ?? "No User";
                                 return submission
                             });
     
@@ -81,22 +86,34 @@ export default class ViewSubmissions extends Component {
         })
     }
 
+    showDeleteSubmisionModal(submission) {
+        this.setState({ submissionToDelete: submission, showDeleteSubmissionModal: true });
+    }
+
+    hideModal() {
+        this.setState({submissionToDelete: null, showDeleteSubmissionModal: false });
+    }
+
+    showDeleteSubmisionModal(submission) {
+        this.setState({ submissionToDelete: submission, showDeleteSubmissionModal: true });
+    }
+
+    confirmDeleteSubmission(){
+        this.deleteSubmission(this.state.submissionToDelete._id);
+        this.hideModal();
+    }
+
     submissionList() {
         return this.state.submissions.map((currentsubmission, idx) => {
             let convertedDate = new Date(currentsubmission.date).toLocaleString("en-US", { timeZone: Intl.DateTimeFormat()?.resolvedOptions()?.timeZone ?? "UTC" });
             return (
                 <tr key={idx}>
-                    <td style={{ textAlign: "center" }}>{currentsubmission.userId}</td>
+                    <td style={{ textAlign: "center" }}>{currentsubmission.username}</td>
                     <td style={{ textAlign: "center" }}>{currentsubmission.projectName}</td>
                     <td style={{ textAlign: "center" }}>{convertedDate}</td>
                     <td style={{ textAlign: "center" }}>{currentsubmission.completed ? "Yes" : "No"}</td>
                     <td align ="center"> <Button size="sm" onClick={() => this.nextPath('/Results/', currentsubmission.submission ?? {})}> Responses</Button> </td>
-                    <td align ="center"> <IconButton size="small" color="secondary" onClick={() => { if (window.confirm('Are you sure you want to delete the submission?')) { (this.deleteSubmission(currentsubmission._id)) } }}><DeleteIcon style={{ color: red[500] }}/> </IconButton></td>
-                    
-
-
-
-
+                    <td align ="center"> <IconButton size="small" color="secondary" onClick={() => { this.showDeleteSubmisionModal(currentsubmission)}}><DeleteIcon style={{ color: red[500] }}/> </IconButton></td>
                 </tr>
             )
         })
@@ -108,6 +125,7 @@ export default class ViewSubmissions extends Component {
     render() {
         return (
             <main id="wb-cont" role="main" property="mainContentOfPage" className="container" style={{ paddingBottom: "1rem" }}>
+                <DeleteSubmissionModal onHide={this.hideModal} confirmDelete={this.confirmDeleteSubmission} show={this.state.showDeleteSubmissionModal} submission={this.state?.submissionToDelete} />
                 <h1 className="section-header">
                     Administration
                 </h1>
