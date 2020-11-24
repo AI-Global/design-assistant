@@ -14,14 +14,19 @@ export default function DeleteUserModal(props) {
             centered
             show={props.show}
             onHide={props.onHide}>
+            <Modal.Header id="contained-modal-title-vcenter">
+                <Modal.Title>
+                Delete {props.user?.username}
+                </Modal.Title>
+            </Modal.Header>
             <Modal.Body>
                 <Form>
                     <Form.Group>
                         <div className="container">
                             <div className="row">
+                            <Form.Label> Delete all submissions from {props.user?.username}?</Form.Label>
                                 <div className="col text-center">
-                                <Form.Label> Delete {props.user?.username}'s Submissions?</Form.Label>
-                                    <div key='inline-radio' className="mb-3" style={{ paddingTop: "1.5em" }}>
+                                    <div key='inline-radio' className="mb-3">
                                         <Form.Check inline label="Yes" type='radio' id='inline-radio-1' checked={deleteSubmissions} onChange={() => setDeleteSubmissions(true)} />
                                         <Form.Check inline label="No" type='radio' id='inline-radio-2' checked={!deleteSubmissions} onChange={() => setDeleteSubmissions(false)} />
                                     </div>
