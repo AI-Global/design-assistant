@@ -37,7 +37,7 @@ export default function QuestionModal(props) {
     const [dimension, setDimension] = useState(props.question.trustIndexDimension)
     const [weight, setWeight] = useState(props.question.weighting)
     const [questionType, setQType] = useState(props.question.questionType)
-    const [questionLink, setLink] = useState(props.question?.rec_links.join(", "))
+    const [questionLink, setLink] = useState(props.question?.rec_links?.join(", "))
 
     // Hook for showing delet quesiton warning
     const [warningShow, setWarningShow] = useState(false)
