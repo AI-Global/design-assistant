@@ -14,6 +14,7 @@ import { Button, Form, Row, Col, Card } from 'react-bootstrap';
 export default function QuestionModal(props) {
     const responseTypes = ["text", "comment", "dropdown", "radiogroup", "checkbox", "slider"]
 
+    // get metadata from props
     const dimensions = props.dimensions
     const domains = props.metadata.domain
     const lifecycles = props.metadata.lifecycle
@@ -44,10 +45,12 @@ export default function QuestionModal(props) {
 
     // validation for question field
     const [questionValid, setInvalid] = useState(false)
-    //validation for slider points fields
+    // validation for slider points fields
     const [sliderLowValid, setSliderLowInvalid] = useState(false)
     const [sliderMedValid, setSliderMedInvalid] = useState(false)
     const [sliderHighValid, setSliderHighInvalid] = useState(false)
+
+    // hook for saving questions so useEffect isn't fired continuously on render
     const [saveQ, setSave] = useState(false);
 
     const [child, setChild] = useState(props.question.child)
@@ -62,6 +65,7 @@ export default function QuestionModal(props) {
     }
 
     function removeResponse(index) {
+        // remove a response object from the responses array
         const newResponse = responses.filter(function (e) { return e.responseNumber !== index; })
         for (var i in newResponse) {
             newResponse[i].responseNumber = parseInt(i)
@@ -71,11 +75,14 @@ export default function QuestionModal(props) {
     }
 
     function editIndicator(indicator, index, score) {
+        // edit and existing repsonse indicator
         responses[index] = { "responseNumber": index, "indicator": indicator, "score": score }
         setResponses([...responses])
     }
 
     function revertIndicators(r) {
+        // if the quesiton is closed and edits aren't save we need to loop through all repsonse
+        // indicators and reset them to the previous state
         for (var i in r) {
             r[i].responseNumber = parseInt(i)
         }
@@ -83,6 +90,7 @@ export default function QuestionModal(props) {
     }
 
     function editScore(score, index, indicator) {
+        // edits the score of an associtaed response indicator 
         responses[index] = { "responseNumber": index, "indicator": indicator, "score": score }
         setResponses([...responses])
     }
@@ -113,6 +121,8 @@ export default function QuestionModal(props) {
     }
 
     function Validate(event) {
+        // validates the form: quesiton filed must not be empty and if response type is slider, the low med high fields
+        // must be numbers, and ordered low < med< high
         event.preventDefault();
         if (responseType === 'slider') {
             !(responses[0]?.score && responses[0]?.score < responses[1]?.score && responses[0]?.score < responses[2]?.score) ? setSliderLowInvalid(true) : setSliderLowInvalid(false)
@@ -121,6 +131,7 @@ export default function QuestionModal(props) {
 
         }
         event.target.elements.question.value === "" ? setInvalid(true) : setInvalid(false)
+        // set saveQ hook to true to trigger useEffect and save changes to db
         setSave(true)
     }
 
@@ -129,6 +140,7 @@ export default function QuestionModal(props) {
     },)
 
     function save() {
+        // if form fields are all valid (not invalid), save question to db
         if (!questionValid && !sliderLowValid && !sliderMedValid && !sliderHighValid) {
             var endPoint
             props.question.alt_text = altText
@@ -146,7 +158,7 @@ export default function QuestionModal(props) {
             props.question.trigger = trigger
             props.question.domainApplicability = questionDomain
             props.question.regionalApplicability = questionRegion
-            setSave(false)
+            setSave(false) // important to set saveQ hook back to false so useEffect isn't fired again
             if (questionLink.length) {
                 props.question.rec_links = questionLink.split(",")
                 for (let i in props.question.rec_links) {
@@ -196,7 +208,7 @@ export default function QuestionModal(props) {
                 props.question.domainApplicability = []
                 props.question.regionalApplicability = []
                 props.question.rec_links = []
-                setSave(false)
+                setSave(false) // important to set saveQ hook back to false so useEffect isn't fired again
                 close()
             }
         }
