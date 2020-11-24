@@ -39,25 +39,28 @@ const User = props => (
         <Link to={"/ViewSubmissions/"+props.user._id}> <Button size="sm">Submissions</Button> </Link> </td>
         <td align ="center"> <IconButton size="small" color="secondary" onClick={() => 
             { var conf = window.confirm('Are you sure you want to delete the user?');
-                if (conf == true) 
-            { var conf = window.confirm('Would you like to delete all the submissions from this user?');
-                if(conf == true)
+                if (conf === true) 
+             var confirm = window.confirm('Would you like to delete all the submissions from this user?');
+                if(confirm === true)
+                
                 {
-                    {(props.deleteUserSubmission(props.user._id))}
-                    {(props.deleteUser(props.user._id))}
-                    window.alert("User and their submissions are deleted.")
+                // eslint-disable-next-line
+                {(props.deleteUserSubmission(props.user._id))} 
+                // eslint-disable-next-line
+                {(props.deleteUser(props.user._id))} 
+                window.alert("User and their submissions are deleted.")
                 }
                 else
                 {
-                    var conf = window.confirm('Would you just like to delete the user and keep their submission?');
+                    var con = window.confirm('Would you just like to delete the user and keep their submission?');
 
-                    if (conf == true)
+                    if (con === true)
                     {
                     (props.deleteUser(props.user._id))
                     window.alert("User deleted.")
                     }
                 }
-            }
+            
             }}><DeleteIcon style={{ color: red[500] }}/> </IconButton></td>
     </tr>
 )
