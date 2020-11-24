@@ -25,7 +25,7 @@ export default function QuestionModal(props) {
 
     // Set all question properties as hooks for rendering and updating
     const [altText, setAltText] = useState(props.question.alt_text)
-    const [questionDomain, setDomain] = useState(props.question.domainApplicability ? props.question.domainApplicability : [] )
+    const [questionDomain, setDomain] = useState(props.question.domainApplicability ? props.question.domainApplicability : [])
     const [questionLifecycle, setLifecycle] = useState(props.question.lifecycle ? props.question.lifecycle : [])
     const [points, setPoints] = useState(props.question.pointsAvailable)
     const [question, setQuestion] = useState(props.question.question)
@@ -124,11 +124,12 @@ export default function QuestionModal(props) {
             props.question.trigger = trigger
             props.question.domainApplicability = questionDomain
             props.question.regionalApplicability = questionRegion
-            props.question.rec_links = questionLink.split(",")
-            for (let i in props.question.rec_links){
-                props.question.rec_links[i] = props.question.rec_links[i]?.trim()
+            if (questionLink.length) {
+                props.question.rec_links = questionLink.split(",")
+                for (let i in props.question.rec_links) {
+                    props.question.rec_links[i] = props.question.rec_links[i]?.trim()
+                }
             }
-
             if (props.mode === "edit") {
                 endPoint = '/questions/' + props.question._id;
                 axios.put(process.env.REACT_APP_SERVER_ADDR + endPoint, props.question)
@@ -246,7 +247,7 @@ export default function QuestionModal(props) {
     if (!dimensions) {
         return null;
     }
-    
+
     return (
         <React.Fragment>
             <Modal
@@ -412,7 +413,7 @@ export default function QuestionModal(props) {
                                         <Form.Label>Role</Form.Label>
                                         <Card className="select-list-box">
                                             {roles.map((role, index) =>
-                                                <Form.Check type='checkbox' checked={questionRole?.includes(index + 1)} label={role.name} id={'role'+role.name} key={index} value={index + 1} onChange={(e) => updateRole(parseInt(e.target.value))} />
+                                                <Form.Check type='checkbox' checked={questionRole?.includes(index + 1)} label={role.name} id={'role' + role.name} key={index} value={index + 1} onChange={(e) => updateRole(parseInt(e.target.value))} />
                                             )}
                                         </Card>
                                     </Form.Group>
@@ -422,7 +423,7 @@ export default function QuestionModal(props) {
                                         <Form.Label>Domain</Form.Label>
                                         <Card className="select-list-box">
                                             {domains.map((domain, index) =>
-                                                <Form.Check type='checkbox' checked={questionDomain?.includes(index + 1)} label={domain.name} id={'domain-'+domain.name} key={index} value={index + 1} onChange={(e) => updateDomain(parseInt(e.target.value))} />
+                                                <Form.Check type='checkbox' checked={questionDomain?.includes(index + 1)} label={domain.name} id={'domain-' + domain.name} key={index} value={index + 1} onChange={(e) => updateDomain(parseInt(e.target.value))} />
                                             )}
                                         </Card>
                                     </Form.Group>
@@ -432,7 +433,7 @@ export default function QuestionModal(props) {
                                         <Form.Label>Region</Form.Label>
                                         <Card className="select-list-box">
                                             {regions.map((region, index) =>
-                                                <Form.Check type='checkbox' checked={questionRegion?.includes(index + 1)} label={region.name} id={'region-'+region.name} key={index} value={index + 1} onChange={(e) => updateRegion(parseInt(e.target.value))} />
+                                                <Form.Check type='checkbox' checked={questionRegion?.includes(index + 1)} label={region.name} id={'region-' + region.name} key={index} value={index + 1} onChange={(e) => updateRegion(parseInt(e.target.value))} />
                                             )}
                                         </Card>
                                     </Form.Group>
@@ -442,7 +443,7 @@ export default function QuestionModal(props) {
                                         <Form.Label>Life-Cycle</Form.Label>
                                         <Card className="select-list-box">
                                             {lifecycles.map((lifecycle, index) =>
-                                                <Form.Check type='checkbox' checked={questionLifecycle?.includes(index + 1)} label={lifecycle.name} id={'lifecycle-'+lifecycle.name} key={index} value={index + 1} onChange={(e) => updateLifecycle(parseInt(e.target.value))} />
+                                                <Form.Check type='checkbox' checked={questionLifecycle?.includes(index + 1)} label={lifecycle.name} id={'lifecycle-' + lifecycle.name} key={index} value={index + 1} onChange={(e) => updateLifecycle(parseInt(e.target.value))} />
                                             )}
                                         </Card>
                                     </Form.Group>
