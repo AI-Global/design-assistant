@@ -10,7 +10,6 @@ const Region = require('../models/region.model');
 const fs = require('fs');
 const { create, findOne } = require('../models/question.model');
 const mongoose = require('mongoose');
-const { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } = require('constants');
 
 async function getDimensions() {
     // Get Lookup of Dimensions from DB
@@ -108,17 +107,13 @@ function formatQuestion(q, Dimensions, Triggers = null) {
         }
 
     } else if (question.type == "radiogroup" || question.type == "checkbox") {
-        // Add dimension to question score
+        // Score and Dimension
         question.score = {};
         if (q.trustIndexDimension) {
             question.score.dimension = Dimensions[q.trustIndexDimension].label
         }
 
-        // Set initial score to zero
-        question.score.max = 0;
-
         if (q.pointsAvailable) {
-            // Update score if the question has points
             question.score.max = q.pointsAvailable * q.weighting;
 
             // Add score to the choices
@@ -143,23 +138,16 @@ function formatQuestion(q, Dimensions, Triggers = null) {
     } else if (question.type == "slider") {
         // Set type to nouislider 
         question.type = "nouislider"
-
-        // Add dimension to question score
+        
+        // Score and Dimension
         question.score = {};
         if (q.trustIndexDimension) {
             question.score.dimension = Dimensions[q.trustIndexDimension].label
         }
 
-        // calculate question score
         if (q.pointsAvailable) {
             question.score.max = q.pointsAvailable * q.weighting;
             question.score.weight = q.weighting;
-
-            question.choices = [];
-        }else{
-            // Set scores to zero if question has no points
-            question.score.max = 0;
-            question.score.weight = 0;
 
             question.choices = [];
         }
