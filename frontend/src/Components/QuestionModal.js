@@ -390,17 +390,17 @@ export default function QuestionModal(props) {
                                         <React.Fragment>
                                             <Col xs={1} md={1}>
                                                 <Form.Label>Low</Form.Label>
-                                                <Form.Control required="required" isInvalid={sliderLowValid} value={responses[0]?.score || ''} type="number" onChange={(event) => setSliderPoint(event.target.value, 'low')} />
+                                                <Form.Control className="slider-points" required="required" isInvalid={sliderLowValid} value={responses[0]?.score || ''} type="number" onChange={(event) => setSliderPoint(event.target.value, 'low')} />
                                                 <Form.Control.Feedback type="invalid">Invalid</Form.Control.Feedback>
                                             </Col>
                                             <Col xs={1} md={1}>
                                                 <Form.Label>Med</Form.Label>
-                                                <Form.Control required="required" isInvalid={sliderMedValid} value={responses[1]?.score || ''} type="number" onChange={(event) => setSliderPoint(event.target.value, 'med')} />
+                                                <Form.Control className="slider-points" required="required" isInvalid={sliderMedValid} value={responses[1]?.score || ''} type="number" onChange={(event) => setSliderPoint(event.target.value, 'med')} />
                                                 <Form.Control.Feedback type="invalid">Invalid</Form.Control.Feedback>
                                             </Col>
                                             <Col xs={1} md={1}>
                                                 <Form.Label>High</Form.Label>
-                                                <Form.Control required="required" isInvalid={sliderHighValid} value={responses[2]?.score || ''} type="number" onChange={(event) => setSliderPoint(event.target.value, 'high')} />
+                                                <Form.Control className="slider-points" required="required" isInvalid={sliderHighValid} value={responses[2]?.score || ''} type="number" onChange={(event) => setSliderPoint(event.target.value, 'high')} />
                                                 <Form.Control.Feedback type="invalid">Invalid</Form.Control.Feedback>
                                             </Col>
                                         </React.Fragment>
