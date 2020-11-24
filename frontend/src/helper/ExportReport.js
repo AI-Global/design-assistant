@@ -238,9 +238,10 @@ function addReportCard(doc, y) {
       tableWidth: 'auto',
       columnWidth: 'wrap',
       columnStyles: {
-        0: { cellWidth: 58 },
-        1: { cellWidth: 58 },
-        2: { cellWidth: 'auto' },
+        0: { cellWidth: 48 },
+        1: { cellWidth: 48 },
+        2: { cellWidth: 48 },
+        3: { cellWidth: 'auto'}
       },
       didParseCell: (data) => {
         // Style cells.
