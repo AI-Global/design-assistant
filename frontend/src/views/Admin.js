@@ -236,7 +236,8 @@ export default class AdminPanel extends Component {
     }
 
     confirmDeleteSubmission(){
-
+        this.deleteSubmission(this.state.submissionToDelete._id);
+        this.hideModal();
     }
 
     
@@ -246,7 +247,7 @@ export default class AdminPanel extends Component {
             <div>
                 <div className="dimensionNav">
                 <DeleteUserModal onHide={this.hideModal} confirmDelete={this.confirmDeleteUser} show={this.state.showDeleteUserModal} user={this.state?.userToDelete} />
-                <DeleteSubmissionModal onHide={this.hideModal} confirmDelete={this.confirmDelete} show={this.state.showDeleteSubmissionModal} submission={this.state?.submissionToDelete} />
+                <DeleteSubmissionModal onHide={this.hideModal} confirmDelete={this.confirmDeleteSubmission} show={this.state.showDeleteSubmissionModal} submission={this.state?.submissionToDelete} />
                     {!this.state.showFilter ? null :
                         <Accordion>
                             <Card>
