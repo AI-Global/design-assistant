@@ -37,8 +37,7 @@ export default function QuestionModal(props) {
     const [dimension, setDimension] = useState(props.question.trustIndexDimension)
     const [weight, setWeight] = useState(props.question.weighting)
     const [questionType, setQType] = useState(props.question.questionType)
-    const [questionLink, setLink] = useState(props.question.rec_links?.join(', '))
-    console.log(questionLink)
+    const [questionLink, setLink] = useState(props.question?.rec_links.join(", "))
 
     // Hook for showing delet quesiton warning
     const [warningShow, setWarningShow] = useState(false)
@@ -124,7 +123,10 @@ export default function QuestionModal(props) {
             props.question.trigger = trigger
             props.question.questionDomain = questionDomain
             props.question.questionRegion = questionRegion
-            props.question.rec_links = questionLink
+            props.question.rec_links = questionLink.split(",")
+            for (let i in props.question.rec_links){
+                props.question.rec_links[i] = props.question.rec_links[i].trim()
+            }
 
             if (props.mode === "edit") {
                 endPoint = '/questions/' + props.question._id;
