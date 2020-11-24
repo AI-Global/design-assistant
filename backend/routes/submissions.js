@@ -6,7 +6,7 @@ const Submission = require('../models/submission.model');
 // Get all submissions
 router.get('/', async (req, res) => {
     try {
-        const submissions = await Submission.find();
+        const submissions = await Submission.find().sort({ date: -1 });
         res.json(submissions);
         // print debug message
         console.log("Incoming submissions request");

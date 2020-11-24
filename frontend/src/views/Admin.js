@@ -109,7 +109,7 @@ export default class AdminPanel extends Component {
                     .then(response => {
                         var resp = response.data;
                         resp = resp.map(submission => {
-                            submission.userId = this.state.users.find(user => user._id === submission.userId)?.username ?? "No User";
+                            submission.username = this.state.users.find(user => user._id === submission.userId)?.username ?? "No User";
                             return submission
                         });
 
@@ -147,7 +147,7 @@ export default class AdminPanel extends Component {
             .then(response => { console.log(response.data) });
 
         this.setState({
-            submissions: this.state.submissions.filter(ul => ul.userId !== id)
+            submissions: this.state.submissions.filter(ul => ul._id !== id)
         })
     }
     deleteUserSubmission(id) {
@@ -156,7 +156,7 @@ export default class AdminPanel extends Component {
             .then(response => { console.log(response.data) });
 
         this.setState({
-            submissions: this.state.submissions.filter(ul => ul._id !== id)
+            submissions: this.state.submissions.filter(ul => ul.userId !== id)
         })
     }
 
@@ -188,7 +188,7 @@ export default class AdminPanel extends Component {
             let convertedDate = new Date(currentsubmission.date).toLocaleString("en-US", { timeZone: Intl.DateTimeFormat()?.resolvedOptions()?.timeZone ?? "UTC" });
             return (
                 <tr key={idx}>
-                    <td style={{textAlign:"center"}}>{currentsubmission.userId}</td>
+                    <td style={{textAlign:"center"}}>{currentsubmission.username}</td>
                     <td style={{textAlign:"center"}}>{currentsubmission.projectName}</td>
                     <td style={{textAlign:"center"}}>{convertedDate}</td>
                     <td style={{textAlign:"center"}}>{currentsubmission.completed ? "Yes" : "No"}</td>
