@@ -36,7 +36,7 @@ const User = props => (
                 : props.user.role}
 
         </td>
-        <td style={{textAlign:"center"}}>{props.user?.organization}</td>
+        <td style={{ textAlign: "center" }}>{props.user?.organization}</td>
         <td align="center">
             <Button size="sm" onClick={() => props.nextPath("/ViewSubmissions/" + props.user._id)}>View</Button>
         </td>
@@ -66,9 +66,12 @@ export default class AdminPanel extends Component {
         this.state = {
             users: [],
             submissions: [],
-            showFilter: false,
+            showUsersFilter: false,
+            showSubmissionFilter: false,
             orgFilter: "",
             roleFilter: "",
+            userFilter: "",
+            projectFilter: "",
             showDeleteSubmissionModal: false,
             showDeleteUserModal: false,
             userToDelete: null,
@@ -181,38 +184,50 @@ export default class AdminPanel extends Component {
     submissionList() {
         return this.state.submissions.map((currentsubmission, idx) => {
             let convertedDate = new Date(currentsubmission.date).toLocaleString("en-US", { timeZone: Intl.DateTimeFormat()?.resolvedOptions()?.timeZone ?? "UTC" });
-            return (
-                <tr key={idx}>
-                    <td style={{textAlign:"center"}}>{currentsubmission.username}</td>
-                    <td style={{textAlign:"center"}}>{currentsubmission.projectName}</td>
-                    <td style={{textAlign:"center"}}>{convertedDate}</td>
-                    <td style={{textAlign:"center"}}>{currentsubmission.completed ? "Yes" : "No"}</td>
-                    <td style={{textAlign:"center"}}><Button size="sm" onClick={() => this.nextPath('/Results/', currentsubmission.submission ?? {})}> Responses</Button></td> 
-                    <td align ="center"> <IconButton size="small" color="secondary" onClick={() => { this.showDeleteSubmisionModal(currentsubmission)}}><DeleteIcon style={{ color: red[500] }}/> </IconButton></td>
-                </tr>
-            )
+            if (this.state.userFilter === "" || currentsubmission.username?.toLowerCase() === this.state.userFilter?.toLowerCase())
+                if (this.state.projectFilter === "" || currentsubmission.projectName?.toLowerCase() === this.state.projectFilter?.toLowerCase())
+                    return (
+                        <tr key={idx}>
+                            <td style={{ textAlign: "center" }}>{currentsubmission.username}</td>
+                            <td style={{ textAlign: "center" }}>{currentsubmission.projectName}</td>
+                            <td style={{ textAlign: "center" }}>{convertedDate}</td>
+                            <td style={{ textAlign: "center" }}>{currentsubmission.completed ? "Yes" : "No"}</td>
+                            <td style={{ textAlign: "center" }}><Button size="sm" onClick={() => this.nextPath('/Results/', currentsubmission.submission ?? {})}> Responses</Button></td>
+                            <td align="center"> <IconButton size="small" color="secondary" onClick={() => { this.showDeleteSubmisionModal(currentsubmission) }}><DeleteIcon style={{ color: red[500] }} /> </IconButton></td>
+                        </tr>
+                    )
         })
     }
 
     handleTabChange(key) {
         if (key === "userManagement") {
-            this.setState({ showFilter: true });
-        } else {
-            this.setState({ showFilter: false });
+            this.setState({ showUsersFilter: true, showSubmissionsFilter: false });
+        } else if (key === "submissions")
+            this.setState({ showSubmissionsFilter: true, showUsersFilter: false })
+        else {
+            this.setState({ showUsersFilter: false, showSubmissionsFilter: false });
         }
     }
 
     resetFilters(event) {
-        this.setState({ orgFilter: "", roleFilter: "" });
+        this.setState({ orgFilter: "", roleFilter: "", userFilter: "", projectFilter: "" });
         event.target.reset();
     }
 
-    handleFilters(event) {
+    handleUserFilters(event) {
         event.preventDefault();
         let form = event.target.elements;
         let orgFilter = form.orgFilter.value;
         let roleFilter = form.roleFilter.value;
         this.setState({ orgFilter: orgFilter, roleFilter: roleFilter });
+    }
+
+    handleSubmissionFilters(event) {
+        event.preventDefault();
+        let form = event.target.elements;
+        let userFilter = form.userFilter.value;
+        let projectFilter = form.projectNameFilter.value;
+        this.setState({ userFilter: userFilter, projectFilter: projectFilter });
     }
 
     showDeleteUserModal(user) {
@@ -235,20 +250,20 @@ export default class AdminPanel extends Component {
         this.hideModal();
     }
 
-    confirmDeleteSubmission(){
+    confirmDeleteSubmission() {
         this.deleteSubmission(this.state.submissionToDelete._id);
         this.hideModal();
     }
 
-    
+
 
     render() {
         return (
             <div>
                 <div className="dimensionNav">
-                <DeleteUserModal onHide={this.hideModal} confirmDelete={this.confirmDeleteUser} show={this.state.showDeleteUserModal} user={this.state?.userToDelete} />
-                <DeleteSubmissionModal onHide={this.hideModal} confirmDelete={this.confirmDeleteSubmission} show={this.state.showDeleteSubmissionModal} submission={this.state?.submissionToDelete} />
-                    {!this.state.showFilter ? null :
+                    <DeleteUserModal onHide={this.hideModal} confirmDelete={this.confirmDeleteUser} show={this.state.showDeleteUserModal} user={this.state?.userToDelete} />
+                    <DeleteSubmissionModal onHide={this.hideModal} confirmDelete={this.confirmDeleteSubmission} show={this.state.showDeleteSubmissionModal} submission={this.state?.submissionToDelete} />
+                    {!this.state.showUsersFilter ? null :
                         <Accordion>
                             <Card>
                                 <Accordion.Toggle as={Card.Header} eventKey='1'>
@@ -256,7 +271,7 @@ export default class AdminPanel extends Component {
                     </Accordion.Toggle>
                                 <Accordion.Collapse eventKey='1'>
                                     <Card.Body className="cardBody">
-                                        <Form onSubmit={(e) => this.handleFilters(e)} onReset={(e) => this.resetFilters(e)}>
+                                        <Form onSubmit={(e) => this.handleUserFilters(e)} onReset={(e) => this.resetFilters(e)}>
                                             <Form.Group controlId="roleFilter">
                                                 <Form.Label>Role</Form.Label>
                                                 <Form.Control type="text" placeholder="Role Name" />
@@ -264,6 +279,36 @@ export default class AdminPanel extends Component {
                                             <Form.Group controlId="orgFilter">
                                                 <Form.Label>Organization</Form.Label>
                                                 <Form.Control type="text" placeholder="Organization Name" />
+                                            </Form.Group>
+                                            <Form.Group controlId="formSubmit">
+                                            </Form.Group>
+                                            <input type="submit" className="btn btn-primary btn-block btn-lg" value="Submit" />
+                                            <Button type="reset" id="clearFilter"><div>Reset <i className="fa fa-undo fa-fw"></i></div></Button>
+                                        </Form>
+
+                                    </Card.Body>
+
+                                </Accordion.Collapse>
+
+                            </Card>
+                        </Accordion>
+                    }
+                    {!this.state.showSubmissionsFilter ? null :
+                        <Accordion>
+                            <Card>
+                                <Accordion.Toggle as={Card.Header} eventKey='1'>
+                                    Filters
+                    </Accordion.Toggle>
+                                <Accordion.Collapse eventKey='1'>
+                                    <Card.Body className="cardBody">
+                                        <Form onSubmit={(e) => this.handleSubmissionFilters(e)} onReset={(e) => this.resetFilters(e)}>
+                                            <Form.Group controlId="userFilter">
+                                                <Form.Label>User Name</Form.Label>
+                                                <Form.Control type="text" placeholder="User Name" />
+                                            </Form.Group>
+                                            <Form.Group controlId="projectNameFilter">
+                                                <Form.Label>Project Name</Form.Label>
+                                                <Form.Control type="text" placeholder="Project Name" />
                                             </Form.Group>
                                             <Form.Group controlId="formSubmit">
                                             </Form.Group>
@@ -292,24 +337,24 @@ export default class AdminPanel extends Component {
                                 <BootStrapTable id="users" bordered hover responsive className="user-table">
                                     <thead>
                                         <tr>
-                                            <th className="score-card-headers" style={{textAlign:"center"}}>
+                                            <th className="score-card-headers" style={{ textAlign: "center" }}>
                                                 Email
                                         </th>
-                                            <th className="score-card-headers" style={{textAlign:"center"}}>
+                                            <th className="score-card-headers" style={{ textAlign: "center" }}>
                                                 Name
                                         </th>
-                                            <th className="score-card-headers" style={{textAlign:"center"}}>
+                                            <th className="score-card-headers" style={{ textAlign: "center" }}>
                                                 Role
                                         </th>
-                                            <th className="score-card-headers" style={{textAlign:"center"}}>
+                                            <th className="score-card-headers" style={{ textAlign: "center" }}>
                                                 Organization
                                         </th>
-                                            <th className="score-card-headers" style={{textAlign:"center"}}>
+                                            <th className="score-card-headers" style={{ textAlign: "center" }}>
                                                 Submissions
                                         </th>
-                                        <th className="score-card-headers" style={{textAlign:"center"}}>
-                                               
-                                        </th>
+                                            <th className="score-card-headers" style={{ textAlign: "center" }}>
+
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -324,23 +369,23 @@ export default class AdminPanel extends Component {
                                 <BootStrapTable id="submissions" bordered hover responsive className="submission-table">
                                     <thead>
                                         <tr>
-                                            <th className="score-card-headers" style={{textAlign:"center"}}>
+                                            <th className="score-card-headers" style={{ textAlign: "center" }}>
                                                 User Name
                                         </th>
-                                            <th className="score-card-headers" style={{textAlign:"center"}}>
+                                            <th className="score-card-headers" style={{ textAlign: "center" }}>
                                                 Project Name
                                         </th>
-                                            <th className="score-card-headers" style={{textAlign:"center"}}>
+                                            <th className="score-card-headers" style={{ textAlign: "center" }}>
                                                 Date
                                         </th>
 
-                                            <th className="score-card-headers" style={{textAlign:"center"}}>
+                                            <th className="score-card-headers" style={{ textAlign: "center" }}>
                                                 Completed
                                         </th>
-                                            <th className="score-card-headers" style={{textAlign:"center"}}>
+                                            <th className="score-card-headers" style={{ textAlign: "center" }}>
                                                 Responses
                                         </th>
-                                        <th className="score-card-headers" style={{textAlign:"center"}}>
+                                            <th className="score-card-headers" style={{ textAlign: "center" }}>
                                                 Action
                                         </th>
 
@@ -354,10 +399,10 @@ export default class AdminPanel extends Component {
                             </div>
                         </Tab>
                         <Tab eventKey="trustedAIProviders" title="Trusted AI Providers">
-                        <AdminProviders/>
+                            <AdminProviders />
                         </Tab>
                         <Tab eventKey="trustedAIResources" title="Trusted AI Resources">
-                            <AdminResources/>
+                            <AdminResources />
                         </Tab>
                         <Tab eventKey="analytics" title="Analytics">
                             <AnalyticsDashboard />
