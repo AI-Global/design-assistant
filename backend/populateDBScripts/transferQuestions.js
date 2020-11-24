@@ -148,6 +148,7 @@ function main(){
 			} else{
 				// answer
 				let response = {"responseNumber":count, "indicator":values[10], "score":values[12]};
+				responses[count++] = response;
 			}
 		}
 	}
