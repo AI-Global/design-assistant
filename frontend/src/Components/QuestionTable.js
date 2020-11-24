@@ -233,6 +233,7 @@ export default class QuestionTable extends Component {
             "weighting": 0,
             "trigger": null,
             "child": false,
+            "rec_links": []
         }
 
         return (
