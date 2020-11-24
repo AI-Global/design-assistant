@@ -16,15 +16,22 @@ import Accordion from 'react-bootstrap/Accordion';
 import Card from 'react-bootstrap/Card';
 import DeleteUserModal from '../Components/DeleteUserModal';
 import DeleteSubmissionModal from '../Components/DeleteSubmissionModal';
+import Table from '@material-ui/core/Table';
+import TableRow from '@material-ui/core/TableRow';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableFooter from '@material-ui/core/TableFooter'
+import TablePagination from '@material-ui/core/TablePagination';
 
 
 ReactGa.initialize(process.env.REACT_APP_GAID, { testMode: process.env.NODE_ENV === 'test' });
 
 const User = props => (
-    <tr>
-        <td style={{ textAlign: "center" }}>{props.user.email}</td>
-        <td style={{ textAlign: "center" }}>{props.user.username}</td>
-        <td style={{ textAlign: "center" }}>
+    <TableRow hover={true}>
+        <TableCell style={{ textAlign: "center" }}>{props.user.email}</TableCell>
+        <TableCell style={{ textAlign: "center" }}>{props.user.username}</TableCell>
+        <TableCell style={{ textAlign: "center" }}>
 
             {(props.role === "superadmin") ?
                 <DropdownButton id="dropdown-item-button" title={props.user.role}>
@@ -35,16 +42,16 @@ const User = props => (
                 </DropdownButton>
                 : props.user.role}
 
-        </td>
-        <td style={{ textAlign: "center" }}>{props.user?.organization}</td>
-        <td align="center">
+        </TableCell>
+        <TableCell style={{ textAlign: "center" }}>{props.user?.organization}</TableCell>
+        <TableCell align="center">
             <Button size="sm" onClick={() => props.nextPath("/ViewSubmissions/" + props.user._id)}>View</Button>
-        </td>
-        <td align="center">
-            <IconButton size="small" color="secondary" onClick={() => props.showModal(props.user)
+        </TableCell>
+        <TableCell align="center">
+            <IconButton size="small" style={{ paddingTop: "0.60em" }} color="secondary" onClick={() => props.showModal(props.user)
             }><DeleteIcon style={{ color: red[500] }} /> </IconButton>
-        </td>
-    </tr>
+        </TableCell>
+    </TableRow>
 )
 
 export default class AdminPanel extends Component {
@@ -75,7 +82,10 @@ export default class AdminPanel extends Component {
             showDeleteSubmissionModal: false,
             showDeleteUserModal: false,
             userToDelete: null,
-            submissionToDelete: null
+            submissionToDelete: null,
+            usersPage: 0,
+            usersRowsPerPage: 10,
+            usersCount: 0
         };
         this.handleTabChange = this.handleTabChange.bind(this);
     }
@@ -169,32 +179,20 @@ export default class AdminPanel extends Component {
             });
     }
 
-    userList() {
-        if (Array.isArray(this.state.users)) {
-
-            return this.state.users.map(currentuser => {
-                if (this.state.roleFilter === "" || currentuser.role?.toLowerCase() === this.state.roleFilter?.toLowerCase())
-                    if (this.state.orgFilter === "" || currentuser.organization?.toLowerCase() === this.state.orgFilter?.toLowerCase())
-                        return <User user={currentuser} nextPath={this.nextPath} changeRole={this.changeRole} showModal={this.showDeleteUserModal} role={this.role} key={currentuser._id} />;
-                return null;
-            })
-        }
-    }
-
     submissionList() {
         return this.state.submissions.map((currentsubmission, idx) => {
             let convertedDate = new Date(currentsubmission.date).toLocaleString("en-US", { timeZone: Intl.DateTimeFormat()?.resolvedOptions()?.timeZone ?? "UTC" });
             if (this.state.userFilter === "" || currentsubmission.username?.toLowerCase() === this.state.userFilter?.toLowerCase())
                 if (this.state.projectFilter === "" || currentsubmission.projectName?.toLowerCase() === this.state.projectFilter?.toLowerCase())
                     return (
-                        <tr key={idx}>
-                            <td style={{ textAlign: "center" }}>{currentsubmission.username}</td>
-                            <td style={{ textAlign: "center" }}>{currentsubmission.projectName}</td>
-                            <td style={{ textAlign: "center" }}>{convertedDate}</td>
-                            <td style={{ textAlign: "center" }}>{currentsubmission.completed ? "Yes" : "No"}</td>
-                            <td style={{ textAlign: "center" }}><Button size="sm" onClick={() => this.nextPath('/Results/', currentsubmission.submission ?? {})}> Responses</Button></td>
-                            <td align="center"> <IconButton size="small" color="secondary" onClick={() => { this.showDeleteSubmisionModal(currentsubmission) }}><DeleteIcon style={{ color: red[500] }} /> </IconButton></td>
-                        </tr>
+                        <TableRow key={idx}>
+                            <TableCell style={{ textAlign: "center" }}>{currentsubmission.username}</TableCell>
+                            <TableCell style={{ textAlign: "center" }}>{currentsubmission.projectName}</TableCell>
+                            <TableCell style={{ textAlign: "center" }}>{convertedDate}</TableCell>
+                            <TableCell style={{ textAlign: "center" }}>{currentsubmission.completed ? "Yes" : "No"}</TableCell>
+                            <TableCell style={{ textAlign: "center" }}><Button size="sm" onClick={() => this.nextPath('/Results/', currentsubmission.submission ?? {})}> Responses</Button></TableCell>
+                            <TableCell align="center"> <IconButton size="small" style={{ paddingTop: "0.60em" }} color="secondary" onClick={() => { this.showDeleteSubmisionModal(currentsubmission) }}><DeleteIcon style={{ color: red[500] }} /> </IconButton></TableCell>
+                        </TableRow>
                     )
         })
     }
@@ -253,6 +251,24 @@ export default class AdminPanel extends Component {
     confirmDeleteSubmission() {
         this.deleteSubmission(this.state.submissionToDelete._id);
         this.hideModal();
+    }
+
+    handleUsersChangePage = (event, usersPage) => {
+        this.setState({ usersPage });
+    };
+
+    handleUsersChangeRowsPerPage = event => {
+        this.setState({ usersPage: 0, usersRowsPerPage: event.target.value });
+    };
+
+    getFilteredUsers() {
+        let filtered = []
+        this.state.users.forEach(user => {
+            if (this.state.roleFilter === "" || user.role?.toLowerCase() === this.state.roleFilter?.toLowerCase())
+                if (this.state.orgFilter === "" || user.organization?.toLowerCase() === this.state.orgFilter?.toLowerCase())
+                    filtered.push(user)
+        })
+        return filtered;
     }
 
 
@@ -334,68 +350,79 @@ export default class AdminPanel extends Component {
                         </Tab>
                         <Tab eventKey="userManagement" title="Users">
                             <div className="table-responsive mt-3">
-                                <BootStrapTable id="users" bordered hover responsive className="user-table">
-                                    <thead>
-                                        <tr>
-                                            <th className="score-card-headers" style={{ textAlign: "center" }}>
+                                <Table id="users" className="user-table">
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell className="score-card-headers" style={{ textAlign: "center" }}>
                                                 Email
-                                        </th>
-                                            <th className="score-card-headers" style={{ textAlign: "center" }}>
+                                        </TableCell>
+                                            <TableCell className="score-card-headers" style={{ textAlign: "center" }}>
                                                 Name
-                                        </th>
-                                            <th className="score-card-headers" style={{ textAlign: "center" }}>
+                                        </TableCell>
+                                            <TableCell className="score-card-headers" style={{ textAlign: "center" }}>
                                                 Role
-                                        </th>
-                                            <th className="score-card-headers" style={{ textAlign: "center" }}>
+                                        </TableCell>
+                                            <TableCell className="score-card-headers" style={{ textAlign: "center" }}>
                                                 Organization
-                                        </th>
-                                            <th className="score-card-headers" style={{ textAlign: "center" }}>
+                                        </TableCell>
+                                            <TableCell className="score-card-headers" style={{ textAlign: "center" }}>
                                                 Submissions
-                                        </th>
-                                            <th className="score-card-headers" style={{ textAlign: "center" }}>
+                                        </TableCell>
+                                            <TableCell className="score-card-headers" style={{ textAlign: "center" }}>
 
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {this.userList()}
-
-                                    </tbody>
-                                </BootStrapTable>
+                                            </TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {!(Array.isArray(this.state.users)) ? null :
+                                            this.getFilteredUsers().slice(this.state.usersPage * this.state.usersRowsPerPage, this.state.usersPage * this.state.usersRowsPerPage + this.state.usersRowsPerPage).map(currentuser => {
+                                                if (this.state.roleFilter === "" || currentuser.role?.toLowerCase() === this.state.roleFilter?.toLowerCase())
+                                                    if (this.state.orgFilter === "" || currentuser.organization?.toLowerCase() === this.state.orgFilter?.toLowerCase()) {
+                                                        return <User user={currentuser} nextPath={this.nextPath} changeRole={this.changeRole} showModal={this.showDeleteUserModal} role={this.role} key={currentuser._id} />;
+                                                    }
+                                                return null;
+                                            })
+                                        }
+                                    </TableBody>
+                                    <TableFooter>
+                                        <TableRow>
+                                            <TablePagination count={this.getFilteredUsers().length} rowsPerPage={this.state.usersRowsPerPage} page={this.state.usersPage} onChangePage={this.handleUsersChangePage} onChangeRowsPerPage={this.handleUsersChangeRowsPerPage}/>
+                                        </TableRow>
+                                    </TableFooter>
+                                </Table>
                             </div>
                         </Tab>
                         <Tab eventKey="submissions" title="Submissions">
                             <div className="table-responsive mt-3">
-                                <BootStrapTable id="submissions" bordered hover responsive className="submission-table">
-                                    <thead>
-                                        <tr>
-                                            <th className="score-card-headers" style={{ textAlign: "center" }}>
+                                <Table id="submissions" className="submission-table">
+                                    <TableHead>
+                                        <TableRow hover>
+                                            <TableCell className="score-card-headers" style={{ textAlign: "center" }}>
                                                 User Name
-                                        </th>
-                                            <th className="score-card-headers" style={{ textAlign: "center" }}>
+                                        </TableCell>
+                                            <TableCell className="score-card-headers" style={{ textAlign: "center" }}>
                                                 Project Name
-                                        </th>
-                                            <th className="score-card-headers" style={{ textAlign: "center" }}>
+                                        </TableCell>
+                                            <TableCell className="score-card-headers" style={{ textAlign: "center" }}>
                                                 Date
-                                        </th>
+                                        </TableCell>
 
-                                            <th className="score-card-headers" style={{ textAlign: "center" }}>
+                                            <TableCell className="score-card-headers" style={{ textAlign: "center" }}>
                                                 Completed
-                                        </th>
-                                            <th className="score-card-headers" style={{ textAlign: "center" }}>
+                                        </TableCell>
+                                            <TableCell className="score-card-headers" style={{ textAlign: "center" }}>
                                                 Responses
-                                        </th>
-                                            <th className="score-card-headers" style={{ textAlign: "center" }}>
+                                        </TableCell>
+                                            <TableCell className="score-card-headers" style={{ textAlign: "center" }}>
                                                 Action
-                                        </th>
+                                        </TableCell>
 
-                                        </tr>
-                                    </thead>
-                                    <tbody>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
                                         {this.submissionList()}
-
-                                    </tbody>
-                                </BootStrapTable>
+                                    </TableBody>
+                                </Table>
                             </div>
                         </Tab>
                         <Tab eventKey="trustedAIProviders" title="Trusted AI Providers">
