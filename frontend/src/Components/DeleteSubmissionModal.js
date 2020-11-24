@@ -1,8 +1,6 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React from 'react';
 import Modal from 'react-bootstrap/Modal';
-import { Button, Form, Card } from 'react-bootstrap';
-import { Row, Col } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import '../css/theme.css';
 
 
