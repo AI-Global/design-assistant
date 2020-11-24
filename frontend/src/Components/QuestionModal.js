@@ -1,6 +1,6 @@
 import '../css/admin.css';
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Add from '@material-ui/icons/Add';
 import Modal from 'react-bootstrap/Modal';
 import CloseIcon from '@material-ui/icons/Close';
@@ -39,10 +39,16 @@ export default function QuestionModal(props) {
     const [questionType, setQType] = useState(props.question.questionType)
     const [questionLink, setLink] = useState(props.question?.rec_links?.join(", "))
 
-    console.log(questionLink)
-    // Hook for showing delet quesiton warning
+    // Hook for showing delete quesiton warning
     const [warningShow, setWarningShow] = useState(false)
+
+    // validation for question field
     const [questionValid, setInvalid] = useState(false)
+    //validation for slider points fields
+    const [sliderLowValid, setSliderLowInvalid] = useState(false)
+    const [sliderMedValid, setSliderMedInvalid] = useState(false)
+    const [sliderHighValid, setSliderHighInvalid] = useState(false)
+    const [saveQ, setSave] = useState(false);
 
     const [child, setChild] = useState(props.question.child)
     const [trigger, setTrigger] = useState(props.question.trigger)
@@ -99,15 +105,31 @@ export default function QuestionModal(props) {
         setDomain(props.question.domainApplicability)
         setRegion(props.question.regionalApplicability)
         setLink(props.question.rec_links)
+        setSliderLowInvalid(false)
+        setSliderMedInvalid(false)
+        setSliderHighInvalid(false)
         setInvalid(false)
         props.onHide()
     }
 
-    function save(event) {
+    function Validate(event) {
         event.preventDefault();
-        if (event.target.elements.question.value === "") {
-            setInvalid(true)
-        } else {
+        if (responseType === 'slider') {
+            !(responses[0]?.score && responses[0]?.score < responses[1]?.score && responses[0]?.score < responses[2]?.score) ? setSliderLowInvalid(true) : setSliderLowInvalid(false)
+            !(responses[1]?.score && responses[1]?.score < responses[2]?.score) ? setSliderMedInvalid(true) : setSliderMedInvalid(false)
+            !responses[2]?.score ? setSliderHighInvalid(true) : setSliderHighInvalid(false)
+
+        }
+        event.target.elements.question.value === "" ? setInvalid(true) : setInvalid(false)
+        setSave(true)
+    }
+
+    useEffect(() => {
+        if (saveQ) { save(); }
+    },)
+
+    function save() {
+        if (!questionValid && !sliderLowValid && !sliderMedValid && !sliderHighValid) {
             var endPoint
             props.question.alt_text = altText
             props.question.lifecycle = questionLifecycle
@@ -124,6 +146,7 @@ export default function QuestionModal(props) {
             props.question.trigger = trigger
             props.question.domainApplicability = questionDomain
             props.question.regionalApplicability = questionRegion
+            setSave(false)
             if (questionLink.length) {
                 props.question.rec_links = questionLink.split(",")
                 for (let i in props.question.rec_links) {
@@ -173,6 +196,7 @@ export default function QuestionModal(props) {
                 props.question.domainApplicability = []
                 props.question.regionalApplicability = []
                 props.question.rec_links = []
+                setSave(false)
                 close()
             }
         }
@@ -207,7 +231,6 @@ export default function QuestionModal(props) {
         else {
             questionRole.push(index)
         }
-        console.log(questionRole)
         setRole([...questionRole])
     }
 
@@ -246,6 +269,25 @@ export default function QuestionModal(props) {
 
     if (!dimensions) {
         return null;
+    }
+
+    function setSliderPoint(value, s) {
+        switch (s) {
+            case 'low':
+                responses[0] = { "responseNumber": 0, "indicator": s, "score": value }
+                setResponses([...responses])
+                break;
+            case 'med':
+                responses[1] = { "responseNumber": 1, "indicator": s, "score": value }
+                setResponses([...responses])
+                break;
+            case 'high':
+                responses[2] = { "responseNumber": 2, "indicator": s, "score": value }
+                setResponses([...responses])
+                break;
+            default:
+                return;
+        }
     }
 
     return (
@@ -287,7 +329,7 @@ export default function QuestionModal(props) {
                     </IconButton>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form onSubmit={(e) => save(e)} noValidate>
+                    <Form onSubmit={(e) => Validate(e)} noValidate>
                         {!child ? null :
                             <Row style={{ paddingBottom: "1em" }}>
                                 <Col md={12}>
@@ -335,16 +377,6 @@ export default function QuestionModal(props) {
                             </Col>
                             {(responseType === "radiogroup" || responseType === "checkbox" || responseType === "slider") ?
                                 <React.Fragment>
-                                    {responseType === "slider" ? null :
-                                        <Col xs={4} md={2}>
-                                            <Form.Label>Points</Form.Label>
-                                            <Form.Control value={points} as="select" onChange={(event) => setPoints(event.target.value)}>
-                                                <option value={-1}>-1</option>
-                                                <option value={0}>0</option>
-                                                <option value={1}>1</option>
-                                            </Form.Control>
-                                        </Col>
-                                    }
                                     <Col xs={4} md={2}>
                                         <Form.Label>Weight</Form.Label>
                                         <Form.Control value={weight} as="select" onChange={(event) => setWeight(event.target.value)}>
@@ -354,6 +386,34 @@ export default function QuestionModal(props) {
                                             <option>3</option>
                                         </Form.Control>
                                     </Col>
+                                    {responseType === "slider" ?
+                                        <React.Fragment>
+                                            <Col xs={1} md={1}>
+                                                <Form.Label>Low</Form.Label>
+                                                <Form.Control required="required" isInvalid={sliderLowValid} value={responses[0]?.score || ''} type="number" onChange={(event) => setSliderPoint(event.target.value, 'low')} />
+                                                <Form.Control.Feedback type="invalid">Invalid</Form.Control.Feedback>
+                                            </Col>
+                                            <Col xs={1} md={1}>
+                                                <Form.Label>Med</Form.Label>
+                                                <Form.Control required="required" isInvalid={sliderMedValid} value={responses[1]?.score || ''} type="number" onChange={(event) => setSliderPoint(event.target.value, 'med')} />
+                                                <Form.Control.Feedback type="invalid">Invalid</Form.Control.Feedback>
+                                            </Col>
+                                            <Col xs={1} md={1}>
+                                                <Form.Label>High</Form.Label>
+                                                <Form.Control required="required" isInvalid={sliderHighValid} value={responses[2]?.score || ''} type="number" onChange={(event) => setSliderPoint(event.target.value, 'high')} />
+                                                <Form.Control.Feedback type="invalid">Invalid</Form.Control.Feedback>
+                                            </Col>
+                                        </React.Fragment>
+                                        :
+                                        <Col xs={4} md={2}>
+                                            <Form.Label>Points</Form.Label>
+                                            <Form.Control value={points} as="select" onChange={(event) => setPoints(event.target.value)}>
+                                                <option value={-1}>-1</option>
+                                                <option value={0}>0</option>
+                                                <option value={1}>1</option>
+                                            </Form.Control>
+                                        </Col>
+                                    }
                                 </React.Fragment>
                                 : null}
                         </Row>
