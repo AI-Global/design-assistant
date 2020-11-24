@@ -126,13 +126,13 @@ function main(){
 						doc["weighting"] = 0;
 				}
 
-				reference = formatList(reference.replace(/'/g, "\\u0027").replace(/"/g, "\\u0022"));
+				// reference = formatList(reference.replace(/'/g, "\\u0027").replace(/"/g, "\\u0022"));
 				doc["reference"] = reference;
 				doc["roles"] = roles;
 				doc["lifecycle"] = lifecycle;
 				
 				if(altText){
-					altText = formatList(altText.replace(/'/g, "\\u0027").replace(/"/g, "\\u0022"));
+					// altText = formatList(altText.replace(/'/g, "\\u0027").replace(/"/g, "\\u0022"));
 					doc["alt_text"] = altText;
 				} 
 
@@ -151,8 +151,9 @@ function main(){
 				}
 			} else{
 				// answer
-				let response = {"responseNumber":count, "indicator":(values[10]) ? formatList(values[10].replace(/'/g, "\\u0027").replace(/"/g, "\\u0022")) : values[10], "score":values[12]};
-				responses[count++] = response;
+				// let response = {"responseNumber":count, "indicator":(values[10]) ? formatList(values[10].replace(/'/g, "\\u0027").replace(/"/g, "\\u0022")) : values[10], "score":values[12]};
+				// responses[count++] = response;
+				let response = {"responseNumber":count, "indicator":values[10], "score":values[12]};
 			}
 		}
 	}

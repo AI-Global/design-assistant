@@ -179,7 +179,9 @@ async function populate() {
                 reference: parsed_questions[i].reference || null,
                 roles: roleObj.roleID,
                 lifecycle: lifecycleObj.lifecycleID,
-                parent: parsed_questions[i].parent ? parsed_questions[i].parent : null
+                parent: parsed_questions[i].parent ? parsed_questions[i].parent : null,
+                child: false,
+                trigger: null
             }, {upsert:true, runValidators: true}); 
 
 
