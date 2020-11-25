@@ -321,41 +321,21 @@ async function createPages(q, filters) {
         dimQuestions[d] = [];
     }
 
-    var tombQuestions = {}
-    tombQuestions["tombstone"] = [];
-
-    var riskQuestions = {}
-    riskQuestions["risk"] = [];
-
     for (let question of q) {
-        if (question.questionType == "tombstone") {
-            tombQuestions["tombstone"].push(question);
-        } else if (question.questionType == "risk") {
-            riskQuestions["risk"].push(question)
-        } else if (question.trustIndexDimension) {
+        if (question.trustIndexDimension) {
             dimQuestions[question.trustIndexDimension].push(question)
         }
     }
 
-    tombQuestions["tombstone"].sort((a, b) => (a.questionNumber > b.questionNumber) ? 1 : -1);
-    for (let i = 0; i < dimQuestions.length; i++) {
-        dimQuestions.sort((a, b) => (a.questionNumber > b.questionNumber) ? 1 : -1);
-    }
-
-
-    // Add Other question to tombstone and create page 
-    tombQuestions["tombstone"].push({ responseType: "comment", id: "otherTombstone", question: "Other:", alt_text: "If possible, support the feedback with specific recommendations \/ suggestions to improve the tool. Feedback can include:\n - Refinement to existing questions, like suggestions on how questions can be simplified or clarified further\n - Additions of new questions for specific scenarios that may be missed\n - Feedback on whether the listed AI risk domains are fulsome and complete\n - What types of response indicators should be included for your context?" });
-    var projectDetails = createPage(tombQuestions["tombstone"], "projectDetails1", "Project Details", Dimensions, Children);
-    page.pages.push(projectDetails);
-
-    // Add Other question to risk questions and create page 
-    riskQuestions["risk"].push({ responseType: "comment", id: "otherRisk", question: "Other:", alt_text: "If possible, support the feedback with specific recommendations \/ suggestions to improve the tool. Feedback can include:\n - Refinement to existing questions, like suggestions on how questions can be simplified or clarified further\n - Additions of new questions for specific scenarios that may be missed\n - Feedback on whether the listed AI risk domains are fulsome and complete\n - What types of response indicators should be included for your context?" });
-    var riskEvaluation = createPage(riskQuestions["risk"], "riskEvaluation1", "Risk Evaluation", Dimensions, Children);
-    page.pages.push(riskEvaluation);
-
-
     // Apply domain, region, role, lifecycle filter to questions
     dimQuestions = await applyFilters(dimQuestions, filters)
+
+    // Add Other question to tombstone and create page 
+    dimQuestions[1].push({ responseType: "comment", id: "otherTombstone", question: "Other:", alt_text: "If possible, support the feedback with specific recommendations \/ suggestions to improve the tool. Feedback can include:\n - Refinement to existing questions, like suggestions on how questions can be simplified or clarified further\n - Additions of new questions for specific scenarios that may be missed\n - Feedback on whether the listed AI risk domains are fulsome and complete\n - What types of response indicators should be included for your context?" });
+    var projectDetails = createPage(dimQuestions[1], Dimensions[1].page, Dimensions[1].name, Dimensions, Children);
+    page.pages.push(projectDetails);
+
+    delete dimQuestions[1];
 
     // Create pages for the dimensions
     var pageCount = 1;
