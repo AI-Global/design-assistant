@@ -39,6 +39,7 @@ Survey
   .Serializer
   .addProperty("question", "alttext:text");
 
+
 // remove localization strings for progress bar
 // https://surveyjs.answerdesk.io/ticket/details/t2551/display-progress-bar-without-text
 // Asked by: MDE | Answered by: Andrew Telnov
@@ -387,6 +388,7 @@ class DesignAssistantSurvey extends Component {
 
 
   render() {
+    console.log(this.state.model)
     var number = 1
     return (
       this.state.model ?
