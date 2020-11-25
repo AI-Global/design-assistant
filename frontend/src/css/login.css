@@ -78,3 +78,9 @@
     top: 20px;
     right: 150px;
   }
+
+@media screen and (max-width: 1570px) {
+    .user-status .msg {
+        display: none;
+      }
+}

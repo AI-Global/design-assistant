@@ -94,7 +94,7 @@ export default class Login extends Component {
         if (user) {
             return (
                 <div className="user-status">
-                    Logged in as: {user.username} &nbsp;
+                    <div className="user-status msg">Logged in as: {user.username} &nbsp;</div>
                     <UserSettings/>
                 </div>
             )
