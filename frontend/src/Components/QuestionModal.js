@@ -152,7 +152,7 @@ export default function QuestionModal(props) {
             props.question.questionType = questionType
             props.question.responses = responses
             props.question.roles = questionRole
-            dimension === -1 ? props.question.trustIndexDimension = null : props.question.trustIndexDimension = dimension
+            props.question.trustIndexDimension = dimension
             props.question.weighting = weight
             props.question.child = child
             props.question.trigger = trigger
@@ -201,7 +201,7 @@ export default function QuestionModal(props) {
                 props.question.questionType = "tombstone"
                 props.question.responses = []
                 props.question.roles = []
-                props.question.trustIndexDimension = null
+                props.question.trustIndexDimension = 1
                 props.question.weighting = 0
                 props.question.child = child
                 props.question.trigger = trigger
