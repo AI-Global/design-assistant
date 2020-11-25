@@ -233,7 +233,7 @@ export default class AdminPanel extends Component {
         let form = event.target.elements;
         let userFilter = form.userFilter.value;
         let projectFilter = form.projectNameFilter.value;
-        this.setState({ userFilter: userFilter, projectFilter: projectFilter });
+        this.setState({ userFilter: userFilter, projectFilter: projectFilter, usersPage:0, submissionsPage:0 });
     }
 
     showDeleteUserModal(user) {
