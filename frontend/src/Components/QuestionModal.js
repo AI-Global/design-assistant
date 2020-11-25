@@ -1,6 +1,6 @@
 import '../css/admin.css';
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Add from '@material-ui/icons/Add';
 import Modal from 'react-bootstrap/Modal';
 import CloseIcon from '@material-ui/icons/Close';
@@ -14,6 +14,7 @@ import { Button, Form, Row, Col, Card } from 'react-bootstrap';
 export default function QuestionModal(props) {
     const responseTypes = ["text", "comment", "dropdown", "radiogroup", "checkbox", "slider"]
 
+    // get metadata from props
     const dimensions = props.dimensions
     const domains = props.metadata.domain
     const lifecycles = props.metadata.lifecycle
@@ -39,10 +40,18 @@ export default function QuestionModal(props) {
     const [questionType, setQType] = useState(props.question.questionType)
     const [questionLink, setLink] = useState(props.question?.rec_links?.join(", "))
 
-    console.log(questionLink)
-    // Hook for showing delet quesiton warning
+    // Hook for showing delete quesiton warning
     const [warningShow, setWarningShow] = useState(false)
+
+    // validation for question field
     const [questionValid, setInvalid] = useState(false)
+    // validation for slider points fields
+    const [sliderLowValid, setSliderLowInvalid] = useState(false)
+    const [sliderMedValid, setSliderMedInvalid] = useState(false)
+    const [sliderHighValid, setSliderHighInvalid] = useState(false)
+
+    // hook for saving questions so useEffect isn't fired continuously on render
+    const [saveQ, setSave] = useState(false);
 
     const [child, setChild] = useState(props.question.child)
     const [trigger, setTrigger] = useState(props.question.trigger)
@@ -56,6 +65,7 @@ export default function QuestionModal(props) {
     }
 
     function removeResponse(index) {
+        // remove a response object from the responses array
         const newResponse = responses.filter(function (e) { return e.responseNumber !== index; })
         for (var i in newResponse) {
             newResponse[i].responseNumber = parseInt(i)
@@ -65,11 +75,14 @@ export default function QuestionModal(props) {
     }
 
     function editIndicator(indicator, index, score) {
+        // edit and existing repsonse indicator
         responses[index] = { "responseNumber": index, "indicator": indicator, "score": score }
         setResponses([...responses])
     }
 
     function revertIndicators(r) {
+        // if the quesiton is closed and edits aren't save we need to loop through all repsonse
+        // indicators and reset them to the previous state
         for (var i in r) {
             r[i].responseNumber = parseInt(i)
         }
@@ -77,6 +90,7 @@ export default function QuestionModal(props) {
     }
 
     function editScore(score, index, indicator) {
+        // edits the score of an associtaed response indicator 
         responses[index] = { "responseNumber": index, "indicator": indicator, "score": score }
         setResponses([...responses])
     }
@@ -99,15 +113,35 @@ export default function QuestionModal(props) {
         setDomain(props.question.domainApplicability)
         setRegion(props.question.regionalApplicability)
         setLink(props.question.rec_links)
+        setSliderLowInvalid(false)
+        setSliderMedInvalid(false)
+        setSliderHighInvalid(false)
         setInvalid(false)
         props.onHide()
     }
 
-    function save(event) {
+    function Validate(event) {
+        // validates the form: quesiton filed must not be empty and if response type is slider, the low med high fields
+        // must be numbers, and ordered low < med< high
         event.preventDefault();
-        if (event.target.elements.question.value === "") {
-            setInvalid(true)
-        } else {
+        if (responseType === 'slider') {
+            !(responses[0]?.score && responses[0]?.score < responses[1]?.score && responses[0]?.score < responses[2]?.score) ? setSliderLowInvalid(true) : setSliderLowInvalid(false)
+            !(responses[1]?.score && responses[1]?.score < responses[2]?.score) ? setSliderMedInvalid(true) : setSliderMedInvalid(false)
+            !responses[2]?.score ? setSliderHighInvalid(true) : setSliderHighInvalid(false)
+
+        }
+        event.target.elements.question.value === "" ? setInvalid(true) : setInvalid(false)
+        // set saveQ hook to true to trigger useEffect and save changes to db
+        setSave(true)
+    }
+
+    useEffect(() => {
+        if (saveQ) { save(); }
+    },)
+
+    function save() {
+        // if form fields are all valid (not invalid), save question to db
+        if (!questionValid && !sliderLowValid && !sliderMedValid && !sliderHighValid) {
             var endPoint
             props.question.alt_text = altText
             props.question.lifecycle = questionLifecycle
@@ -124,6 +158,7 @@ export default function QuestionModal(props) {
             props.question.trigger = trigger
             props.question.domainApplicability = questionDomain
             props.question.regionalApplicability = questionRegion
+            setSave(false) // important to set saveQ hook back to false so useEffect isn't fired again
             if (questionLink.length) {
                 props.question.rec_links = questionLink.split(",")
                 for (let i in props.question.rec_links) {
@@ -173,6 +208,7 @@ export default function QuestionModal(props) {
                 props.question.domainApplicability = []
                 props.question.regionalApplicability = []
                 props.question.rec_links = []
+                setSave(false) // important to set saveQ hook back to false so useEffect isn't fired again
                 close()
             }
         }
@@ -207,7 +243,6 @@ export default function QuestionModal(props) {
         else {
             questionRole.push(index)
         }
-        console.log(questionRole)
         setRole([...questionRole])
     }
 
@@ -246,6 +281,25 @@ export default function QuestionModal(props) {
 
     if (!dimensions) {
         return null;
+    }
+
+    function setSliderPoint(value, s) {
+        switch (s) {
+            case 'low':
+                responses[0] = { "responseNumber": 0, "indicator": s, "score": value }
+                setResponses([...responses])
+                break;
+            case 'med':
+                responses[1] = { "responseNumber": 1, "indicator": s, "score": value }
+                setResponses([...responses])
+                break;
+            case 'high':
+                responses[2] = { "responseNumber": 2, "indicator": s, "score": value }
+                setResponses([...responses])
+                break;
+            default:
+                return;
+        }
     }
 
     return (
@@ -287,7 +341,7 @@ export default function QuestionModal(props) {
                     </IconButton>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form onSubmit={(e) => save(e)} noValidate>
+                    <Form onSubmit={(e) => Validate(e)} noValidate>
                         {!child ? null :
                             <Row style={{ paddingBottom: "1em" }}>
                                 <Col md={12}>
@@ -335,16 +389,6 @@ export default function QuestionModal(props) {
                             </Col>
                             {(responseType === "radiogroup" || responseType === "checkbox" || responseType === "slider") ?
                                 <React.Fragment>
-                                    {responseType === "slider" ? null :
-                                        <Col xs={4} md={2}>
-                                            <Form.Label>Points</Form.Label>
-                                            <Form.Control value={points} as="select" onChange={(event) => setPoints(event.target.value)}>
-                                                <option value={-1}>-1</option>
-                                                <option value={0}>0</option>
-                                                <option value={1}>1</option>
-                                            </Form.Control>
-                                        </Col>
-                                    }
                                     <Col xs={4} md={2}>
                                         <Form.Label>Weight</Form.Label>
                                         <Form.Control value={weight} as="select" onChange={(event) => setWeight(event.target.value)}>
@@ -354,6 +398,34 @@ export default function QuestionModal(props) {
                                             <option>3</option>
                                         </Form.Control>
                                     </Col>
+                                    {responseType === "slider" ?
+                                        <React.Fragment>
+                                            <Col xs={1} md={1}>
+                                                <Form.Label>Low</Form.Label>
+                                                <Form.Control className="slider-points" required="required" isInvalid={sliderLowValid} value={responses[0]?.score || ''} type="number" onChange={(event) => setSliderPoint(event.target.value, 'low')} />
+                                                <Form.Control.Feedback type="invalid">Invalid</Form.Control.Feedback>
+                                            </Col>
+                                            <Col xs={1} md={1}>
+                                                <Form.Label>Med</Form.Label>
+                                                <Form.Control className="slider-points" required="required" isInvalid={sliderMedValid} value={responses[1]?.score || ''} type="number" onChange={(event) => setSliderPoint(event.target.value, 'med')} />
+                                                <Form.Control.Feedback type="invalid">Invalid</Form.Control.Feedback>
+                                            </Col>
+                                            <Col xs={1} md={1}>
+                                                <Form.Label>High</Form.Label>
+                                                <Form.Control className="slider-points" required="required" isInvalid={sliderHighValid} value={responses[2]?.score || ''} type="number" onChange={(event) => setSliderPoint(event.target.value, 'high')} />
+                                                <Form.Control.Feedback type="invalid">Invalid</Form.Control.Feedback>
+                                            </Col>
+                                        </React.Fragment>
+                                        :
+                                        <Col xs={4} md={2}>
+                                            <Form.Label>Points</Form.Label>
+                                            <Form.Control value={points} as="select" onChange={(event) => setPoints(event.target.value)}>
+                                                <option value={-1}>-1</option>
+                                                <option value={0}>0</option>
+                                                <option value={1}>1</option>
+                                            </Form.Control>
+                                        </Col>
+                                    }
                                 </React.Fragment>
                                 : null}
                         </Row>

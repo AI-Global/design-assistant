@@ -151,7 +151,7 @@ class DesignAssistantSurvey extends Component {
               $('[data-toggle="tooltip"]').tooltip({
                 boundary: 'viewport'
               });
-            }, 2000)
+            }, 2100)
           });
         //change labels to 'h5' to bold them
         model
