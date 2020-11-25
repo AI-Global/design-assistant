@@ -45,9 +45,11 @@ function calculateQuestionScore(question, selectedChoices, riskWeight) {
         // <25 = Low(-1), 25-74 = Medium(0), >75 = High(1) 
         if (selectedChoices !== undefined) {
             if (selectedChoices < 33) {
-                questionScore = -1 * scores.weight;
+                questionScore = question.choices[0] * scores.weight;
             } else if (selectedChoices >= 66) {
-                questionScore = 1 * scores.weight;
+                questionScore = question.choices[2] * scores.weight;
+            }else{
+                questionScore = question.choices[1] * scores.weight;
             }
         }
     }
