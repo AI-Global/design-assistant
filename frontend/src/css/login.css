@@ -77,15 +77,17 @@
     position: absolute;
     top: 20px;
     right: 150px;
+    align-content: center;
   }
 
 .user-status .msg {
     float: left;
     margin: 0 !important;
+    margin-top: 10px !important;
 }
 
 @media screen and (max-width: 1570px) {
     .user-status .msg {
         display: none;
-      }
+    }
 }
