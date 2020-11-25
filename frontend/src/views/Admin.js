@@ -225,7 +225,7 @@ export default class AdminPanel extends Component {
         let form = event.target.elements;
         let orgFilter = form.orgFilter.value;
         let roleFilter = form.roleFilter.value;
-        this.setState({ orgFilter: orgFilter, roleFilter: roleFilter, usersPage:0, submissionsPage:0 });
+        this.setState({ orgFilter: orgFilter, roleFilter: roleFilter, usersPage: 0, submissionsPage: 0 });
     }
 
     handleSubmissionFilters(event) {
@@ -233,7 +233,7 @@ export default class AdminPanel extends Component {
         let form = event.target.elements;
         let userFilter = form.userFilter.value;
         let projectFilter = form.projectNameFilter.value;
-        this.setState({ userFilter: userFilter, projectFilter: projectFilter, usersPage:0, submissionsPage:0 });
+        this.setState({ userFilter: userFilter, projectFilter: projectFilter, usersPage: 0, submissionsPage: 0 });
     }
 
     showDeleteUserModal(user) {
@@ -279,11 +279,13 @@ export default class AdminPanel extends Component {
 
     getFilteredUsers() {
         let filtered = []
-        this.state.users.forEach(user => {
-            if (this.state.roleFilter === "" || user.role?.toLowerCase().includes(this.state.roleFilter?.toLowerCase()))
+        if (this.state.users.length) {
+            this.state.users.forEach(user => {
+                if (this.state.roleFilter === "" || user.role?.toLowerCase().includes(this.state.roleFilter?.toLowerCase()))
                 if (this.state.orgFilter === "" || user.organization?.toLowerCase().includes(this.state.orgFilter?.toLowerCase()))
                     filtered.push(user)
-        })
+            })
+        }
         return filtered;
     }
 

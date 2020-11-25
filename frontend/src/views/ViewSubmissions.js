@@ -94,10 +94,6 @@ export default class ViewSubmissions extends Component {
         this.setState({submissionToDelete: null, showDeleteSubmissionModal: false });
     }
 
-    showDeleteSubmisionModal(submission) {
-        this.setState({ submissionToDelete: submission, showDeleteSubmissionModal: true });
-    }
-
     confirmDeleteSubmission(){
         this.deleteSubmission(this.state.submissionToDelete._id);
         this.hideModal();
