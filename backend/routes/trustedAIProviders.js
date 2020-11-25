@@ -6,7 +6,7 @@ const TrustedAIProviders = require('../models/trustedAIProvider.model');
 // Get all Trusted AI Providers
 router.get('/', async (req,res) => {
     try{
-        const trustedProviders = await TrustedAIProviders.find();
+        const trustedProviders = await TrustedAIProviders.find().sort('resource');
         res.json(trustedProviders);
     }catch(err){
         res.json({message: err});
@@ -23,6 +23,9 @@ router.put('/', async (req, res) => {
         const savedProvider = await provider.save();
         res.json(savedProvider);
     } catch (err) {
+        if (err.code === 11000){
+            res.status(400).json({source: {isInvalid: true, message: "Trusted AI Provider with source already exists."}})
+        }
         res.json({ message: err });
     }
 
@@ -31,8 +34,8 @@ router.put('/', async (req, res) => {
 // delete a provider
 router.delete('/:id', async (req, res) => {
     try {
-        // Delete existing question in DB
-        let doc = await TrustedAIProviders.findOneAndDelete({ _id: req.params.id })
+        // Delete existing provider in DB
+        let doc = await TrustedAIProviders.findByIdAndDelete(req.params.id)
         res.json(doc);
     } catch (err) {
         res.json({ message: err });
@@ -44,11 +47,13 @@ router.delete('/:id', async (req, res) => {
 router.put('/:id', async (req, res) => {
     try{
         const ret = await TrustedAIProviders.findOneAndUpdate({'_id' : req.params.id}, req.body
-        , {upsert:true, runValidators: true});
+        , {upsert:true, runValidators: true, new: true});
         res.json(ret);
     } catch(err){
-        // console.log("error updating", err);
-        res.json({message: err});
+        if (err.code === 11000){
+            res.status(400).json({source: {isInvalid: true, message: "Trusted AI Provider with source already exists."}})
+        }
+        res.status(400).json({message: err});
     }
 });
 module.exports = router;

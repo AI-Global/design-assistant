@@ -49,7 +49,7 @@ const QuestionSchema = mongoose.Schema({
     responseType: {
         type: String,
         required: true,
-        enum: [null, 'text', 'comment', 'checkbox', 'radiogroup', 'dropdown', 'bootstrapslider']
+        enum: [null, 'text', 'comment', 'checkbox', 'radiogroup', 'dropdown', 'slider']
     },
 
     // -1 to 1
@@ -86,6 +86,9 @@ const QuestionSchema = mongoose.Schema({
         parentQuestion: {
             type: String
         }
+    },
+    rec_links: {
+        type: [String]
     }
 
     // TODO: Add test of schema to model

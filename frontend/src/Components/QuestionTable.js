@@ -1,5 +1,6 @@
 import axios from 'axios';
 import '../css/admin.css';
+import ChildModal from './ChildModal';
 import React, { Component } from 'react';
 import Add from '@material-ui/icons/Add';
 import Table from '@material-ui/core/Table';
@@ -11,8 +12,8 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import QuestionRow from '../Components/QuestionRow';
 import IconButton from '@material-ui/core/IconButton';
+import { DropdownButton, Dropdown } from 'react-bootstrap';
 import TableContainer from '@material-ui/core/TableContainer';
-import ChildModal from './ChildModal';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 const reorder = (list, startIndex, endIndex) => {
@@ -53,7 +54,7 @@ export default class QuestionTable extends Component {
         var endPoint = '/metadata';
         axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
             .then(res => {
-                this.setState({metadata: res.data})
+                this.setState({ metadata: res.data })
             })
         this.getQuestions();
     }
@@ -66,7 +67,6 @@ export default class QuestionTable extends Component {
                 this.setState({ questions: res.data.questions.sort((a, b) => (a.questionNumber > b.questionNumber) ? 1 : -1) });
             })
     }
-
 
     async onDragEnd(result) {
         // dropped outside the list
@@ -84,23 +84,23 @@ export default class QuestionTable extends Component {
             this.setState({
                 questions,
                 currentQuestion: questions[result.destination.index],
-                previousQuestion: questions[result.destination.index -1],
+                previousQuestion: questions[result.destination.index - 1],
                 previousNumber: result.source.index + 1,
                 newNumber: result.destination.index + 1,
                 showChildModal: true
             })
-            
+
         } else {
             // do not ask to make a child-parent relationship
             var endPoint = '/questions/' + (result.source.index + 1).toString() + '/1';
             await axios.put(process.env.REACT_APP_SERVER_ADDR + endPoint)
                 .then(() => {
-                    console.log("Question: " + result.source.index.toString() + "is now question: " + result.destination.index.toString() );
+                    console.log("Question: " + result.source.index.toString() + "is now question: " + result.destination.index.toString());
                     this.setState({
                         questions
                     })
                 })
-            
+
         }
     }
 
@@ -121,10 +121,10 @@ export default class QuestionTable extends Component {
 
     updateQuestionNumbers() {
         this.setChildModalShow(false);
-        var endPoint = '/questions/' + this.state.previousNumber.toString() + '/'+ this.state.newNumber.toString();
+        var endPoint = '/questions/' + this.state.previousNumber.toString() + '/' + this.state.newNumber.toString();
         axios.put(process.env.REACT_APP_SERVER_ADDR + endPoint, this.state.currentQuestion.questionNumber)
             .then(() => {
-                console.log("Question: " + this.state.previousNumber.toString() + "is now question: " + this.state.newNumber.toString() );
+                console.log("Question: " + this.state.previousNumber.toString() + "is now question: " + this.state.newNumber.toString());
             })
         // TODO: Add functionality to make question child of parent
     }
@@ -132,23 +132,79 @@ export default class QuestionTable extends Component {
     cancelQuestionUpdate() {
         const questions = reorder(
             this.state.questions,
-            this.state.newNumber-1,
-            this.state.previousNumber-1
+            this.state.newNumber - 1,
+            this.state.previousNumber - 1
         )
         this.setState({
-                questions,
+            questions,
         })
 
         this.setChildModalShow(false);
     }
 
-    setChildModalShow(val){
-        this.setState({showChildModal: val});
+    setChildModalShow(val) {
+        this.setState({ showChildModal: val });
     }
 
-    makeRelationship(){
+    makeRelationship() {
         this.setChildModalShow(false);
         // TODO: Add functionality to make question child of parent
+    }
+
+    async export(fileExt) {
+        var endPoint = '/questions/all/export'
+        var fileName = fileExt === 'json' ? 'json' : 'csv'
+        if (fileExt === 'json') {
+            await axios({
+                url: process.env.REACT_APP_SERVER_ADDR + endPoint,
+                method: 'GET',
+                responseType: 'blob',
+            }).then(res => {
+                const url = window.URL.createObjectURL(new Blob([res.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'questions_' + fileName + '.' + fileExt);
+                document.body.appendChild(link);
+                link.click();
+            })
+        }
+        else {
+            var contentArr = []
+            // push headers into the contentArray
+            const headers = Object.keys(this.state.questions[0])
+            contentArr.push(headers)
+
+            // push question values into contentArray
+            this.state.questions.map(question => {
+                var field = Object.values(question)
+                
+                for (let i in field) {
+                    if (typeof field[i] === 'object' && field[i] !== null) { 
+                        field[i] = JSON.stringify(field[i])
+                    }
+                    if (typeof field[i] === 'string' ) {
+                        field[i] = '"' + field[i].replaceAll("\"", "''").replaceAll("#", "") + '"'
+                    }
+                }
+                contentArr.push(field)
+            })
+
+            let csvContent = "data:text/csv;charset=utf-8,";
+
+            contentArr.forEach(function (rowArray) {
+                let row = rowArray.join(",");
+                csvContent += row + "\r\n";
+            });
+
+            var encodedUri = encodeURI(csvContent);
+            var link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", 'questions_' + fileName + '.' + fileExt);
+            document.body.appendChild(link); // Required for FF
+            
+            link.click(); // This will download the data file named "my_data.csv".
+
+        }
     }
 
     render() {
@@ -159,8 +215,8 @@ export default class QuestionTable extends Component {
             "questionNumber": this.state.questions.length + 1,
             "__v": 0,
             "alt_text": null,
-            "domainApplicability": [6],
-            "lifecycle": [6],
+            "domainApplicability": [],
+            "lifecycle": [],
             "mandatory": true,
             "parent": null,
             "pointsAvailable": 0,
@@ -168,14 +224,15 @@ export default class QuestionTable extends Component {
             "question": null,
             "questionType": "tombstone",
             "reference": null,
-            "regionalApplicability": [8],
+            "regionalApplicability": [],
             "responseType": "text",
             "responses": [],
-            "roles": [13],
+            "roles": [],
             "trustIndexDimension": null,
             "weighting": 0,
             "trigger": null,
             "child": false,
+            "rec_links": []
         }
 
         return (
@@ -208,7 +265,12 @@ export default class QuestionTable extends Component {
                             <TableCell>No.</TableCell>
                             <TableCell>Question</TableCell>
                             <TableCell align="right">Dimension</TableCell>
-                            <TableCell />
+                            <TableCell>
+                                <DropdownButton className="export-dropdown" title={<i className="fas fa-file-export fa-lg" />}>
+                                    <Dropdown.Item onClick={() => this.export('json')}>.json</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => this.export('csv')}>.csv</Dropdown.Item>
+                                </DropdownButton>
+                            </TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody component={DroppableComponent(this.onDragEnd)}>

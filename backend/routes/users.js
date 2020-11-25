@@ -20,7 +20,7 @@ owasp.config({
 // create user - for signup
 router.post('/create', async (req,res) => {
     let errors = [];
-    const {username, email, password, passwordConfirmation} = req.body;
+    const {username, email, password, passwordConfirmation, organization} = req.body;
 
     let result = owasp.test(password);
     if(result.strong == false){
@@ -32,7 +32,7 @@ router.post('/create', async (req,res) => {
         return res.status(400).json({passwordConfirmation: { isInvalid: true  , message: "Those passwords didn't match. Try again." }});
 
     // create new user, send to db
-    let user = new User({email, username, password});
+    let user = new User({email, username, password, organization});
     await user.save()
         .then(user => {
             let emailSubject = 'Responsible AI Design Assistant Account Creation';
@@ -237,6 +237,26 @@ router.post('/updatePassword', auth, (req, res) => {
             // unknown mongodb error
             return res.status(400).json(err);            
         });
+})
+
+router.post('/updateOrganization', auth, (req, res) => {
+    // error with authentication token
+    if(!req.user){
+        return res.json();
+    }
+    let newOrganization = req.body.newOrganization;
+    let password = req.body.password;
+    User.findById(req.user.id)
+        .select()
+        .then(existingUser => {
+            if(!existingUser) return res.status(400).json({organization: { isInvalid: true, message: 'User does not exist. Please create an account.'}})
+            if(!existingUser.authenticate(password)) return res.status(400).json({password: { isInvalid: true, message: 'Incorrect password entered'}})
+            existingUser.organization = newOrganization;
+            User.findByIdAndUpdate(req.user.id, existingUser, {upsert: true})
+            .then(user => {
+                res.json(user);
+            })
+        })
 })
 
 

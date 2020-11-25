@@ -85,6 +85,12 @@ function formatQuestion(q, Dimensions, Triggers = null) {
         question.recommendation.fr = "";
     }
 
+    if (q.rec_links) {
+        question.recommendedlinks = {};
+        question.recommendedlinks.default = q.rec_links;
+        question.recommendedlinks.fr = "";
+    }
+
     if (question.type == "dropdown") {
         question.hasOther = true;
         question.choice = [];
@@ -101,23 +107,26 @@ function formatQuestion(q, Dimensions, Triggers = null) {
         }
 
     } else if (question.type == "radiogroup" || question.type == "checkbox") {
-        if (q.pointsAvailable) {
+        // Score and Dimension
+        question.score = {};
+        if (q.trustIndexDimension) {
+            question.score.dimension = Dimensions[q.trustIndexDimension].label
+        }
 
-            question.score = {};
-
-            if (q.trustIndexDimension) {
-                question.score.dimension = Dimensions[q.trustIndexDimension].label
-            }
-
-            question.score.max = q.pointsAvailable * q.weighting;
-
-            // Add score to the choices
-            question.score.choices = {};
+        // Add choices to score
+        question.score.choices = {};
+        if (q.responses) {
             for (let c of q.responses) {
                 question.score.choices[c.id] = c.score * q.weighting;
 
             }
+        }
 
+        // Calculate max score
+        if (q.pointsAvailable) {
+            question.score.max = q.pointsAvailable * q.weighting;
+        } else {
+            question.score.max = 0;
         }
 
         // Add choices to question
@@ -132,27 +141,30 @@ function formatQuestion(q, Dimensions, Triggers = null) {
             question.choices.push(choice);
         }
 
-    } else if (question.type == "bootstrapslider") {
-        // Set type to bootstrap slider 
-        question.type = "bootstrapslider"
+    } else if (question.type == "slider") {
+        // Set type to nouislider 
+        question.type = "nouislider"
 
+        // Score and Dimension
+        question.score = {};
+        if (q.trustIndexDimension) {
+            question.score.dimension = Dimensions[q.trustIndexDimension].label
+        }
+        question.choices = [];
+
+        // Calculate max score
         if (q.pointsAvailable) {
-            question.score = {};
-
-            if (q.trustIndexDimension) {
-                question.score.dimension = Dimensions[q.trustIndexDimension].label
-            }
-
             question.score.max = q.pointsAvailable * q.weighting;
             question.score.weight = q.weighting;
-
-            question.choices = [];
+        } else {
+            question.score.max = 0
+            question.score.weight = q.weighting;
         }
 
         // Low Medium and High
-        question.step = 1;
-        question.rangeMin = 1;
-        question.rangeMax = 3;
+        question.pipsValues = [0, 100]
+        question.pipsDensity = 100
+        question.tooltips = false
     }
 
     return question;
@@ -410,6 +422,11 @@ router.get('/:questionId', async (req, res) => {
         .catch((err) => res.status(400).send(err));
 });
 
+router.get('/all/export', async (req, res) => {
+    Question.find()
+        .then((questions) => res.status(200).send(questions))
+        .catch((err) => res.status(400).send(err));
+})
 
 // Add new question
 // TODO: Should be restricted to admin role

@@ -31,8 +31,8 @@ const mockRiskQuestion = {
     "questionNumber": 10,
     "_v": 0,
     "alt_text": "Vulnerable Populations: There are several definitions available for the term b\u0000\u001cvulnerable populationb\u0000\u001d, the words simply imply the disadvantaged sub-segment of the community[1] requiring utmost care, specific ancillary considerations and augmented protections in research. The vulnerable individualsb\u0000\u0019 freedom and capability to protect one-self from intended or inherent risks is variably abbreviated, from decreased freewill to inability to make informed choices (NCBI)\r",
-    "domainApplicability": null,
-    "lifecycle": 6,
+    "domainApplicability": [],
+    "lifecycle": [6],
     "mandatory": true,
     "parent": null,
     "pointsAvailable": 1,
@@ -40,7 +40,7 @@ const mockRiskQuestion = {
     "question": "Is your user base comprised of individuals or groups from vulnerable populations?",
     "questionType": "risk",
     "reference": "Reference from AI Principles for Vulnerable Populations in Humanitarian Contexts: There are many recent examples of Artificial Intelligence (AI) systems being used for vulnerable people in humanitarian and disaster response contexts, with serious ethical and security-related implications. In particular, vulnerable populations are put at further risk through biases inherently built into AI systems. There are security concerns regarding their personal information being exposed and even used for persecution purposes.",
-    "regionalApplicability": null,
+    "regionalApplicability": [],
     "responseType": "radiogroup",
     "responses": [{ "_id": { "$oid": "5fac1a38d10a490ecdbe1b7d" }, "responseNumber": 0, "indicator": "Yes - Most users will be individuals or groups from vulnerable populations", "score": -1 }, { "_id": { "$oid": "5fac1a4ad10a490ecdbe1b84" }, "responseNumber": 1, "indicator": "Yes - Some users will be individuals or groups from vulnerable populations", "score": 0 }, { "_id": { "$oid": "5fac1a38d10a490ecdbe1b7f" }, "responseNumber": 2, "indicator": "No - There are currently no identified vulnerable populations in the user base", "score": 1 }],
     "roles": [13],
@@ -53,8 +53,8 @@ const mockNewQuestion = {
     "questionNumber": 3,
     "__v": 0,
     "alt_text": null,
-    "domainApplicability": null,
-    "lifecycle": 6,
+    "domainApplicability": [],
+    "lifecycle": [],
     "mandatory": true,
     "parent": null,
     "pointsAvailable": 0,
@@ -62,10 +62,10 @@ const mockNewQuestion = {
     "question": null,
     "questionType": "tombstone",
     "reference": null,
-    "regionalApplicability": null,
+    "regionalApplicability": [],
     "responseType": "text",
     "responses": [],
-    "roles": [13],
+    "roles": [],
     "trustIndexDimension": null,
     "weighting": 0
 }
@@ -128,7 +128,7 @@ test('Question Modal renders with survey Risk question', () => {
     expect(screen.queryByText("Responses")).toBeTruthy();
     expect(screen.queryByText("Score")).toBeTruthy();
     expect(screen.queryByText("Reference")).toBeTruthy();
-    // expect(screen.queryByText("Link")).toBeTruthy();
+    expect(screen.queryByText("Link")).toBeTruthy();
 })
 
 test('Question Modal renders with new question', () => {

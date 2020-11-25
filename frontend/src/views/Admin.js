@@ -1,21 +1,30 @@
 import '../css/admin.css';
 import React, { Component } from 'react';
+import DeleteIcon from '@material-ui/icons/Delete';
+import IconButton from '@material-ui/core/IconButton';
+import { red } from '@material-ui/core/colors';
 import QuestionTable from '../Components/QuestionTable';
 import AnalyticsDashboard from '../Components/AnalyticsDashboard';
-import { Tabs, Tab, Button, Table as BootStrapTable, DropdownButton, Dropdown } from 'react-bootstrap';
+import AdminProviders from '../Components/AdminProviders';
+import AdminResources from '../Components/AdminResources';
+import { Tabs, Tab, Button, Table as BootStrapTable, DropdownButton, Dropdown, Form } from 'react-bootstrap';
 import { getLoggedInUser } from '../helper/AuthHelper';
 import ReactGa from 'react-ga';
 import axios from 'axios';
 import Login from './Login';
+import Accordion from 'react-bootstrap/Accordion';
+import Card from 'react-bootstrap/Card';
+import DeleteUserModal from '../Components/DeleteUserModal';
+import DeleteSubmissionModal from '../Components/DeleteSubmissionModal';
 
 
 ReactGa.initialize(process.env.REACT_APP_GAID, { testMode: process.env.NODE_ENV === 'test' });
 
 const User = props => (
     <tr>
-        <td>{props.user.email}</td>
-        <td>{props.user.username}</td>
-        <td>
+        <td style={{ textAlign: "center" }}>{props.user.email}</td>
+        <td style={{ textAlign: "center" }}>{props.user.username}</td>
+        <td style={{ textAlign: "center" }}>
 
             {(props.role === "superadmin") ?
                 <DropdownButton id="dropdown-item-button" title={props.user.role}>
@@ -27,9 +36,13 @@ const User = props => (
                 : props.user.role}
 
         </td>
-        <td>
-            <a href="#" onClick={() => { if (window.confirm('Are you sure you want to delete the user?')) { (props.deleteUser(props.user._id)) } }}>Delete User</a>
-
+        <td style={{textAlign:"center"}}>{props.user?.organization}</td>
+        <td align="center">
+            <Button size="sm" onClick={() => props.nextPath("/ViewSubmissions/" + props.user._id)}>View</Button>
+        </td>
+        <td align="center">
+            <IconButton size="small" style={{paddingTop: "0.60em" }} color="secondary" onClick={() => props.showModal(props.user)
+            }><DeleteIcon style={{ color: red[500] }} /> </IconButton>
         </td>
     </tr>
 )
@@ -39,14 +52,29 @@ export default class AdminPanel extends Component {
         super(props);
 
         this.deleteUser = this.deleteUser.bind(this)
+        this.deleteUserSubmission = this.deleteUserSubmission.bind(this)
+        this.deleteSubmission = this.deleteSubmission.bind(this)
         this.changeRole = this.changeRole.bind(this)
+        this.nextPath = this.nextPath.bind(this)
+        this.showDeleteUserModal = this.showDeleteUserModal.bind(this)
+        this.showDeleteSubmisionModal = this.showDeleteSubmisionModal.bind(this)
+        this.hideModal = this.hideModal.bind(this)
+        this.confirmDeleteUser = this.confirmDeleteUser.bind(this)
+        this.confirmDeleteSubmission = this.confirmDeleteSubmission.bind(this)
         this.role = undefined
 
         this.state = {
             users: [],
-            submissions: []
-
+            submissions: [],
+            showFilter: false,
+            orgFilter: "",
+            roleFilter: "",
+            showDeleteSubmissionModal: false,
+            showDeleteUserModal: false,
+            userToDelete: null,
+            submissionToDelete: null
         };
+        this.handleTabChange = this.handleTabChange.bind(this);
     }
 
     componentDidMount() {
@@ -67,7 +95,6 @@ export default class AdminPanel extends Component {
                 this.setState({ json: json });
             })
 
-
         endPoint = '/users';
         axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
             .then(response => {
@@ -77,7 +104,7 @@ export default class AdminPanel extends Component {
                     .then(response => {
                         var resp = response.data;
                         resp = resp.map(submission => {
-                            submission.userId = this.state.users.find(user => user._id === submission.userId)?.username ?? "No User";
+                            submission.username = this.state.users.find(user => user._id === submission.userId)?.username ?? "No User";
                             return submission
                         });
 
@@ -109,7 +136,24 @@ export default class AdminPanel extends Component {
             users: this.state.users.filter(ul => ul._id !== id)
         })
     }
+    deleteSubmission(id) {
+        let endPoint = '/submissions/delete/' + id;
+        axios.delete(process.env.REACT_APP_SERVER_ADDR + endPoint)
+            .then(response => { console.log(response.data) });
 
+        this.setState({
+            submissions: this.state.submissions.filter(ul => ul._id !== id)
+        })
+    }
+    deleteUserSubmission(id) {
+        let endPoint = '/submissions/deleteAll/' + id;
+        axios.delete(process.env.REACT_APP_SERVER_ADDR + endPoint)
+            .then(response => { console.log(response.data) });
+
+        this.setState({
+            submissions: this.state.submissions.filter(ul => ul.userId !== id)
+        })
+    }
 
     changeRole(id, role) {
         let endPoint = '/users/' + id;
@@ -124,8 +168,12 @@ export default class AdminPanel extends Component {
 
     userList() {
         if (Array.isArray(this.state.users)) {
+
             return this.state.users.map(currentuser => {
-                return <User user={currentuser} deleteUser={this.deleteUser} changeRole={this.changeRole} role={this.role} key={currentuser._id} />;
+                if (this.state.roleFilter === "" || currentuser.role?.toLowerCase() === this.state.roleFilter?.toLowerCase())
+                    if (this.state.orgFilter === "" || currentuser.organization?.toLowerCase() === this.state.orgFilter?.toLowerCase())
+                        return <User user={currentuser} nextPath={this.nextPath} changeRole={this.changeRole} showModal={this.showDeleteUserModal} role={this.role} key={currentuser._id} />;
+                return null;
             })
         }
     }
@@ -135,99 +183,189 @@ export default class AdminPanel extends Component {
             let convertedDate = new Date(currentsubmission.date).toLocaleString("en-US", { timeZone: Intl.DateTimeFormat()?.resolvedOptions()?.timeZone ?? "UTC" });
             return (
                 <tr key={idx}>
-                    <td>{currentsubmission.userId}</td>
-                    <td>{currentsubmission.projectName}</td>
-                    <td>{convertedDate}</td>
-                    <td>{currentsubmission.lifecycle}</td>
-                    <td>{currentsubmission.completed ? "Yes" : "No"}</td>
-                    <td>
-                        <Button size="sm" onClick={() => this.nextPath('/Results/', currentsubmission.submission ?? {})}>View Responses</Button>
-                    </td>
+                    <td style={{textAlign:"center"}}>{currentsubmission.username}</td>
+                    <td style={{textAlign:"center"}}>{currentsubmission.projectName}</td>
+                    <td style={{textAlign:"center"}}>{convertedDate}</td>
+                    <td style={{textAlign:"center"}}>{currentsubmission.completed ? "Yes" : "No"}</td>
+                    <td style={{textAlign:"center"}}><Button size="sm" onClick={() => this.nextPath('/Results/', currentsubmission.submission ?? {})}> Responses</Button></td> 
+                    <td align ="center"> <IconButton size="small" style={{paddingTop: "0.60em" }} color="secondary" onClick={() => { this.showDeleteSubmisionModal(currentsubmission)}}><DeleteIcon style={{ color: red[500]}}/> </IconButton></td>
                 </tr>
             )
         })
     }
 
+    handleTabChange(key) {
+        if (key === "userManagement") {
+            this.setState({ showFilter: true });
+        } else {
+            this.setState({ showFilter: false });
+        }
+    }
+
+    resetFilters(event) {
+        this.setState({ orgFilter: "", roleFilter: "" });
+        event.target.reset();
+    }
+
+    handleFilters(event) {
+        event.preventDefault();
+        let form = event.target.elements;
+        let orgFilter = form.orgFilter.value;
+        let roleFilter = form.roleFilter.value;
+        this.setState({ orgFilter: orgFilter, roleFilter: roleFilter });
+    }
+
+    showDeleteUserModal(user) {
+        this.setState({ userToDelete: user, showDeleteUserModal: true });
+    }
+
+    showDeleteSubmisionModal(submission) {
+        this.setState({ submissionToDelete: submission, showDeleteSubmissionModal: true });
+    }
+
+    hideModal() {
+        this.setState({ userToDelete: null, submissionToDelete: null, showDeleteUserModal: false, showDeleteSubmissionModal: false });
+    }
+
+    confirmDeleteUser(deleteSubmissions) {
+        if (deleteSubmissions) {
+            this.deleteUserSubmission(this.state.userToDelete._id)
+        }
+        this.deleteUser(this.state.userToDelete._id)
+        this.hideModal();
+    }
+
+    confirmDeleteSubmission(){
+        this.deleteSubmission(this.state.submissionToDelete._id);
+        this.hideModal();
+    }
+
+    
+
     render() {
         return (
-            <main id="wb-cont" role="main" property="mainContentOfPage" className="container" style={{ paddingBottom: "1rem" }}>
-                <h1 className="section-header">
-                    Administration Panel
+            <div>
+                <div className="dimensionNav">
+                <DeleteUserModal onHide={this.hideModal} confirmDelete={this.confirmDeleteUser} show={this.state.showDeleteUserModal} user={this.state?.userToDelete} />
+                <DeleteSubmissionModal onHide={this.hideModal} confirmDelete={this.confirmDeleteSubmission} show={this.state.showDeleteSubmissionModal} submission={this.state?.submissionToDelete} />
+                    {!this.state.showFilter ? null :
+                        <Accordion>
+                            <Card>
+                                <Accordion.Toggle as={Card.Header} eventKey='1'>
+                                    Filters
+                    </Accordion.Toggle>
+                                <Accordion.Collapse eventKey='1'>
+                                    <Card.Body className="cardBody">
+                                        <Form onSubmit={(e) => this.handleFilters(e)} onReset={(e) => this.resetFilters(e)}>
+                                            <Form.Group controlId="roleFilter">
+                                                <Form.Label>Role</Form.Label>
+                                                <Form.Control type="text" placeholder="Role Name" />
+                                            </Form.Group>
+                                            <Form.Group controlId="orgFilter">
+                                                <Form.Label>Organization</Form.Label>
+                                                <Form.Control type="text" placeholder="Organization Name" />
+                                            </Form.Group>
+                                            <Form.Group controlId="formSubmit">
+                                            </Form.Group>
+                                            <input type="submit" className="btn btn-primary btn-block btn-lg" value="Submit" />
+                                            <Button type="reset" id="clearFilter"><div>Reset <i className="fa fa-undo fa-fw"></i></div></Button>
+                                        </Form>
+
+                                    </Card.Body>
+
+                                </Accordion.Collapse>
+
+                            </Card>
+                        </Accordion>
+                    }
+                </div>
+                <main id="wb-cont" role="main" property="mainContentOfPage" className="container" style={{ paddingBottom: "1rem" }}>
+                    <h1 className="section-header">
+                        Administration Panel
                 </h1>
-                <Tabs defaultActiveKey="surveyManagement">
-                    <Tab eventKey="surveyManagement" title="Survey Management">
-                        <QuestionTable />
-                    </Tab>
-                    <Tab eventKey="userManagement" title="Users">
-                        <div className="table-responsive mt-3">
-                            <BootStrapTable id="users" bordered hover responsive className="user-table">
-                                <thead>
-                                    <tr>
-                                        <th className="score-card-headers">
-                                            Email
+                    <Tabs defaultActiveKey="surveyManagement" onSelect={this.handleTabChange}>
+                        <Tab eventKey="surveyManagement" title="Survey Management">
+                            <QuestionTable />
+                        </Tab>
+                        <Tab eventKey="userManagement" title="Users">
+                            <div className="table-responsive mt-3">
+                                <BootStrapTable id="users" bordered hover responsive className="user-table">
+                                    <thead>
+                                        <tr>
+                                            <th className="score-card-headers" style={{textAlign:"center"}}>
+                                                Email
                                         </th>
-                                        <th className="score-card-headers">
-                                            User Name
+                                            <th className="score-card-headers" style={{textAlign:"center"}}>
+                                                Name
+                                        </th>
+                                            <th className="score-card-headers" style={{textAlign:"center"}}>
+                                                Role
+                                        </th>
+                                            <th className="score-card-headers" style={{textAlign:"center"}}>
+                                                Organization
+                                        </th>
+                                            <th className="score-card-headers" style={{textAlign:"center"}}>
+                                                Submissions
+                                        </th>
+                                        <th className="score-card-headers" style={{textAlign:"center"}}>
+                                               
+                                        </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {this.userList()}
+
+                                    </tbody>
+                                </BootStrapTable>
+                            </div>
+                        </Tab>
+                        <Tab eventKey="submissions" title="Submissions">
+                            <div className="table-responsive mt-3">
+                                <BootStrapTable id="submissions" bordered hover responsive className="submission-table">
+                                    <thead>
+                                        <tr>
+                                            <th className="score-card-headers" style={{textAlign:"center"}}>
+                                                User Name
+                                        </th>
+                                            <th className="score-card-headers" style={{textAlign:"center"}}>
+                                                Project Name
+                                        </th>
+                                            <th className="score-card-headers" style={{textAlign:"center"}}>
+                                                Date
                                         </th>
 
-                                        <th className="score-card-headers">
-                                            User Role
+                                            <th className="score-card-headers" style={{textAlign:"center"}}>
+                                                Completed
+                                        </th>
+                                            <th className="score-card-headers" style={{textAlign:"center"}}>
+                                                Responses
+                                        </th>
+                                        <th className="score-card-headers" style={{textAlign:"center"}}>
+                                                Action
                                         </th>
 
-                                        <th className="score-card-headers">
-                                            Action
-                                        </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {this.submissionList()}
 
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {this.userList()}
-
-                                </tbody>
-                            </BootStrapTable>
-                        </div>
-                    </Tab>
-                    <Tab eventKey="submissions" title="Submissions">
-                        <div className="table-responsive mt-3">
-                            <BootStrapTable id="submissions" bordered hover responsive className="submission-table">
-                                <thead>
-                                    <tr>
-                                        <th className="score-card-headers">
-                                            User Name
-                                        </th>
-                                        <th className="score-card-headers">
-                                            Project Name
-                                        </th>
-
-                                        <th className="score-card-headers">
-                                            Date
-                                        </th>
-
-                                        <th className="score-card-headers">
-                                            Lifecycle
-                                        </th>
-                                        <th className="score-card-headers">
-                                            Completed
-                                        </th>
-                                        <th className="score-card-headers">
-                                            Submissions
-                                        </th>
-
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {this.submissionList()}
-
-                                </tbody>
-                            </BootStrapTable>
-                        </div>
-                    </Tab>
-                    <Tab eventKey="analytics" title="Analytics">
-                        <AnalyticsDashboard />
-                    </Tab>
-                </Tabs>
-                <Login />
-            </main>
+                                    </tbody>
+                                </BootStrapTable>
+                            </div>
+                        </Tab>
+                        <Tab eventKey="trustedAIProviders" title="Trusted AI Providers">
+                        <AdminProviders/>
+                        </Tab>
+                        <Tab eventKey="trustedAIResources" title="Trusted AI Resources">
+                            <AdminResources/>
+                        </Tab>
+                        <Tab eventKey="analytics" title="Analytics">
+                            <AnalyticsDashboard />
+                        </Tab>
+                    </Tabs>
+                    <Login />
+                </main>
+            </div>
         )
     }
 }

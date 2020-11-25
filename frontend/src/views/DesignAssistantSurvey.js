@@ -68,6 +68,7 @@ class DesignAssistantSurvey extends Component {
       D: 28,
       authToken: localStorage.getItem("authToken"),
       submission_id: this?.props?.location?.state?.submission_id,
+      user_id: this?.props?.location?.state?.user_id
     };
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
@@ -75,7 +76,7 @@ class DesignAssistantSurvey extends Component {
 
   // Request questions JSON from backend 
   componentDidMount() {
-    widgets.bootstrapslider(Survey);
+    widgets.nouislider(Survey);
 
     ReactGa.pageview(window.location.pathname + window.location.search);
 
@@ -113,7 +114,7 @@ class DesignAssistantSurvey extends Component {
         if (this?.props?.location?.state?.prevResponses) {
           model.data = this.props.location.state.prevResponses;
           let questionsAnswered = Object.keys(model.data);
-          let lastQuestionAnswered = questionsAnswered[questionsAnswered.length-1];
+          let lastQuestionAnswered = questionsAnswered[questionsAnswered.length - 1];
           let lastPageAnswered = model.pages.find(page => page.elements.find(question => question.name === lastQuestionAnswered));
           model.currentPageNo = lastPageAnswered?.visibleIndex ?? 0;
         }
@@ -238,7 +239,12 @@ class DesignAssistantSurvey extends Component {
     let title = this.state.json?.pages[0]?.elements?.find(q => q?.title?.default === "Title of project");
     let dateTime = new Date();
     let projectName = this.state.model.data[title?.name] ?? "";
-    axios.post(process.env.REACT_APP_SERVER_ADDR + '/submissions/update/' + this.state.submission_id, {
+    let endpoint = '/submissions';
+    if (this.state.submission_id) {
+      endpoint = '/submissions/update/' + this.state.submission_id;
+    }
+    axios.post(process.env.REACT_APP_SERVER_ADDR + endpoint, {
+      userId: this.state?.user_id,
       submission: this.state.model.data,
       date: dateTime,
       projectName: projectName,
@@ -248,10 +254,11 @@ class DesignAssistantSurvey extends Component {
       roles: this.state.roleFilters,
       lifecycle: this.state.lifecycleFilters
     }).then(res => {
-      console.log(res.data)
       toast("Saving Responses", {
-        toastId:"saving"
+        toastId: "saving"
       });
+      let submission = res.data;
+      this.setState({ submission_id: submission._id });
     });
   }
 
@@ -371,7 +378,7 @@ class DesignAssistantSurvey extends Component {
         this.setState({ regionFilters: [] })
         break
       case 'lifecycle':
-        this.setState({lifecycleFilters: [] })
+        this.setState({ lifecycleFilters: [] })
         break
       default:
         console.log('not a valid filter')
