@@ -150,7 +150,15 @@ function formatQuestion(q, Dimensions, Triggers = null) {
         if (q.trustIndexDimension) {
             question.score.dimension = Dimensions[q.trustIndexDimension].label
         }
-        question.choices = [];
+        question.choices = [-1,0,1];
+
+        if (q.responses) {
+            low = q.responses.filter(resp => resp.indicator == "low")[0].score;
+            med = q.responses.filter(resp => resp.indicator == "med")[0].score;
+            high = q.responses.filter(resp => resp.indicator == "high")[0].score;
+
+            question.choices = [low,med,high];
+        }
 
         // Calculate max score
         if (q.pointsAvailable) {
