@@ -85,7 +85,7 @@ function formatQuestion(q, Dimensions, Triggers = null) {
         question.recommendation.fr = "";
     }
 
-    if (q.rec_links){
+    if (q.rec_links) {
         question.recommendedlinks = {};
         question.recommendedlinks.default = q.rec_links;
         question.recommendedlinks.fr = "";
@@ -107,18 +107,25 @@ function formatQuestion(q, Dimensions, Triggers = null) {
         }
 
     } else if (question.type == "radiogroup" || question.type == "checkbox") {
-        if (q.pointsAvailable) {
+        // Score and Dimension
+        question.score = {};
+        if (q.trustIndexDimension) {
+            question.score.dimension = Dimensions[q.trustIndexDimension].label
+        }
 
-            question.score = {};
-            question.score.dimension = Dimensions[q.trustIndexDimension].label;
-            question.score.max = q.pointsAvailable * q.weighting;
-
-            // Add score to the choices
-            question.score.choices = {};
+        // Add choices to score
+        question.score.choices = {};
+        if (q.responses) {
             for (let c of q.responses) {
                 question.score.choices[c.id] = c.score * q.weighting;
             }
+        }
 
+        // Calculate max score
+        if (q.pointsAvailable) {
+            question.score.max = q.pointsAvailable * q.weighting;
+        } else {
+            question.score.max = 0;
         }
 
         // Add choices to question
@@ -136,21 +143,24 @@ function formatQuestion(q, Dimensions, Triggers = null) {
         // Set type to nouislider 
         question.type = "nouislider"
 
+        // Score and Dimension
+        question.score = {};
+        if (q.trustIndexDimension) {
+            question.score.dimension = Dimensions[q.trustIndexDimension].label
+        }
+        question.choices = [];
+
+        // Calculate max score
         if (q.pointsAvailable) {
-            question.score = {};
-
-            if (q.trustIndexDimension) {
-                question.score.dimension = Dimensions[q.trustIndexDimension].label
-            }
-
             question.score.max = q.pointsAvailable * q.weighting;
             question.score.weight = q.weighting;
-            
-            question.choices = [];
+        } else {
+            question.score.max = 0
+            question.score.weight = q.weighting;
         }
 
         // Low Medium and High
-        question.pipsValues = [0,100] 
+        question.pipsValues = [0, 100]
         question.pipsDensity = 100
         question.tooltips = false
     }
