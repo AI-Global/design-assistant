@@ -14,6 +14,7 @@ import TrustedAIProviders from './TrustedAIProviders';
 import TrustedAIResources from './TrustedAIResources';
 import ReactGa from 'react-ga';
 import Login from './Login';
+import calculateQuestionScore from '../helper/QuestionScore';
 
 ReactGa.initialize(process.env.REACT_APP_GAID, { testMode: process.env.NODE_ENV === 'test' });
 
@@ -29,6 +30,13 @@ const ExportHandler = () => {
         category: 'Button',
         action: 'Exported report as PDF'
     })
+}
+
+const riskLevel =
+{
+    1: "Low",
+    2: "Medium",
+    3: "High"
 }
 
 /**
@@ -49,6 +57,28 @@ export default class Results extends Component {
         axios.get(process.env.REACT_APP_SERVER_ADDR + '/dimensions').then((res) => {
             this.setState({ Dimensions: res.data });
         });
+    }
+
+    calculateRiskWeight(riskQuestions, results) {
+        var riskScore = 0;
+        var maxRiskScore = 0;
+        // Calculate total risk based off user responses
+        riskQuestions.map(question => {
+            let selectedChoices = results[question.name];
+            let questionScore = calculateQuestionScore(question, selectedChoices, 1);
+            riskScore += questionScore.score;
+            maxRiskScore += questionScore.maxScore;
+        });
+
+        // Calculate whether Risk level is low medium or high
+        var riskWeight = 1;
+        if (riskScore > (maxRiskScore * 0.66)) {
+            riskWeight = 3;
+        } else if (riskScore > (maxRiskScore * 0.33)) {
+            riskWeight = 2;
+        }
+
+        return riskWeight;
     }
 
     downloadCSV(results, questionsObj) {
@@ -131,6 +161,8 @@ export default class Results extends Component {
             return allQuestions
         });
 
+        var riskWeight = this.calculateRiskWeight(allQuestions.filter(x => x.score?.dimension === "RK"), surveyResults);
+
         var titleQuestion = allQuestions.find(question => question.title.default === "Title of project");
         var descriptionQuestion = allQuestions.find(question => question.title.default === "Project Description");
         var industryQuestion = allQuestions.find(question => question.title.default === "Industry");
@@ -182,10 +214,10 @@ export default class Results extends Component {
                                 </thead>
                                 <tbody>
                                     {this.state.Dimensions.map((dimension, idx) => {
- 
+
                                         if (dimension.label !== "T" && dimension.label !== "RK") {
                                             return (
-                                                <DimensionScore key={idx} radarChartData={radarChartData} dimensionName={dimension.name} riskQuestions={allQuestions.filter(x => x.score?.dimension === "RK")}
+                                                <DimensionScore key={idx} radarChartData={radarChartData} dimensionName={dimension.name} riskWeight={riskWeight}
                                                     results={surveyResults} questions={allQuestions.filter(x => x.score?.dimension === dimension.label)} />
                                             )
                                         }
@@ -234,6 +266,7 @@ export default class Results extends Component {
                     </Tab>
                 </Tabs>
                 <div className="dimension-chart">
+                    <h4>Risk Level: {riskLevel[riskWeight ?? 1]}</h4>
                     <ResponsiveRadar
                         data={radarChartData}
                         keys={["score"]}
