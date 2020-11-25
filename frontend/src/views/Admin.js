@@ -280,8 +280,8 @@ export default class AdminPanel extends Component {
     getFilteredUsers() {
         let filtered = []
         this.state.users.forEach(user => {
-            if (this.state.roleFilter === "" || user.role?.toLowerCase() === this.state.roleFilter?.toLowerCase())
-                if (this.state.orgFilter === "" || user.organization?.toLowerCase() === this.state.orgFilter?.toLowerCase())
+            if (this.state.roleFilter === "" || user.role?.toLowerCase().includes(this.state.roleFilter?.toLowerCase()))
+                if (this.state.orgFilter === "" || user.organization?.toLowerCase().includes(this.state.orgFilter?.toLowerCase()))
                     filtered.push(user)
         })
         return filtered;
@@ -290,8 +290,8 @@ export default class AdminPanel extends Component {
     getFilteredSubmissions() {
         let filtered = []
         this.state.submissions.forEach(currentsubmission => {
-            if (this.state.userFilter === "" || currentsubmission.username?.toLowerCase() === this.state.userFilter?.toLowerCase())
-                if (this.state.projectFilter === "" || currentsubmission.projectName?.toLowerCase() === this.state.projectFilter?.toLowerCase())
+            if (this.state.userFilter === "" || currentsubmission.username?.toLowerCase().includes(this.state.userFilter?.toLowerCase()))
+                if (this.state.projectFilter === "" || currentsubmission.projectName?.toLowerCase().includes(this.state.projectFilter?.toLowerCase()))
                     filtered.push(currentsubmission)
         })
         return filtered;

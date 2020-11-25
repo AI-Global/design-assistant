@@ -71,7 +71,7 @@ export default class TrustedAIResources extends Component{
                     </thead>
                     <tbody>
                         {resources.map(function(resource, idx) {
-                            if(filter === "" || resource["resource"].includes(filter)){
+                            if(filter === "" || resource["resource"].toLowerCase().includes(filter?.toLowerCase())){
                             return ( 
                                 <tr key={idx}>
                                     <td>

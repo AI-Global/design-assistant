@@ -71,7 +71,7 @@ export default class TrustedAIProviders extends Component {
                     </thead>
                     <tbody>
                         {providers.map(function (provider, idx) {
-                            if(filter === "" || provider["resource"].includes(filter)){
+                            if(filter === "" || provider["resource"].toLowerCase().includes(filter?.toLowerCase())){
                             return (
                                 <tr key={idx}>
                                     <td>
