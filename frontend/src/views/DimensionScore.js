@@ -84,8 +84,6 @@ export default class DimensionScore extends Component {
             maxRiskScore += questionScore.maxScore;
         });
 
-        console.log(riskScore)
-        console.log(maxRiskScore)
         // Calculate whether Risk level is low medium or high
         var riskWeight = 1;
         if (riskScore > (maxRiskScore * 0.66)) {
@@ -93,13 +91,12 @@ export default class DimensionScore extends Component {
         } else if (riskScore > (maxRiskScore * 0.33)) {
             riskWeight = 2;
         }
-        console.log(riskWeight)
+
         var dimensionScore = 0;
         var maxDimensionScore = 0;
         questions.map(question => {
             let selectedChoices = results[question.name];
             let questionScore = this.calculateQuestionScore(question, selectedChoices, riskWeight);
-            //console.log(questionScore)
             dimensionScore += questionScore.score;
             maxDimensionScore += questionScore.maxScore;
             return dimensionScore;
