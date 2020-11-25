@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-import {Table} from 'react-bootstrap'
+import { Form, Table, InputGroup } from 'react-bootstrap'
+import { grey } from '@material-ui/core/colors';
+import IconButton from '@material-ui/core/IconButton';
+import SearchIcon from '@material-ui/icons/Search';
 import axios from 'axios';
 require('dotenv').config()
 
@@ -8,11 +11,12 @@ require('dotenv').config()
  * the trusted AI providers that are stored in 
  * the database. 
  */
-export default class TrustedAIProviders extends Component{
-    constructor(props){
+export default class TrustedAIProviders extends Component {
+    constructor(props) {
         super(props);
         this.state = {
-            providers: []
+            providers: [],
+            filter: ""
         }
     }
 
@@ -25,10 +29,31 @@ export default class TrustedAIProviders extends Component{
             })
     }
 
-    render (){
+    handleSubmit(event){
+        event.preventDefault();
+        let form = event.target.elements;
+        let filter = form.filterProviders.value;
+        this.setState({filter})
+        return
+    }
+
+    render() {
         var providers = this.state.providers;
+        var filter = this.state.filter;
         return (
             <div className="report-card mt-3">
+                <Form onSubmit={(e) => this.handleSubmit(e)}>
+                    <Form.Group controlId="filterProviders">
+                        <InputGroup className="mb-3">
+                            <Form.Control type="text" placeholder="Search..." />
+                            <InputGroup.Append>
+                                <IconButton size="small" color="secondary" type="submit">
+                                    <SearchIcon style={{ color: grey[900] }} />
+                                </IconButton>
+                            </InputGroup.Append>
+                        </InputGroup>
+                    </Form.Group>
+                </Form>
                 <Table id="trusted-ai-providers" bordered responsive className="report-card-table">
                     <thead>
                         <tr role="row">
@@ -45,8 +70,9 @@ export default class TrustedAIProviders extends Component{
                         </tr>
                     </thead>
                     <tbody>
-                        {providers.map(function(provider, idx) {
-                            return ( 
+                        {providers.map(function (provider, idx) {
+                            if(filter === "" || provider["resource"].includes(filter)){
+                            return (
                                 <tr key={idx}>
                                     <td>
                                         <a href={provider["source"]}>{provider["resource"]}</a>
@@ -55,7 +81,9 @@ export default class TrustedAIProviders extends Component{
                                         {provider["description"]}
                                     </td>
                                 </tr>
-                            )
+                            ) } else {
+                                return null;
+                            }
 
                         })}
                     </tbody>
