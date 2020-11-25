@@ -306,7 +306,6 @@ export default function QuestionModal(props) {
                                 <Form.Group controlId="questionDimension">
                                     <Form.Label>Dimension</Form.Label>
                                     <Form.Control value={dimension === null ? "" : dimension} as="select" onChange={(event) => setDimension(parseInt(event.target.value))}>
-                                        <option value="-1">Details</option>
                                         {Object.values(dimensions).map((dimension, index) =>
                                             <option key={index + 1} value={index + 1} data-testid={dimension.name}>{dimension.name}</option>
                                         )}
