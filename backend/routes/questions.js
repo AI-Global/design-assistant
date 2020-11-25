@@ -13,7 +13,7 @@ const mongoose = require('mongoose');
 
 async function getDimensions() {
     // Get Lookup of Dimensions from DB
-    let dimensions = await Dimension.find()
+    let dimensions = await Dimension.find().sort({ dimensionID: 1 })
 
     let Dimensions = {}
     for (let d of dimensions) {

@@ -5,7 +5,7 @@ const Dimension = require('../models/dimension.model');
 // Get dimensions
 router.get('/', async (req,res) => {
     try{
-        const dimensions = await Dimension.find();
+        const dimensions = await Dimension.find().sort({ dimensionID: 1 });
         res.json(dimensions);
         // print debug message
         console.log("Incoming dimensions request");
@@ -17,7 +17,7 @@ router.get('/', async (req,res) => {
 
 router.get('/names', async (req,res) => {
     try{
-        const dimensions = await Dimension.find({}, 'name');
+        const dimensions = await Dimension.find({}, 'name').sort({ dimensionID: 1 });
         let dimensionNames = [];
         dimensions.forEach(function (item, index) {
             dimensionNames.push(item.name);
