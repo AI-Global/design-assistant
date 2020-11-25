@@ -182,7 +182,7 @@ export default class Results extends Component {
                                 </thead>
                                 <tbody>
                                     {this.state.Dimensions.map((dimension, idx) => {
-                                        if (dimension.label != "T" && dimension.label != "RK") {
+                                        if (dimension.label !== "T" && dimension.label !== "RK") {
                                             return (
                                                 <DimensionScore key={idx} radarChartData={radarChartData} dimensionName={dimension.name}
                                                     results={surveyResults} questions={allQuestions.filter(x => x.score?.dimension === dimension.label)} />
@@ -197,7 +197,7 @@ export default class Results extends Component {
                         <Tab.Container id="left-tabs-example" defaultActiveKey={this.state.Dimensions[0].label}>
                             <Tab.Content>
                                 {this.state.Dimensions.map((dimension, idx) => {
-                                    if (dimension.label != "T" && dimension.label != "RK") {
+                                    if (dimension.label !== "T" && dimension.label !== "RK") {
                                         return (
                                             <Tab.Pane key={idx} eventKey={dimension.label}>
                                                 <ReportCard dimension={dimension.label} results={surveyResults} questions={questions.filter(x => x.score?.dimension === dimension.label)} />
@@ -208,7 +208,7 @@ export default class Results extends Component {
                             </Tab.Content>
                             <Nav variant="tabs" className="report-card-nav" defaultActiveKey="accountability">
                                 {this.state.Dimensions.map((dimension, idx) => {
-                                    if (dimension.label != "T" && dimension.label != "RK") {
+                                    if (dimension.label !== "T" && dimension.label !== "RK") {
                                         return (
                                             <Nav.Item key={idx} >
                                                 <Nav.Link eventKey={dimension.label}>
