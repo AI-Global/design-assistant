@@ -69,7 +69,7 @@ export default class Results extends Component {
             var user_response_ids;
 
             // the
-            var response = results[question.name];
+            let response = results[question.name];
 
             // If there are more than one response, filter
             if (Array.isArray(response)) {
