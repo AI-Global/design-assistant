@@ -161,13 +161,8 @@ function formatQuestion(q, Dimensions, Triggers = null) {
         }
 
         // Calculate max score
-        if (q.pointsAvailable) {
-            question.score.max = q.pointsAvailable * q.weighting;
-            question.score.weight = q.weighting;
-        } else {
-            question.score.max = 0
-            question.score.weight = q.weighting;
-        }
+        question.score.max = question.choices[2] * q.weighting;
+        question.score.weight = q.weighting;
 
         // Low Medium and High
         question.pipsValues = [0, 100]
