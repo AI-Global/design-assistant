@@ -182,9 +182,10 @@ export default class Results extends Component {
                                 </thead>
                                 <tbody>
                                     {this.state.Dimensions.map((dimension, idx) => {
+ 
                                         if (dimension.label !== "T" && dimension.label !== "RK") {
                                             return (
-                                                <DimensionScore key={idx} radarChartData={radarChartData} dimensionName={dimension.name}
+                                                <DimensionScore key={idx} radarChartData={radarChartData} dimensionName={dimension.name} riskQuestions={allQuestions.filter(x => x.score?.dimension === "RK")}
                                                     results={surveyResults} questions={allQuestions.filter(x => x.score?.dimension === dimension.label)} />
                                             )
                                         }
