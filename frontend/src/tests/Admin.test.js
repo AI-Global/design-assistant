@@ -26,7 +26,7 @@ const mockDB = {
             "label": "A",
             "name": "Accountability"
           }],
-        "analytics" : []
+        "analytics" : [],
     }
 }
 
@@ -37,6 +37,7 @@ test('Admin Page renders', async () => {
     axios.get.mockResolvedValue(emptyMockDB);
 
     await render(<Router><Admin/></Router>);
+
     expect(screen.getByText(loginButton)).toBeTruthy();
 
     expect(screen.getByText(adminWelcomeText)).toBeTruthy();
