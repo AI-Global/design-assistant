@@ -68,6 +68,8 @@ export default class Results extends Component {
             let questionScore = calculateQuestionScore(question, selectedChoices, 1);
             riskScore += questionScore.score;
             maxRiskScore += questionScore.maxScore;
+
+            return maxRiskScore
         });
 
         // Calculate whether Risk level is low medium or high
@@ -190,7 +192,7 @@ export default class Results extends Component {
                 <h1 className="section-header">
                     Results
                 </h1>
-                <button id="exportButton" type="button" className="btn btn-save mr-2 btn btn-primary export-button" onClick={() => { ExportHandler(); exportReport(projectTitle, projectDescription, projectIndustry, projectRegion) }}>Export</button>
+                <button id="exportButton" type="button" className="btn btn-save mr-2 btn btn-primary export-button" onClick={() => { ExportHandler(); exportReport(projectTitle, projectDescription, projectIndustry, projectRegion, riskLevel[riskWeight ?? 1]) }}>Export</button>
                 <button id="exportButtonCSV" type="button" className="btn btn-save mr-2 btn btn-primary export-button-csv" onClick={() => { this.downloadCSV(surveyResults, questions) }}>Export as CSV</button>
                 <Tabs defaultActiveKey="score">
                     <Tab eventKey="score" title="Score">
@@ -221,6 +223,7 @@ export default class Results extends Component {
                                                     results={surveyResults} questions={allQuestions.filter(x => x.score?.dimension === dimension.label)} />
                                             )
                                         }
+                                        return null;
                                     })}
                                 </tbody>
                             </Table>
@@ -237,6 +240,7 @@ export default class Results extends Component {
                                             </Tab.Pane>
                                         );
                                     }
+                                    return null;
                                 })}
                             </Tab.Content>
                             <Nav variant="tabs" className="report-card-nav" defaultActiveKey="accountability">
@@ -250,6 +254,7 @@ export default class Results extends Component {
                                             </Nav.Item>
                                         );
                                     }
+                                    return null;
                                 })}
                             </Nav>
                         </Tab.Container>
