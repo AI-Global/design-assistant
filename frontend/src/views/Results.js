@@ -197,22 +197,26 @@ export default class Results extends Component {
                         <Tab.Container id="left-tabs-example" defaultActiveKey={this.state.Dimensions[0].label}>
                             <Tab.Content>
                                 {this.state.Dimensions.map((dimension, idx) => {
-                                    return (
-                                        <Tab.Pane key={idx} eventKey={dimension.label}>
-                                            <ReportCard dimension={dimension.label} results={surveyResults} questions={questions.filter(x => x.score?.dimension === dimension.label)} />
-                                        </Tab.Pane>
-                                    );
+                                    if (dimension.label != "T" && dimension.label != "RK") {
+                                        return (
+                                            <Tab.Pane key={idx} eventKey={dimension.label}>
+                                                <ReportCard dimension={dimension.label} results={surveyResults} questions={questions.filter(x => x.score?.dimension === dimension.label)} />
+                                            </Tab.Pane>
+                                        );
+                                    }
                                 })}
                             </Tab.Content>
                             <Nav variant="tabs" className="report-card-nav" defaultActiveKey="accountability">
                                 {this.state.Dimensions.map((dimension, idx) => {
-                                    return (
-                                        <Nav.Item key={idx} >
-                                            <Nav.Link eventKey={dimension.label}>
-                                                {dimension.name}
-                                            </Nav.Link>
-                                        </Nav.Item>
-                                    );
+                                    if (dimension.label != "T" && dimension.label != "RK") {
+                                        return (
+                                            <Nav.Item key={idx} >
+                                                <Nav.Link eventKey={dimension.label}>
+                                                    {dimension.name}
+                                                </Nav.Link>
+                                            </Nav.Item>
+                                        );
+                                    }
                                 })}
                             </Nav>
                         </Tab.Container>
