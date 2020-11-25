@@ -31,6 +31,7 @@ const User = props => (
     <TableRow hover={true}>
         <TableCell style={{ textAlign: "center" }}>{props.user.email}</TableCell>
         <TableCell style={{ textAlign: "center" }}>{props.user.username}</TableCell>
+        <TableCell style={{ textAlign: "center" }}>{props.user?.organization}</TableCell>
         <TableCell style={{ textAlign: "center" }}>
 
             {(props.role === "superadmin") ?
@@ -43,7 +44,6 @@ const User = props => (
                 : props.user.role}
 
         </TableCell>
-        <TableCell style={{ textAlign: "center" }}>{props.user?.organization}</TableCell>
         <TableCell align="center">
             <Button size="sm" onClick={() => props.nextPath("/ViewSubmissions/" + props.user._id)}>View</Button>
         </TableCell>
@@ -388,10 +388,10 @@ export default class AdminPanel extends Component {
                                                 Name
                                         </TableCell>
                                             <TableCell className="score-card-headers" style={{ textAlign: "center" }}>
-                                                Role
+                                                Organization
                                         </TableCell>
                                             <TableCell className="score-card-headers" style={{ textAlign: "center" }}>
-                                                Organization
+                                                Role
                                         </TableCell>
                                             <TableCell className="score-card-headers" style={{ textAlign: "center" }}>
                                                 Submissions
