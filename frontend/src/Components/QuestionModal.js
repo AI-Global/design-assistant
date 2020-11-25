@@ -125,10 +125,9 @@ export default function QuestionModal(props) {
         // must be numbers, and ordered low < med< high
         event.preventDefault();
         if (responseType === 'slider') {
-            !(responses[0]?.score && responses[0]?.score < responses[1]?.score && responses[0]?.score < responses[2]?.score) ? setSliderLowInvalid(true) : setSliderLowInvalid(false)
-            !(responses[1]?.score && responses[1]?.score < responses[2]?.score) ? setSliderMedInvalid(true) : setSliderMedInvalid(false)
-            !responses[2]?.score ? setSliderHighInvalid(true) : setSliderHighInvalid(false)
-
+            !(responses[0]?.score && parseInt(responses[0]?.score) < parseInt(responses[1]?.score) && parseInt(responses[0]?.score) < parseInt(responses[2]?.score)) ? setSliderLowInvalid(true) : setSliderLowInvalid(false)
+            !(responses[1]?.score && parseInt(responses[1]?.score) < parseInt(responses[2]?.score)) ? setSliderMedInvalid(true) : setSliderMedInvalid(false)
+            !(responses[2]?.score) ? setSliderHighInvalid(true) : setSliderHighInvalid(false)
         }
         event.target.elements.question.value === "" ? setInvalid(true) : setInvalid(false)
         // set saveQ hook to true to trigger useEffect and save changes to db
