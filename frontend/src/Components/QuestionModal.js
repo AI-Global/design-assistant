@@ -39,6 +39,7 @@ export default function QuestionModal(props) {
     const [weight, setWeight] = useState(props.question.weighting)
     const [questionType, setQType] = useState(props.question.questionType)
     const [questionLink, setLink] = useState(props.question?.rec_links?.join(", "))
+    const [questionPrompt, setPrompt] = useState(props.question?.prompt)
 
     // Hook for showing delete quesiton warning
     const [warningShow, setWarningShow] = useState(false)
@@ -113,6 +114,7 @@ export default function QuestionModal(props) {
         setDomain(props.question.domainApplicability)
         setRegion(props.question.regionalApplicability)
         setLink(props.question.rec_links)
+        setPrompt(props.question.prompt)
         setSliderLowInvalid(false)
         setSliderMedInvalid(false)
         setSliderHighInvalid(false)
@@ -137,7 +139,7 @@ export default function QuestionModal(props) {
 
     useEffect(() => {
         if (saveQ) { save(); }
-    },)
+    })
 
     function save() {
         // if form fields are all valid (not invalid), save question to db
@@ -158,6 +160,7 @@ export default function QuestionModal(props) {
             props.question.trigger = trigger
             props.question.domainApplicability = questionDomain
             props.question.regionalApplicability = questionRegion
+            props.question.prompt = questionPrompt
             setSave(false) // important to set saveQ hook back to false so useEffect isn't fired again
             if (questionLink.length) {
                 props.question.rec_links = questionLink.split(",")
@@ -208,6 +211,7 @@ export default function QuestionModal(props) {
                 props.question.domainApplicability = []
                 props.question.regionalApplicability = []
                 props.question.rec_links = []
+                props.question.prompt = null
                 setSave(false) // important to set saveQ hook back to false so useEffect isn't fired again
                 close()
             }
@@ -438,6 +442,15 @@ export default function QuestionModal(props) {
                                 </Form.Group>
                             </Col>
                         </Row>
+                        {responseType === "checkbox" ?
+                            <Row>
+                                <Col xs={12} md={12}>
+                                    <Form.Group controlId="prompt">
+                                        <Form.Label>Prompt</Form.Label>
+                                        <Form.Control size="sm" placeholder="Question Prompt" value={questionPrompt || ""} onChange={(event) => setPrompt(event.target.value)} />
+                                    </Form.Group>
+                                </Col>
+                            </Row> : null}
                         {(responseType === "comment" || responseType === "text" || responseType === "slider") ? null :
                             <Row>
                                 <Col xs={11} md={11} style={{ display: "inline-block" }}>
