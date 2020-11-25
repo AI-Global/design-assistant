@@ -39,16 +39,16 @@ export default class Results extends Component {
     constructor(props) {
         super(props);
         this.state = {
-          Dimensions: []
+            Dimensions: []
         }
     }
 
     componentDidMount() {
-        
+
         ReactGa.pageview(window.location.pathname + window.location.search);
-        axios.get(process.env.REACT_APP_SERVER_ADDR +'/dimensions').then((res) => {
-            this.setState({Dimensions: res.data});
-          });
+        axios.get(process.env.REACT_APP_SERVER_ADDR + '/dimensions').then((res) => {
+            this.setState({ Dimensions: res.data });
+        });
     }
 
     downloadCSV(results, questionsObj) {
@@ -151,15 +151,15 @@ export default class Results extends Component {
         var questions = allQuestions.filter((question) => Object.keys(surveyResults).includes(question.name))
 
         var radarChartData = [];
-        if(this.state.Dimensions.length === 0){
+        if (this.state.Dimensions.length === 0) {
             return null;
         } else return (
             <main id="wb-cont" role="main" property="mainContentOfPage" className="container" style={{ paddingBottom: "1rem" }}>
                 <h1 className="section-header">
                     Results
                 </h1>
-                <button id="exportButton" type="button" className="btn btn-save mr-2 btn btn-primary export-button" onClick={() => {ExportHandler(); exportReport(projectTitle, projectDescription, projectIndustry, projectRegion)}}>Export</button>
-                <button id="exportButtonCSV" type="button" className="btn btn-save mr-2 btn btn-primary export-button-csv" onClick={() => {this.downloadCSV(surveyResults, questions)}}>Export as CSV</button>
+                <button id="exportButton" type="button" className="btn btn-save mr-2 btn btn-primary export-button" onClick={() => { ExportHandler(); exportReport(projectTitle, projectDescription, projectIndustry, projectRegion) }}>Export</button>
+                <button id="exportButtonCSV" type="button" className="btn btn-save mr-2 btn btn-primary export-button-csv" onClick={() => { this.downloadCSV(surveyResults, questions) }}>Export as CSV</button>
                 <Tabs defaultActiveKey="score">
                     <Tab eventKey="score" title="Score">
                         <div className="table-responsive mt-3">
@@ -182,10 +182,12 @@ export default class Results extends Component {
                                 </thead>
                                 <tbody>
                                     {this.state.Dimensions.map((dimension, idx) => {
-                                        return (
-                                            <DimensionScore key={idx} radarChartData={radarChartData} dimensionName={dimension.name}
-                                                results={surveyResults} questions={allQuestions.filter(x => x.score?.dimension === dimension.label)} />
-                                        )
+                                        if (dimension.label != "T" && dimension.label != "RK") {
+                                            return (
+                                                <DimensionScore key={idx} radarChartData={radarChartData} dimensionName={dimension.name}
+                                                    results={surveyResults} questions={allQuestions.filter(x => x.score?.dimension === dimension.label)} />
+                                            )
+                                        }
                                     })}
                                 </tbody>
                             </Table>
