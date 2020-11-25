@@ -390,16 +390,6 @@ export default function QuestionModal(props) {
                                     </Form.Control>
                                 </Form.Group>
                             </Col>
-                            {/* <Col xs={4} md={2}>
-                                <Form.Group controlId="questionType">
-                                    <Form.Label>Question Type</Form.Label>
-                                    <Form.Control data-testid="questionType" value={questionType || ''} as="select" onChange={(event) => setQType(event.target.value)}>
-                                        <option>tombstone</option>
-                                        <option>mitigation</option>
-                                        <option>risk</option>
-                                    </Form.Control>
-                                </Form.Group>
-                            </Col> */}
                             {(responseType === "radiogroup" || responseType === "checkbox" || responseType === "slider") ?
                                 <React.Fragment>
                                     <Col xs={4} md={2}>
