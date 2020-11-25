@@ -72,6 +72,8 @@ class DesignAssistantSurvey extends Component {
     };
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
+    this.handleOpenEmptyModal = this.handleOpenEmptyModal.bind(this);
+    this.handleCloseEmptyModal = this.handleCloseEmptyModal.bind(this);
   }
 
   // Request questions JSON from backend 
@@ -98,6 +100,11 @@ class DesignAssistantSurvey extends Component {
       .then(res => {
         this.setState({ mount: false })
         var json = res.data;
+
+        if (json.pages.length <= 1) {
+          this.handleOpenEmptyModal();
+        }
+
         // replace double escaped characters so showdown correctly renders markdown frontslashes and newlines
         var stringified = JSON.stringify(json);
         stringified = stringified.replace(/\\\\n/g, "\\n");
@@ -151,7 +158,7 @@ class DesignAssistantSurvey extends Component {
               $('[data-toggle="tooltip"]').tooltip({
                 boundary: 'viewport'
               });
-            }, 2000)
+            }, 2100)
           });
         //change labels to 'h5' to bold them
         model
@@ -209,6 +216,14 @@ class DesignAssistantSurvey extends Component {
     this.setState({ showModal: false });
   }
 
+  handleOpenEmptyModal() {
+    this.setState({ showEmptyModal: true });
+  }
+
+  handleCloseEmptyModal() {
+    this.setState({ showEmptyModal: false });
+  }
+
   percent() {
     return this.state.model.getProgress();
   }
@@ -218,6 +233,7 @@ class DesignAssistantSurvey extends Component {
     // because we would need to call the database here
     this.state.model.clear()
     this.handleCloseModal()
+    this.handleCloseEmptyModal()
     window.location.pathname = '/'
   }
 
@@ -511,18 +527,17 @@ class DesignAssistantSurvey extends Component {
             size="md"
             aria-labelledby="contained-modal-title-vcenter"
             centered
-            show={this.state.showProjectModal}>
+            show={this.state.showEmptyModal}>
             <ModalHeader closeButton>
               <ModalTitle id="contained-modal-title-vcenter">
-                Project Title
+                No Questions
               </ModalTitle>
             </ModalHeader>
             <ModalBody>
-              <p>Please enter the name of your project.</p>
+              <p>There are no questions in the database.</p>
             </ModalBody>
             <ModalFooter>
-              <Button onClick={this.handleCloseProjectModal}>No</Button>
-              <Button id="resetButton" onClick={() => this.resetSurvey()}>Yes</Button>
+              <Button id="resetButton" onClick={() => this.resetSurvey()}>Go Back</Button>
             </ModalFooter>
           </Modal>
           <Login />
