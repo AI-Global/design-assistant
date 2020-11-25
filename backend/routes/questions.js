@@ -63,10 +63,15 @@ function formatQuestion(q, Dimensions, Triggers = null) {
         question.hideNumber = true
     }
 
+    if (!q.trustIndexDimension) {
+        question.hideNumber = true
+    }
+
+
     // Set conditions for when the question is visiable
     if (Triggers) {
         question.visibleIf = Triggers;
-
+        question.hideNumber = true;
     }
 
     // The rest of these properties are dependant on the question
@@ -145,7 +150,6 @@ function formatQuestion(q, Dimensions, Triggers = null) {
             if (q.trustIndexDimension) {
                 question.score.dimension = Dimensions[q.trustIndexDimension].label
             }
-
             question.score.max = q.pointsAvailable * q.weighting;
             question.score.weight = q.weighting;
             
