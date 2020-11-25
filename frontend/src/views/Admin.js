@@ -14,15 +14,18 @@ import axios from 'axios';
 import Login from './Login';
 import Accordion from 'react-bootstrap/Accordion';
 import Card from 'react-bootstrap/Card';
+import DeleteUserModal from '../Components/DeleteUserModal';
+import DeleteSubmissionModal from '../Components/DeleteSubmissionModal';
 
 
 ReactGa.initialize(process.env.REACT_APP_GAID, { testMode: process.env.NODE_ENV === 'test' });
 
 const User = props => (
     <tr>
-        <td>{props.user.email}</td>
-        <td>{props.user.username}</td>
-        <td>
+        <td style={{ textAlign: "center" }}>{props.user.email}</td>
+        <td style={{ textAlign: "center" }}>{props.user.username}</td>
+        <td style={{ textAlign: "center" }}>
+
             {(props.role === "superadmin") ?
                 <DropdownButton id="dropdown-item-button" title={props.user.role}>
                     <Dropdown.Item onClick={props.changeRole.bind(this, props.user._id, "member")} >Member</Dropdown.Item>
@@ -33,9 +36,13 @@ const User = props => (
                 : props.user.role}
 
         </td>
-        <td>{props.user?.organization}</td>
+        <td style={{textAlign:"center"}}>{props.user?.organization}</td>
         <td align="center">
-            <IconButton size="small" color="secondary" onClick={() => { if (window.confirm('Are you sure you want to delete the user?')) { (props.deleteUser(props.user._id)) } }}><DeleteIcon style={{ color: red[500] }} /></IconButton>
+            <Button size="sm" onClick={() => props.nextPath("/ViewSubmissions/" + props.user._id)}>View</Button>
+        </td>
+        <td align="center">
+            <IconButton size="small" style={{paddingTop: "0.60em" }} color="secondary" onClick={() => props.showModal(props.user)
+            }><DeleteIcon style={{ color: red[500] }} /> </IconButton>
         </td>
     </tr>
 )
@@ -45,7 +52,15 @@ export default class AdminPanel extends Component {
         super(props);
 
         this.deleteUser = this.deleteUser.bind(this)
+        this.deleteUserSubmission = this.deleteUserSubmission.bind(this)
+        this.deleteSubmission = this.deleteSubmission.bind(this)
         this.changeRole = this.changeRole.bind(this)
+        this.nextPath = this.nextPath.bind(this)
+        this.showDeleteUserModal = this.showDeleteUserModal.bind(this)
+        this.showDeleteSubmisionModal = this.showDeleteSubmisionModal.bind(this)
+        this.hideModal = this.hideModal.bind(this)
+        this.confirmDeleteUser = this.confirmDeleteUser.bind(this)
+        this.confirmDeleteSubmission = this.confirmDeleteSubmission.bind(this)
         this.role = undefined
 
         this.state = {
@@ -53,8 +68,11 @@ export default class AdminPanel extends Component {
             submissions: [],
             showFilter: false,
             orgFilter: "",
-            roleFilter: ""
-
+            roleFilter: "",
+            showDeleteSubmissionModal: false,
+            showDeleteUserModal: false,
+            userToDelete: null,
+            submissionToDelete: null
         };
         this.handleTabChange = this.handleTabChange.bind(this);
     }
@@ -86,7 +104,7 @@ export default class AdminPanel extends Component {
                     .then(response => {
                         var resp = response.data;
                         resp = resp.map(submission => {
-                            submission.userId = this.state.users.find(user => user._id === submission.userId)?.username ?? "No User";
+                            submission.username = this.state.users.find(user => user._id === submission.userId)?.username ?? "No User";
                             return submission
                         });
 
@@ -118,7 +136,24 @@ export default class AdminPanel extends Component {
             users: this.state.users.filter(ul => ul._id !== id)
         })
     }
+    deleteSubmission(id) {
+        let endPoint = '/submissions/delete/' + id;
+        axios.delete(process.env.REACT_APP_SERVER_ADDR + endPoint)
+            .then(response => { console.log(response.data) });
 
+        this.setState({
+            submissions: this.state.submissions.filter(ul => ul._id !== id)
+        })
+    }
+    deleteUserSubmission(id) {
+        let endPoint = '/submissions/deleteAll/' + id;
+        axios.delete(process.env.REACT_APP_SERVER_ADDR + endPoint)
+            .then(response => { console.log(response.data) });
+
+        this.setState({
+            submissions: this.state.submissions.filter(ul => ul.userId !== id)
+        })
+    }
 
     changeRole(id, role) {
         let endPoint = '/users/' + id;
@@ -137,7 +172,7 @@ export default class AdminPanel extends Component {
             return this.state.users.map(currentuser => {
                 if (this.state.roleFilter === "" || currentuser.role?.toLowerCase() === this.state.roleFilter?.toLowerCase())
                     if (this.state.orgFilter === "" || currentuser.organization?.toLowerCase() === this.state.orgFilter?.toLowerCase())
-                        return <User user={currentuser} deleteUser={this.deleteUser} changeRole={this.changeRole} role={this.role} key={currentuser._id} />;
+                        return <User user={currentuser} nextPath={this.nextPath} changeRole={this.changeRole} showModal={this.showDeleteUserModal} role={this.role} key={currentuser._id} />;
                 return null;
             })
         }
@@ -148,14 +183,12 @@ export default class AdminPanel extends Component {
             let convertedDate = new Date(currentsubmission.date).toLocaleString("en-US", { timeZone: Intl.DateTimeFormat()?.resolvedOptions()?.timeZone ?? "UTC" });
             return (
                 <tr key={idx}>
-                    <td>{currentsubmission.userId}</td>
-                    <td>{currentsubmission.projectName}</td>
-                    <td>{convertedDate}</td>
-                    <td>{currentsubmission.lifecycle}</td>
-                    <td>{currentsubmission.completed ? "Yes" : "No"}</td>
-                    <td>
-                        <Button size="sm" onClick={() => this.nextPath('/Results/', currentsubmission.submission ?? {})}>View Responses</Button>
-                    </td>
+                    <td style={{textAlign:"center"}}>{currentsubmission.username}</td>
+                    <td style={{textAlign:"center"}}>{currentsubmission.projectName}</td>
+                    <td style={{textAlign:"center"}}>{convertedDate}</td>
+                    <td style={{textAlign:"center"}}>{currentsubmission.completed ? "Yes" : "No"}</td>
+                    <td style={{textAlign:"center"}}><Button size="sm" onClick={() => this.nextPath('/Results/', currentsubmission.submission ?? {})}> Responses</Button></td> 
+                    <td align ="center"> <IconButton size="small" style={{paddingTop: "0.60em" }} color="secondary" onClick={() => { this.showDeleteSubmisionModal(currentsubmission)}}><DeleteIcon style={{ color: red[500]}}/> </IconButton></td>
                 </tr>
             )
         })
@@ -180,14 +213,41 @@ export default class AdminPanel extends Component {
         let orgFilter = form.orgFilter.value;
         let roleFilter = form.roleFilter.value;
         this.setState({ orgFilter: orgFilter, roleFilter: roleFilter });
-
-
     }
+
+    showDeleteUserModal(user) {
+        this.setState({ userToDelete: user, showDeleteUserModal: true });
+    }
+
+    showDeleteSubmisionModal(submission) {
+        this.setState({ submissionToDelete: submission, showDeleteSubmissionModal: true });
+    }
+
+    hideModal() {
+        this.setState({ userToDelete: null, submissionToDelete: null, showDeleteUserModal: false, showDeleteSubmissionModal: false });
+    }
+
+    confirmDeleteUser(deleteSubmissions) {
+        if (deleteSubmissions) {
+            this.deleteUserSubmission(this.state.userToDelete._id)
+        }
+        this.deleteUser(this.state.userToDelete._id)
+        this.hideModal();
+    }
+
+    confirmDeleteSubmission(){
+        this.deleteSubmission(this.state.submissionToDelete._id);
+        this.hideModal();
+    }
+
+    
 
     render() {
         return (
             <div>
                 <div className="dimensionNav">
+                <DeleteUserModal onHide={this.hideModal} confirmDelete={this.confirmDeleteUser} show={this.state.showDeleteUserModal} user={this.state?.userToDelete} />
+                <DeleteSubmissionModal onHide={this.hideModal} confirmDelete={this.confirmDeleteSubmission} show={this.state.showDeleteSubmissionModal} submission={this.state?.submissionToDelete} />
                     {!this.state.showFilter ? null :
                         <Accordion>
                             <Card>
@@ -232,20 +292,23 @@ export default class AdminPanel extends Component {
                                 <BootStrapTable id="users" bordered hover responsive className="user-table">
                                     <thead>
                                         <tr>
-                                            <th className="score-card-headers">
+                                            <th className="score-card-headers" style={{textAlign:"center"}}>
                                                 Email
                                         </th>
-                                            <th className="score-card-headers">
-                                                User Name
+                                            <th className="score-card-headers" style={{textAlign:"center"}}>
+                                                Name
                                         </th>
-                                            <th className="score-card-headers">
-                                                User Role
+                                            <th className="score-card-headers" style={{textAlign:"center"}}>
+                                                Role
                                         </th>
-                                            <th className="score-card-headers">
-                                                User Organization
+                                            <th className="score-card-headers" style={{textAlign:"center"}}>
+                                                Organization
                                         </th>
-                                            <th className="score-card-headers">
-                                                Action
+                                            <th className="score-card-headers" style={{textAlign:"center"}}>
+                                                Submissions
+                                        </th>
+                                        <th className="score-card-headers" style={{textAlign:"center"}}>
+                                               
                                         </th>
                                         </tr>
                                     </thead>
@@ -261,24 +324,24 @@ export default class AdminPanel extends Component {
                                 <BootStrapTable id="submissions" bordered hover responsive className="submission-table">
                                     <thead>
                                         <tr>
-                                            <th className="score-card-headers">
+                                            <th className="score-card-headers" style={{textAlign:"center"}}>
                                                 User Name
                                         </th>
-                                            <th className="score-card-headers">
+                                            <th className="score-card-headers" style={{textAlign:"center"}}>
                                                 Project Name
                                         </th>
-                                            <th className="score-card-headers">
+                                            <th className="score-card-headers" style={{textAlign:"center"}}>
                                                 Date
                                         </th>
 
-                                            <th className="score-card-headers">
-                                                Lifecycle
-                                        </th>
-                                            <th className="score-card-headers">
+                                            <th className="score-card-headers" style={{textAlign:"center"}}>
                                                 Completed
                                         </th>
-                                            <th className="score-card-headers">
-                                                Submissions
+                                            <th className="score-card-headers" style={{textAlign:"center"}}>
+                                                Responses
+                                        </th>
+                                        <th className="score-card-headers" style={{textAlign:"center"}}>
+                                                Action
                                         </th>
 
                                         </tr>

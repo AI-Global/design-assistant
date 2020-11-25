@@ -6,7 +6,7 @@ const Submission = require('../models/submission.model');
 // Get all submissions
 router.get('/', async (req, res) => {
     try {
-        const submissions = await Submission.find();
+        const submissions = await Submission.find().sort({ date: -1 });
         res.json(submissions);
         // print debug message
         console.log("Incoming submissions request");
@@ -21,7 +21,7 @@ router.get('/', async (req, res) => {
 router.get('/user/:userId', async (req, res) => {
     try {
         await Submission.find({ userId: req.params.userId }).sort({ date: -1 }).then(submissions => {
-            res.json({ submissions: submissions });
+            res.json({submissions: submissions});
         });
     } catch (err) {
         // console.log("error returning user submissions", err)
@@ -85,6 +85,13 @@ router.post('/', async (req, res) => {
         // console.log("error to insert", err);
     }
 
+});
+
+router.delete('/deleteAll/:uid', async (req, res) => {
+    let uid = req.params.uid;
+    Submission.deleteMany({userId: uid})
+    .then(() => res.json('User submissions deleted.'))
+    .catch(err => res.status(400).json('Error: ' + err));
 });
 
 module.exports = router;
