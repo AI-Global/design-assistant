@@ -39,7 +39,6 @@ export default function QuestionModal(props) {
     const [questionType, setQType] = useState(props.question.questionType)
     const [questionLink, setLink] = useState(props.question?.rec_links?.join(", "))
 
-    console.log(questionLink)
     // Hook for showing delet quesiton warning
     const [warningShow, setWarningShow] = useState(false)
     const [questionValid, setInvalid] = useState(false)
@@ -244,6 +243,20 @@ export default function QuestionModal(props) {
         setLifecycle([...questionLifecycle])
     }
 
+    function updateDimension(value) {
+        switch (value) {
+            case 1:
+                setQType('tombstone')
+                break;
+            case 2:
+                setQType('risk')
+                break;
+            default:
+                setQType('mitigation')
+        }
+        setDimension(value)
+    }
+
     if (!dimensions) {
         return null;
     }
@@ -305,7 +318,7 @@ export default function QuestionModal(props) {
                             <Col xs={4} md={3}>
                                 <Form.Group controlId="questionDimension">
                                     <Form.Label>Dimension</Form.Label>
-                                    <Form.Control value={dimension === null ? "" : dimension} as="select" onChange={(event) => setDimension(parseInt(event.target.value))}>
+                                    <Form.Control value={dimension === null ? "" : dimension} as="select" onChange={(event) => updateDimension(parseInt(event.target.value))}>
                                         {Object.values(dimensions).map((dimension, index) =>
                                             <option key={index + 1} value={index + 1} data-testid={dimension.name}>{dimension.name}</option>
                                         )}
@@ -322,7 +335,7 @@ export default function QuestionModal(props) {
                                     </Form.Control>
                                 </Form.Group>
                             </Col>
-                            <Col xs={4} md={2}>
+                            {/* <Col xs={4} md={2}>
                                 <Form.Group controlId="questionType">
                                     <Form.Label>Question Type</Form.Label>
                                     <Form.Control data-testid="questionType" value={questionType || ''} as="select" onChange={(event) => setQType(event.target.value)}>
@@ -331,7 +344,7 @@ export default function QuestionModal(props) {
                                         <option>risk</option>
                                     </Form.Control>
                                 </Form.Group>
-                            </Col>
+                            </Col> */}
                             {(responseType === "radiogroup" || responseType === "checkbox" || responseType === "slider") ?
                                 <React.Fragment>
                                     {responseType === "slider" ? null :
