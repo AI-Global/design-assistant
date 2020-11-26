@@ -61,15 +61,10 @@ class DesignAssistantSurvey extends Component {
       lifecycleFilters: [],
       dimArray: [],
       showModal: false,
-      //TODO: Change these from being hardcoded 
-      A: 1,
-      B: 9,
-      E: 19,
-      R: 25,
-      D: 28,
       authToken: localStorage.getItem("authToken"),
       submission_id: this?.props?.location?.state?.submission_id,
-      user_id: this?.props?.location?.state?.user_id
+      user_id: this?.props?.location?.state?.user_id,
+      localResponses: JSON.parse(localStorage.getItem("localResponses"))
     };
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
@@ -93,6 +88,17 @@ class DesignAssistantSurvey extends Component {
         this.setState({ metadata: res.data })
       })
     this.getQuestions()
+  }
+
+  componentDidUpdate() {
+    if (this.state.model?.data !== undefined) {
+      localStorage.setItem("localResponses", JSON.stringify(this.state.model?.data))
+      console.log(localStorage.getItem("localResponses"))
+    }
+  }
+
+  componentWillUnmount() {
+    localStorage.removeItem("localResponses")
   }
 
   async getQuestions(submissions) {
@@ -136,6 +142,10 @@ class DesignAssistantSurvey extends Component {
 
         if (submissions) {
           model.data = submissions
+        }
+
+        if(this.state.localResponses) {
+          model.data = this.state.localResponses
         }
 
         model
@@ -289,30 +299,6 @@ class DesignAssistantSurvey extends Component {
     console.log("Survey results: " + JSON.stringify(survey.data));
   }
 
-  navDim(dimension) {
-    const survey = this.state.model
-    switch (dimension) {
-      case 0:
-        survey.currentPage = survey.pages[this.state.A]
-        break;
-      case 1:
-        survey.currentPage = survey.pages[this.state.B]
-        break;
-      case 2:
-        survey.currentPage = survey.pages[this.state.E]
-        break;
-      case 3:
-        survey.currentPage = survey.pages[this.state.R]
-        break;
-      case 4:
-        survey.currentPage = survey.pages[this.state.D]
-        break;
-      default:
-        survey.currentPage = survey.pages[0]
-    }
-    this.setState(this.state)
-  }
-
   addRole(e) {
     const v = parseInt(e)
     if (this.state.roleFilters.includes(v)) {
@@ -406,7 +392,6 @@ class DesignAssistantSurvey extends Component {
         console.log('not a valid filter')
     }
   }
-
 
   render() {
     console.log(this.state.model)
