@@ -308,3 +308,63 @@ response:
     "__v": 0
 }
 ```
+
+## Dimensions
+
+### GET /dimensions
+
+Returns a list of all dimensions in the database.
+
+#### example
+
+request:
+```
+GET /dimensions
+```
+
+response:
+```json
+[
+    {
+        "_id": "5fbe13fd4b93713a34bf747d",
+        "dimensionID": 1,
+        "__v": 0,
+        "label": "T",
+        "name": "Project Details"
+    },
+    {
+        "_id": "5fbe13fd4b93713a34bf747e",
+        "dimensionID": 2,
+        "__v": 0,
+        "label": "RK",
+        "name": "Risk"
+    },
+    ...
+]
+```
+
+### GET /dimensions/names
+
+Returns a list of all dimensions names.
+
+#### example
+
+request:
+```
+GET /dimensions/names
+```
+
+response:
+```json
+{
+    "dimensions": [
+        "Project Details",
+        "Risk",
+        "Accountability",
+        "Bias and Fairness",
+        "Explainability and Interpretability",
+        "Robustness",
+        "Data Quality"
+    ]
+}
+```
