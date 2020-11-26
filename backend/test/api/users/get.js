@@ -26,52 +26,6 @@ function connect() {
     });
 }
 
-// Test for GET all users endpoint
-describe('GET /users', () => {
-    before((done) => {
-        connect()
-            .then(() => done())
-            .catch((err) => done(err));
-    });
-    after((done) => {
-        connect()
-            .then(() => done())
-            .catch((err) => done(err));
-
-    });
-
-    // test getting all users with invalid auth token
-    it('get all users by invalid auth token returns error', (done) => {
-        request(app).get('/users')
-        .set('x-auth-token', 'test')
-        .then((res) => {
-            const body = res.body;
-            expect(body).to.contain.property('msg');
-            done();
-        })
-        .catch((err) => done(err));
-    });
-
-    // test getting all users with valid auth token
-    it('get all users by auth token returns all valid users', (done) => {
-        request(app).get('/users')
-        .set('x-auth-token', testToken)
-        .then((res) => {
-            const users = res.body;
-
-            // iterate through all returned users and assert they contain valid fields
-            for (let i = 0; i < users.length; ++i) {
-                expect(users[i]).to.contain.property('role');
-                expect(users[i]).to.contain.property('_id');
-                expect(users[i]).to.contain.property('email');
-                expect(users[i]).to.contain.property('username');
-            }
-            done();
-        })
-        .catch((err) => done(err));
-    });
-});
-
 describe('GET /users/user', () => {
     before((done) => {
         connect()
