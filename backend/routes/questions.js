@@ -394,16 +394,6 @@ router.get('/', async (req, res) => {
         })
         .catch((err) => res.status(400).send(err));
 
-    // Test query for empty database
-    // Question.find({"questionNumber": 0})
-    //     .then(async (questions) => {
-    //         console.log(questions);
-    //         pages = await createPages(questions, filters);
-    //         console.log(pages);
-    //         res.status(200).send(pages);            
-    //     })
-    //     .catch((err) => res.status(400).send(err));
-
 });
 
 // Get all questions as JSON from DB. No Assembly for SurveyJS
