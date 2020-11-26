@@ -350,3 +350,15 @@ input[type=number]
   background-color: #dc3545!important
 
 }
+
+#dropdown-item-button {
+  width: 70%
+}
+
+.user-table .MuiTableCell-root{
+  border: 1px solid rgba(224, 224, 224, 1)
+}
+
+.submission-table .MuiTableCell-root{
+  border: 1px solid rgba(224, 224, 224, 1)
+}
