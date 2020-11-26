@@ -6,7 +6,7 @@ require('dotenv').config();
 async function setUpDriver() {
     let driver = await new Builder()
         .forBrowser('chrome')
-        .setChromeOptions(new chrome.Options().windowSize({width: 1920,height: 1080}))
+        .setChromeOptions(new chrome.Options().headless().windowSize({width: 1920,height: 1080}))
         .build();
     await driver.get(process.env.REACT_APP_TESTING_ADDR);
     await driver.findElement(By.className('user-status btn btn-primary')).click();
