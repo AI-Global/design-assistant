@@ -368,3 +368,58 @@ response:
     ]
 }
 ```
+
+## Metadata
+
+### GET /metadata
+
+Returns a list of metadata that includes roles, domains, regions, and lifecycles.
+
+#### example
+
+request:
+```
+GET /metadata
+```
+
+response:
+```json
+{
+    "domain": [
+        {
+            "_id": "5fbc3a98df3b66962f3a88e7",
+            "domainID": 1,
+            "__v": 0,
+            "name": "Health"
+        },
+         ...
+    ],
+    "lifecycle": [
+        {
+            "_id": "5fbc3a98df3b66962f3a884f",
+            "lifecycleID": 1,
+            "__v": 0,
+            "name": "Plan and Design"
+        },
+         ...
+    ],
+     "region": [
+        {
+            "_id": "5fbc3a97df3b66962f3a87b5",
+            "regionID": 1,
+            "__v": 0,
+            "name": "Africa"
+        },
+        ...
+    ],
+    "roles": [
+        {
+            "_id": "5fbc3a96df3b66962f3a869f",
+            "roleID": 1,
+            "__v": 0,
+            "name": "Product Owner / Business Owner"
+        },
+         ...
+    ]
+}
+```
