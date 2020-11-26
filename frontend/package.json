@@ -39,6 +39,7 @@
     "react-scripts": "^4.0.0",
     "react-test-renderer": "^16.14.0",
     "react-toastify": "^6.1.0",
+    "selenium-webdriver": "^4.0.0-alpha.7",
     "showdown": "^1.9.1",
     "style-loader": "^2.0.0",
     "survey-react": "^1.8.7",
