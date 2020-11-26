@@ -49,6 +49,62 @@ response:
 }
 ```
 
+### GET /questions/all
+
+Returns an object with a list of all survey questions in the database.
+Questions are not formatted for surveyJS.
+
+#### example
+
+request:
+```
+GET /questions/all
+```
+
+response:
+```json
+{
+   "questions":[
+      {
+         "trigger":null,
+         "domainApplicability":[
+            
+         ],
+         "regionalApplicability":[
+            
+         ],
+         "roles":[
+            13
+         ],
+         "lifecycle":[
+            6
+         ],
+         "rec_links":[
+            
+         ],
+         "_id":"5fbc551fdf3b66962f48b103",
+         "questionNumber":1,
+         "__v":0,
+         "alt_text":null,
+         "child":false,
+         "mandatory":true,
+         "pointsAvailable":0,
+         "prompt":null,
+         "question":"Title of project",
+         "questionType":"tombstone",
+         "reference":null,
+         "responseType":"text",
+         "responses":[
+            
+         ],
+         "trustIndexDimension":1,
+         "weighting":0
+      },
+      ...
+   ]
+}
+```
+
 ### GET /questions/{QUESTION_ID}
 
 Returns the question associated with `QUESTION_ID`
