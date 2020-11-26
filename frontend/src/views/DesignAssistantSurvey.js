@@ -99,7 +99,7 @@ class DesignAssistantSurvey extends Component {
   componentWillUnmount() {
     localStorage.removeItem("localResponses")
   }
-
+        
   async getQuestions(submissions) {
     var endPoint = '/questions';
     axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint, { params: { roles: this.state.roleFilters, domains: this.state.domainFilters, regions: this.state.regionFilters, lifecycles: this.state.lifecycleFilters } })

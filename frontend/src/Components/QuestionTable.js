@@ -217,7 +217,7 @@ export default class QuestionTable extends Component {
             "lifecycle": [],
             "mandatory": true,
             "parent": null,
-            "pointsAvailable": 0,
+            "pointsAvailable": 1,
             "prompt": null,
             "question": null,
             "questionType": "tombstone",
