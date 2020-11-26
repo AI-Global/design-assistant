@@ -107,7 +107,7 @@ class DesignAssistantSurvey extends Component {
         this.setState({ mount: false })
         var json = res.data;
 
-        if (json.pages.length <= 1) {
+        if (json.pages.length < 1) {
           this.handleOpenEmptyModal();
         }
 
