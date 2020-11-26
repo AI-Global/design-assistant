@@ -127,10 +127,9 @@ export default function QuestionModal(props) {
         // must be numbers, and ordered low < med< high
         event.preventDefault();
         if (responseType === 'slider') {
-            !(responses[0]?.score && responses[0]?.score < responses[1]?.score && responses[0]?.score < responses[2]?.score) ? setSliderLowInvalid(true) : setSliderLowInvalid(false)
-            !(responses[1]?.score && responses[1]?.score < responses[2]?.score) ? setSliderMedInvalid(true) : setSliderMedInvalid(false)
-            !responses[2]?.score ? setSliderHighInvalid(true) : setSliderHighInvalid(false)
-
+            !(responses[0]?.score && parseInt(responses[0]?.score) < parseInt(responses[1]?.score) && parseInt(responses[0]?.score) < parseInt(responses[2]?.score)) ? setSliderLowInvalid(true) : setSliderLowInvalid(false)
+            !(responses[1]?.score && parseInt(responses[1]?.score) < parseInt(responses[2]?.score)) ? setSliderMedInvalid(true) : setSliderMedInvalid(false)
+            !(responses[2]?.score) ? setSliderHighInvalid(true) : setSliderHighInvalid(false)
         }
         event.target.elements.question.value === "" ? setInvalid(true) : setInvalid(false)
         // set saveQ hook to true to trigger useEffect and save changes to db
@@ -409,17 +408,17 @@ export default function QuestionModal(props) {
                                         <React.Fragment>
                                             <Col xs={1} md={1}>
                                                 <Form.Label>Low</Form.Label>
-                                                <Form.Control className="slider-points" required="required" isInvalid={sliderLowValid} value={responses[0]?.score || ''} type="number" onChange={(event) => setSliderPoint(event.target.value, 'low')} />
+                                                <Form.Control className="slider-points" required="required" isInvalid={sliderLowValid} value={responses[0]?.score === 0 ? 0 : responses[0]?.score} type="number" onChange={(event) => setSliderPoint(event.target.value, 'low')} />
                                                 <Form.Control.Feedback type="invalid">Invalid</Form.Control.Feedback>
                                             </Col>
                                             <Col xs={1} md={1}>
                                                 <Form.Label>Med</Form.Label>
-                                                <Form.Control className="slider-points" required="required" isInvalid={sliderMedValid} value={responses[1]?.score || ''} type="number" onChange={(event) => setSliderPoint(event.target.value, 'med')} />
+                                                <Form.Control className="slider-points" required="required" isInvalid={sliderMedValid} value={responses[1]?.score === 0 ? 0 : responses[1]?.score} type="number" onChange={(event) => setSliderPoint(event.target.value, 'med')} />
                                                 <Form.Control.Feedback type="invalid">Invalid</Form.Control.Feedback>
                                             </Col>
                                             <Col xs={1} md={1}>
                                                 <Form.Label>High</Form.Label>
-                                                <Form.Control className="slider-points" required="required" isInvalid={sliderHighValid} value={responses[2]?.score || ''} type="number" onChange={(event) => setSliderPoint(event.target.value, 'high')} />
+                                                <Form.Control className="slider-points" required="required" isInvalid={sliderHighValid} value={responses[2]?.score === 0 ? 0 : responses[2]?.score} type="number" onChange={(event) => setSliderPoint(event.target.value, 'high')} />
                                                 <Form.Control.Feedback type="invalid">Invalid</Form.Control.Feedback>
                                             </Col>
                                         </React.Fragment>
