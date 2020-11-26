@@ -1,25 +1,11 @@
+/*
+require('dotenv').config();
+process.env.NODE_ENV = 'test';
 const expect = require('chai').expect;
 const request = require('supertest');
-const mongoose = require('mongoose');
 const app = require('../../../app.js');
-const Mockgoose = require('mockgoose').Mockgoose;
-const mockgoose = new Mockgoose(mongoose);
-require('dotenv').config();
 
-// Conenct to DB. 
-// TODO: Connect to mockgoose DB once POST endpoints test created. GET nothing then post then get again
-function connect() {
-    return new Promise((resolve, reject) => {
-        mongoose.connect(process.env.DB_CONNECTION,
-            { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true })
-            .then((res, err) => {
-                if (err) return reject(err);
-                resolve();
-            });
-    });
-}
-
-describe('GET /trustedairesources', () => {
+describe('GET /trustedaiproviders', () => {
     before((done) => {
         connect()
             .then(() => done())
@@ -35,9 +21,9 @@ describe('GET /trustedairesources', () => {
     });
 
     // Test getting surveyJS questions JSON
-    it('Getting list of all trustedairesources', (done) => {
+    it('Getting list of all trustedaiproviders', (done) => {
         // TODO: Make post request once connected to mockdb
-        request(app).get('/trustedairesources')
+        request(app).get('/trustedaiproviders')
         .then((res) => {
             const body = res.body;
             expect(body[0]).to.contain.property('_id');
@@ -50,4 +36,4 @@ describe('GET /trustedairesources', () => {
         .catch((err) => done(err));
     });
 
-});
+});*/
