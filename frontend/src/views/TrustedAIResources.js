@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-import {Table} from 'react-bootstrap'
+import { Form, Table, InputGroup } from 'react-bootstrap'
+import { grey } from '@material-ui/core/colors';
+import IconButton from '@material-ui/core/IconButton';
+import SearchIcon from '@material-ui/icons/Search';
 import axios from 'axios';
 require('dotenv').config()
 
@@ -12,7 +15,8 @@ export default class TrustedAIResources extends Component{
     constructor(props){
         super(props);
         this.state = {
-            resources: []
+            resources: [],
+            filter: ""
         }
     }
 
@@ -25,10 +29,31 @@ export default class TrustedAIResources extends Component{
             })
     }
 
+    handleSubmit(event){
+        event.preventDefault();
+        let form = event.target.elements;
+        let filter = form.filterResources.value;
+        this.setState({filter})
+        return
+    }
+
     render (){
         var resources = this.state.resources;
+        var filter = this.state.filter;
         return (
             <div className="report-card mt-3">
+                <Form onSubmit={(e) => this.handleSubmit(e)}>
+                    <Form.Group controlId="filterResources">
+                        <InputGroup className="mb-3">
+                            <Form.Control type="text" placeholder="Search..." />
+                            <InputGroup.Append>
+                                <IconButton size="small" color="secondary" type="submit">
+                                    <SearchIcon style={{ color: grey[900] }} />
+                                </IconButton>
+                            </InputGroup.Append>
+                        </InputGroup>
+                    </Form.Group>
+                </Form>
                 <Table id="trusted-ai-resources" bordered responsive className="report-card-table">
                     <thead>
                         <tr role="row">
@@ -46,6 +71,7 @@ export default class TrustedAIResources extends Component{
                     </thead>
                     <tbody>
                         {resources.map(function(resource, idx) {
+                            if(filter === "" || resource["resource"].toLowerCase().includes(filter?.toLowerCase())){
                             return ( 
                                 <tr key={idx}>
                                     <td>
@@ -55,7 +81,9 @@ export default class TrustedAIResources extends Component{
                                         {resource["description"]}
                                     </td>
                                 </tr>
-                            )
+                            )} else{
+                                return null;
+                            }
 
                         })}
                     </tbody>

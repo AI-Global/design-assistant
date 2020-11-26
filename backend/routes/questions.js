@@ -390,7 +390,7 @@ async function createPages(q, filters) {
 router.get('/', async (req, res) => {
     // Optional filters in req body
     filters = req.query;
-    // Only request parent questions from DB
+    //Only request parent questions from DB
     Question.find({ "child": false })
         .sort({ questionNumber: 1 })
         .then(async (questions) => {
@@ -398,6 +398,16 @@ router.get('/', async (req, res) => {
             res.status(200).send(pages);
         })
         .catch((err) => res.status(400).send(err));
+
+    // Test query for empty database
+    // Question.find({"questionNumber": 0})
+    //     .then(async (questions) => {
+    //         console.log(questions);
+    //         pages = await createPages(questions, filters);
+    //         console.log(pages);
+    //         res.status(200).send(pages);            
+    //     })
+    //     .catch((err) => res.status(400).send(err));
 
 });
 
