@@ -59,11 +59,19 @@ function formatQuestion(q, Dimensions, Triggers = null) {
     question.name = q.id;
     question.type = q.responseType;
 
+    if (question.name.includes('other')) {
+        question.hideNumber = true
+    }
+
+    if (!q.trustIndexDimension) {
+        question.hideNumber = true
+    }
+
 
     // Set conditions for when the question is visiable
     if (Triggers) {
         question.visibleIf = Triggers;
-
+        question.hideNumber = true;
     }
 
     // The rest of these properties are dependant on the question
@@ -216,6 +224,7 @@ function createPage(questions, pageName, pageTitle, Dimensions, Children) {
     page.title = {};
     page.title.default = pageTitle;
     page.title.fr = "";
+
     // Map MongoDB questions to surveyJS format
     page.elements = questionHeiarchy.map(function (q) {
         if (q.child) {
@@ -311,7 +320,7 @@ async function createPages(q, filters) {
     // This function takes in a list of questions from mongoDB and formats them into pages for surveyJS
     var page = {};
     page.pages = [];
-    page.showQuestionNumbers = "false";
+    page.showQuestionNumbers = "on";
     page.showProgressBar = "top";
     page.firstPageIsStarted = "false";
     page.showNavigationButtons = "false";
@@ -349,7 +358,7 @@ async function createPages(q, filters) {
         // Create pages of 2 questions 
         for (let question of dimQuestions[dimension]) {
             questions.push(question);
-            questions.push({ responseType: "comment", id: "other" + question.id, question: "Other:", alt_text: "If possible, support the feedback with specific recommendations \/ suggestions to improve the tool. Feedback can include:\n - Refinement to existing questions, like suggestions on how questions can be simplified or clarified further\n - Additions of new questions for specific scenarios that may be missed\n - Feedback on whether the listed AI risk domains are fulsome and complete\n - What types of response indicators should be included for your context?" });
+            questions.push({responseType: "comment", id: "other" + question.id, question: "Other:", alt_text: "If possible, support the feedback with specific recommendations \/ suggestions to improve the tool. Feedback can include:\n - Refinement to existing questions, like suggestions on how questions can be simplified or clarified further\n - Additions of new questions for specific scenarios that may be missed\n - Feedback on whether the listed AI risk domains are fulsome and complete\n - What types of response indicators should be included for your context?" });
             if (questions.length == 4) {
                 var dimPage = createPage(questions, Dimensions[question.trustIndexDimension].page + pageCount, Dimensions[question.trustIndexDimension].name, Dimensions, Children);
                 page.pages.push(dimPage);

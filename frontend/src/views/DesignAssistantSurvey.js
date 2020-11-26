@@ -39,6 +39,7 @@ Survey
   .Serializer
   .addProperty("question", "alttext:text");
 
+
 // remove localization strings for progress bar
 // https://surveyjs.answerdesk.io/ticket/details/t2551/display-progress-bar-without-text
 // Asked by: MDE | Answered by: Andrew Telnov
@@ -92,10 +93,13 @@ class DesignAssistantSurvey extends Component {
   componentDidUpdate() {
     if (this.state.model?.data !== undefined) {
       localStorage.setItem("localResponses", JSON.stringify(this.state.model?.data))
-      console.log(localStorage.getItem("localResponses"))
     }
   }
 
+  componentWillUnmount() {
+    localStorage.removeItem("localResponses")
+  }
+        
   async getQuestions(submissions) {
     var endPoint = '/questions';
     axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint, { params: { roles: this.state.roleFilters, domains: this.state.domainFilters, regions: this.state.regionFilters, lifecycles: this.state.lifecycleFilters } })
@@ -174,10 +178,14 @@ class DesignAssistantSurvey extends Component {
             if (title) {
               // add tooltip for question if alttext has default value
               let altTextHTML = "";
+              let childIndent = "";
               if (options.question.alttext && options.question.alttext.hasOwnProperty("default")) {
                 let altText = converter.makeHtml(options.question.alttext.default.replace(/"/g, "&quot;"));
                 altText = `<div class="text-justify">${altText}</div>`.replace(/"/g, "&quot;");
                 altTextHTML = `<i class="fas fa-info-circle ml-2" data-toggle="tooltip" data-html="true" title="${altText}"></i>`;
+              }
+              if (options.question.visibleIf) { 
+                childIndent = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
               }
               title.outerHTML =
                 '<label for="' +
@@ -185,7 +193,7 @@ class DesignAssistantSurvey extends Component {
                 '" class="' +
                 title.className +
                 '"><span class="field-name">' +
-                title.innerText +
+                childIndent + title.innerText +
                 "</span>" +
                 altTextHTML +
                 "</label>";
@@ -346,22 +354,26 @@ class DesignAssistantSurvey extends Component {
   }
 
   shouldDisplayNav(child) {
-    let visibleIf = child.visibleIf;
-    var parId = visibleIf.split("{")[1].split("}")[0];
-    var resId = visibleIf.split("'")[1].split("'")[0];
+    let visibleIfArray = child.visibleIf.split("or ");
+    let show = false
+    visibleIfArray.forEach((visibleIf) => {
 
-    if (this.state?.model?.data[parId]) {
-      if (Array.isArray(this.state.model.data[parId])) {
-        if (this.state.model.data[parId].contains(resId)) {
-          return true;
-        }
-      } else {
-        if (this.state.model.data[parId] === resId) {
-          return true;
+      var parId = visibleIf.split("{")[1].split("}")[0];
+      var resId = visibleIf.split("'")[1].split("'")[0];
+
+      if (this.state?.model?.data[parId]) {
+        if (Array.isArray(this.state.model.data[parId])) {
+          if (this.state.model.data[parId].includes(resId)) {
+            show = true;
+          }
+        } else {
+          if (this.state.model.data[parId] === resId) {
+            show = true;
+          }
         }
       }
-    }
-    return false;
+    })
+    return show;
   }
 
   clearFilter(filter) {
@@ -399,14 +411,14 @@ class DesignAssistantSurvey extends Component {
                     <Accordion.Collapse eventKey={index + 1}>
                       <Card.Body>
                         {this?.state?.json?.pages?.map((page, index) => {
-                          return (page.name.includes(dimension.substring(0, 4)) ? page.elements.map((question, i) => {
-                            return ((question.type !== "comment" && (!question.visibleIf || this.shouldDisplayNav(question))) ?
-                              <Button style={{ margin: "0.75em" }} key={i} id={this.state.model.data[question.name] ? "answered" : "unanswered"} onClick={() => this.navPage(index)}>{number++}</Button>
+                          return (page.name.toLowerCase().includes(dimension.substring(0, 4).toLowerCase()) ? page.elements.map((question, i) => {
+                            return ((!question.name.includes("other") && (!question.visibleIf || this.shouldDisplayNav(question))) ?
+                              <Button style={{ margin: "0.75em" }} key={i} id={this.state.model.data[question.name] ? "answered" : "unanswered"} onClick={() => this.navPage(index)}>{question.visibleIf ? '' : number++}</Button>
                               : null)
                           })
                             : null)
                         })
-                        }
+                        } 
                       </Card.Body>
                     </Accordion.Collapse>
                   </Card>)

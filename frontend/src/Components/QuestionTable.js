@@ -173,7 +173,7 @@ export default class QuestionTable extends Component {
             contentArr.push(headers)
 
             // push question values into contentArray
-            this.state.questions.map(question => {
+            this.state.questions.forEach(question => {
                 var field = Object.values(question)
                 
                 for (let i in field) {
