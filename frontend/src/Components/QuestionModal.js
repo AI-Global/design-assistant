@@ -127,10 +127,9 @@ export default function QuestionModal(props) {
         // must be numbers, and ordered low < med< high
         event.preventDefault();
         if (responseType === 'slider') {
-            !(responses[0]?.score && responses[0]?.score < responses[1]?.score && responses[0]?.score < responses[2]?.score) ? setSliderLowInvalid(true) : setSliderLowInvalid(false)
-            !(responses[1]?.score && responses[1]?.score < responses[2]?.score) ? setSliderMedInvalid(true) : setSliderMedInvalid(false)
-            !responses[2]?.score ? setSliderHighInvalid(true) : setSliderHighInvalid(false)
-
+            !(responses[0]?.score && parseInt(responses[0]?.score) < parseInt(responses[1]?.score) && parseInt(responses[0]?.score) < parseInt(responses[2]?.score)) ? setSliderLowInvalid(true) : setSliderLowInvalid(false)
+            !(responses[1]?.score && parseInt(responses[1]?.score) < parseInt(responses[2]?.score)) ? setSliderMedInvalid(true) : setSliderMedInvalid(false)
+            !(responses[2]?.score) ? setSliderHighInvalid(true) : setSliderHighInvalid(false)
         }
         event.target.elements.question.value === "" ? setInvalid(true) : setInvalid(false)
         // set saveQ hook to true to trigger useEffect and save changes to db
@@ -154,7 +153,7 @@ export default function QuestionModal(props) {
             props.question.questionType = questionType
             props.question.responses = responses
             props.question.roles = questionRole
-            dimension === -1 ? props.question.trustIndexDimension = null : props.question.trustIndexDimension = dimension
+            props.question.trustIndexDimension = dimension
             props.question.weighting = weight
             props.question.child = child
             props.question.trigger = trigger
@@ -204,7 +203,7 @@ export default function QuestionModal(props) {
                 props.question.questionType = "tombstone"
                 props.question.responses = []
                 props.question.roles = []
-                props.question.trustIndexDimension = null
+                props.question.trustIndexDimension = 1
                 props.question.weighting = 0
                 props.question.child = child
                 props.question.trigger = trigger
@@ -281,6 +280,20 @@ export default function QuestionModal(props) {
             questionLifecycle.push(index)
         }
         setLifecycle([...questionLifecycle])
+    }
+
+    function updateDimension(value) {
+        switch (value) {
+            case 1:
+                setQType('tombstone')
+                break;
+            case 2:
+                setQType('risk')
+                break;
+            default:
+                setQType('mitigation')
+        }
+        setDimension(value)
     }
 
     if (!dimensions) {
@@ -363,8 +376,7 @@ export default function QuestionModal(props) {
                             <Col xs={4} md={3}>
                                 <Form.Group controlId="questionDimension">
                                     <Form.Label>Dimension</Form.Label>
-                                    <Form.Control value={dimension === null ? "" : dimension} as="select" onChange={(event) => setDimension(parseInt(event.target.value))}>
-                                        <option value="-1">Details</option>
+                                    <Form.Control value={dimension === null ? "" : dimension} as="select" onChange={(event) => updateDimension(parseInt(event.target.value))}>
                                         {Object.values(dimensions).map((dimension, index) =>
                                             <option key={index + 1} value={index + 1} data-testid={dimension.name}>{dimension.name}</option>
                                         )}
@@ -378,16 +390,6 @@ export default function QuestionModal(props) {
                                         {responseTypes.map((type, index) =>
                                             <option key={index} value={type}>{type}</option>
                                         )}
-                                    </Form.Control>
-                                </Form.Group>
-                            </Col>
-                            <Col xs={4} md={2}>
-                                <Form.Group controlId="questionType">
-                                    <Form.Label>Question Type</Form.Label>
-                                    <Form.Control data-testid="questionType" value={questionType || ''} as="select" onChange={(event) => setQType(event.target.value)}>
-                                        <option>tombstone</option>
-                                        <option>mitigation</option>
-                                        <option>risk</option>
                                     </Form.Control>
                                 </Form.Group>
                             </Col>
@@ -406,17 +408,17 @@ export default function QuestionModal(props) {
                                         <React.Fragment>
                                             <Col xs={1} md={1}>
                                                 <Form.Label>Low</Form.Label>
-                                                <Form.Control className="slider-points" required="required" isInvalid={sliderLowValid} value={responses[0]?.score || ''} type="number" onChange={(event) => setSliderPoint(event.target.value, 'low')} />
+                                                <Form.Control className="slider-points" required="required" isInvalid={sliderLowValid} value={responses[0]?.score === 0 ? 0 : responses[0]?.score} type="number" onChange={(event) => setSliderPoint(event.target.value, 'low')} />
                                                 <Form.Control.Feedback type="invalid">Invalid</Form.Control.Feedback>
                                             </Col>
                                             <Col xs={1} md={1}>
                                                 <Form.Label>Med</Form.Label>
-                                                <Form.Control className="slider-points" required="required" isInvalid={sliderMedValid} value={responses[1]?.score || ''} type="number" onChange={(event) => setSliderPoint(event.target.value, 'med')} />
+                                                <Form.Control className="slider-points" required="required" isInvalid={sliderMedValid} value={responses[1]?.score === 0 ? 0 : responses[1]?.score} type="number" onChange={(event) => setSliderPoint(event.target.value, 'med')} />
                                                 <Form.Control.Feedback type="invalid">Invalid</Form.Control.Feedback>
                                             </Col>
                                             <Col xs={1} md={1}>
                                                 <Form.Label>High</Form.Label>
-                                                <Form.Control className="slider-points" required="required" isInvalid={sliderHighValid} value={responses[2]?.score || ''} type="number" onChange={(event) => setSliderPoint(event.target.value, 'high')} />
+                                                <Form.Control className="slider-points" required="required" isInvalid={sliderHighValid} value={responses[2]?.score === 0 ? 0 : responses[2]?.score} type="number" onChange={(event) => setSliderPoint(event.target.value, 'high')} />
                                                 <Form.Control.Feedback type="invalid">Invalid</Form.Control.Feedback>
                                             </Col>
                                         </React.Fragment>
