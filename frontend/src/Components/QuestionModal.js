@@ -196,7 +196,7 @@ export default function QuestionModal(props) {
                 // need to clear question metadata before closing for adding action
                 props.question.alt_text = null
                 props.question.lifecycle = []
-                props.question.pointsAvailable = 0
+                props.question.pointsAvailable = 1
                 props.question.question = null
                 props.question.reference = null
                 props.question.responseType = "text"
@@ -296,6 +296,13 @@ export default function QuestionModal(props) {
         setDimension(value)
     }
 
+    function updateType(type) {
+        if (type === "slider") {
+            setResponses([])
+        }
+        setType(type)
+    }
+
     if (!dimensions) {
         return null;
     }
@@ -386,14 +393,14 @@ export default function QuestionModal(props) {
                             <Col xs={4} md={2}>
                                 <Form.Group controlId="responseType">
                                     <Form.Label>Response Type</Form.Label>
-                                    <Form.Control data-testid="responseType" value={responseType || ''} as="select" onChange={(event) => setType(event.target.value)}>
+                                    <Form.Control data-testid="responseType" value={responseType || ''} as="select" onChange={(event) => updateType(event.target.value)}>
                                         {responseTypes.map((type, index) =>
                                             <option key={index} value={type}>{type}</option>
                                         )}
                                     </Form.Control>
                                 </Form.Group>
                             </Col>
-                            {(responseType === "radiogroup" || responseType === "checkbox" || responseType === "slider") ?
+                            {(responseType === "dropdown" || responseType === "radiogroup" || responseType === "checkbox" || responseType === "slider") ?
                                 <React.Fragment>
                                     <Col xs={4} md={2}>
                                         <Form.Label>Weight</Form.Label>
@@ -408,29 +415,21 @@ export default function QuestionModal(props) {
                                         <React.Fragment>
                                             <Col xs={1} md={1}>
                                                 <Form.Label>Low</Form.Label>
-                                                <Form.Control className="slider-points" required="required" isInvalid={sliderLowValid} value={responses[0]?.score === 0 ? 0 : responses[0]?.score} type="number" onChange={(event) => setSliderPoint(event.target.value, 'low')} />
+                                                <Form.Control className="slider-points" required="required" isInvalid={sliderLowValid} value={responses[0]?.score === 0 ? 0 : responses[0]?.score ?? ''} type="number" onChange={(event) => setSliderPoint(event.target.value, 'low')} />
                                                 <Form.Control.Feedback type="invalid">Invalid</Form.Control.Feedback>
                                             </Col>
                                             <Col xs={1} md={1}>
                                                 <Form.Label>Med</Form.Label>
-                                                <Form.Control className="slider-points" required="required" isInvalid={sliderMedValid} value={responses[1]?.score === 0 ? 0 : responses[1]?.score} type="number" onChange={(event) => setSliderPoint(event.target.value, 'med')} />
+                                                <Form.Control className="slider-points" required="required" isInvalid={sliderMedValid} value={responses[1]?.score === 0 ? 0 : responses[1]?.score ?? ''} type="number" onChange={(event) => setSliderPoint(event.target.value, 'med')} />
                                                 <Form.Control.Feedback type="invalid">Invalid</Form.Control.Feedback>
                                             </Col>
                                             <Col xs={1} md={1}>
                                                 <Form.Label>High</Form.Label>
-                                                <Form.Control className="slider-points" required="required" isInvalid={sliderHighValid} value={responses[2]?.score === 0 ? 0 : responses[2]?.score} type="number" onChange={(event) => setSliderPoint(event.target.value, 'high')} />
+                                                <Form.Control className="slider-points" required="required" isInvalid={sliderHighValid} value={responses[2]?.score === 0 ? 0 : responses[2]?.score ?? ''} type="number" onChange={(event) => setSliderPoint(event.target.value, 'high')} />
                                                 <Form.Control.Feedback type="invalid">Invalid</Form.Control.Feedback>
                                             </Col>
                                         </React.Fragment>
-                                        :
-                                        <Col xs={4} md={2}>
-                                            <Form.Label>Points</Form.Label>
-                                            <Form.Control value={points} as="select" onChange={(event) => setPoints(event.target.value)}>
-                                                <option value={-1}>-1</option>
-                                                <option value={0}>0</option>
-                                                <option value={1}>1</option>
-                                            </Form.Control>
-                                        </Col>
+                                        : null
                                     }
                                 </React.Fragment>
                                 : null}
@@ -456,7 +455,7 @@ export default function QuestionModal(props) {
                         {(responseType === "comment" || responseType === "text" || responseType === "slider") ? null :
                             <Row>
                                 <Col xs={11} md={11} style={{ display: "inline-block" }}>
-                                    <Form.Group controlId="responses">
+                                    <Form.Group>
                                         <Form.Label>
                                             Responses
                                             <IconButton aria-label="add response" size="small" style={{ "marginLeft": "0.3em" }} onClick={() => { addResponse(responses) }}>
@@ -473,20 +472,20 @@ export default function QuestionModal(props) {
                                                             </IconButton>
                                                         </InputGroup.Text>
                                                     </InputGroup.Prepend>
-                                                    <Form.Control type="text" placeholder="Response" value={response.indicator} style={{ height: "inherit" }} onChange={(event) => editIndicator(event.target.value, index, response.score)} />
+                                                    <Form.Control id={"response-"+index}type="text" placeholder="Response" value={response.indicator} style={{ height: "inherit" }} onChange={(event) => editIndicator(event.target.value, index, response.score)} />
                                                 </InputGroup>
                                             </div>
                                         )}
                                     </Form.Group>
                                 </Col>
                                 <Col xs={1} md={1}>
-                                    <Form.Group controlId="responseScore">
+                                    <Form.Group>
                                         <Form.Label style={{ paddingBottom: "4px" }}> {/*  */}
                                         Score
                                     </Form.Label>
                                         {responses.map((response, index) =>
                                             <div key={index} style={{ paddingBottom: "1em" }}>
-                                                <Form.Control type="number" placeholder="0" value={response.score || ''} style={{ "minHeight": "44px" }} onChange={(event) => editScore(event.target.value, index, response.indicator)} ></Form.Control>
+                                                <Form.Control id={"response-score-"+index} type="number" placeholder="0" value={response.score || ''} style={{ "minHeight": "44px" }} onChange={(event) => editScore(event.target.value, index, response.indicator)} ></Form.Control>
                                             </div>
                                         )}
                                     </Form.Group>
