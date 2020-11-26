@@ -25,6 +25,12 @@ function connect() {
             });
     });
 }
+
+// Test for GET all users endpoint
+describe('GET /users', () => {
+    
+});
+
 describe('GET /users/user', () => {
     before((done) => {
         connect()
