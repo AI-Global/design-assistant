@@ -175,7 +175,6 @@ class DesignAssistantSurvey extends Component {
           .onAfterRenderQuestion
           .add(function (model, options) {
             let title = options.htmlElement.querySelector("h5");
-            let prompt = options.htmlElement.querySelector("p");
             if (title) {
               // add tooltip for question if alttext has default value
               let altTextHTML = "";
@@ -364,7 +363,7 @@ class DesignAssistantSurvey extends Component {
 
       if (this.state?.model?.data[parId]) {
         if (Array.isArray(this.state.model.data[parId])) {
-          if (this.state.model.data[parId].contains(resId)) {
+          if (this.state.model.data[parId].includes(resId)) {
             show = true;
           }
         } else {
@@ -419,7 +418,7 @@ class DesignAssistantSurvey extends Component {
                           })
                             : null)
                         })
-                        }
+                        } 
                       </Card.Body>
                     </Accordion.Collapse>
                   </Card>)
