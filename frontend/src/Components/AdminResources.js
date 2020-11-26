@@ -148,7 +148,7 @@ export default class AdminResources extends Component {
                     </Form>
                 </Modal>
 
-                <Table bordered hover responsive className="mt-3">
+                <Table className="mt-3">
                     <TableHead>
                         <TableRow className="edit-trusted-headers">
                             <TableCell> Trusted AI Resource</TableCell>

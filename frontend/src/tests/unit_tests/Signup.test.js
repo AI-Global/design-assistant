@@ -1,6 +1,6 @@
 import React from 'react';
 import { fireEvent, render, screen, wait } from '@testing-library/react';
-import Signup from '../views/Signup.js';
+import Signup from '../../views/Signup.js';
 import axios from 'axios';
 
 jest.mock('axios');

@@ -1,6 +1,6 @@
 import React from 'react';
 import { fireEvent, render, screen, wait } from '@testing-library/react';
-import Login from '../views/Login.js';
+import Login from '../../views/Login.js';
 import axios from 'axios';
 import { BrowserRouter as Router } from 'react-router-dom';
 
