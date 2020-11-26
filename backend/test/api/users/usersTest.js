@@ -1,10 +1,81 @@
-/*
 require('dotenv').config();
 process.env.NODE_ENV = 'test';
 const expect = require('chai').expect;
 const request = require('supertest');
 const app = require('../../../app.js');
 
+var userID = "5fc011112338b2f0d85aaae5"
+
+//var postID = ""
+
+//new User({email, username, password, organization})
+/*describe('POST /users/create', () => {
+
+    it('Posting a user', (done) => {
+        request(app).post('/users/create')
+        .send({
+            "username": "user123123",
+            "email": "mairala@email.com",
+            "password": "Ridwan888/",
+            "passwordConfirmation": "Ridwan888/",
+        })
+        .then((res) => {
+            const body = res.body;
+            expect(body).to.contain.property('token');
+            expect(body).to.contain.property('user');
+            done();
+        })
+        .catch((err) => done(err));
+    });
+
+});*/
+
+describe('GET /users', () => {
+
+    it('Getting all users', (done) => {
+        request(app).get('/users')
+        .then((res) => {
+            const body = res.body;
+            expect(body[0]).to.contain.property('role');
+            expect(body[0]).to.contain.property('username');
+            expect(body[0]).to.contain.property('email');
+            done();
+        })
+        .catch((err) => done(err));
+    });
+
+});
+
+
+describe('POST /users/auth', () => {
+
+    it('Authorizing users', (done) => {
+        request(app).post('/users/auth')
+        .send({
+            "username": "greyhatburner989@gmail.com",
+	        "password": "Adminadmin/8"
+        })
+        .then((res) => {
+            const body = res.body;
+            expect(body).to.contain.property('token');
+            expect(body).to.contain.property('user');
+            done();
+        })
+        .catch((err) => done(err));
+    });
+
+});
+
+describe('DELETE /users/{ID}', () => {
+
+    it('Delete user by user ID ', (done) => {
+        request(app).delete('/users/'+userID)
+        .expect(200, done)
+    });
+
+});
+
+/*
 describe('GET /users/user', () => {
     before((done) => {
         connect()
