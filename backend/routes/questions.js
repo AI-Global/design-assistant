@@ -150,16 +150,19 @@ function formatQuestion(q, Dimensions, Triggers = null) {
         if (q.trustIndexDimension) {
             question.score.dimension = Dimensions[q.trustIndexDimension].label
         }
-        question.choices = [];
+        question.choices = [-1,0,1];
+
+        if (q.responses) {
+            low = q.responses.filter(resp => resp.indicator == "low")[0].score;
+            med = q.responses.filter(resp => resp.indicator == "med")[0].score;
+            high = q.responses.filter(resp => resp.indicator == "high")[0].score;
+
+            question.choices = [low,med,high];
+        }
 
         // Calculate max score
-        if (q.pointsAvailable) {
-            question.score.max = q.pointsAvailable * q.weighting;
-            question.score.weight = q.weighting;
-        } else {
-            question.score.max = 0
-            question.score.weight = q.weighting;
-        }
+        question.score.max = question.choices[2] * q.weighting;
+        question.score.weight = q.weighting;
 
         // Low Medium and High
         question.pipsValues = [0, 100]

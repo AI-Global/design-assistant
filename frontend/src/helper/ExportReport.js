@@ -293,7 +293,7 @@ export function exportReport(title, description, industry, region, risk) {
 
   y = addAbout(doc, y);
   y = addScore(doc, y);
-  y = addReportCard(doc, y);
+  addReportCard(doc, y);
   doc.save('Responsible AI Design Report Card.pdf')
 }
 
