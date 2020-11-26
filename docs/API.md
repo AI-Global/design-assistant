@@ -423,3 +423,149 @@ response:
     ]
 }
 ```
+
+
+## Users
+
+### GET /user 
+
+Returns a list of all users in the database.
+
+#### example
+
+request:
+```
+GET /users
+```
+
+response:
+```json
+[
+    {
+        "role":"admin",
+        "_id":"5fadea7e2bb08880f012cf5c",
+        "orgs":[],
+        "email":"mlnguyen@ualberta.ca",
+        "username":"mlnguyen@ualberta.ca",
+        "__v":0,
+        "organization":"University of Alberta"
+    },
+    {
+        "role":"superadmin",
+        "_id":"5fb02188cbd4a712416a331c",
+        "orgs":[],
+        "email":"dronan@ualberta.ca",
+        "username":"dronan@ualberta.ca",
+        "__v":0
+    }
+    ...
+]
+```
+
+### GET /user/{USER_ID}
+
+Returns the user associated with `USER_ID`
+
+### example
+
+request:
+```
+GET /users/5fbdb1a135c3b617d06e498f
+```
+
+response:
+```json
+{
+    "role": "member",
+    "_id": "5fbdb1a135c3b617d06e498f",
+    "email": "example@ai-global.org",
+    "username": "example@ai-global.org",
+    "organization": "AI Global",
+    "__v": 0
+}
+```
+
+### POST /create
+
+Upon validation of the user's information against the database, adds a new user to the database
+
+### example
+
+request:
+```
+POST /users/create
+{
+	"username": "test",
+	"email": "test@test",
+	"password": "Test123!",
+   "passwordConfirmation": "Test123!"
+}
+```
+
+response:
+```json
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmYmZhYmNkODdjZjc0M2E5ODc5NjZmNSIsImlhdCI6MTYwNjM5Njg3NywiZXhwIjoxNjA4OTg4ODc3fQ.1tAalZnDyTc0YKAtjf4SlnGTx0eJ0y9bPj3-RaF5xGc",
+    "user": {
+        "id": "5fbfabcd87cf743a987966f5",
+        "username": "test",
+        "email": "test@test"
+    }
+}
+```
+
+### POST /auth
+
+Upon validation of the username and password against the database, returns an authorization token and the associated user
+
+### example
+
+request:
+```
+POST /users/auth
+{
+	"username": "test",
+	"password": "Test123!"
+}
+```
+
+response:
+```json
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmYmZhYmNkODdjZjc0M2E5ODc5NjZmNSIsImlhdCI6MTYwNjM5NzAyMCwiZXhwIjoxNjA4OTg5MDIwfQ.vfi6-1nug_zy2J7k8eWDXw62TXmvgpLn9GSxk16-M3s",
+    "user": {
+        "id": "5fbfabcd87cf743a987966f5",
+        "username": "test",
+        "email": "test@test"
+    }
+}
+```
+
+### GET /users/user
+
+returns user associated with the header x-auth-token
+
+### example
+
+request:
+```
+POST /users/user
+{
+   "headers": {
+      "x-auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmYmZhYmNkODdjZjc0M2E5ODc5NjZmNSIsImlhdCI6MTYwNjM5NzAyMCwiZXhwIjoxNjA4OTg5MDIwfQ.vfi6-1nug_zy2J7k8eWDXw62TXmvgpLn9GSxk16-M3s"
+   }
+}
+```
+
+response:
+```json
+{
+    "role": "member",
+    "_id": "5fbfabcd87cf743a987966f5",
+    "email": "test@test",
+    "username": "test",
+    "__v": 0
+}
+```
+
+
