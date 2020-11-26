@@ -129,3 +129,63 @@ response:
     ...
 ]
 ```
+
+## Analytics
+
+### GET /analytics
+
+Returns a list of all analytics in the database.
+
+#### example
+
+request:
+```
+GET /analytics
+```
+
+response:
+```json
+{
+   "analytics":[
+      {
+         "_id":"5fb0fd26b738924e516932f5",
+         "analyticName":"Sessions",
+         "embed":"<iframe width=\"450\" height=\"371\" seamless frameborder=\"0\" scrolling=\"no\" src=\"https://docs.google.com/spreadsheets/d/e/2PACX-1vTEBLoeChbI1EO1jCLAEt20JoN-yAkOSafDf4mimsG_JeIFVMoJ0hCXg9J1WXRuwHyGMQx0c-xOn8EK/pubchart?oid=1875195725&amp;format=interactive\"></iframe>",
+         "__v":0
+      },
+      {
+         "_id":"5fb109a36764c2105583b476",
+         "analyticName":"Geo",
+         "embed":"<iframe width=\"465\" height=\"371\" seamless frameborder=\"0\" scrolling=\"no\" src=\"https://docs.google.com/spreadsheets/d/e/2PACX-1vTEBLoeChbI1EO1jCLAEt20JoN-yAkOSafDf4mimsG_JeIFVMoJ0hCXg9J1WXRuwHyGMQx0c-xOn8EK/pubchart?oid=658943918&amp;format=interactive\"></iframe>",
+         "__v":0
+      }
+      ...
+   ]
+}
+```
+
+### POST /analytics
+
+Add a new analytic to the database
+
+#### example
+
+request:
+```
+POST /analytics
+
+{
+    "analyticName": "New Analytic",
+    "embed": "<iframe width='50' height='50' seamless frameborder='0' scrolling='no' src='...'></iframe>"
+}
+```
+
+response:
+```json
+{
+    "_id": "5fbf7885c62b8924f0fa1b31",
+    "analyticName": "New Analytic",
+    "embed": "<iframe width='50' height='50' seamless frameborder='0' scrolling='no' src='...'></iframe>",
+    "__v": 0
+}
+```
