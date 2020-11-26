@@ -230,7 +230,7 @@ export default class Results extends Component {
                         </div>
                     </Tab>
                     <Tab eventKey="report-card" title="Report Card">
-                        <Tab.Container id="left-tabs-example" defaultActiveKey={this.state.Dimensions[2].label}>
+                        <Tab.Container id="left-tabs-example" defaultActiveKey={this.state?.Dimensions[2]?.label}>
                             <Tab.Content>
                                 {this.state.Dimensions.map((dimension, idx) => {
                                     if (dimension.label !== "T" && dimension.label !== "RK") {
