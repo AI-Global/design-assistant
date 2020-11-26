@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import {Button, Table as BootStrapTable} from 'react-bootstrap';
+import { Button, Table as BootStrapTable } from 'react-bootstrap';
 import ReactGa from 'react-ga';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -45,28 +45,28 @@ export default class ViewSubmissions extends Component {
                 this.setState({ json: json });
             })
 
-            endPoint = '/users';
-            axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
-                .then(response => {
-                    this.setState({ users: response.data })
-                    endPoint = '/submissions/user/' + id
-                    axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
-                        .then(response => {
-                            var resp = response.data.submissions;
-                            resp = resp.map(submission => {
-                                submission.username = this.state.users.find(user => user._id === submission.userId)?.username ?? "No User";
-                                return submission
-                            });
-    
-                            this.setState({ submissions: resp })
-                        })
-                        .catch((error) => {
-                            console.log(error);
-                        })
-                })
-                .catch((error) => {
-                    console.log(error);
-                })
+        endPoint = '/users';
+        axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
+            .then(response => {
+                this.setState({ users: response.data })
+                endPoint = '/submissions/user/' + id
+                axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint)
+                    .then(response => {
+                        var resp = response.data.submissions;
+                        resp = resp.map(submission => {
+                            submission.username = this.state.users.find(user => user._id === submission.userId)?.username ?? "No User";
+                            return submission
+                        });
+
+                        this.setState({ submissions: resp })
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    })
+            })
+            .catch((error) => {
+                console.log(error);
+            })
     }
 
     nextPath(path, submission) {
@@ -76,6 +76,7 @@ export default class ViewSubmissions extends Component {
         })
     }
 
+    // Makes a delete request to the db to delete the submission with id="id"
     deleteSubmission(id) {
         let endPoint = '/submissions/delete/' + id;
         axios.delete(process.env.REACT_APP_SERVER_ADDR + endPoint)
@@ -86,19 +87,22 @@ export default class ViewSubmissions extends Component {
         })
     }
 
+    // set flags to show the DeleteSubmissionModal
     showDeleteSubmisionModal(submission) {
         this.setState({ submissionToDelete: submission, showDeleteSubmissionModal: true });
     }
 
+    // set flags to hide the DeleteSubmissionModal
     hideModal() {
-        this.setState({submissionToDelete: null, showDeleteSubmissionModal: false });
+        this.setState({ submissionToDelete: null, showDeleteSubmissionModal: false });
     }
 
-    confirmDeleteSubmission(){
+    confirmDeleteSubmission() {
         this.deleteSubmission(this.state.submissionToDelete._id);
         this.hideModal();
     }
 
+    // return the rows for the submissions table
     submissionList() {
         return this.state.submissions.map((currentsubmission, idx) => {
             let convertedDate = new Date(currentsubmission.date).toLocaleString("en-US", { timeZone: Intl.DateTimeFormat()?.resolvedOptions()?.timeZone ?? "UTC" });
@@ -108,15 +112,12 @@ export default class ViewSubmissions extends Component {
                     <td style={{ textAlign: "center" }}>{currentsubmission.projectName}</td>
                     <td style={{ textAlign: "center" }}>{convertedDate}</td>
                     <td style={{ textAlign: "center" }}>{currentsubmission.completed ? "Yes" : "No"}</td>
-                    <td align ="center"> <Button size="sm" onClick={() => this.nextPath('/Results/', currentsubmission.submission ?? {})}> Responses</Button> </td>
-                    <td align ="center"> <IconButton size="small" color="secondary" onClick={() => { this.showDeleteSubmisionModal(currentsubmission)}}><DeleteIcon style={{ color: red[500] }}/> </IconButton></td>
+                    <td align="center"> <Button size="sm" onClick={() => this.nextPath('/Results/', currentsubmission.submission ?? {})}> Responses</Button> </td>
+                    <td align="center"> <IconButton size="small" color="secondary" onClick={() => { this.showDeleteSubmisionModal(currentsubmission) }}><DeleteIcon style={{ color: red[500] }} /> </IconButton></td>
                 </tr>
             )
         })
     }
-
-
-
 
     render() {
         return (

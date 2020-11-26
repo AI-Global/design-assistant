@@ -41,7 +41,6 @@ export default class DimensionScore extends Component {
                         ? <FontAwesomeIcon icon={faCheckCircle} size="lg" aria-label="improve true" />
                         : <FontAwesomeIcon icon={faCircle} size="lg" color="#dee2e6" aria-label="improve false" />
                     }
-
                 </td>
                 <td className="text-center">
                     {(percentageScore >= 50 && percentageScore <= 75)
