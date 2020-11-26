@@ -1,7 +1,7 @@
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import axios from 'axios';
-import DesignAssistantSurvey from '../views/DesignAssistantSurvey.js';
+import DesignAssistantSurvey from '../../views/DesignAssistantSurvey.js';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 jest.mock('axios');

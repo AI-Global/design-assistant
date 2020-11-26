@@ -1,6 +1,11 @@
 import axios from 'axios';
 import React, { Component } from 'react';
-import { Table, Button, Form, Col, Modal } from 'react-bootstrap';
+import { Button, Form, Col, Modal } from 'react-bootstrap';
+import Table from '@material-ui/core/Table';
+import TableRow from '@material-ui/core/TableRow';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
 import IconButton from '@material-ui/core/IconButton';
 import Add from '@material-ui/icons/Add';
 
@@ -143,29 +148,29 @@ export default class AdminResources extends Component {
                     </Form>
                 </Modal>
 
-                <Table bordered hover responsive className="mt-3">
-                    <thead>
-                        <tr className="edit-trusted-headers">
-                            <th width="33%">Trusted AI Resource</th>
-                            <th>Description</th>
-                            <th className="text-center">
+                <Table className="mt-3">
+                    <TableHead>
+                        <TableRow className="edit-trusted-headers">
+                            <TableCell> Trusted AI Resource</TableCell>
+                            <TableCell>Description</TableCell>
+                            <TableCell className="text-center">
                                 <IconButton aria-label="add resource" size="small" onClick={() => { handleEditShow(-1) }}><Add /></IconButton>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                            </TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
                         {Array.isArray(trustedAIResources) &&
                             trustedAIResources.map((resource, index) => {
                                 return (
-                                    <tr key={index}>
-                                        <td><a href={resource?.source}>{resource?.resource}</a></td>
-                                        <td>{resource?.description}</td>
-                                        <td><Button onClick={() => { handleEditShow(index) }}>Edit</Button></td>
-                                    </tr>
+                                    <TableRow hover={true} key={index}>
+                                        <TableCell><a href={resource?.source}>{resource?.resource}</a></TableCell>
+                                        <TableCell>{resource?.description}</TableCell>
+                                        <TableCell><Button onClick={() => { handleEditShow(index) }}>Edit</Button></TableCell>
+                                    </TableRow>
                                 )
                             })
                         }
-                    </tbody>
+                    </TableBody>
                 </Table>
             </div>
         )

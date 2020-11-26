@@ -14,11 +14,6 @@ app.get('/', (req, res) => {
     res.send("Home");
 });
 
-// Connect to mongoDB
-mongoose.connect(process.env.DB_CONNECTION , {useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true}, () => {
-    console.log("Connected to DB")
-});
-
 // need so that we don't use deprecated useFindAndModify method
 mongoose.set('useFindAndModify', false);
 
@@ -44,10 +39,26 @@ app.use("/metadata", metaDataRouter);
 app.use("/dimensions", dimensionsRouter);
 app.use("/analytics", analyticsRouter);
 
+if (process.env.NODE_ENV === 'test' && process.env.TEST_DB_CONNECTION) {
+    // Connect to test mongoDB
+    mongoose.connect(process.env.TEST_DB_CONNECTION, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true }, () => {
+        console.log("Connected to Test DB")
+        // Listen on port
+        app.listen(5000, '0.0.0.0', () => {
+            console.log("Listening on port " + 5000);
+        });
+    });
+} else {
+    // Connect to mongoDB
+    mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true }, () => {
+        console.log("Connected to DB")
+        // Listen on port
+        app.listen(port, '0.0.0.0', () => {
+            console.log("Listening on port " + port);
+        });
+    });
+}
 
-// Listen on port
-app.listen(port, '0.0.0.0',  () => {
-    console.log("Listening on port " + port);
-});
+
 
 module.exports = app;

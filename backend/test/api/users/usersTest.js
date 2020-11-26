@@ -1,30 +1,9 @@
-
+/*
+require('dotenv').config();
+process.env.NODE_ENV = 'test';
 const expect = require('chai').expect;
 const request = require('supertest');
-const { mongo } = require('mongoose');
 const app = require('../../../app.js');
-
-var Mongoose = require('mongoose').Mongoose;
-var mongoose = new Mongoose();
-
-var Mockgoose = require('mockgoose').Mockgoose;
-var mockgoose = new Mockgoose(mongoose);
-
-require('dotenv').config();
-
-const testToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmYjA5YjRlMjFmODVkOGI0YzcwYzhiYSIsImlhdCI6MTYwNTQwOTk4NiwiZXhwIjoxNjA4MDAxOTg2fQ.MEC2Jm1VB3ai07__NPeTeFaNexh-VjdTdlxz6vaB5mM";
-
-// Conenct to DB. 
-function connect() {
-    return new Promise((resolve, reject) => {
-        mongoose.connect(process.env.DB_CONNECTION,
-            { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true })
-            .then((res, err) => {
-                if (err) return reject(err);
-                resolve();
-            });
-    });
-}
 
 describe('GET /users/user', () => {
     before((done) => {
@@ -109,3 +88,4 @@ describe('GET /users/isLoggedIn', () => {
     });
 });
 
+*/

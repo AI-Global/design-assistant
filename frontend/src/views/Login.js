@@ -74,8 +74,8 @@ export default class Login extends Component {
                     else {
                         sessionStorage.setItem('authToken', result["token"]);
                     }
-                    this.setState({user: result["user"]});
-                    this.setState({showLoginModal: false});
+                    this.setState({ user: result["user"] });
+                    this.setState({ showLoginModal: false });
                     window.location.reload();
                 }
             }).catch(err => {
@@ -93,15 +93,15 @@ export default class Login extends Component {
         let user = this.state.user;
         if (user) {
             return (
-                <div className="user-status">
-                    Logged in as: {user.username} &nbsp;
-                    <UserSettings/>
-                </div>
+                    <div className="user-status">
+                        <p className="msg">Logged in as: {user.username} &nbsp;</p>
+                        <UserSettings />
+                    </div>
             )
         }
         else {
             return (
-                <Button variant="primary" onClick={() => {handleShow();LoginHandler()}} className="user-status">
+                <Button variant="primary" onClick={() => { handleShow(); LoginHandler() }} className="user-status">
                     Log in
                 </Button>
             )
@@ -130,14 +130,14 @@ export default class Login extends Component {
                         <Form onSubmit={(e) => this.handleSubmit(e)}>
                             <Form.Group controlId="loginUsername">
                                 <i className="fa fa-user"></i>
-                                <Form.Control type="text" placeholder="Username" required="required" isInvalid={this.state.username.isInvalid} autoComplete="username" aria-label="username"/>
+                                <Form.Control type="text" placeholder="Username" required="required" isInvalid={this.state.username.isInvalid} autoComplete="username" aria-label="username" />
                                 <Form.Control.Feedback type="invalid">
                                     {this.state.username.message}
                                 </Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group controlId="loginPassword">
                                 <i className="fa fa-lock"></i>
-                                <Form.Control type="password" placeholder="Password" required="required" isInvalid={this.state.password.isInvalid} autoComplete="current-password" aria-label="password"/>
+                                <Form.Control type="password" placeholder="Password" required="required" isInvalid={this.state.password.isInvalid} autoComplete="current-password" aria-label="password" />
                                 <Form.Control.Feedback type="invalid">
                                     {this.state.password.message}
                                 </Form.Control.Feedback>
@@ -155,7 +155,7 @@ export default class Login extends Component {
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
-                        <a href="#/" onClick={() => {handleClose(); ContinueHandler()}}>Continue without an account</a>
+                        <a href="#/" onClick={() => { handleClose(); ContinueHandler() }}>Continue without an account</a>
                     </Modal.Footer>
                 </Modal>
             </div>

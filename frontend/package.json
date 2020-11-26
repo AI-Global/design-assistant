@@ -19,6 +19,7 @@
     "bootstrap-slider": "^11.0.2",
     "css-loader": "^4.3.0",
     "dotenv": "^8.2.0",
+    "file-saver": "^2.0.5",
     "font-awesome": "^4.7.0",
     "jest-canvas-mock": "^2.3.0",
     "jquery": "^3.5.1",
@@ -38,6 +39,7 @@
     "react-scripts": "^4.0.0",
     "react-test-renderer": "^16.14.0",
     "react-toastify": "^6.1.0",
+    "selenium-webdriver": "^4.0.0-alpha.7",
     "showdown": "^1.9.1",
     "style-loader": "^2.0.0",
     "survey-react": "^1.8.7",
@@ -46,7 +48,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --silent --runInBand",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

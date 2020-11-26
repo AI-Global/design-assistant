@@ -13,7 +13,7 @@ const mongoose = require('mongoose');
 
 async function getDimensions() {
     // Get Lookup of Dimensions from DB
-    let dimensions = await Dimension.find()
+    let dimensions = await Dimension.find().sort({ dimensionID: 1 })
 
     let Dimensions = {}
     for (let d of dimensions) {
@@ -59,11 +59,19 @@ function formatQuestion(q, Dimensions, Triggers = null) {
     question.name = q.id;
     question.type = q.responseType;
 
+    if (question.name.includes('other')) {
+        question.hideNumber = true
+    }
+
+    if (!q.trustIndexDimension) {
+        question.hideNumber = true
+    }
+
 
     // Set conditions for when the question is visiable
     if (Triggers) {
         question.visibleIf = Triggers;
-
+        question.hideNumber = true;
     }
 
     // The rest of these properties are dependant on the question
@@ -85,6 +93,12 @@ function formatQuestion(q, Dimensions, Triggers = null) {
         question.recommendation.fr = "";
     }
 
+    if (q.rec_links) {
+        question.recommendedlinks = {};
+        question.recommendedlinks.default = q.rec_links;
+        question.recommendedlinks.fr = "";
+    }
+
     if (question.type == "dropdown") {
         question.hasOther = true;
         question.choice = [];
@@ -101,22 +115,31 @@ function formatQuestion(q, Dimensions, Triggers = null) {
         }
 
     } else if (question.type == "radiogroup" || question.type == "checkbox") {
-        if (q.pointsAvailable) {
+        // Score and Dimension
+        question.score = {};
+        if (q.trustIndexDimension) {
+            question.score.dimension = Dimensions[q.trustIndexDimension].label
+        }
 
-            question.score = {};
-            question.score.dimension = Dimensions[q.trustIndexDimension].label;
-            question.score.max = q.pointsAvailable * q.weighting;
-
-            // Add score to the choices
-            question.score.choices = {};
+        // Add choices to score
+        question.score.choices = {};
+        if (q.responses) {
             for (let c of q.responses) {
                 question.score.choices[c.id] = c.score * q.weighting;
-            }
 
+            }
+        }
+
+        // Calculate max score
+        if (q.pointsAvailable) {
+            question.score.max = q.pointsAvailable * q.weighting;
+        } else {
+            question.score.max = 0;
         }
 
         // Add choices to question
         question.choices = [];
+
         for (let c of q.responses) {
             var choice = {};
             choice.value = c.id;
@@ -130,21 +153,27 @@ function formatQuestion(q, Dimensions, Triggers = null) {
         // Set type to nouislider 
         question.type = "nouislider"
 
-        if (q.pointsAvailable) {
-            question.score = {};
+        // Score and Dimension
+        question.score = {};
+        if (q.trustIndexDimension) {
+            question.score.dimension = Dimensions[q.trustIndexDimension].label
+        }
+        question.choices = [-1,0,1];
 
-            if (q.trustIndexDimension) {
-                question.score.dimension = Dimensions[q.trustIndexDimension].label
-            }
+        if (q.responses) {
+            low = q.responses.filter(resp => resp.indicator == "low")[0].score;
+            med = q.responses.filter(resp => resp.indicator == "med")[0].score;
+            high = q.responses.filter(resp => resp.indicator == "high")[0].score;
 
-            question.score.max = q.pointsAvailable * q.weighting;
-            question.score.weight = q.weighting;
-            
-            question.choices = [];
+            question.choices = [low,med,high];
         }
 
+        // Calculate max score
+        question.score.max = question.choices[2] * q.weighting;
+        question.score.weight = q.weighting;
+
         // Low Medium and High
-        question.pipsValues = [0,100] 
+        question.pipsValues = [0, 100]
         question.pipsDensity = 100
         question.tooltips = false
     }
@@ -195,6 +224,7 @@ function createPage(questions, pageName, pageTitle, Dimensions, Children) {
     page.title = {};
     page.title.default = pageTitle;
     page.title.fr = "";
+
     // Map MongoDB questions to surveyJS format
     page.elements = questionHeiarchy.map(function (q) {
         if (q.child) {
@@ -237,8 +267,8 @@ async function applyFilters(questions, filters) {
             filters.roles.push(allRoles)
         }
 
-        for (let dim of Object.keys(questions)) {
-            questions[dim] = questions[dim].filter(q => filters.roles.some(role => q.roles.includes(role)))
+        for (let dim of Object.keys(questions).filter(k => String(k) !== "1")) {
+            questions[dim] = questions[dim].filter(q => filters.roles.some(role => q.roles?.includes(role)))
         }
     }
 
@@ -249,8 +279,8 @@ async function applyFilters(questions, filters) {
             filters.regions.push(allRegions)
         }
 
-        for (let dim of Object.keys(questions)) {
-            questions[dim] = questions[dim].filter(q => filters.regions.some(region => q.regionalApplicability.includes(region)))
+        for (let dim of Object.keys(questions).filter(k => String(k) !== "1")) {
+            questions[dim] = questions[dim].filter(q => filters.regions.some(region => q.regionalApplicability?.includes(region)))
         }
     }
 
@@ -261,8 +291,8 @@ async function applyFilters(questions, filters) {
             filters.lifecycles.push(allLifecycles)
         }
 
-        for (let dim of Object.keys(questions)) {
-            questions[dim] = questions[dim].filter(q => filters.lifecycles.some(lifecycle => q.lifecycle.includes(lifecycle)))
+        for (let dim of Object.keys(questions).filter(k => String(k) !== "1")) {
+            questions[dim] = questions[dim].filter(q => filters.lifecycles.some(lifecycle => q.lifecycle?.includes(lifecycle)))
         }
     }
 
@@ -273,8 +303,8 @@ async function applyFilters(questions, filters) {
             filters.domains.push(allDomains)
         }
 
-        for (let dim of Object.keys(questions)) {
-            questions[dim] = questions[dim].filter(q => filters.domains.some(domain => q.domainApplicability.includes(domain)))
+        for (let dim of Object.keys(questions).filter(k => String(k) !== "1")) {
+            questions[dim] = questions[dim].filter(q => filters.domains.some(domain => q.domainApplicability?.includes(domain)))
         }
     }
 
@@ -290,7 +320,7 @@ async function createPages(q, filters) {
     // This function takes in a list of questions from mongoDB and formats them into pages for surveyJS
     var page = {};
     page.pages = [];
-    page.showQuestionNumbers = "false";
+    page.showQuestionNumbers = "on";
     page.showProgressBar = "top";
     page.firstPageIsStarted = "false";
     page.showNavigationButtons = "false";
@@ -303,31 +333,21 @@ async function createPages(q, filters) {
         dimQuestions[d] = [];
     }
 
-    var tombQuestions = {}
-    tombQuestions["tombstone"] = [];
-
     for (let question of q) {
-        if (question.questionType == "tombstone") {
-            tombQuestions["tombstone"].push(question);
-        } else if (question.trustIndexDimension) {
+        if (question.trustIndexDimension) {
             dimQuestions[question.trustIndexDimension].push(question)
         }
     }
 
-    tombQuestions["tombstone"].sort((a, b) => (a.questionNumber > b.questionNumber) ? 1 : -1);
-    for (let i = 0; i < dimQuestions.length; i++) {
-        dimQuestions.sort((a, b) => (a.questionNumber > b.questionNumber) ? 1 : -1);
-    }
-
-
-    // Add Other question to tombstone and create page 
-    tombQuestions["tombstone"].push({ responseType: "comment", id: "otherTombstone", question: "Other:", alt_text: "If possible, support the feedback with specific recommendations \/ suggestions to improve the tool. Feedback can include:\n - Refinement to existing questions, like suggestions on how questions can be simplified or clarified further\n - Additions of new questions for specific scenarios that may be missed\n - Feedback on whether the listed AI risk domains are fulsome and complete\n - What types of response indicators should be included for your context?" });
-    var projectDetails = createPage(tombQuestions["tombstone"], "projectDetails1", "Project Details", Dimensions, Children);
-    page.pages.push(projectDetails);
-
-
     // Apply domain, region, role, lifecycle filter to questions
     dimQuestions = await applyFilters(dimQuestions, filters)
+
+    // Add Other question to tombstone and create page 
+    dimQuestions[1].push({ responseType: "comment", id: "otherTombstone", question: "Other:", alt_text: "If possible, support the feedback with specific recommendations \/ suggestions to improve the tool. Feedback can include:\n - Refinement to existing questions, like suggestions on how questions can be simplified or clarified further\n - Additions of new questions for specific scenarios that may be missed\n - Feedback on whether the listed AI risk domains are fulsome and complete\n - What types of response indicators should be included for your context?" });
+    var projectDetails = createPage(dimQuestions[1], Dimensions[1].page, Dimensions[1].name, Dimensions, Children);
+    page.pages.push(projectDetails);
+
+    delete dimQuestions[1];
 
     // Create pages for the dimensions
     var pageCount = 1;
@@ -338,7 +358,7 @@ async function createPages(q, filters) {
         // Create pages of 2 questions 
         for (let question of dimQuestions[dimension]) {
             questions.push(question);
-            questions.push({ responseType: "comment", id: "other" + question.id, question: "Other:", alt_text: "If possible, support the feedback with specific recommendations \/ suggestions to improve the tool. Feedback can include:\n - Refinement to existing questions, like suggestions on how questions can be simplified or clarified further\n - Additions of new questions for specific scenarios that may be missed\n - Feedback on whether the listed AI risk domains are fulsome and complete\n - What types of response indicators should be included for your context?" });
+            questions.push({responseType: "comment", id: "other" + question.id, question: "Other:", alt_text: "If possible, support the feedback with specific recommendations \/ suggestions to improve the tool. Feedback can include:\n - Refinement to existing questions, like suggestions on how questions can be simplified or clarified further\n - Additions of new questions for specific scenarios that may be missed\n - Feedback on whether the listed AI risk domains are fulsome and complete\n - What types of response indicators should be included for your context?" });
             if (questions.length == 4) {
                 var dimPage = createPage(questions, Dimensions[question.trustIndexDimension].page + pageCount, Dimensions[question.trustIndexDimension].name, Dimensions, Children);
                 page.pages.push(dimPage);
@@ -363,9 +383,10 @@ async function createPages(q, filters) {
 
 // Get all questions. Assemble SurveyJS JSON here
 router.get('/', async (req, res) => {
+
     // Optional filters in req body
     filters = req.query;
-    // Only request parent questions from DB
+    //Only request parent questions from DB
     Question.find({ "child": false })
         .sort({ questionNumber: 1 })
         .then(async (questions) => {
@@ -412,7 +433,7 @@ router.post('/', async (req, res) => {
         const savedQuestions = await question.save();
         res.json(savedQuestions);
     } catch (err) {
-        res.json({ message: err });
+        res.status(400).send(err)
     }
 
 });
@@ -429,16 +450,15 @@ router.delete('/:questionId', async (req, res) => {
             await Question.deleteOne({ _id: req.params.questionId })
             var maxQ = await Question.find().sort({ questionNumber: -1 }).limit(1)
             var maxNumber = maxQ[0].questionNumber
-            console.log(number, maxNumber)
 
             for (let i = number + 1; i <= maxNumber; i++) {
                 await Question.findOneAndUpdate({ questionNumber: i }, { questionNumber: i - 1 });
             }
 
         })
-        res.json(doc);
+        res.status(200).send(doc);
     } catch (err) {
-        res.json({ message: err });
+        res.status(400).send(err)
     }
 
 });
@@ -448,9 +468,9 @@ router.put('/:questionId', async (req, res) => {
         // Update existing question in DB
         var response = await Question.findOneAndUpdate({ _id: req.params.questionId }, req.body);
 
-        res.json(response);
+        res.status(200).send(response);
     } catch (err) {
-        res.json({ message: err });
+        res.status(400).send(err)
     }
 });
 
@@ -486,7 +506,7 @@ router.put('/:startNumber/:endNumber', async (req, res) => {
         res.json({ message: "Transaction Complete" })
 
     } catch (err) {
-        res.json({ message: err, part: 4 });
+        res.status(400).send(err)
     }
 
 });

@@ -1,9 +1,9 @@
 import axios from 'axios';
 import '../css/admin.css';
+import ChildModal from './ChildModal';
 import React, { Component } from 'react';
 import Add from '@material-ui/icons/Add';
 import Table from '@material-ui/core/Table';
-import Paper from '@material-ui/core/Paper';
 import QuestionModal from './QuestionModal';
 import TableRow from '@material-ui/core/TableRow';
 import TableBody from '@material-ui/core/TableBody';
@@ -11,10 +11,8 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import QuestionRow from '../Components/QuestionRow';
 import IconButton from '@material-ui/core/IconButton';
-import TableContainer from '@material-ui/core/TableContainer';
-import ChildModal from './ChildModal';
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { DropdownButton, Dropdown } from 'react-bootstrap';
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 const reorder = (list, startIndex, endIndex) => {
     const result = Array.from(list)
@@ -67,7 +65,6 @@ export default class QuestionTable extends Component {
                 this.setState({ questions: res.data.questions.sort((a, b) => (a.questionNumber > b.questionNumber) ? 1 : -1) });
             })
     }
-
 
     async onDragEnd(result) {
         // dropped outside the list
@@ -154,8 +151,7 @@ export default class QuestionTable extends Component {
 
     async export(fileExt) {
         var endPoint = '/questions/all/export'
-        var fileName = fileExt === 'json' ? 'json' : 'csv_delimiter=;'
-
+        var fileName = fileExt === 'json' ? 'json' : 'csv'
         if (fileExt === 'json') {
             await axios({
                 url: process.env.REACT_APP_SERVER_ADDR + endPoint,
@@ -171,19 +167,41 @@ export default class QuestionTable extends Component {
             })
         }
         else {
-            // convert json to csv: https://stackoverflow.com/a/31536517
-            // need to deliminate with ; or it will screw the whole file up
-            const replacer = (key, value) => value === null ? '' : value
-            const header = Object.keys(this.state.questions[0])
-            let csv = this.state.questions.map(row => header.map(fieldName => JSON.stringify(row[fieldName], replacer)).join(';'))
-            csv.unshift(header.join(';'))
-            csv = csv.join('\r\n')
-            const url = window.URL.createObjectURL(new Blob([csv]));
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', 'questions_' + fileName + '.' + fileExt);
-            document.body.appendChild(link);
-            link.click();
+            var contentArr = []
+            // push headers into the contentArray
+            const headers = Object.keys(this.state.questions[0])
+            contentArr.push(headers)
+
+            // push question values into contentArray
+            this.state.questions.forEach(question => {
+                var field = Object.values(question)
+                
+                for (let i in field) {
+                    if (typeof field[i] === 'object' && field[i] !== null) { 
+                        field[i] = JSON.stringify(field[i])
+                    }
+                    if (typeof field[i] === 'string' ) {
+                        field[i] = '"' + field[i].replaceAll("\"", "''").replaceAll("#", "") + '"'
+                    }
+                }
+                contentArr.push(field)
+            })
+
+            let csvContent = "data:text/csv;charset=utf-8,";
+
+            contentArr.forEach(function (rowArray) {
+                let row = rowArray.join(",");
+                csvContent += row + "\r\n";
+            });
+
+            var encodedUri = encodeURI(csvContent);
+            var link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", 'questions_' + fileName + '.' + fileExt);
+            document.body.appendChild(link); // Required for FF
+            
+            link.click(); // This will download the data file named "my_data.csv".
+
         }
     }
 
@@ -195,27 +213,28 @@ export default class QuestionTable extends Component {
             "questionNumber": this.state.questions.length + 1,
             "__v": 0,
             "alt_text": null,
-            "domainApplicability": [6],
-            "lifecycle": [6],
+            "domainApplicability": [],
+            "lifecycle": [],
             "mandatory": true,
             "parent": null,
-            "pointsAvailable": 0,
+            "pointsAvailable": 1,
             "prompt": null,
             "question": null,
             "questionType": "tombstone",
             "reference": null,
-            "regionalApplicability": [8],
+            "regionalApplicability": [],
             "responseType": "text",
             "responses": [],
-            "roles": [13],
-            "trustIndexDimension": null,
+            "roles": [],
+            "trustIndexDimension": 1,
             "weighting": 0,
             "trigger": null,
             "child": false,
+            "rec_links": []
         }
 
         return (
-            <TableContainer component={Paper}>
+            <div className="table-responsive mt-3">
                 {this.state.previousQuestion === null ? null :
                     <ChildModal
                         show={this.state.showChildModal}
@@ -245,7 +264,7 @@ export default class QuestionTable extends Component {
                             <TableCell>Question</TableCell>
                             <TableCell align="right">Dimension</TableCell>
                             <TableCell>
-                                <DropdownButton className="export-dropdown" title={<i className="fas fa-file-export fa-lg"/>}>
+                                <DropdownButton className="export-dropdown" title={<i className="fas fa-file-export fa-lg" />}>
                                     <Dropdown.Item onClick={() => this.export('json')}>.json</Dropdown.Item>
                                     <Dropdown.Item onClick={() => this.export('csv')}>.csv</Dropdown.Item>
                                 </DropdownButton>
@@ -254,7 +273,7 @@ export default class QuestionTable extends Component {
                     </TableHead>
                     <TableBody component={DroppableComponent(this.onDragEnd)}>
                         {this.state.questions.map((question, index) => (
-                            <TableRow component={DraggableComponent(question._id, index)} key={question._id}>
+                            <TableRow hover={true} component={DraggableComponent(question._id, index)} key={question._id}>
                                 <QuestionRow
                                     question={question}
                                     dimensions={this.state.dimensions}
@@ -266,7 +285,7 @@ export default class QuestionTable extends Component {
                         ))}
                     </TableBody>
                 </Table>
-            </TableContainer>
+            </div>
         )
     }
 }

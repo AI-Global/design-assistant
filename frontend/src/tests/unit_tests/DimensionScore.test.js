@@ -1,6 +1,6 @@
 import React from 'react';
 import {render, screen} from '@testing-library/react';
-import DimensionScore from '../views/DimensionScore'
+import DimensionScore from '../../views/DimensionScore'
 import {Table} from 'react-bootstrap';
 
 const mockQuestions = [{

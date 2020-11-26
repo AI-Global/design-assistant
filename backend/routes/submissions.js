@@ -6,7 +6,7 @@ const Submission = require('../models/submission.model');
 // Get all submissions
 router.get('/', async (req, res) => {
     try {
-        const submissions = await Submission.find();
+        const submissions = await Submission.find().sort({ date: -1 });
         res.json(submissions);
     } catch (err) {
         res.json({ message: err });
@@ -19,17 +19,17 @@ router.get('/', async (req, res) => {
 router.get('/user/:userId', async (req, res) => {
     try {
         await Submission.find({ userId: req.params.userId }).sort({ date: -1 }).then(submissions => {
-            res.json({ submissions: submissions });
+            res.json({submissions: submissions});
         });
     } catch (err) {
-        // console.log("error returning user submissions", err)
+
         res.json({ message: err });
     }
 });
 
 router.post('/update/:submissionId', async (req, res) => {
     try {
-        console.log("updating");
+
         const submissions = await Submission.findOneAndUpdate({ '_id': req.params.submissionId }, {
             submission: req.body.submission,
             date: req.body.date,
@@ -40,13 +40,7 @@ router.post('/update/:submissionId', async (req, res) => {
             region: req.body.region,
             roles: req.body.roles,
         }, {upsert:true, runValidators: true});
-        // const submissions = await Submission.findOneAndUpdate({'_id' : req.params.submissionId}, {
-        //     userId: req.body.userId,
-        //     date: req.body.date,
-        //     lifecycle: req.body.lifecycle,
-        //     submission: req.body.submission,
-        //     completed: req.body.completed
-        // }, {upsert:true, runValidators: true});
+
         res.json(submissions);
     } catch (err) {
         res.json({ message: err });
@@ -55,7 +49,7 @@ router.post('/update/:submissionId', async (req, res) => {
 
 router.delete('/delete/:id', async (req, res) => {
     await Submission.findByIdAndDelete(req.params.id)
-        .then(() => res.json('User submission deleted.'))
+        .then(() => res.status(200).json('User submission deleted.'))
         .catch(err => res.status(400).json('Error: ' + err));
 });
 
@@ -76,13 +70,18 @@ router.post('/', async (req, res) => {
 
     try {
         const savedSubmission = await submission.save();
-        // console.log("inserting");
         res.json(savedSubmission);
     } catch (err) {
         res.json({ message: err });
-        // console.log("error to insert", err);
     }
 
+});
+
+router.delete('/deleteAll/:uid', async (req, res) => {
+    let uid = req.params.uid;
+    Submission.deleteMany({userId: uid})
+    .then(() => res.json('User submissions deleted.'))
+    .catch(err => res.status(400).json('Error: ' + err));
 });
 
 module.exports = router;
