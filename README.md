@@ -12,6 +12,8 @@
 
 [Responsible AI Assistant Member User Manual](docs/Responsible%20AI%20Assistant%20Member%20User%20Manual.pdf)
 
+[Testing Documentation](docs/Testing%20Document.pdf)
+
 ### Admin Account 
 
 Username: admin\
