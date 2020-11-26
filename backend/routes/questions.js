@@ -455,7 +455,7 @@ router.delete('/:questionId', async (req, res) => {
             }
 
         })
-        res.json(doc);
+        res.status(200).send(doc);
     } catch (err) {
         res.status(400).send(err)
     }
@@ -467,7 +467,7 @@ router.put('/:questionId', async (req, res) => {
         // Update existing question in DB
         var response = await Question.findOneAndUpdate({ _id: req.params.questionId }, req.body);
 
-        res.json(response);
+        res.status(200).send(response);
     } catch (err) {
         res.status(400).send(err)
     }
