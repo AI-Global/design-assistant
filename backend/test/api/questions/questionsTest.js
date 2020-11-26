@@ -192,7 +192,7 @@ describe('GET /questions/{QID}', () => {
         request(app).get('/questions/' + post2ID)
             .then((res) => {
                 const body = res.body;
-                console.log(res.body)
+   
                 expect(body).to.contain.property('title');
                 expect(body).to.contain.property('name');
                 expect(body).to.contain.property('type');
