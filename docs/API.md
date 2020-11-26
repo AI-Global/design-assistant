@@ -41,10 +41,11 @@ response:
       }
       ...
    ],
-   "showQuestionNumbers":"false",
+   "showQuestionNumbers":"on",
    "showProgressBar":"bottom",
    "firstPageIsStarted":"false",
    "showNavigationButtons":"false"
+   "clearInvisibleValues": "onHidden"
 }
 ```
 
@@ -95,6 +96,68 @@ response:
             }
         }
     ]
+}
+```
+
+### POST /questions
+
+Add a new question to the database
+
+#### example
+
+request:
+```
+POST /questions
+
+{
+   "trigger":null,
+   "domainApplicability":[],
+   "regionalApplicability":[],
+   "roles":[],
+   "lifecycle":[],
+   "rec_links":[],
+   "questionNumber":1,
+   "alt_text":null,
+   "child":false,
+   "mandatory":true,
+   "pointsAvailable":0,
+   "prompt":null,
+   "question":"Test Question",
+   "questionType":"tombstone",
+   "reference":null,
+   "responseType":"text",
+   "responses":[],
+   "trustIndexDimension":1,
+   "weighting":0
+}
+```
+
+response:
+```json
+{
+    "trigger": {
+        "responses": []
+    },
+    "domainApplicability": [],
+    "regionalApplicability": [],
+    "roles": [],
+    "lifecycle": [],
+    "rec_links": [],
+    "_id": "5fbf91b74323703d62d24df3",
+    "questionNumber": 1,
+    "alt_text": null,
+    "child": false,
+    "mandatory": true,
+    "pointsAvailable": 0,
+    "prompt": null,
+    "question": "Test Question",
+    "questionType": "tombstone",
+    "reference": null,
+    "responseType": "text",
+    "responses": [],
+    "trustIndexDimension": 1,
+    "weighting": 0,
+    "__v": 0
 }
 ```
 
