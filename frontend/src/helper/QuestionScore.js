@@ -12,17 +12,15 @@ function calculateQuestionScore(question, selectedChoices, riskWeight) {
     var questionScore = 0;
     var maxQuestionScore = 0;
     if (question.type === QuestionTypes.checkbox) {
-        maxQuestionScore += scores.max;
         if (selectedChoices !== undefined) {
-            var choiceScore = 0
             selectedChoices.map(choice => {
-                choiceScore += scores?.choices[choice] ?? 0;
-                return choiceScore;
+                let choiceScore = scores?.choices[choice] ?? 0;
+                questionScore += choiceScore;
+                if(choiceScore > 0 ){
+                    maxQuestionScore += choiceScore;
+                }
+                return questionScore;
             })
-            if (choiceScore > scores.max) {
-                choiceScore = scores.max;
-            }
-            questionScore += choiceScore;
         }
     }
     else if (question.type === QuestionTypes.radiogroup) {
@@ -53,7 +51,7 @@ function calculateQuestionScore(question, selectedChoices, riskWeight) {
             }
         }
     }
-
+    
     // Multiple each questions score by their risk
     return { score: questionScore * riskWeight, maxScore: maxQuestionScore * riskWeight };
 }
