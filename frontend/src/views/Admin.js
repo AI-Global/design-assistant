@@ -312,7 +312,7 @@ export default class AdminPanel extends Component {
                             <Card>
                                 <Accordion.Toggle as={Card.Header} eventKey='1'>
                                     Filters
-                    </Accordion.Toggle>
+                                </Accordion.Toggle>
                                 <Accordion.Collapse eventKey='1'>
                                     <Card.Body className="cardBody">
                                         <Form onSubmit={(e) => this.handleUserFilters(e)} onReset={(e) => this.resetFilters(e)}>
@@ -342,7 +342,7 @@ export default class AdminPanel extends Component {
                             <Card>
                                 <Accordion.Toggle as={Card.Header} eventKey='1'>
                                     Filters
-                    </Accordion.Toggle>
+                                </Accordion.Toggle>
                                 <Accordion.Collapse eventKey='1'>
                                     <Card.Body className="cardBody">
                                         <Form onSubmit={(e) => this.handleSubmissionFilters(e)} onReset={(e) => this.resetFilters(e)}>

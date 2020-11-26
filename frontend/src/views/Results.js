@@ -14,6 +14,7 @@ import TrustedAIProviders from './TrustedAIProviders';
 import TrustedAIResources from './TrustedAIResources';
 import ReactGa from 'react-ga';
 import Login from './Login';
+import calculateQuestionScore from '../helper/QuestionScore';
 
 ReactGa.initialize(process.env.REACT_APP_GAID, { testMode: process.env.NODE_ENV === 'test' });
 
@@ -31,6 +32,13 @@ const ExportHandler = () => {
     })
 }
 
+const riskLevel =
+{
+    1: "Low",
+    2: "Medium",
+    3: "High"
+}
+
 /**
  * Component processes the answers to the survey and
  * renders the results to the user in various different ways.
@@ -39,16 +47,38 @@ export default class Results extends Component {
     constructor(props) {
         super(props);
         this.state = {
-          Dimensions: []
+            Dimensions: []
         }
     }
 
     componentDidMount() {
-        
+
         ReactGa.pageview(window.location.pathname + window.location.search);
-        axios.get(process.env.REACT_APP_SERVER_ADDR +'/dimensions').then((res) => {
-            this.setState({Dimensions: res.data});
-          });
+        axios.get(process.env.REACT_APP_SERVER_ADDR + '/dimensions').then((res) => {
+            this.setState({ Dimensions: res.data });
+        });
+    }
+
+    calculateRiskWeight(riskQuestions, results) {
+        var riskScore = 0;
+        var maxRiskScore = 0;
+        // Calculate total risk based off user responses
+        riskQuestions.map(question => {
+            let selectedChoices = results[question.name];
+            let questionScore = calculateQuestionScore(question, selectedChoices, 1);
+            riskScore += questionScore.score;
+            maxRiskScore += questionScore.maxScore;
+        });
+
+        // Calculate whether Risk level is low medium or high
+        var riskWeight = 1;
+        if (riskScore > (maxRiskScore * 0.66)) {
+            riskWeight = 3;
+        } else if (riskScore > (maxRiskScore * 0.33)) {
+            riskWeight = 2;
+        }
+
+        return riskWeight;
     }
 
     downloadCSV(results, questionsObj) {
@@ -131,6 +161,8 @@ export default class Results extends Component {
             return allQuestions
         });
 
+        var riskWeight = this.calculateRiskWeight(allQuestions.filter(x => x.score?.dimension === "RK"), surveyResults);
+
         var titleQuestion = allQuestions.find(question => question.title.default === "Title of project");
         var descriptionQuestion = allQuestions.find(question => question.title.default === "Project Description");
         var industryQuestion = allQuestions.find(question => question.title.default === "Industry");
@@ -151,15 +183,15 @@ export default class Results extends Component {
         var questions = allQuestions.filter((question) => Object.keys(surveyResults).includes(question.name))
 
         var radarChartData = [];
-        if(this.state.Dimensions.length === 0){
+        if (this.state.Dimensions.length === 0) {
             return null;
         } else return (
             <main id="wb-cont" role="main" property="mainContentOfPage" className="container" style={{ paddingBottom: "1rem" }}>
                 <h1 className="section-header">
                     Results
                 </h1>
-                <button id="exportButton" type="button" className="btn btn-save mr-2 btn btn-primary export-button" onClick={() => {ExportHandler(); exportReport(projectTitle, projectDescription, projectIndustry, projectRegion)}}>Export</button>
-                <button id="exportButtonCSV" type="button" className="btn btn-save mr-2 btn btn-primary export-button-csv" onClick={() => {this.downloadCSV(surveyResults, questions)}}>Export as CSV</button>
+                <button id="exportButton" type="button" className="btn btn-save mr-2 btn btn-primary export-button" onClick={() => { ExportHandler(); exportReport(projectTitle, projectDescription, projectIndustry, projectRegion) }}>Export</button>
+                <button id="exportButtonCSV" type="button" className="btn btn-save mr-2 btn btn-primary export-button-csv" onClick={() => { this.downloadCSV(surveyResults, questions) }}>Export as CSV</button>
                 <Tabs defaultActiveKey="score">
                     <Tab eventKey="score" title="Score">
                         <div className="table-responsive mt-3">
@@ -182,10 +214,13 @@ export default class Results extends Component {
                                 </thead>
                                 <tbody>
                                     {this.state.Dimensions.map((dimension, idx) => {
-                                        return (
-                                            <DimensionScore key={idx} radarChartData={radarChartData} dimensionName={dimension.name}
-                                                results={surveyResults} questions={allQuestions.filter(x => x.score?.dimension === dimension.label)} />
-                                        )
+
+                                        if (dimension.label !== "T" && dimension.label !== "RK") {
+                                            return (
+                                                <DimensionScore key={idx} radarChartData={radarChartData} dimensionName={dimension.name} riskWeight={riskWeight}
+                                                    results={surveyResults} questions={allQuestions.filter(x => x.score?.dimension === dimension.label)} />
+                                            )
+                                        }
                                     })}
                                 </tbody>
                             </Table>
@@ -195,22 +230,26 @@ export default class Results extends Component {
                         <Tab.Container id="left-tabs-example" defaultActiveKey={this.state.Dimensions[0].label}>
                             <Tab.Content>
                                 {this.state.Dimensions.map((dimension, idx) => {
-                                    return (
-                                        <Tab.Pane key={idx} eventKey={dimension.label}>
-                                            <ReportCard dimension={dimension.label} results={surveyResults} questions={questions.filter(x => x.score?.dimension === dimension.label)} />
-                                        </Tab.Pane>
-                                    );
+                                    if (dimension.label !== "T" && dimension.label !== "RK") {
+                                        return (
+                                            <Tab.Pane key={idx} eventKey={dimension.label}>
+                                                <ReportCard dimension={dimension.label} results={surveyResults} questions={questions.filter(x => x.score?.dimension === dimension.label)} />
+                                            </Tab.Pane>
+                                        );
+                                    }
                                 })}
                             </Tab.Content>
                             <Nav variant="tabs" className="report-card-nav" defaultActiveKey="accountability">
                                 {this.state.Dimensions.map((dimension, idx) => {
-                                    return (
-                                        <Nav.Item key={idx} >
-                                            <Nav.Link eventKey={dimension.label}>
-                                                {dimension.name}
-                                            </Nav.Link>
-                                        </Nav.Item>
-                                    );
+                                    if (dimension.label !== "T" && dimension.label !== "RK") {
+                                        return (
+                                            <Nav.Item key={idx} >
+                                                <Nav.Link eventKey={dimension.label}>
+                                                    {dimension.name}
+                                                </Nav.Link>
+                                            </Nav.Item>
+                                        );
+                                    }
                                 })}
                             </Nav>
                         </Tab.Container>
@@ -227,6 +266,7 @@ export default class Results extends Component {
                     </Tab>
                 </Tabs>
                 <div className="dimension-chart">
+                    <h4>Risk Level: {riskLevel[riskWeight ?? 1]}</h4>
                     <ResponsiveRadar
                         data={radarChartData}
                         keys={["score"]}

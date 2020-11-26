@@ -32,7 +32,7 @@ export default function QuestionRow(props) {
             <TableCell className={classes.tablecell} component="th" scope="row">
                 {question.question}
             </TableCell>
-            <TableCell className={classes.tablecell} align="right">{(question.trustIndexDimension !== null) ? dimensions[question.trustIndexDimension].name : 'Details'}</TableCell>
+            <TableCell className={classes.tablecell} align="right">{dimensions[question.trustIndexDimension]?.name}</TableCell>
             <TableCell className={classes.tabecell}><Button onClick={() => setModalShow(true)}>Edit</Button></TableCell>
         </React.Fragment>
     )
