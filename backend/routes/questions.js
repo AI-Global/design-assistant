@@ -13,7 +13,7 @@ const mongoose = require('mongoose');
 
 async function getDimensions() {
     // Get Lookup of Dimensions from DB
-    let dimensions = await Dimension.find()
+    let dimensions = await Dimension.find().sort({ dimensionID: 1 })
 
     let Dimensions = {}
     for (let d of dimensions) {
@@ -126,6 +126,7 @@ function formatQuestion(q, Dimensions, Triggers = null) {
         if (q.responses) {
             for (let c of q.responses) {
                 question.score.choices[c.id] = c.score * q.weighting;
+
             }
         }
 
@@ -138,6 +139,7 @@ function formatQuestion(q, Dimensions, Triggers = null) {
 
         // Add choices to question
         question.choices = [];
+
         for (let c of q.responses) {
             var choice = {};
             choice.value = c.id;
@@ -328,31 +330,21 @@ async function createPages(q, filters) {
         dimQuestions[d] = [];
     }
 
-    var tombQuestions = {}
-    tombQuestions["tombstone"] = [];
-
     for (let question of q) {
-        if (question.questionType == "tombstone") {
-            tombQuestions["tombstone"].push(question);
-        } else if (question.trustIndexDimension) {
+        if (question.trustIndexDimension) {
             dimQuestions[question.trustIndexDimension].push(question)
         }
     }
 
-    tombQuestions["tombstone"].sort((a, b) => (a.questionNumber > b.questionNumber) ? 1 : -1);
-    for (let i = 0; i < dimQuestions.length; i++) {
-        dimQuestions.sort((a, b) => (a.questionNumber > b.questionNumber) ? 1 : -1);
-    }
-
-
-    // Add Other question to tombstone and create page 
-    tombQuestions["tombstone"].push({responseType: "comment", id: "otherTombstone", question: "Other:", alt_text: "If possible, support the feedback with specific recommendations \/ suggestions to improve the tool. Feedback can include:\n - Refinement to existing questions, like suggestions on how questions can be simplified or clarified further\n - Additions of new questions for specific scenarios that may be missed\n - Feedback on whether the listed AI risk domains are fulsome and complete\n - What types of response indicators should be included for your context?" });
-    var projectDetails = createPage(tombQuestions["tombstone"], "projectDetails1", "Project Details", Dimensions, Children);
-    page.pages.push(projectDetails);
-
-
     // Apply domain, region, role, lifecycle filter to questions
     dimQuestions = await applyFilters(dimQuestions, filters)
+
+    // Add Other question to tombstone and create page 
+    dimQuestions[1].push({ responseType: "comment", id: "otherTombstone", question: "Other:", alt_text: "If possible, support the feedback with specific recommendations \/ suggestions to improve the tool. Feedback can include:\n - Refinement to existing questions, like suggestions on how questions can be simplified or clarified further\n - Additions of new questions for specific scenarios that may be missed\n - Feedback on whether the listed AI risk domains are fulsome and complete\n - What types of response indicators should be included for your context?" });
+    var projectDetails = createPage(dimQuestions[1], Dimensions[1].page, Dimensions[1].name, Dimensions, Children);
+    page.pages.push(projectDetails);
+
+    delete dimQuestions[1];
 
     // Create pages for the dimensions
     var pageCount = 1;
@@ -464,7 +456,6 @@ router.delete('/:questionId', async (req, res) => {
             await Question.deleteOne({ _id: req.params.questionId })
             var maxQ = await Question.find().sort({ questionNumber: -1 }).limit(1)
             var maxNumber = maxQ[0].questionNumber
-            console.log(number, maxNumber)
 
             for (let i = number + 1; i <= maxNumber; i++) {
                 await Question.findOneAndUpdate({ questionNumber: i }, { questionNumber: i - 1 });

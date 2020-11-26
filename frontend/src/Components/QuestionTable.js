@@ -4,7 +4,6 @@ import ChildModal from './ChildModal';
 import React, { Component } from 'react';
 import Add from '@material-ui/icons/Add';
 import Table from '@material-ui/core/Table';
-import Paper from '@material-ui/core/Paper';
 import QuestionModal from './QuestionModal';
 import TableRow from '@material-ui/core/TableRow';
 import TableBody from '@material-ui/core/TableBody';
@@ -13,7 +12,6 @@ import TableHead from '@material-ui/core/TableHead';
 import QuestionRow from '../Components/QuestionRow';
 import IconButton from '@material-ui/core/IconButton';
 import { DropdownButton, Dropdown } from 'react-bootstrap';
-import TableContainer from '@material-ui/core/TableContainer';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 const reorder = (list, startIndex, endIndex) => {
@@ -228,7 +226,7 @@ export default class QuestionTable extends Component {
             "responseType": "text",
             "responses": [],
             "roles": [],
-            "trustIndexDimension": null,
+            "trustIndexDimension": 1,
             "weighting": 0,
             "trigger": null,
             "child": false,
@@ -236,7 +234,7 @@ export default class QuestionTable extends Component {
         }
 
         return (
-            <TableContainer component={Paper}>
+            <div className="table-responsive mt-3">
                 {this.state.previousQuestion === null ? null :
                     <ChildModal
                         show={this.state.showChildModal}
@@ -287,7 +285,7 @@ export default class QuestionTable extends Component {
                         ))}
                     </TableBody>
                 </Table>
-            </TableContainer>
+            </div>
         )
     }
 }
