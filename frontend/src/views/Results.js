@@ -233,7 +233,7 @@ export default class Results extends Component {
                         <Tab.Container id="left-tabs-example" defaultActiveKey={this.state?.Dimensions[2]?.label}>
                             <Tab.Content>
                                 {this.state.Dimensions.map((dimension, idx) => {
-                                    if (dimension.label !== "T" && dimension.label !== "RK") {
+                                    if (dimension.label !== "T") {
                                         return (
                                             <Tab.Pane key={idx} eventKey={dimension.label}>
                                                 <ReportCard dimension={dimension.label} results={surveyResults} questions={questions.filter(x => x.score?.dimension === dimension.label)} />
@@ -245,7 +245,7 @@ export default class Results extends Component {
                             </Tab.Content>
                             <Nav variant="tabs" className="report-card-nav" defaultActiveKey="accountability">
                                 {this.state.Dimensions.map((dimension, idx) => {
-                                    if (dimension.label !== "T" && dimension.label !== "RK") {
+                                    if (dimension.label !== "T") {
                                         return (
                                             <Nav.Item key={idx} >
                                                 <Nav.Link eventKey={dimension.label}>

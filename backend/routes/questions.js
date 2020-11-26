@@ -267,8 +267,8 @@ async function applyFilters(questions, filters) {
             filters.roles.push(allRoles)
         }
 
-        for (let dim of Object.keys(questions)) {
-            questions[dim] = questions[dim].filter(q => filters.roles.some(role => q.roles.includes(role)))
+        for (let dim of Object.keys(questions).filter(k => String(k) !== "1")) {
+            questions[dim] = questions[dim].filter(q => filters.roles.some(role => q.roles?.includes(role)))
         }
     }
 
@@ -279,8 +279,8 @@ async function applyFilters(questions, filters) {
             filters.regions.push(allRegions)
         }
 
-        for (let dim of Object.keys(questions)) {
-            questions[dim] = questions[dim].filter(q => filters.regions.some(region => q.regionalApplicability.includes(region)))
+        for (let dim of Object.keys(questions).filter(k => String(k) !== "1")) {
+            questions[dim] = questions[dim].filter(q => filters.regions.some(region => q.regionalApplicability?.includes(region)))
         }
     }
 
@@ -291,8 +291,8 @@ async function applyFilters(questions, filters) {
             filters.lifecycles.push(allLifecycles)
         }
 
-        for (let dim of Object.keys(questions)) {
-            questions[dim] = questions[dim].filter(q => filters.lifecycles.some(lifecycle => q.lifecycle.includes(lifecycle)))
+        for (let dim of Object.keys(questions).filter(k => String(k) !== "1")) {
+            questions[dim] = questions[dim].filter(q => filters.lifecycles.some(lifecycle => q.lifecycle?.includes(lifecycle)))
         }
     }
 
@@ -303,8 +303,8 @@ async function applyFilters(questions, filters) {
             filters.domains.push(allDomains)
         }
 
-        for (let dim of Object.keys(questions)) {
-            questions[dim] = questions[dim].filter(q => filters.domains.some(domain => q.domainApplicability.includes(domain)))
+        for (let dim of Object.keys(questions).filter(k => String(k) !== "1")) {
+            questions[dim] = questions[dim].filter(q => filters.domains.some(domain => q.domainApplicability?.includes(domain)))
         }
     }
 
@@ -383,6 +383,7 @@ async function createPages(q, filters) {
 
 // Get all questions. Assemble SurveyJS JSON here
 router.get('/', async (req, res) => {
+
     // Optional filters in req body
     filters = req.query;
     //Only request parent questions from DB
@@ -393,16 +394,6 @@ router.get('/', async (req, res) => {
             res.status(200).send(pages);
         })
         .catch((err) => res.status(400).send(err));
-
-    // Test query for empty database
-    // Question.find({"questionNumber": 0})
-    //     .then(async (questions) => {
-    //         console.log(questions);
-    //         pages = await createPages(questions, filters);
-    //         console.log(pages);
-    //         res.status(200).send(pages);            
-    //     })
-    //     .catch((err) => res.status(400).send(err));
 
 });
 

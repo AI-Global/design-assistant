@@ -29,9 +29,9 @@ ReactGa.initialize(process.env.REACT_APP_GAID, { testMode: process.env.NODE_ENV 
 
 const User = props => (
     <TableRow hover={true}>
-        <TableCell style={{ textAlign: "center" }}>{props.user.email}</TableCell>
-        <TableCell style={{ textAlign: "center" }}>{props.user.username}</TableCell>
-        <TableCell style={{ textAlign: "center" }}>{props.user?.organization}</TableCell>
+        <TableCell style={{ textAlign: "left" }}>{props.user.email}</TableCell>
+        <TableCell style={{ textAlign: "left" }}>{props.user.username}</TableCell>
+        <TableCell style={{ textAlign: "left" }}>{props.user?.organization}</TableCell>
         <TableCell style={{ textAlign: "center" }}>
 
             {(props.role === "superadmin") ?
@@ -193,13 +193,13 @@ export default class AdminPanel extends Component {
         return this.getFilteredSubmissions().slice(this.state.submissionsPage * this.state.submissionsRowsPerPage, this.state.submissionsPage * this.state.submissionsRowsPerPage + this.state.submissionsRowsPerPage).map((currentsubmission, idx) => {
             let convertedDate = new Date(currentsubmission.date).toLocaleString("en-US", { timeZone: Intl.DateTimeFormat()?.resolvedOptions()?.timeZone ?? "UTC" });
             return (
-                <TableRow key={idx}>
-                    <TableCell style={{ textAlign: "center" }}>{currentsubmission.username}</TableCell>
-                    <TableCell style={{ textAlign: "center" }}>{currentsubmission.projectName}</TableCell>
-                    <TableCell style={{ textAlign: "center" }}>{convertedDate}</TableCell>
-                    <TableCell style={{ textAlign: "center" }}>{currentsubmission.completed ? "Yes" : "No"}</TableCell>
+                <TableRow hover={true} key={idx}>
+                    <TableCell style={{ textAlign: "left" }}>{currentsubmission.username}</TableCell>
+                    <TableCell style={{ textAlign: "left" }}>{currentsubmission.projectName}</TableCell>
+                    <TableCell style={{ textAlign: "left" }}>{convertedDate}</TableCell>
+                    <TableCell style={{ textAlign: "left" }}>{currentsubmission.completed ? "Yes" : "No"}</TableCell>
                     <TableCell style={{ textAlign: "center" }}><Button size="sm" onClick={() => this.nextPath('/Results/', currentsubmission.submission ?? {})}> Responses</Button></TableCell>
-                    <TableCell align="center"> <IconButton size="small" style={{ paddingTop: "0.60em" }} color="secondary" onClick={() => { this.showDeleteSubmisionModal(currentsubmission) }}><DeleteIcon style={{ color: red[500] }} /> </IconButton></TableCell>
+                    <TableCell align="center"> <IconButton size="small" style={{ paddingTop: "0.10em" }} color="secondary" onClick={() => { this.showDeleteSubmisionModal(currentsubmission) }}><DeleteIcon style={{ color: red[500] }} /> </IconButton></TableCell>
                 </TableRow>
             )
         })
@@ -381,13 +381,13 @@ export default class AdminPanel extends Component {
                                 <Table id="users" className="user-table">
                                     <TableHead>
                                         <TableRow>
-                                            <TableCell className="score-card-headers" style={{ textAlign: "center" }}>
+                                            <TableCell className="score-card-headers" style={{ textAlign: "left" }}>
                                                 Email
                                         </TableCell>
-                                            <TableCell className="score-card-headers" style={{ textAlign: "center" }}>
+                                            <TableCell className="score-card-headers" style={{ textAlign: "left" }}>
                                                 Name
                                         </TableCell>
-                                            <TableCell className="score-card-headers" style={{ textAlign: "center" }}>
+                                            <TableCell className="score-card-headers" style={{ textAlign: "left" }}>
                                                 Organization
                                         </TableCell>
                                             <TableCell className="score-card-headers" style={{ textAlign: "center" }}>
@@ -417,17 +417,17 @@ export default class AdminPanel extends Component {
                                 <Table id="submissions" className="submission-table">
                                     <TableHead>
                                         <TableRow hover>
-                                            <TableCell className="score-card-headers" style={{ textAlign: "center" }}>
+                                            <TableCell className="score-card-headers" style={{ textAlign: "left" }}>
                                                 User Name
                                         </TableCell>
-                                            <TableCell className="score-card-headers" style={{ textAlign: "center" }}>
+                                            <TableCell className="score-card-headers" style={{ textAlign: "left" }}>
                                                 Project Name
                                         </TableCell>
-                                            <TableCell className="score-card-headers" style={{ textAlign: "center" }}>
+                                            <TableCell className="score-card-headers" style={{ textAlign: "left" }}>
                                                 Date
                                         </TableCell>
 
-                                            <TableCell className="score-card-headers" style={{ textAlign: "center" }}>
+                                            <TableCell className="score-card-headers" style={{ textAlign: "left" }}>
                                                 Completed
                                         </TableCell>
                                             <TableCell className="score-card-headers" style={{ textAlign: "center" }}>

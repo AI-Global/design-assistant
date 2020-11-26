@@ -273,7 +273,7 @@ export default class QuestionTable extends Component {
                     </TableHead>
                     <TableBody component={DroppableComponent(this.onDragEnd)}>
                         {this.state.questions.map((question, index) => (
-                            <TableRow component={DraggableComponent(question._id, index)} key={question._id}>
+                            <TableRow hover={true} component={DraggableComponent(question._id, index)} key={question._id}>
                                 <QuestionRow
                                     question={question}
                                     dimensions={this.state.dimensions}
