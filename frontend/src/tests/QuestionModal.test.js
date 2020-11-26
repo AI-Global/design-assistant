@@ -164,7 +164,6 @@ test('Question Modal renders with Project Details (Tombstone) question', () => {
     expect(screen.getByText("Question")).toBeTruthy();
     expect(screen.getByText("Title of project")).toBeTruthy();
 
-    expect(screen.queryByText("Points")).toBeFalsy();
     expect(screen.queryByText("Weight")).toBeFalsy();
     expect(screen.queryByText("Role")).toBeFalsy(); // This entire row renders together, so if 'Role' is not visible, neither are any of the sections
     expect(screen.queryByText("Responses")).toBeFalsy();
@@ -186,9 +185,6 @@ test('Question Modal renders with survey Risk question', () => {
 
     expect(screen.getByText("Weight")).toBeTruthy();
     expect(screen.getByText("3")).toBeTruthy();
-
-    expect(screen.getByText("Points")).toBeTruthy();
-    expect(screen.getAllByText("1")).toBeTruthy();
 
     expect(screen.getByText("Question")).toBeTruthy();
     expect(screen.getByText("Is your user base comprised of individuals or groups from vulnerable populations?")).toBeTruthy();
@@ -214,8 +210,6 @@ test('Question Modal renders with new question', () => {
 
     expect(screen.queryByText("Weight")).toBeFalsy();
 
-    expect(screen.queryByText("Points")).toBeFalsy();
-
     expect(screen.getByText("Question")).toBeTruthy();
 
     expect(screen.queryByText("Role")).toBeFalsy(); // This entire row renders together, so if 'Role' is not visible, neither are any of the sections
@@ -240,9 +234,6 @@ test('Question Modal renders with survey Mitigation question', () => {
 
     expect(screen.getByText("Weight")).toBeTruthy();
     expect(screen.getByText("3")).toBeTruthy();
-
-    expect(screen.getByText("Points")).toBeTruthy();
-    expect(screen.getAllByText("-1")).toBeTruthy();
 
     expect(screen.getByText("Question")).toBeTruthy();
     expect(screen.getByText("This is a mitigation quesiton.")).toBeTruthy();
