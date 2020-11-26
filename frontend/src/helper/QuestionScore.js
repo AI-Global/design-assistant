@@ -12,7 +12,7 @@ function calculateQuestionScore(question, selectedChoices, riskWeight) {
     var questionScore = 0;
     var maxQuestionScore = 0;
     if (question.type === QuestionTypes.checkbox) {
-        if (selectedChoices !== undefined) {
+        if (selectedChoices !== undefined && Array.isArray(selectedChoices)) {
             selectedChoices.map(choice => {
                 let choiceScore = scores?.choices[choice] ?? 0;
                 questionScore += choiceScore;
@@ -41,7 +41,7 @@ function calculateQuestionScore(question, selectedChoices, riskWeight) {
 
         // Map slider results
         // <25 = Low(-1), 25-74 = Medium(0), >75 = High(1) 
-        if (selectedChoices !== undefined) {
+        if (selectedChoices !== undefined && !Number.isNaN(selectedChoices)) {
             if (selectedChoices < 33) {
                 questionScore = question.choices[0] * scores.weight;
             } else if (selectedChoices >= 66) {
@@ -49,6 +49,7 @@ function calculateQuestionScore(question, selectedChoices, riskWeight) {
             }else{
                 questionScore = question.choices[1] * scores.weight;
             }
+
         }
     }
     
