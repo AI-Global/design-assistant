@@ -60,4 +60,4 @@ An existing AI resource can be edited by clicking the _Edit_ button, which will 
 To delete an existing AI resource, click the _Edit_ button again, and then click the _Delete_ button in the bottom left corner of the pop up window, and confirm the deletion.
 
 ## Analytics
-From the **Analytics** tab, the admin is presented the following site analytics from Google Analytics: Number of Sessions, Location of Session, Average Session Duration. Further analytics can be accessed through your valid google account at (https://accounts.google.com/)[https://accounts.google.com/]
+From the **Analytics** tab, the admin is presented the following site analytics from Google Analytics: Number of Sessions, Location of Session, Average Session Duration. Further analytics can be accessed through your valid google account at https://accounts.google.com/
