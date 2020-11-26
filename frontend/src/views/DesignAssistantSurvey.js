@@ -93,7 +93,6 @@ class DesignAssistantSurvey extends Component {
   componentDidUpdate() {
     if (this.state.model?.data !== undefined) {
       localStorage.setItem("localResponses", JSON.stringify(this.state.model?.data))
-      console.log(localStorage.getItem("localResponses"))
     }
   }
 
@@ -176,13 +175,18 @@ class DesignAssistantSurvey extends Component {
           .onAfterRenderQuestion
           .add(function (model, options) {
             let title = options.htmlElement.querySelector("h5");
+            let prompt = options.htmlElement.querySelector("p");
             if (title) {
               // add tooltip for question if alttext has default value
               let altTextHTML = "";
+              let childIndent = "";
               if (options.question.alttext && options.question.alttext.hasOwnProperty("default")) {
                 let altText = converter.makeHtml(options.question.alttext.default.replace(/"/g, "&quot;"));
                 altText = `<div class="text-justify">${altText}</div>`.replace(/"/g, "&quot;");
                 altTextHTML = `<i class="fas fa-info-circle ml-2" data-toggle="tooltip" data-html="true" title="${altText}"></i>`;
+              }
+              if (options.question.visibleIf) { 
+                childIndent = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
               }
               title.outerHTML =
                 '<label for="' +
@@ -190,7 +194,7 @@ class DesignAssistantSurvey extends Component {
                 '" class="' +
                 title.className +
                 '"><span class="field-name">' +
-                title.innerText +
+                childIndent + title.innerText +
                 "</span>" +
                 altTextHTML +
                 "</label>";
@@ -365,7 +369,6 @@ class DesignAssistantSurvey extends Component {
           }
         } else {
           if (this.state.model.data[parId] === resId) {
-            console.log('HERE')
             show = true;
           }
         }
@@ -394,7 +397,6 @@ class DesignAssistantSurvey extends Component {
   }
 
   render() {
-    console.log(this.state.model)
     var number = 1
     return (
       this.state.model ?
@@ -410,8 +412,8 @@ class DesignAssistantSurvey extends Component {
                     <Accordion.Collapse eventKey={index + 1}>
                       <Card.Body>
                         {this?.state?.json?.pages?.map((page, index) => {
-                          return (page.name.includes(dimension.substring(0, 4)) ? page.elements.map((question, i) => {
-                            return ((question.type !== "comment" && (!question.visibleIf || this.shouldDisplayNav(question))) ?
+                          return (page.name.toLowerCase().includes(dimension.substring(0, 4).toLowerCase()) ? page.elements.map((question, i) => {
+                            return ((!question.name.includes("other") && (!question.visibleIf || this.shouldDisplayNav(question))) ?
                               <Button style={{ margin: "0.75em" }} key={i} id={this.state.model.data[question.name] ? "answered" : "unanswered"} onClick={() => this.navPage(index)}>{question.visibleIf ? '' : number++}</Button>
                               : null)
                           })

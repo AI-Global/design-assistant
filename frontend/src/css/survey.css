@@ -155,3 +155,7 @@ input:disabled {
 .Toastify__progress-bar--default{
   background: linear-gradient(90deg, #097AE8, #00CDFF, #42d3d4) !important;
 }
+
+.small {
+  padding-left: 2.3em !important;
+}
