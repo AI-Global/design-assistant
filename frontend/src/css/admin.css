@@ -94,3 +94,8 @@ input[type=number]
   overflow-y: scroll;
 
 }
+
+.slider-points.is-invalid  {
+  background-image: none !important;
+  padding-right: 0 !important;
+}
