@@ -196,7 +196,7 @@ export default function QuestionModal(props) {
                 // need to clear question metadata before closing for adding action
                 props.question.alt_text = null
                 props.question.lifecycle = []
-                props.question.pointsAvailable = 0
+                props.question.pointsAvailable = 1
                 props.question.question = null
                 props.question.reference = null
                 props.question.responseType = "text"
@@ -393,7 +393,7 @@ export default function QuestionModal(props) {
                                     </Form.Control>
                                 </Form.Group>
                             </Col>
-                            {(responseType === "radiogroup" || responseType === "checkbox" || responseType === "slider") ?
+                            {(responseType === "dropdown" || responseType === "radiogroup" || responseType === "checkbox" || responseType === "slider") ?
                                 <React.Fragment>
                                     <Col xs={4} md={2}>
                                         <Form.Label>Weight</Form.Label>
@@ -422,15 +422,7 @@ export default function QuestionModal(props) {
                                                 <Form.Control.Feedback type="invalid">Invalid</Form.Control.Feedback>
                                             </Col>
                                         </React.Fragment>
-                                        :
-                                        <Col xs={4} md={2}>
-                                            <Form.Label>Points</Form.Label>
-                                            <Form.Control value={points} as="select" onChange={(event) => setPoints(event.target.value)}>
-                                                <option value={-1}>-1</option>
-                                                <option value={0}>0</option>
-                                                <option value={1}>1</option>
-                                            </Form.Control>
-                                        </Col>
+                                        : null
                                     }
                                 </React.Fragment>
                                 : null}
