@@ -28,7 +28,31 @@ function connect() {
 
 // Test for GET all users endpoint
 describe('GET /users', () => {
-    
+    before((done) => {
+        connect()
+            .then(() => done())
+            .catch((err) => done(err));
+    });
+    after((done) => {
+        connect()
+            .then(() => done())
+            .catch((err) => done(err));
+
+    });
+
+    // test getting all users with invalid auth token
+    it('get all users by invalid auth token returns error', (done) => {
+        request(app).get('/users')
+        .set('x-auth-token', 'test')
+        .then((res) => {
+            const body = res.body;
+            expect(body).to.contain.property('msg');
+            done();
+        })
+        .catch((err) => done(err));
+    });
+
+
 });
 
 describe('GET /users/user', () => {
