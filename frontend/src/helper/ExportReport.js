@@ -27,7 +27,7 @@ function addHeader(doc, y) {
 /**
  * Function adds the Title and Description of the project surveyed to the PDF.
  */
-function addTitleDescription(title, description, region, industry, doc, y) {
+function addTitleDescription(title, description, region, industry, risk, doc, y) {
   doc.setFontSize(16);
   doc.text(title, 10, y);
 
@@ -36,6 +36,10 @@ function addTitleDescription(title, description, region, industry, doc, y) {
     doc.setFontSize(10);
     
     let RI = []
+    if (risk){
+      RI.push("Risk Level: " + risk);
+    }
+
     if (region){
       RI.push("Region: " + region);
     }
@@ -278,18 +282,18 @@ function addReportCard(doc, y) {
  * @param title 
  * @param description 
  */
-export function exportReport(title, description, industry, region) {
+export function exportReport(title, description, industry, region, risk) {
   const doc = new jsPDF();
   // eslint-disable-next-line
   var y = 35;
   y = addHeader(doc, y);
-  if (title !== undefined || description !== undefined || region || industry ) {
-    y = addTitleDescription(title ?? " ", description ?? " ", region , industry, doc, y);
+  if (title !== undefined || description !== undefined || region || industry || risk ) {
+    y = addTitleDescription(title ?? " ", description ?? " ", region , industry, risk, doc, y);
   }
 
   y = addAbout(doc, y);
   y = addScore(doc, y);
-  y = addReportCard(doc, y);
+  addReportCard(doc, y);
   doc.save('Responsible AI Design Report Card.pdf')
 }
 

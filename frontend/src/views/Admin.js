@@ -31,6 +31,7 @@ const User = props => (
     <TableRow hover={true}>
         <TableCell style={{ textAlign: "center" }}>{props.user.email}</TableCell>
         <TableCell style={{ textAlign: "center" }}>{props.user.username}</TableCell>
+        <TableCell style={{ textAlign: "center" }}>{props.user?.organization}</TableCell>
         <TableCell style={{ textAlign: "center" }}>
 
             {(props.role === "superadmin") ?
@@ -43,7 +44,6 @@ const User = props => (
                 : props.user.role}
 
         </TableCell>
-        <TableCell style={{ textAlign: "center" }}>{props.user?.organization}</TableCell>
         <TableCell align="center">
             <Button size="sm" onClick={() => props.nextPath("/ViewSubmissions/" + props.user._id)}>View</Button>
         </TableCell>
@@ -225,7 +225,7 @@ export default class AdminPanel extends Component {
         let form = event.target.elements;
         let orgFilter = form.orgFilter.value;
         let roleFilter = form.roleFilter.value;
-        this.setState({ orgFilter: orgFilter, roleFilter: roleFilter, usersPage:0, submissionsPage:0 });
+        this.setState({ orgFilter: orgFilter, roleFilter: roleFilter, usersPage: 0, submissionsPage: 0 });
     }
 
     handleSubmissionFilters(event) {
@@ -233,7 +233,7 @@ export default class AdminPanel extends Component {
         let form = event.target.elements;
         let userFilter = form.userFilter.value;
         let projectFilter = form.projectNameFilter.value;
-        this.setState({ userFilter: userFilter, projectFilter: projectFilter, usersPage:0, submissionsPage:0 });
+        this.setState({ userFilter: userFilter, projectFilter: projectFilter, usersPage: 0, submissionsPage: 0 });
     }
 
     showDeleteUserModal(user) {
@@ -279,11 +279,13 @@ export default class AdminPanel extends Component {
 
     getFilteredUsers() {
         let filtered = []
-        this.state.users.forEach(user => {
-            if (this.state.roleFilter === "" || user.role?.toLowerCase().includes(this.state.roleFilter?.toLowerCase()))
+        if (this.state.users.length) {
+            this.state.users.forEach(user => {
+                if (this.state.roleFilter === "" || user.role?.toLowerCase().includes(this.state.roleFilter?.toLowerCase()))
                 if (this.state.orgFilter === "" || user.organization?.toLowerCase().includes(this.state.orgFilter?.toLowerCase()))
                     filtered.push(user)
-        })
+            })
+        }
         return filtered;
     }
 
@@ -310,7 +312,7 @@ export default class AdminPanel extends Component {
                             <Card>
                                 <Accordion.Toggle as={Card.Header} eventKey='1'>
                                     Filters
-                    </Accordion.Toggle>
+                                </Accordion.Toggle>
                                 <Accordion.Collapse eventKey='1'>
                                     <Card.Body className="cardBody">
                                         <Form onSubmit={(e) => this.handleUserFilters(e)} onReset={(e) => this.resetFilters(e)}>
@@ -340,7 +342,7 @@ export default class AdminPanel extends Component {
                             <Card>
                                 <Accordion.Toggle as={Card.Header} eventKey='1'>
                                     Filters
-                    </Accordion.Toggle>
+                                </Accordion.Toggle>
                                 <Accordion.Collapse eventKey='1'>
                                     <Card.Body className="cardBody">
                                         <Form onSubmit={(e) => this.handleSubmissionFilters(e)} onReset={(e) => this.resetFilters(e)}>
@@ -386,10 +388,10 @@ export default class AdminPanel extends Component {
                                                 Name
                                         </TableCell>
                                             <TableCell className="score-card-headers" style={{ textAlign: "center" }}>
-                                                Role
+                                                Organization
                                         </TableCell>
                                             <TableCell className="score-card-headers" style={{ textAlign: "center" }}>
-                                                Organization
+                                                Role
                                         </TableCell>
                                             <TableCell className="score-card-headers" style={{ textAlign: "center" }}>
                                                 Submissions
