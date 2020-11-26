@@ -20,7 +20,7 @@ router.post('/', async (req, res) => {
         const savedAnalytic = await analytic.save();
         res.json(savedAnalytic);
     } catch (err) {
-        res.status(500).send(err)
+        res.status(400).send(err)
     }
 
 });
