@@ -1,7 +1,6 @@
 require('dotenv').config();
 process.env.NODE_ENV = 'test';
 const expect = require('chai').expect;
-const { post } = require('jquery');
 const request = require('supertest');
 const app = require('../../../app.js');
 
@@ -213,26 +212,6 @@ describe('POST /questions', () => {
     });
 });
 
-describe('PUT /questions/{QID}', () => {
-
-    it('Update an existing question', (done) => {
-        request(app).put('/questions/' + postID)
-            .send({
-                "questionNumber": 11,
-                "question": "updated question"
-            }).expect(200, done)
-
-        request(app).get('/questions/' + postID)
-            .then((res) => {
-                const body = res.body;
-                expect(body.questionNumber).to.equal(11);
-                expect(body.question).to.equal("updated question");
-
-                done();
-            })
-            .catch((err) => done(err));
-    });
-});
 
 
 describe('DELETE /questions/{QID}', () => {
