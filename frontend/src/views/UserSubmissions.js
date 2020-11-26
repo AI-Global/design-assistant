@@ -73,7 +73,7 @@ class UserSubmissions extends Component {
 
                     this.props.history.push({
                         pathname: '/Results',
-                        state: { questions: json, responses: submission.submission }
+                        state: { questions: json, responses: submission.submission ?? {} }
                     })
                 })
         }
