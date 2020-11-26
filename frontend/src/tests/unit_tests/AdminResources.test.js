@@ -1,7 +1,7 @@
 import React from 'react';
 import { fireEvent, render, screen, wait } from '@testing-library/react';
 import axios from 'axios';
-import AdminResources from '../Components/AdminResources.js';
+import AdminResources from '../../Components/AdminResources.js';
 
 jest.mock('axios');
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import {render, screen} from '@testing-library/react';
-import ReportCard from '../views/ReportCard';
+import ReportCard from '../../views/ReportCard';
 
 const mockQuestions = [{
     "type": "radiogroup",

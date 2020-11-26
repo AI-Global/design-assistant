@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import TrustedAIProviders from '../views/TrustedAIProviders';
+import TrustedAIProviders from '../../views/TrustedAIProviders';
 import axios from 'axios';
 
 jest.mock('axios');

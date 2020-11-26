@@ -1,6 +1,6 @@
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
-import QuestionModal from '../Components/QuestionModal';
+import QuestionModal from '../../Components/QuestionModal';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 const mockSliderQuestion = {

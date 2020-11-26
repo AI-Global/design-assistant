@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen} from '@testing-library/react';
 import axios from 'axios';
-import Admin from '../views/Admin';
+import Admin from '../../views/Admin';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 jest.mock('axios');
