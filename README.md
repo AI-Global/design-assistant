@@ -6,7 +6,11 @@
 
 [Project Structure Text Overview](docs/project_structure.md)
 
-[Admin Panel Guide](docs/admin_guide.md)
+[Admin Panel ReadMe Guide](docs/admin_guide.md)
+
+[Responsible AI Assistant Administrator User Manual](docs/Responsible%20AI%20Assistant%20Administrator%20User%20Manual.pdf)
+
+[Responsible AI Assistant Member User Manual](docs/Responsible%20AI%20Assistant%20Member%20User%20Manual.pdf)
 
 ### Admin Account 
 
