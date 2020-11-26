@@ -6,7 +6,9 @@ import axios from 'axios';
 
 jest.mock('axios');
 
-const data = [ {_id: "5fa50d0ad17b20d5d45d8826", dimensionID: 1, __v: 0, label: "A", name: "Accountability"} ];
+const data = [ {_id: "5fa50d0ad17b20d5d45d8826", dimensionID: 1, __v: 0, label: "T", name: "Project Details"},
+{dimensionID: 2, label: "RK", name: "Risk" },
+{dimensionID: 3, label: "A", name: "Accountability"} ];
 const response ={ data };
 const loginButton = "Log in"
 
