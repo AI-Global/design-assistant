@@ -17,6 +17,8 @@ import ModalFooter from 'react-bootstrap/ModalFooter';
 import ModalHeader from 'react-bootstrap/ModalHeader';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import { ToastContainer, toast } from 'react-toastify';
+import { getLoggedInUser } from '../helper/AuthHelper';
+
 import 'react-toastify/dist/ReactToastify.css';
 
 // set up survey styles and properties for rendering html
@@ -93,6 +95,12 @@ class DesignAssistantSurvey extends Component {
   componentDidUpdate() {
     if (this.state.model?.data !== undefined) {
       localStorage.setItem("localResponses", JSON.stringify(this.state.model?.data))
+    }
+    if(!this.state?.user_id){
+      getLoggedInUser().then(user => {
+        if(user)
+        this.setState({ user_id: user._id });
+    })
     }
   }
 
@@ -273,6 +281,7 @@ class DesignAssistantSurvey extends Component {
     if (this.state.submission_id) {
       endpoint = '/submissions/update/' + this.state.submission_id;
     }
+
     axios.post(process.env.REACT_APP_SERVER_ADDR + endpoint, {
       userId: this.state?.user_id,
       submission: this.state.model.data,
