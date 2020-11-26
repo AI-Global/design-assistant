@@ -432,7 +432,7 @@ router.post('/', async (req, res) => {
         const savedQuestions = await question.save();
         res.json(savedQuestions);
     } catch (err) {
-        res.json({ message: err });
+        res.status(400).send(err)
     }
 
 });
@@ -457,7 +457,7 @@ router.delete('/:questionId', async (req, res) => {
         })
         res.json(doc);
     } catch (err) {
-        res.json({ message: err });
+        res.status(400).send(err)
     }
 
 });
@@ -469,7 +469,7 @@ router.put('/:questionId', async (req, res) => {
 
         res.json(response);
     } catch (err) {
-        res.json({ message: err });
+        res.status(400).send(err)
     }
 });
 
@@ -505,7 +505,7 @@ router.put('/:startNumber/:endNumber', async (req, res) => {
         res.json({ message: "Transaction Complete" })
 
     } catch (err) {
-        res.json({ message: err, part: 4 });
+        res.status(400).send(err)
     }
 
 });
