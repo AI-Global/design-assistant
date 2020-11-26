@@ -28,7 +28,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 ReactGa.initialize(process.env.REACT_APP_GAID, { testMode: process.env.NODE_ENV === 'test' });
 
 const User = props => (
-    <TableRow hover={true}>
+    <TableRow>
         <TableCell style={{ textAlign: "left" }}>{props.user.email}</TableCell>
         <TableCell style={{ textAlign: "left" }}>{props.user.username}</TableCell>
         <TableCell style={{ textAlign: "left" }}>{props.user?.organization}</TableCell>
@@ -193,7 +193,7 @@ export default class AdminPanel extends Component {
         return this.getFilteredSubmissions().slice(this.state.submissionsPage * this.state.submissionsRowsPerPage, this.state.submissionsPage * this.state.submissionsRowsPerPage + this.state.submissionsRowsPerPage).map((currentsubmission, idx) => {
             let convertedDate = new Date(currentsubmission.date).toLocaleString("en-US", { timeZone: Intl.DateTimeFormat()?.resolvedOptions()?.timeZone ?? "UTC" });
             return (
-                <TableRow hover={true} key={idx}>
+                <TableRow key={idx}>
                     <TableCell style={{ textAlign: "left" }}>{currentsubmission.username}</TableCell>
                     <TableCell style={{ textAlign: "left" }}>{currentsubmission.projectName}</TableCell>
                     <TableCell style={{ textAlign: "left" }}>{convertedDate}</TableCell>
