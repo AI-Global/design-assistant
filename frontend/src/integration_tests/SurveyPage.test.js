@@ -6,9 +6,14 @@ require('dotenv').config();
 async function setUpDriver() {
     let driver = await new Builder()
         .forBrowser('chrome')
-        .setChromeOptions(new chrome.Options().headless().windowSize({width: 1920,height: 1080}))
+        .setChromeOptions(new chrome.Options().windowSize({width: 1920,height: 1080}))
         .build();
     await driver.get(process.env.REACT_APP_TESTING_ADDR);
+    await driver.findElement(By.className('user-status btn btn-primary')).click();
+    await driver.findElement(By.id('loginUsername')).sendKeys('test@selenium');
+    await driver.findElement(By.id('loginPassword')).sendKeys('Test123!');
+    await driver.findElement(By.xpath("//input[@value='Login']")).click();
+    await driver.wait(until.elementLocated(By.className("usersettings-dropdown dropdown")));
     await driver.findElement(By.xpath("//*[contains(text(), 'Start New Survey')]")).click();
     await driver.wait(until.urlContains("DesignAssistantSurvey"));
     return driver;
