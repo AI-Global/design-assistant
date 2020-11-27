@@ -38,36 +38,8 @@ describe('POST /users', () => {
 
 });
 
-// describe('GET /users', () => {
-
-//     it('Getting all users', (done) => {
-//         request(app).get('/users')
-//         .then((res) => {
-//             const body = res.body;
-//             expect(body[0]).to.contain.property('role');
-//             expect(body[0]).to.contain.property('username');
-//             expect(body[0]).to.contain.property('email');
-//             done();
-//         })
-//         .catch((err) => done(err));
-//     });
-
-// });
-
 // Test for GET all users endpoint
 describe('GET /users', () => {
-
-    // // test getting all users with invalid auth token
-    // it('get all users by invalid auth token returns error', (done) => {
-    //     request(app).get('/users')
-    //     .set('x-auth-token', 'test')
-    //     .then((res) => {
-    //         const body = res.body;
-    //         expect(body).to.contain.property('msg');
-    //         done();
-    //     })
-    //     .catch((err) => done(err));
-    // });
 
     // test getting all users with valid auth token
     it('get all users by auth token returns all valid users', (done) => {
