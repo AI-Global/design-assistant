@@ -30,21 +30,78 @@ var userID = "5fc011112338b2f0d85aaae5"
 
 });*/
 
+// describe('GET /users', () => {
+
+//     it('Getting all users', (done) => {
+//         request(app).get('/users')
+//         .then((res) => {
+//             const body = res.body;
+//             expect(body[0]).to.contain.property('role');
+//             expect(body[0]).to.contain.property('username');
+//             expect(body[0]).to.contain.property('email');
+//             done();
+//         })
+//         .catch((err) => done(err));
+//     });
+
+// });
+
+// Test for GET all users endpoint
 describe('GET /users', () => {
 
-    it('Getting all users', (done) => {
+    // test getting all users with invalid auth token
+    it('get all users by invalid auth token returns error', (done) => {
         request(app).get('/users')
+        .set('x-auth-token', 'test')
         .then((res) => {
             const body = res.body;
-            expect(body[0]).to.contain.property('role');
-            expect(body[0]).to.contain.property('username');
-            expect(body[0]).to.contain.property('email');
+            expect(body).to.contain.property('msg');
             done();
         })
         .catch((err) => done(err));
     });
 
+    // test getting all users with valid auth token
+    it('get all users by auth token returns all valid users', (done) => {
+        request(app).get('/users')
+        .then((res) => {
+            const users = res.body;
+
+            // iterate through all returned users and assert they contain valid fields
+            for (let i = 0; i < users.length; ++i) {
+                expect(users[i]).to.contain.property('role');
+                expect(users[i]).to.contain.property('_id');
+                expect(users[i]).to.contain.property('email');
+                expect(users[i]).to.contain.property('username');
+            }
+            done();
+        })
+        .catch((err) => done(err));
+    });
 });
+
+// describe('GET /questions', () => {
+
+//     // Test getting surveyJS questions JSON
+//     it('Getting all questions', (done) => {
+//         // TODO: Make post request once connected to mockdb
+//         request(app).get('/questions')
+//             .then((res) => {
+//                 const body = res.body;
+//                 expect(body).to.contain.property('pages');
+//                 expect(body).to.contain.property('showQuestionNumbers');
+//                 expect(body).to.contain.property('showProgressBar');
+//                 expect(body).to.contain.property('firstPageIsStarted');
+//                 expect(body).to.contain.property('showNavigationButtons');
+//                 expect(body.pages[0]).to.contain.property('name');
+//                 expect(body.pages[0]).to.contain.property('title');
+//                 expect(body.pages[0]).to.contain.property('elements');
+//                 done();
+//             })
+//             .catch((err) => done(err));
+//     });
+
+// });
 
 
 describe('POST /users/auth', () => {

@@ -119,7 +119,7 @@ router.get('/isLoggedIn', auth, (req, res) => {
 
 
 // Get all users
-router.get('/', async (req, res) => {
+router.get('/', auth, async (req, res) => {
     User.find()
         .then(users => res.status(200).send(users))
         .catch((err) => res.status(400).send(err));
