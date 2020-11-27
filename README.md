@@ -16,6 +16,15 @@
 
 [Testing Documentation](docs/Testing%20Document.pdf)
 
+### .env Files 
+The frontend and backend .env files are templates without any values. These values need to be filled in for the app to work
+
+You can use the .env files from sprint4 for testing purposes
+
+[frontend/.env](https://github.com/UAlberta-CMPUT401/ai-global/blob/sprint4/frontend/.env)
+
+[backend/.env](https://github.com/UAlberta-CMPUT401/ai-global/blob/sprint4/backend/.env)
+
 ### Admin Account 
 
 Username: admin\
