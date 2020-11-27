@@ -11,8 +11,8 @@ require('dotenv').config()
  * the trusted AI providers that are stored in 
  * the database. 
  */
-export default class TrustedAIResources extends Component{
-    constructor(props){
+export default class TrustedAIResources extends Component {
+    constructor(props) {
         super(props);
         this.state = {
             resources: [],
@@ -29,15 +29,16 @@ export default class TrustedAIResources extends Component{
             })
     }
 
-    handleSubmit(event){
+    // set the filter for the resource names upon submission of search form
+    handleSubmit(event) {
         event.preventDefault();
         let form = event.target.elements;
         let filter = form.filterResources.value;
-        this.setState({filter})
+        this.setState({ filter })
         return
     }
 
-    render (){
+    render() {
         var resources = this.state.resources;
         var filter = this.state.filter;
         return (
@@ -70,18 +71,19 @@ export default class TrustedAIResources extends Component{
                         </tr>
                     </thead>
                     <tbody>
-                        {resources.map(function(resource, idx) {
-                            if(filter === "" || resource["resource"].toLowerCase().includes(filter?.toLowerCase())){
-                            return ( 
-                                <tr key={idx}>
-                                    <td>
-                                        <a href={resource["source"]}>{resource["resource"]}</a>
-                                    </td>
-                                    <td>
-                                        {resource["description"]}
-                                    </td>
-                                </tr>
-                            )} else{
+                        {resources.map(function (resource, idx) {
+                            if (filter === "" || resource["resource"].toLowerCase().includes(filter?.toLowerCase())) {
+                                return (
+                                    <tr key={idx}>
+                                        <td>
+                                            <a href={resource["source"]}>{resource["resource"]}</a>
+                                        </td>
+                                        <td>
+                                            {resource["description"]}
+                                        </td>
+                                    </tr>
+                                )
+                            } else {
                                 return null;
                             }
 

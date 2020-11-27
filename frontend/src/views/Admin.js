@@ -161,6 +161,7 @@ export default class AdminPanel extends Component {
             submissions: this.state.submissions.filter(ul => ul._id !== id)
         })
     }
+
     deleteUserSubmission(id) {
         let endPoint = '/submissions/deleteAll/' + id;
         axios.delete(process.env.REACT_APP_SERVER_ADDR + endPoint)
@@ -171,6 +172,10 @@ export default class AdminPanel extends Component {
         })
     }
 
+    /**
+     * Makes a request to the users endpoint to update the role of the user
+     * with id= "id"
+     */
     changeRole(id, role) {
         let endPoint = '/users/' + id;
         axios.put(process.env.REACT_APP_SERVER_ADDR + endPoint, { "role": role })
@@ -182,6 +187,7 @@ export default class AdminPanel extends Component {
             });
     }
 
+    // returns the current page's rows for the users table
     usersList() {
         return !(Array.isArray(this.state.users)) ? null :
             this.getFilteredUsers().slice(this.state.usersPage * this.state.usersRowsPerPage, this.state.usersPage * this.state.usersRowsPerPage + this.state.usersRowsPerPage).map(currentuser => {
@@ -189,6 +195,7 @@ export default class AdminPanel extends Component {
             })
     }
 
+    // returns the current page's rows for the submission table
     submissionList() {
         return this.getFilteredSubmissions().slice(this.state.submissionsPage * this.state.submissionsRowsPerPage, this.state.submissionsPage * this.state.submissionsRowsPerPage + this.state.submissionsRowsPerPage).map((currentsubmission, idx) => {
             let convertedDate = new Date(currentsubmission.date).toLocaleString("en-US", { timeZone: Intl.DateTimeFormat()?.resolvedOptions()?.timeZone ?? "UTC" });
@@ -205,6 +212,9 @@ export default class AdminPanel extends Component {
         })
     }
 
+    /**
+     * Sets the flags to display/hide the appropriate fitler menus 
+     */
     handleTabChange(key) {
         if (key === "userManagement") {
             this.setState({ showUsersFilter: true, showSubmissionsFilter: false });
@@ -215,11 +225,16 @@ export default class AdminPanel extends Component {
         }
     }
 
+    // reset filters to defaults
     resetFilters(event) {
         this.setState({ orgFilter: "", roleFilter: "", userFilter: "", projectFilter: "" });
         event.target.reset();
     }
 
+    /**
+     * Sets the filters on the users table upon
+     * submission of the user filters form
+     */
     handleUserFilters(event) {
         event.preventDefault();
         let form = event.target.elements;
@@ -228,6 +243,10 @@ export default class AdminPanel extends Component {
         this.setState({ orgFilter: orgFilter, roleFilter: roleFilter, usersPage: 0, submissionsPage: 0 });
     }
 
+    /**
+     * Sets the filters on the submissions table upon
+     * submission of the submission filters form
+     */
     handleSubmissionFilters(event) {
         event.preventDefault();
         let form = event.target.elements;
@@ -236,18 +255,28 @@ export default class AdminPanel extends Component {
         this.setState({ userFilter: userFilter, projectFilter: projectFilter, usersPage: 0, submissionsPage: 0 });
     }
 
+    // Sets the flag to show the DeleteUserModal
     showDeleteUserModal(user) {
         this.setState({ userToDelete: user, showDeleteUserModal: true });
     }
 
+    // Sets the flag to show the DeleteSubmissionModal
     showDeleteSubmisionModal(submission) {
         this.setState({ submissionToDelete: submission, showDeleteSubmissionModal: true });
     }
 
+    /**
+     * Hides any modals present on the screen
+     * Resets and selections present
+     */
     hideModal() {
         this.setState({ userToDelete: null, submissionToDelete: null, showDeleteUserModal: false, showDeleteSubmissionModal: false });
     }
 
+    /**
+     * Deletes the selected user and hides the DeleteUserModal
+     * If selected, deletes all submissions of the selected user as well
+     */
     confirmDeleteUser(deleteSubmissions) {
         if (deleteSubmissions) {
             this.deleteUserSubmission(this.state.userToDelete._id)
@@ -256,6 +285,10 @@ export default class AdminPanel extends Component {
         this.hideModal();
     }
 
+    /** 
+     * Deletes the selected submission, 
+     * hides the DeleteSubmissionModal
+     */
     confirmDeleteSubmission() {
         this.deleteSubmission(this.state.submissionToDelete._id);
         this.hideModal();
@@ -277,6 +310,7 @@ export default class AdminPanel extends Component {
         this.setState({ submissionsPage: 0, submissionsRowsPerPage: event.target.value });
     };
 
+    // return a list of users that meet the user filter's criteria
     getFilteredUsers() {
         let filtered = []
         if (this.state.users.length) {
@@ -289,6 +323,7 @@ export default class AdminPanel extends Component {
         return filtered;
     }
 
+    // return a list of submissions that meet the submission filter's criteria
     getFilteredSubmissions() {
         let filtered = []
         this.state.submissions.forEach(currentsubmission => {
@@ -298,8 +333,6 @@ export default class AdminPanel extends Component {
         })
         return filtered;
     }
-
-
 
     render() {
         return (
