@@ -23,6 +23,7 @@ describe('PUT /trustedaiproviders', () => {
                 providerID = body["_id"];
                 done();
             })
+            .catch((err) => done(err));
     });
 
     it('update trusted ai provider', (done) => {
@@ -40,6 +41,7 @@ describe('PUT /trustedaiproviders', () => {
                 expect(body).to.contain.property('source');
                 done();
             })
+            .catch((err) => done(err));
     });
 });
 

@@ -22,9 +22,8 @@ describe('PUT /trustedairesources', () => {
                 expect(body).to.contain.property('source');
                 resourceID = body["_id"];
                 done();
-            }).catch((err) => {
-                done(err);
-            });
+            })
+            .catch((err) => done(err));
     });
 
     it('update trusted ai resource', (done) => {
@@ -42,6 +41,7 @@ describe('PUT /trustedairesources', () => {
                 expect(body).to.contain.property('source');
                 done();
             })
+            .catch((err) =>  done(err));
     });
 });
 
