@@ -80,30 +80,6 @@ describe('GET /users', () => {
     });
 });
 
-// describe('GET /questions', () => {
-
-//     // Test getting surveyJS questions JSON
-//     it('Getting all questions', (done) => {
-//         // TODO: Make post request once connected to mockdb
-//         request(app).get('/questions')
-//             .then((res) => {
-//                 const body = res.body;
-//                 expect(body).to.contain.property('pages');
-//                 expect(body).to.contain.property('showQuestionNumbers');
-//                 expect(body).to.contain.property('showProgressBar');
-//                 expect(body).to.contain.property('firstPageIsStarted');
-//                 expect(body).to.contain.property('showNavigationButtons');
-//                 expect(body.pages[0]).to.contain.property('name');
-//                 expect(body.pages[0]).to.contain.property('title');
-//                 expect(body.pages[0]).to.contain.property('elements');
-//                 done();
-//             })
-//             .catch((err) => done(err));
-//     });
-
-// });
-
-
 describe('POST /users/auth', () => {
 
     it('Authorizing users', (done) => {
