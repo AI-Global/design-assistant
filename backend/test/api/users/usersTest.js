@@ -4,31 +4,39 @@ const expect = require('chai').expect;
 const request = require('supertest');
 const app = require('../../../app.js');
 
-var userID = "5fc011112338b2f0d85aaae5"
+var userID = "";
+var authToken = "";
 
-//var postID = ""
+describe('POST /users', () => {
+    const user = {
+        "email": "test@backend",
+        "username": "test@backend",
+        "password": "Test123!",
+        "passwordConfirmation": "Test123!"
+    }
 
-//new User({email, username, password, organization})
-/*describe('POST /users/create', () => {
-
-    it('Posting a user', (done) => {
+    it('Creating a new user', (done) => {
         request(app).post('/users/create')
-        .send({
-            "username": "user123123",
-            "email": "mairala@email.com",
-            "password": "Ridwan888/",
-            "passwordConfirmation": "Ridwan888/",
-        })
-        .then((res) => {
-            const body = res.body;
-            expect(body).to.contain.property('token');
-            expect(body).to.contain.property('user');
-            done();
-        })
-        .catch((err) => done(err));
+            .send(user)
+            .then((res) => {
+                const body = res.body;
+                expect(body).to.contain.property('token');
+                expect(body.user).to.contain.property('id');
+                expect(body.user).to.contain.property('email');
+                userID = body["user"]["id"];
+                authToken = body["token"];
+                done();
+            })
+            .catch((err) => done(err));
     });
 
-});*/
+    it('Creating an invalid user', (done) => {
+        request(app).post('/users/create')
+            .send(user)
+            .expect(422, done);
+    });
+
+});
 
 // describe('GET /users', () => {
 
@@ -80,116 +88,59 @@ describe('GET /users', () => {
     });
 });
 
-describe('POST /users/auth', () => {
+describe('GET /users/{USER_ID}', () => {
+    it('Getting user by user ID', (done) => {
+        request(app).get('/users/' + userID)
+            .then((res) => {
+                const body = res.body;
+                expect(body).to.contain.property('role');
+                expect(body).to.contain.property('username');
+                expect(body).to.contain.property('email');
+                done();
+            })
+            .catch((err) => done(err));
+    });
+});
 
-    it('Authorizing users', (done) => {
+describe('POST /users/auth', () => {
+    it('Authorize user', (done) => {
         request(app).post('/users/auth')
-        .send({
-            "username": "greyhatburner989@gmail.com",
-	        "password": "Adminadmin/8"
-        })
-        .then((res) => {
-            const body = res.body;
-            expect(body).to.contain.property('token');
-            expect(body).to.contain.property('user');
-            done();
-        })
-        .catch((err) => done(err));
+            .send({
+                "username": "test@backend",
+                "password": "Test123!"
+            })
+            .then((res) => {
+                const body = res.body;
+                expect(body).to.contain.property('token');
+                expect(body).to.contain.property('user');
+                done();
+            })
+            .catch((err) => done(err));
+    });
+
+    it('Authorize user with invalid credentials', (done) => {
+        request(app).post('/users/auth')
+            .send({
+                "username": "test@backend",
+                "password": "Test123!!"
+            }).expect(400, done);
+    });
+
+    it('Getting user by invalid authorization token', (done) => {
+        request(app).get('/users/user')
+            .set('x-auth-token', "")
+            // denied authorization 
+            .expect(401, done);
     });
 
 });
 
 describe('DELETE /users/{ID}', () => {
-
     it('Delete user by user ID ', (done) => {
-        request(app).delete('/users/'+userID)
-        .expect(200, done)
-    });
-
-});
-
-/*
-describe('GET /users/user', () => {
-    before((done) => {
-        connect()
-            .then(() => done())
+        request(app).delete('/users/' + userID)
+            .then((res) => {
+                done();
+            })
             .catch((err) => done(err));
-
-    });
-
-    after((done) => {
-        connect()
-            .then(() => done())
-            .catch((err) => done(err));
-
-    });
-
-    // test invalid auth token 
-    it('get user by invalid auth token returns error', (done) => {
-        request(app).get('/users/user')
-        .set('x-auth-token', 'test')
-        .then((res) => {
-            const body = res.body;
-            expect(body).to.contain.property('msg');
-            done();
-        })
-        .catch((err) => done(err));
-    });
-    
-    // test valid auth token
-    it('get user by auth token returns user', (done) => {
-        request(app).get('/users/user')
-        .set('x-auth-token', testToken)
-        .then((res) => {
-            const body = res.body;
-            expect(body).to.contain.property('role');
-            expect(body).to.contain.property('_id');
-            expect(body).to.contain.property('email');
-            expect(body).to.contain.property('username');
-            done();
-        })
-        .catch((err) => done(err));
     });
 });
-
-describe('GET /users/isLoggedIn', () => {
-    before((done) => {
-        connect()
-            .then(() => done())
-            .catch((err) => done(err));
-
-    });
-
-    after((done) => {
-        connect()
-            .then(() => done())
-            .catch((err) => done(err));
-
-    });
-
-    // test invalid auth token
-    it('get user by invalid auth token returns error', (done) => {
-        request(app).get('/users/isLoggedIn')
-        .set('x-auth-token', 'test')
-        .then((res) => {
-            const body = res.body;
-            expect(body).to.contain.property('msg');
-            done();
-        })
-        .catch((err) => done(err));
-    });
-
-    // test valid auth token
-    it('get user by valid auth token returns status', (done) => {
-        request(app).get('/users/isLoggedIn')
-        .set('x-auth-token', testToken)
-        .then((res) => {
-            const body = res.body;
-            expect(body).to.contain.property('isLoggedIn');
-            done();
-        })
-        .catch((err) => done(err));
-    });
-});
-
-*/
