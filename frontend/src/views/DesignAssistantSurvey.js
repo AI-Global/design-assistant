@@ -93,9 +93,12 @@ class DesignAssistantSurvey extends Component {
   }
 
   componentDidUpdate() {
+    // make answeres persistent across page reloads
     if (this.state.model?.data !== undefined) {
       localStorage.setItem("localResponses", JSON.stringify(this.state.model?.data))
     }
+
+    // associate submissions with the user if they sign-in mid-survey
     if(!this.state?.user_id){
       getLoggedInUser().then(user => {
         if(user)
@@ -104,6 +107,8 @@ class DesignAssistantSurvey extends Component {
     }
   }
 
+  
+  // clear local storage before navigating away
   componentWillUnmount() {
     localStorage.removeItem("localResponses")
   }
@@ -362,6 +367,9 @@ class DesignAssistantSurvey extends Component {
     this.setState(this.state)
   }
 
+  /**
+   * Returns true if a child's trigger is included in the answers  
+   */
   shouldDisplayNav(child) {
     let visibleIfArray = child.visibleIf.split("or ");
     let show = false

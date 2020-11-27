@@ -29,6 +29,7 @@ export default class TrustedAIProviders extends Component {
             })
     }
 
+    // set the filter for the provider names upon submission of search form
     handleSubmit(event){
         event.preventDefault();
         let form = event.target.elements;

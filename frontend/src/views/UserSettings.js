@@ -174,6 +174,11 @@ class UserSettings extends Component {
             });
     }
 
+    /**
+     * send post request to update organization of user 
+     * upon submission of change organization form and
+     * validating confirmation of password field
+     */
     handleOrganizationSubmit(event){
         event.preventDefault();
         this.resetValidations();
