@@ -49,17 +49,17 @@ var userID = "5fc011112338b2f0d85aaae5"
 // Test for GET all users endpoint
 describe('GET /users', () => {
 
-    // test getting all users with invalid auth token
-    it('get all users by invalid auth token returns error', (done) => {
-        request(app).get('/users')
-        .set('x-auth-token', 'test')
-        .then((res) => {
-            const body = res.body;
-            expect(body).to.contain.property('msg');
-            done();
-        })
-        .catch((err) => done(err));
-    });
+    // // test getting all users with invalid auth token
+    // it('get all users by invalid auth token returns error', (done) => {
+    //     request(app).get('/users')
+    //     .set('x-auth-token', 'test')
+    //     .then((res) => {
+    //         const body = res.body;
+    //         expect(body).to.contain.property('msg');
+    //         done();
+    //     })
+    //     .catch((err) => done(err));
+    // });
 
     // test getting all users with valid auth token
     it('get all users by auth token returns all valid users', (done) => {
