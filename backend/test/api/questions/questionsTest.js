@@ -120,6 +120,7 @@ describe('GET /questions/{QID}', () => {
         request(app).get('/questions/' + postID)
             .then((res) => {
                 const body = res.body;
+
                 expect(body).to.contain.property('title');
                 expect(body).to.contain.property('name');
                 expect(body).to.contain.property('type');
@@ -130,9 +131,8 @@ describe('GET /questions/{QID}', () => {
                 expect(body).to.contain.property('pipsDensity');
                 expect(body).to.contain.property('tooltips');
 
-                done();
             })
-            .catch((err) => done(err));
+
 
         request(app).post('/questions')
             .send({
@@ -174,16 +174,28 @@ describe('GET /questions/{QID}', () => {
             }).expect(200).then((res) => {
                 const body = res.body;
                 post2ID = body['_id'];
+                done();
             })
+
+
+
+    });
+
+});
+
+
+describe('GET /questions/{QID}', () => {
+
+    it('Getting radiogroup question', (done) => {
 
         // radio question
         request(app).get('/questions/' + post2ID)
             .then((res) => {
                 const body = res.body;
+   
                 expect(body).to.contain.property('title');
                 expect(body).to.contain.property('name');
                 expect(body).to.contain.property('type');
-                expect(body).to.contain.property('recommendation');
                 expect(body).to.contain.property('score');
                 expect(body.score).to.contain.property('dimension');
                 expect(body.score).to.contain.property('choices');
@@ -196,10 +208,9 @@ describe('GET /questions/{QID}', () => {
             })
             .catch((err) => done(err));
 
+
     });
-
 });
-
 
 describe('POST /questions', () => {
 
