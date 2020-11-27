@@ -4,6 +4,8 @@
 
 [API documentation](docs/API.md)
 
+[Deployment Documentation](docs/Deployment&#32;Document.md)
+
 [Project Structure Text Overview](docs/project_structure.md)
 
 [Admin Panel ReadMe Guide](docs/admin_guide.md)
