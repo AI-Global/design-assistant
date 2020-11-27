@@ -39,9 +39,7 @@ test('Admin can create a new question', async() => {
     await driver.findElement(By.xpath('//*[@id="wb-cont"]/div[1]/div[1]/div/table/thead/tr/th[1]/button')).click();
 
 
-    await driver.findElement(By.id('resetButton')).click();
-    await driver.wait(until.elementLocated(By.xpath("//*[contains(text(), 'Yes')]")));
-    await driver.findElement(By.xpath("/html/body/div[8]/div/div/div[3]/button[1]")).click();
+    await driver.findElement(By.xpath('/html/body/div[4]/div/div/div[1]/button')).click();
 });
 
 test('Admin can edit a question', async() => {
