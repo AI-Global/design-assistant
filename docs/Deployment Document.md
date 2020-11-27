@@ -13,7 +13,7 @@ sudo n stable
 Node.JS and npm are both required to run this app. Restart your terminal after running these commands.
 
 ## Environment Variables
-There are two .env files that you'll need to fill in with information.
+There are two .env files that you'll need to enter information into before running the app.
 
 ### backend/.env
 
@@ -49,7 +49,7 @@ This command will install the required frontend and backend node modules.
 
 ### Backend server
 
-#### This command will start your back end server
+#### This command will start your backend server
 
 ```
 cd backend/
@@ -58,7 +58,7 @@ sudo npm start
 
 ### Frontend App (Developement)
 
-#### This command will start your app on port 3000
+#### This command will start your frontend app on port 3000
 
 ```
 cd frontend/
@@ -71,7 +71,7 @@ cd frontend/
 sudo PORT=80 npm run start
 ```
 
-### Frontend App (Deploy production build)
+### Frontend App (Production)
 
 #### Create production build
 
