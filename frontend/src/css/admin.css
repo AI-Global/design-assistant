@@ -3,21 +3,20 @@
   background-color: #d0e0e3;
 }
 
-.modal-60w{
-  width: 60%;
+.modal-question {
+  width: 60% !important;
   max-width: none !important;
 }
 
-.modal-30w{
-  width: 30%;
-  max-width: none !important;
+.modal {
+  z-index: 1040 !important;
 }
 
 .form-label {
   font-weight: 600;
 }
 
-.modal-60w .modal-body {
+.modal-question .modal-body {
   padding-left: 6em;
   padding-right: 6em;
 }
@@ -53,10 +52,50 @@ input[type=number]
   border-radius: 5%;
 }
 
-.modal {
-  z-index: 1040;
-}
-
 .form-label {
   min-height: 40px !important;
+}
+
+.edit-trusted-form-label {
+  min-height: 0px !important
+
+}
+
+.edit-trusted-headers {
+  background-color: #d0e0e3;
+}
+
+.export-dropdown .btn {
+  background-color: #007bff !important;
+  width: 100%;
+}
+
+.export-dropdown .dropdown-toggle::after {
+  display: none;
+}
+
+.select-list-box {
+  display: block;
+  width: 100%;
+  height: 8rem;
+  padding: .375rem .75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  appearance: listbox;
+  align-items: flex-start;
+  overflow-x: hidden;
+  overflow-y: scroll;
+
+}
+
+.slider-points.is-invalid  {
+  background-image: none !important;
+  padding-right: 0 !important;
 }

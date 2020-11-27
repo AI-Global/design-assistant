@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const crypto = require('crypto');
 
 const USER_ROLES = [
+    'superadmin',
     'admin',
     'mod',
     'member'
@@ -33,13 +34,9 @@ const UserSchema = new mongoose.Schema({
         type: String, 
         required: true 
     },
-    orgs: [
-        { 
-          type: mongoose.Schema.Types.ObjectId, 
-          ref: 'Organization', 
-          default: [] 
-        },
-    ],
+    organization: { 
+          type: String,  
+        }
 });
 
 UserSchema.virtual('password')

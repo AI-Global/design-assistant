@@ -1,5 +1,5 @@
 html {
-  background-color: #252525;
+  background-color: #262626;
 }
 .banner {
   padding-top: .5rem;
@@ -55,7 +55,7 @@ html {
   position: relative; 
   bottom: 0px; 
   width: 100%; 
-  background-color: #252525;
+  background-color: #262626;
 }
 
 .copyright {
@@ -114,6 +114,28 @@ main h2, main .h2 {
 main h1, main h2, main .h1, main .h2 {
   margin-top: 23px !important;
   margin-bottom: 11.5px !important;
+}
+
+.noUi-target, noUi-ltr, noUi-horizontal{
+  width:50%;
+}
+
+.noUi-value, .noUi-value-horizontal, .noUi-value-large {
+  visibility: hidden;
+}
+
+.noUi-value[style*="left: 100%"]::after, noUi-value-horizontal[style*="left: 100%"]::after, noUi-value-large[style*="left: 100%"]::after{
+  content: "High "!important;
+  color: black;
+  visibility: visible;
+  margin-right: 1.5rem;
+}
+
+.noUi-value[style*="left: 0%"]::after, noUi-value-horizontal[style*="left: 0%"]::after, noUi-value-large[style*="left: 0%"]::after{
+  content: "Low "!important;
+  color: black;
+  visibility: visible;
+  margin-right: 0.4rem;
 }
 
 .info-tooltip {
@@ -205,7 +227,7 @@ form .btn:not(.btn-call-to-action) {
   .dimensionNav {
     position: absolute;
     left: 3em;
-    top: 12em;
+    top: 14.5em;
     z-index: 5;
     max-width: 18em;
     min-width: 18em;
@@ -217,24 +239,36 @@ form .btn:not(.btn-call-to-action) {
     z-index: 5;
     max-width: 18em;
     min-width: 18em;
-    min-height: 18em;
+    min-height: 30em;
     margin-left:auto;
     margin-right:auto;
   }
+}
 
-  .filterDrop{
-    width: 40%;
-    display: inline-block;
-  }
+.questionFilter .card {
+  overflow: visible !important;
+}
 
-  .filterDrop .btn {
-    width: 100%;
-  }
+.filterDrop{
+  padding-bottom: 1em;
+}
 
-  .cardBody {
-    text-align: center;
-    height: 12em;
-  }
+.filterDrop .btn {
+  width: 90%;
+}
+
+.filterApply {
+  width: 90%;
+  /* margin-top: 14.5em; */
+}
+
+.filterDrop .dropdown-menu {
+  padding: 1em !important;
+  width: 90%;
+}
+
+.cardBody {
+  text-align: center;
 }
 
 .MuiTableCell-head {
@@ -242,23 +276,8 @@ form .btn:not(.btn-call-to-action) {
   background-color: #d0e0e3;
 }
 
-.modal-60w{
-  width: 60%;
-  max-width: none !important;
-}
-
-.modal-30w{
-  width: 30%;
-  max-width: none !important;
-}
-
 .form-label {
   font-weight: 600;
-}
-
-.modal-body {
-  padding-left: 6em;
-  padding-right: 6em;
 }
 
 #modal-footer-border {
@@ -292,17 +311,11 @@ input[type=number]
   border-radius: 5%;
 }
 
-.modal{
-  z-index: 1040;
-}
-
-
 .survey-results-table {
   display: flex;
   flex-flow: column;
   width: 100%;
 }
-
 
 .survey-results-table tbody {
   display: block;
@@ -323,4 +336,29 @@ input[type=number]
 
 #ResultsButton {
   background-color: #007bff !important;
+}
+
+#newSurvey {
+  margin-right: 1rem !important
+}
+
+.sv_container {
+  min-height: 100vh !important;
+}
+
+#DeleteSurveyButton {
+  background-color: #dc3545!important
+
+}
+
+#dropdown-item-button {
+  width: 70%
+}
+
+.user-table .MuiTableCell-root{
+  border: 1px solid rgba(224, 224, 224, 1)
+}
+
+.submission-table .MuiTableCell-root{
+  border: 1px solid rgba(224, 224, 224, 1)
 }

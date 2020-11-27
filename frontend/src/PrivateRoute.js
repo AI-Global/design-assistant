@@ -10,16 +10,14 @@ function PrivateRoute({ component: Component, ...rest }) {
             setUser(user)
         })
     }, [])
-
-    console.log("u:", u)
-
+    
     return (
         <Route
             {...rest}
             render={props =>
                 u === '' ? null : (
                     u === undefined ? <Redirect to="/" /> :
-                        u.role === "admin" ? <Component {...props} /> : <Redirect to="/" /> 
+                        (u.role === "admin" ||u.role === "superadmin" ) ? <Component {...props} /> : <Redirect to="/" /> 
                     )
             }
         />

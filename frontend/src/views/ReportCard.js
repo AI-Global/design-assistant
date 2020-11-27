@@ -1,33 +1,33 @@
 import React, { Component } from 'react';
-import {Table} from 'react-bootstrap';
+import { Table } from 'react-bootstrap';
 
 /**
  * Component renders a Table for the report card.
  * Table provides a list of the questions answered, the user's responses
  * and the recommendations provided by AI Global for a specific dimension.
  */
-export default class ReportCard extends Component{
+export default class ReportCard extends Component {
     /**
      * Function creates the  row of the report card table which
      * provides the question, the response to the question,
      * and the recommendation from AI Global.
      */
-    displayQuestion(result, question){    
+    displayQuestion(result, question) {
         var choices;
-        if(Array.isArray(result)){
-            choices = question?.choices?.filter((choice) => result?.includes(choice?.value) );     
+        if (Array.isArray(result)) {
+            choices = question?.choices?.filter((choice) => result?.includes(choice?.value));
         }
-        else{
-            choices = question?.choices?.filter((choice) => result === choice?.value );     
+        else {
+            choices = question?.choices?.filter((choice) => result === choice?.value);
         }
         return (
             <tr key={question?.name}>
                 <td>
-                    {question?.title?.default.split("\n").map(function(item, idx) {
+                    {question?.title?.default.split("\n").map(function (item, idx) {
                         return (
                             <span key={idx}>
                                 {item}
-                                <br/>
+                                <br />
                             </span>
                         )
                     })}
@@ -35,11 +35,11 @@ export default class ReportCard extends Component{
                 <td>
                     {choices.map(choice => {
                         return (
-                            choice?.text?.default.split("\n").map(function(item, idx) {
+                            choice?.text?.default.split("\n").map(function (item, idx) {
                                 return (
                                     <span key={idx}>
                                         {item}
-                                        <br/>
+                                        <br />
                                     </span>
                                 )
                             })
@@ -47,36 +47,55 @@ export default class ReportCard extends Component{
                     })}
                 </td>
                 <td>
-                    {question?.recommendation?.default.split("\n").map(function(item, idx) {
+                    {question?.recommendation?.default.split("\n").map(function (item, idx) {
                         return (
                             <span key={idx}>
                                 {item}
-                                <br/>
+                                <br />
                             </span>
                         )
                     })}
                 </td>
+                <td>
+                    {question?.recommendedlinks?.default.map(function (recommendedlink, idx) {
+                        let url = recommendedlink;
+                        if (!/^(?:f|ht)tps?:\/\//.test(url)) {
+                            url = "http://" + url;
+                        }                    
+                        return (
+                            <span key={idx}>
+                                <a href={url}>{recommendedlink}</a>
+                                <br/>
+                            </span>
+                        )
+                    })
+                    }
+                </td>
+
             </tr>
         )
     }
-    
-    render (){
+
+    render() {
         var dimension = this.props.dimension;
         var results = this.props.results;
         var questions = this.props.questions;
         return (
             <div className="report-card mt-3">
-                <Table id={"report-card-"+ dimension} bordered responsive className="report-card-table">
+                <Table id={"report-card-" + dimension} bordered responsive className="report-card-table">
                     <thead>
                         <tr role="row">
                             <th role="columnheader" scope="col" className="report-card-headers">
-                                    Question
+                                Question
                             </th>
                             <th role="columnheader" scope="col" className="report-card-headers">
-                                    Your Response
+                                Your Response
                             </th>
                             <th role="columnheader" scope="col" className="report-card-headers">
-                                    Recommendation
+                                Recommendation
+                            </th>
+                            <th role="columnheader" scope="col" style={{ width: 283 }} className="report-card-headers">
+                                Recommended Links
                             </th>
                         </tr>
                     </thead>
@@ -89,5 +108,5 @@ export default class ReportCard extends Component{
             </div>
         )
     }
-}   
+}
 
