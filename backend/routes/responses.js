@@ -7,8 +7,6 @@ router.get('/', async (req,res) => {
     try{
         const responses = await Response.find();
         res.json(responses);
-        // for debugging
-        console.log("Incoming responses request");
     }catch(err){
         res.json({message: err});
     }
