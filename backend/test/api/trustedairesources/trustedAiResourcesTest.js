@@ -51,10 +51,14 @@ describe('GET /trustedairesources', () => {
         request(app).get('/trustedairesources')
             .then((res) => {
                 const body = res.body;
-                expect(body[0]).to.contain.property('_id');
-                expect(body[0]).to.contain.property('resource');
-                expect(body[0]).to.contain.property('description');
-                expect(body[0]).to.contain.property('source');
+
+                // checks that all resources are valid
+                for (let i = 0; i < body.length; ++i) {
+                    expect(body[i]).to.contain.property('_id');
+                    expect(body[i]).to.contain.property('resource');
+                    expect(body[i]).to.contain.property('description');
+                    expect(body[i]).to.contain.property('source');
+                }
 
                 done();
             })
