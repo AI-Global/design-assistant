@@ -1,7 +1,10 @@
 # AI-Global Responsible Design Assistant
+
+### Demo
 Presentation: https://docs.google.com/presentation/d/1DI0MNAUXckx0i4YQVYPd8MPbshR-7BhZwzKhLxSTU-w/edit?usp=sharing
 Screencast: https://youtu.be/cp9tbfmL__U
 
+### Links
 [Responsible AI Trust Index](http://162.246.157.168/)
 
 [API documentation](docs/API.md)
