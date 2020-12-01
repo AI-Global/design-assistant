@@ -5,6 +5,7 @@ import ReactGa from 'react-ga';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { red } from '@material-ui/core/colors';
+import Login from './Login';
 import DeleteSubmissionModal from '../Components/DeleteSubmissionModal';
 
 
@@ -157,6 +158,7 @@ export default class ViewSubmissions extends Component {
                         </tbody>
                     </BootStrapTable>
                 </div>
+                <Login/>
             </main>
 
         )
