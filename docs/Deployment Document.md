@@ -71,7 +71,7 @@ cd frontend/
 sudo PORT=80 npm run start
 ```
 
-### Frontend App (Production)
+### Frontend App (Production) Note there is a styling bug if you use this method. Use the Developement method for now
 
 #### Create production build
 
