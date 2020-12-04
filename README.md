@@ -33,11 +33,6 @@ These values need to be filled in for the app to work. You can use the values fr
 
 [backend/.env](https://github.com/UAlberta-CMPUT401/ai-global/blob/sprint4/backend/.env)
 
-### Admin Account 
-
-Username: admin\
-Password: admin
-
 
 ### License
 

@@ -456,7 +456,9 @@ router.delete('/:questionId', async (req, res) => {
             }
 
         })
-        res.status(200).send(true);
+
+        res.status(200).send({});
+
     } catch (err) {
         res.status(400).send(err)
     }
