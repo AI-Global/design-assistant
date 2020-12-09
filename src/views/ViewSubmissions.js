@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { Button, Table as BootStrapTable } from 'react-bootstrap';
 import ReactGa from 'react-ga';
 import IconButton from '@material-ui/core/IconButton';
@@ -33,8 +33,7 @@ export default class ViewSubmissions extends Component {
     const id = path[path.length - 1];
 
     ReactGa.pageview(window.location.pathname + window.location.search);
-    var endPoint = '/questions';
-    axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint).then((res) => {
+    api.get('questions').then((res) => {
       var json = res.data;
       // replace double escaped characters so showdown correctly renders markdown frontslashes and newlines
       var stringified = JSON.stringify(json);
@@ -44,14 +43,12 @@ export default class ViewSubmissions extends Component {
       this.setState({ json: json });
     });
 
-    endPoint = '/users';
-    axios
-      .get(process.env.REACT_APP_SERVER_ADDR + endPoint)
+    api
+      .get('users')
       .then((response) => {
         this.setState({ users: response.data });
-        endPoint = '/submissions/user/' + id;
-        axios
-          .get(process.env.REACT_APP_SERVER_ADDR + endPoint)
+        api
+          .get('submissions/user/' + id)
           .then((response) => {
             var resp = response.data.submissions;
             resp = resp.map((submission) => {
@@ -81,12 +78,9 @@ export default class ViewSubmissions extends Component {
 
   // Makes a delete request to the db to delete the submission with id="id"
   deleteSubmission(id) {
-    let endPoint = '/submissions/delete/' + id;
-    axios
-      .delete(process.env.REACT_APP_SERVER_ADDR + endPoint)
-      .then((response) => {
-        console.log(response.data);
-      });
+    api.delete('submissions/delete/' + id).then((response) => {
+      console.log(response.data);
+    });
 
     this.setState({
       submissions: this.state.submissions.filter((ul) => ul._id !== id),

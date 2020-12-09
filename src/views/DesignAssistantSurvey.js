@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import axios from 'axios';
+import api from '../api';
 import Login from './Login';
 import ReactGa from 'react-ga';
 import showdown from 'showdown';
@@ -71,14 +71,11 @@ class DesignAssistantSurvey extends Component {
 
     ReactGa.pageview(window.location.pathname + window.location.search);
 
-    axios
-      .get(process.env.REACT_APP_SERVER_ADDR + '/dimensions/names')
-      .then((res) => {
-        this.setState({ dimArray: res.data.dimensions });
-      });
+    api.get('dimensions/names').then((res) => {
+      this.setState({ dimArray: res.data.dimensions });
+    });
 
-    var endPoint = '/metadata';
-    axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint).then((res) => {
+    api.get('metadata').then((res) => {
       this.setState({ metadata: res.data });
     });
     this.getQuestions();
@@ -107,9 +104,8 @@ class DesignAssistantSurvey extends Component {
   }
 
   async getQuestions(submissions) {
-    var endPoint = '/questions';
-    axios
-      .get(process.env.REACT_APP_SERVER_ADDR + endPoint, {
+    api
+      .get('questions', {
         params: {
           roles: this.state.roleFilters,
           domains: this.state.domainFilters,
@@ -312,13 +308,13 @@ class DesignAssistantSurvey extends Component {
     );
     let dateTime = new Date();
     let projectName = this.state.model.data[title?.name] ?? '';
-    let endpoint = '/submissions';
+    let endpoint = 'submissions';
     if (this.state.submission_id) {
-      endpoint = '/submissions/update/' + this.state.submission_id;
+      endpoint = 'submissions/update/' + this.state.submission_id;
     }
 
-    axios
-      .post(process.env.REACT_APP_SERVER_ADDR + endpoint, {
+    api
+      .post(endpoint, {
         userId: this.state?.user_id,
         submission: this.state.model.data,
         date: dateTime,

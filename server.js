@@ -20,9 +20,19 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
   if (
     !req.originalUrl.startsWith('/api/') &&
-    ['js', 'json', 'css', 'png', 'map', 'ico', 'txt', 'jpg'].filter((ext) =>
-      req.originalUrl.endsWith('.' + ext)
-    ).length == 0
+    [
+      'js',
+      'json',
+      'css',
+      'png',
+      'map',
+      'ico',
+      'txt',
+      'jpg',
+      'woff2',
+      'woff',
+      'ttf',
+    ].filter((ext) => req.originalUrl.endsWith('.' + ext)).length == 0
   ) {
     // Serve index html
     return res.sendFile(path.join(__dirname, 'build', 'index.html'));
@@ -47,15 +57,15 @@ app.use(express.json());
 // need so that we don't use deprecated useFindAndModify method
 mongoose.set('useFindAndModify', false);
 
-app.use('/questions', require('./api/routes/questions'));
-app.use('/responses', require('./api/routes/responses'));
-app.use('/trustedAIProviders', require('./api/routes/trustedAIProviders'));
-app.use('/trustedAIResources', require('./api/routes/trustedAIResources'));
-app.use('/users', require('./api/routes/users'));
-app.use('/submissions', require('./api/routes/submissions'));
-app.use('/metadata', require('./api/routes/metadata'));
-app.use('/dimensions', require('./api/routes/dimensions'));
-app.use('/analytics', require('./api/routes/analytics'));
+app.use('/api/questions', require('./api/routes/questions'));
+app.use('/api/responses', require('./api/routes/responses'));
+app.use('/api/trustedAIProviders', require('./api/routes/trustedAIProviders'));
+app.use('/api/trustedAIResources', require('./api/routes/trustedAIResources'));
+app.use('/api/users', require('./api/routes/users'));
+app.use('/api/submissions', require('./api/routes/submissions'));
+app.use('/api/metadata', require('./api/routes/metadata'));
+app.use('/api/dimensions', require('./api/routes/dimensions'));
+app.use('/api/analytics', require('./api/routes/analytics'));
 
 mongoose.connect(
   process.env.MONGODB_URL,

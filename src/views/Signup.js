@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Modal, Form } from 'react-bootstrap';
 import '../css/signup.css';
-import axios from 'axios';
+import api from '../api';
 import { expireAuthToken } from '../helper/AuthHelper';
 import ReactGa from 'react-ga';
 
@@ -65,9 +65,8 @@ export default class Signup extends Component {
         },
       });
     } else {
-      var endPoint = '/users/create/';
-      axios
-        .post(process.env.REACT_APP_SERVER_ADDR + endPoint, {
+      api
+        .post('users/create', {
           email: email,
           username: username,
           password: password,

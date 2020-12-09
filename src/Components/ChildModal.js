@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import Modal from 'react-bootstrap/Modal';
 import { Button, Form, Card } from 'react-bootstrap';
 import { Row, Col } from 'react-bootstrap';
@@ -7,8 +7,6 @@ import SubdirectoryArrowRightIcon from '@material-ui/icons/SubdirectoryArrowRigh
 import '../css/theme.css';
 
 export default function ChildModal(props) {
-  // console.log(numResponse)
-
   var currentQuestion = props.current_question
     ? props.current_question.question
     : '0';
@@ -48,12 +46,8 @@ export default function ChildModal(props) {
         parentQuestion: parentQ,
       };
 
-      var endPoint = '/questions/' + props.current_question._id;
-      axios
-        .put(
-          process.env.REACT_APP_SERVER_ADDR + endPoint,
-          props.current_question
-        )
+      api
+        .put('questions/' + props.current_question._id, props.current_question)
         .then((res) => {
           const result = res.data;
           if (result.errors) {

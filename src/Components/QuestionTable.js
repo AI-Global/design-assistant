@@ -1,4 +1,4 @@
-import axios from 'axios';
+import api from '../api';
 import '../css/admin.css';
 import ChildModal from './ChildModal';
 import React, { Component } from 'react';
@@ -48,25 +48,21 @@ export default class QuestionTable extends Component {
   }
 
   componentDidMount() {
-    var endPoint = '/metadata';
-    axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint).then((res) => {
+    api.get('metadata').then((res) => {
       this.setState({ metadata: res.data });
     });
     this.getQuestions();
   }
 
   async getQuestions() {
-    var endPoint = '/questions/all';
-    await axios
-      .get(process.env.REACT_APP_SERVER_ADDR + endPoint)
-      .then((res) => {
-        this.setState({ dimensions: res.data.Dimensions });
-        this.setState({
-          questions: res.data.questions.sort((a, b) =>
-            a.questionNumber > b.questionNumber ? 1 : -1
-          ),
-        });
+    await api.get('questions/all').then((res) => {
+      this.setState({ dimensions: res.data.Dimensions });
+      this.setState({
+        questions: res.data.questions.sort((a, b) =>
+          a.questionNumber > b.questionNumber ? 1 : -1
+        ),
       });
+    });
   }
 
   async onDragEnd(result) {
@@ -92,19 +88,19 @@ export default class QuestionTable extends Component {
       });
     } else {
       // do not ask to make a child-parent relationship
-      var endPoint =
-        '/questions/' + (result.source.index + 1).toString() + '/1';
-      await axios.put(process.env.REACT_APP_SERVER_ADDR + endPoint).then(() => {
-        console.log(
-          'Question: ' +
-            result.source.index.toString() +
-            'is now question: ' +
-            result.destination.index.toString()
-        );
-        this.setState({
-          questions,
+      await api
+        .put('questions/' + (result.source.index + 1).toString() + '/1')
+        .then(() => {
+          console.log(
+            'Question: ' +
+              result.source.index.toString() +
+              'is now question: ' +
+              result.destination.index.toString()
+          );
+          this.setState({
+            questions,
+          });
         });
-      });
     }
   }
 
@@ -123,14 +119,12 @@ export default class QuestionTable extends Component {
 
   updateQuestionNumbers() {
     this.setChildModalShow(false);
-    var endPoint =
-      '/questions/' +
-      this.state.previousNumber.toString() +
-      '/' +
-      this.state.newNumber.toString();
-    axios
+    api
       .put(
-        process.env.REACT_APP_SERVER_ADDR + endPoint,
+        'questions/' +
+          this.state.previousNumber.toString() +
+          '/' +
+          this.state.newNumber.toString(),
         this.state.currentQuestion.questionNumber
       )
       .then(() => {
@@ -167,11 +161,10 @@ export default class QuestionTable extends Component {
   }
 
   async export(fileExt) {
-    var endPoint = '/questions/all/export';
     var fileName = fileExt === 'json' ? 'json' : 'csv';
     if (fileExt === 'json') {
       await axios({
-        url: process.env.REACT_APP_SERVER_ADDR + endPoint,
+        url: 'questions/all/export',
         method: 'GET',
         responseType: 'blob',
       }).then((res) => {

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Modal, Form, Button } from 'react-bootstrap';
 import '../css/login.css';
 import Signup from './Signup';
-import axios from 'axios';
+import api from '../api';
 import { getLoggedInUser, expireAuthToken } from '../helper/AuthHelper';
 import UserSettings from './UserSettings';
 import ReactGa from 'react-ga';
@@ -53,9 +53,8 @@ export default class Login extends Component {
     let username = form.loginUsername.value;
     let password = form.loginPassword.value;
     let remember = form.loginRemember.checked;
-    var endPoint = '/users/auth';
-    axios
-      .post(process.env.REACT_APP_SERVER_ADDR + endPoint, {
+    api
+      .post('users/auth', {
         username: username?.toLowerCase(),
         password: password,
       })

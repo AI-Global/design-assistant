@@ -1,4 +1,4 @@
-import axios from 'axios';
+import api from '../api';
 const key = 'authToken';
 
 export function expireAuthToken() {
@@ -8,9 +8,8 @@ export function expireAuthToken() {
 
 export function getLoggedInUser() {
   let authToken = localStorage.getItem(key) ?? sessionStorage.getItem(key);
-  var endPoint = '/users/user';
-  return axios
-    .get(process.env.REACT_APP_SERVER_ADDR + endPoint, {
+  return api
+    .get('users/user', {
       headers: {
         'x-auth-token': authToken,
       },
@@ -33,9 +32,8 @@ export function isLoggedIn() {
   if (!authToken) {
     return false;
   }
-  var endPoint = '/users/isLoggedIn';
-  return axios
-    .get(process.env.REACT_APP_SERVER_ADDR + endPoint, {
+  return api
+    .get('users/isLoggedIn', {
       headers: {
         'x-auth-token': authToken,
       },

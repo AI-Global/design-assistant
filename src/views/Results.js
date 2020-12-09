@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { saveAs } from 'file-saver';
 import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -54,7 +54,7 @@ export default class Results extends Component {
 
   componentDidMount() {
     ReactGa.pageview(window.location.pathname + window.location.search);
-    axios.get(process.env.REACT_APP_SERVER_ADDR + '/dimensions').then((res) => {
+    api.get('dimensions').then((res) => {
       this.setState({ Dimensions: res.data });
     });
   }

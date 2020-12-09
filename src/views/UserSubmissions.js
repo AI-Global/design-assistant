@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button, Table, Modal } from 'react-bootstrap';
 import { getLoggedInUser } from '../helper/AuthHelper';
-import axios from 'axios';
+import api from '../api';
 import ReactGa from 'react-ga';
 import { withRouter } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -32,9 +32,8 @@ class UserSubmissions extends Component {
     // get the logged in user and their submissions from backend
     getLoggedInUser().then((user) => {
       if (user) {
-        var endPoint = '/submissions/user/' + user._id;
         this.setState({ user: user });
-        axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint).then((res) => {
+        api.get('submissions/user/' + user._id).then((res) => {
           var submissions = res.data;
           this.setState(submissions);
         });
@@ -57,9 +56,8 @@ class UserSubmissions extends Component {
     if (submission.completed) {
       // If survey is completed we need to pass submission repsonses and questions to results page
       // so we need to make a API call to get questions here
-      var endPoint = '/questions';
       var json;
-      axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint).then((res) => {
+      api.get('questions').then((res) => {
         json = res.data;
         // replace double escaped characters so showdown correctly renders markdown frontslashes and newlines
 
@@ -103,13 +101,10 @@ class UserSubmissions extends Component {
     let currentSubmissionIdx = this.state.currentSubmissionIdx;
     let submissions = this.state.submissions;
     let submission = submissions[currentSubmissionIdx];
-    let endPoint = '/submissions/delete/' + submission._id;
-    axios
-      .delete(process.env.REACT_APP_SERVER_ADDR + endPoint)
-      .then((response) => {
-        submissions.splice(currentSubmissionIdx, 1);
-        this.setState({ submissions: submissions });
-      });
+    api.delete('submissions/delete/' + submission._id).then((response) => {
+      submissions.splice(currentSubmissionIdx, 1);
+      this.setState({ submissions: submissions });
+    });
     this.setState({ showDeleteWarning: false });
   }
 
@@ -118,9 +113,8 @@ class UserSubmissions extends Component {
     let submission = this.state.submissions[index];
     let user = this.state.user;
     let dateTime = new Date();
-    var endPoint = '/submissions/';
-    axios
-      .post(process.env.REACT_APP_SERVER_ADDR + endPoint, {
+    api
+      .post('submissions', {
         userId: user?._id ?? null,
         projectName: submission?.projectName ?? '',
         date: dateTime,

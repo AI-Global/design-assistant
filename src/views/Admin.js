@@ -17,7 +17,7 @@ import {
 } from 'react-bootstrap';
 import { getLoggedInUser } from '../helper/AuthHelper';
 import ReactGa from 'react-ga';
-import axios from 'axios';
+import api from '../api';
 import Login from './Login';
 import Accordion from 'react-bootstrap/Accordion';
 import Card from 'react-bootstrap/Card';
@@ -136,8 +136,7 @@ export default class AdminPanel extends Component {
     });
 
     ReactGa.pageview(window.location.pathname + window.location.search);
-    var endPoint = '/questions';
-    axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint).then((res) => {
+    api.get('questions').then((res) => {
       var json = res.data;
       // replace double escaped characters so showdown correctly renders markdown frontslashes and newlines
       var stringified = JSON.stringify(json);
@@ -146,15 +145,12 @@ export default class AdminPanel extends Component {
       json = JSON.parse(stringified);
       this.setState({ json: json });
     });
-
-    endPoint = '/users';
-    axios
-      .get(process.env.REACT_APP_SERVER_ADDR + endPoint)
+    api
+      .get('users')
       .then((response) => {
         this.setState({ users: response.data });
-        endPoint = '/submissions';
-        axios
-          .get(process.env.REACT_APP_SERVER_ADDR + endPoint)
+        api
+          .get('submissions')
           .then((response) => {
             var resp = response.data;
             resp = resp.map((submission) => {
@@ -183,24 +179,18 @@ export default class AdminPanel extends Component {
   }
 
   deleteUser(id) {
-    let endPoint = '/users/' + id;
-    axios
-      .delete(process.env.REACT_APP_SERVER_ADDR + endPoint)
-      .then((response) => {
-        console.log(response.data);
-      });
+    api.delete('users/' + id).then((response) => {
+      console.log(response.data);
+    });
 
     this.setState({
       users: this.state.users.filter((ul) => ul._id !== id),
     });
   }
   deleteSubmission(id) {
-    let endPoint = '/submissions/delete/' + id;
-    axios
-      .delete(process.env.REACT_APP_SERVER_ADDR + endPoint)
-      .then((response) => {
-        console.log(response.data);
-      });
+    api.delete('submissions/delete/' + id).then((response) => {
+      console.log(response.data);
+    });
 
     this.setState({
       submissions: this.state.submissions.filter((ul) => ul._id !== id),
@@ -208,12 +198,9 @@ export default class AdminPanel extends Component {
   }
 
   deleteUserSubmission(id) {
-    let endPoint = '/submissions/deleteAll/' + id;
-    axios
-      .delete(process.env.REACT_APP_SERVER_ADDR + endPoint)
-      .then((response) => {
-        console.log(response.data);
-      });
+    api.delete('submissions/deleteAll/' + id).then((response) => {
+      console.log(response.data);
+    });
 
     this.setState({
       submissions: this.state.submissions.filter((ul) => ul.userId !== id),
@@ -225,17 +212,14 @@ export default class AdminPanel extends Component {
    * with id= "id"
    */
   changeRole(id, role) {
-    let endPoint = '/users/' + id;
-    axios
-      .put(process.env.REACT_APP_SERVER_ADDR + endPoint, { role: role })
-      .then((response) => {
-        this.state.users.find(
-          (user) => user._id === response.data._id
-        ).role = role;
-        this.setState({
-          users: this.state.users,
-        });
+    api.put('users/' + id, { role: role }).then((response) => {
+      this.state.users.find(
+        (user) => user._id === response.data._id
+      ).role = role;
+      this.setState({
+        users: this.state.users,
       });
+    });
   }
 
   // returns the current page's rows for the users table

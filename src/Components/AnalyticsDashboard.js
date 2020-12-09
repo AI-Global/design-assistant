@@ -1,4 +1,4 @@
-import axios from 'axios';
+import api from '../api';
 import React, { Component } from 'react';
 import Analytic from './Analytic.js';
 
@@ -11,9 +11,8 @@ export default class AnalyticsDashboard extends Component {
   }
 
   componentDidMount() {
-    var endPoint = '/analytics';
-    axios
-      .get(process.env.REACT_APP_SERVER_ADDR + endPoint)
+    api
+      .get('analytics')
       .catch((err) => {
         console.log(err);
       })

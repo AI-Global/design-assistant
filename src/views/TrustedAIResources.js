@@ -3,7 +3,7 @@ import { Form, Table, InputGroup } from 'react-bootstrap';
 import { grey } from '@material-ui/core/colors';
 import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
-import axios from 'axios';
+import api from '../api';
 
 /**
  * Component renders a Table that displays
@@ -20,8 +20,7 @@ export default class TrustedAIResources extends Component {
   }
 
   componentDidMount() {
-    var endPoint = '/trustedAIResources';
-    axios.get(process.env.REACT_APP_SERVER_ADDR + endPoint).then((response) => {
+    api.get('trustedAIResources').then((response) => {
       const resources = response.data;
       this.setState({ resources });
     });

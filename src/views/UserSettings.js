@@ -8,7 +8,7 @@ import {
   getAuthToken,
 } from '../helper/AuthHelper';
 import '../css/usersettings.css';
-import axios from 'axios';
+import api from '../api';
 import ReactGa from 'react-ga';
 import { withRouter } from 'react-router-dom';
 
@@ -87,10 +87,9 @@ class UserSettings extends Component {
     let newEmail = form.newEmail.value;
     let password = form.emailPassword.value;
     let authToken = getAuthToken();
-    let endPoint = '/users/updateEmail';
-    return axios
+    return api
       .post(
-        process.env.REACT_APP_SERVER_ADDR + endPoint,
+        'users/updateEmail',
         {
           newEmail: newEmail,
           password: password,
@@ -124,10 +123,9 @@ class UserSettings extends Component {
     let newUsername = form.newUsername.value;
     let password = form.usernamePassword.value;
     let authToken = getAuthToken();
-    let endPoint = '/users/updateUsername';
-    return axios
+    return api
       .post(
-        process.env.REACT_APP_SERVER_ADDR + endPoint,
+        'users/updateUsername',
         {
           newUsername: newUsername,
           password: password,
@@ -172,10 +170,9 @@ class UserSettings extends Component {
       return;
     }
     let authToken = getAuthToken();
-    let endPoint = '/users/updatePassword';
-    return axios
+    return api
       .post(
-        process.env.REACT_APP_SERVER_ADDR + endPoint,
+        'users/updatePassword',
         {
           password: oldPassword,
           newPassword: newPassword,
@@ -210,10 +207,9 @@ class UserSettings extends Component {
     let newOrganization = form.newOrganization.value;
     let password = form.organizationPassword.value;
     let authToken = getAuthToken();
-    let endPoint = '/users/updateOrganization';
-    return axios
+    return api
       .post(
-        process.env.REACT_APP_SERVER_ADDR + endPoint,
+        'users/updateOrganization',
         {
           newOrganization: newOrganization,
           password: password,

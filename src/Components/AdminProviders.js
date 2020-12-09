@@ -1,4 +1,4 @@
-import axios from 'axios';
+import api from '../api';
 import React, { Component } from 'react';
 import { Button, Modal, Form, Col } from 'react-bootstrap';
 import Table from '@material-ui/core/Table';
@@ -23,9 +23,8 @@ export default class AdminProviders extends Component {
 
   // retrieves the list of trusted ai providers that can be edited
   componentDidMount() {
-    let endPoint = '/trustedAIProviders';
-    axios
-      .get(process.env.REACT_APP_SERVER_ADDR + endPoint)
+    api
+      .get('trustedAIProviders')
       .then((res) => {
         this.setState({ trustedAIProviders: res.data });
       })
@@ -38,11 +37,9 @@ export default class AdminProviders extends Component {
   deleteProvider() {
     let trustedAIProviders = this.state.trustedAIProviders;
     let currentIndex = this.state.currentIndex;
-    let endPoint =
-      '/trustedAIProviders/' + trustedAIProviders[currentIndex]?._id;
     if (currentIndex !== -1) {
-      axios
-        .delete(process.env.REACT_APP_SERVER_ADDR + endPoint)
+      api
+        .delete('trustedAIProviders/' + trustedAIProviders[currentIndex]?._id)
         .then((response) => {
           trustedAIProviders.splice(currentIndex, 1);
           this.setState({ trustedAIProviders: trustedAIProviders });
@@ -61,15 +58,16 @@ export default class AdminProviders extends Component {
     let form = event.target.elements;
     let trustedAIProviders = this.state.trustedAIProviders;
     let currentIndex = this.state.currentIndex;
-    let endPoint =
-      '/trustedAIProviders/' + (trustedAIProviders[currentIndex]?._id ?? '');
     let body = {
       resource: form.title.value,
       description: form.description.value,
       source: form.source.value,
     };
-    axios
-      .put(process.env.REACT_APP_SERVER_ADDR + endPoint, body)
+    api
+      .put(
+        'trustedAIProviders/' + (trustedAIProviders[currentIndex]?._id ?? ''),
+        body
+      )
       .then((response) => {
         let newProvider = response.data;
         if (trustedAIProviders[currentIndex]?._id) {

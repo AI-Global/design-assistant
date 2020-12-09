@@ -1,4 +1,4 @@
-import axios from 'axios';
+import api from '../api';
 import React, { Component } from 'react';
 import { Button, Form, Col, Modal } from 'react-bootstrap';
 import Table from '@material-ui/core/Table';
@@ -23,9 +23,8 @@ export default class AdminResources extends Component {
 
   // retrieves the list of trusted ai resources that can be edited
   componentDidMount() {
-    let endPoint = '/trustedAIResources';
-    axios
-      .get(process.env.REACT_APP_SERVER_ADDR + endPoint)
+    api
+      .get('trustedAIResources')
       .then((res) => {
         this.setState({ trustedAIResources: res.data });
       })
@@ -38,11 +37,9 @@ export default class AdminResources extends Component {
   deleteResource() {
     let trustedAIResources = this.state.trustedAIResources;
     let currentIndex = this.state.currentIndex;
-    let endPoint =
-      '/trustedAIResources/' + trustedAIResources[currentIndex]?._id;
     if (currentIndex !== -1) {
-      axios
-        .delete(process.env.REACT_APP_SERVER_ADDR + endPoint)
+      api
+        .delete('trustedAIResources/' + trustedAIResources[currentIndex]?._id)
         .then((response) => {
           trustedAIResources.splice(currentIndex, 1);
           this.setState({ trustedAIResources: trustedAIResources });
@@ -61,15 +58,16 @@ export default class AdminResources extends Component {
     let form = event.target.elements;
     let trustedAIResources = this.state.trustedAIResources;
     let currentIndex = this.state.currentIndex;
-    let endPoint =
-      '/trustedAIResources/' + (trustedAIResources[currentIndex]?._id ?? '');
     let body = {
       resource: form.title.value,
       description: form.description.value,
       source: form.source.value,
     };
     axios
-      .put(process.env.REACT_APP_SERVER_ADDR + endPoint, body)
+      .put(
+        'trustedAIResources/' + (trustedAIResources[currentIndex]?._id ?? ''),
+        body
+      )
       .then((response) => {
         let newResource = response.data;
         if (trustedAIResources[currentIndex]?._id) {
