@@ -7,106 +7,129 @@ import { Table } from 'react-bootstrap';
  * and the recommendations provided by AI Global for a specific dimension.
  */
 export default class ReportCard extends Component {
-    /**
-     * Function creates the  row of the report card table which
-     * provides the question, the response to the question,
-     * and the recommendation from AI Global.
-     */
-    displayQuestion(result, question) {
-        var choices;
-        if (Array.isArray(result)) {
-            choices = question?.choices?.filter((choice) => result?.includes(choice?.value));
-        }
-        else {
-            choices = question?.choices?.filter((choice) => result === choice?.value);
-        }
-        return (
-            <tr key={question?.name}>
-                <td>
-                    {question?.title?.default.split("\n").map(function (item, idx) {
-                        return (
-                            <span key={idx}>
-                                {item}
-                                <br />
-                            </span>
-                        )
-                    })}
-                </td>
-                <td>
-                    {choices.map(choice => {
-                        return (
-                            choice?.text?.default.split("\n").map(function (item, idx) {
-                                return (
-                                    <span key={idx}>
-                                        {item}
-                                        <br />
-                                    </span>
-                                )
-                            })
-                        )
-                    })}
-                </td>
-                <td>
-                    {question?.recommendation?.default.split("\n").map(function (item, idx) {
-                        return (
-                            <span key={idx}>
-                                {item}
-                                <br />
-                            </span>
-                        )
-                    })}
-                </td>
-                <td>
-                    {question?.recommendedlinks?.default.map(function (recommendedlink, idx) {
-                        let url = recommendedlink;
-                        if (!/^(?:f|ht)tps?:\/\//.test(url)) {
-                            url = "http://" + url;
-                        }                    
-                        return (
-                            <span key={idx}>
-                                <a href={url}>{recommendedlink}</a>
-                                <br/>
-                            </span>
-                        )
-                    })
-                    }
-                </td>
+  /**
+   * Function creates the  row of the report card table which
+   * provides the question, the response to the question,
+   * and the recommendation from AI Global.
+   */
+  displayQuestion(result, question) {
+    var choices;
+    if (Array.isArray(result)) {
+      choices = question?.choices?.filter((choice) =>
+        result?.includes(choice?.value)
+      );
+    } else {
+      choices = question?.choices?.filter((choice) => result === choice?.value);
+    }
+    return (
+      <tr key={question?.name}>
+        <td>
+          {question?.title?.default.split('\n').map(function (item, idx) {
+            return (
+              <span key={idx}>
+                {item}
+                <br />
+              </span>
+            );
+          })}
+        </td>
+        <td>
+          {choices.map((choice) => {
+            return choice?.text?.default.split('\n').map(function (item, idx) {
+              return (
+                <span key={idx}>
+                  {item}
+                  <br />
+                </span>
+              );
+            });
+          })}
+        </td>
+        <td>
+          {question?.recommendation?.default
+            .split('\n')
+            .map(function (item, idx) {
+              return (
+                <span key={idx}>
+                  {item}
+                  <br />
+                </span>
+              );
+            })}
+        </td>
+        <td>
+          {question?.recommendedlinks?.default.map(function (
+            recommendedlink,
+            idx
+          ) {
+            let url = recommendedlink;
+            if (!/^(?:f|ht)tps?:\/\//.test(url)) {
+              url = 'http://' + url;
+            }
+            return (
+              <span key={idx}>
+                <a href={url}>{recommendedlink}</a>
+                <br />
+              </span>
+            );
+          })}
+        </td>
+      </tr>
+    );
+  }
 
+  render() {
+    var dimension = this.props.dimension;
+    var results = this.props.results;
+    var questions = this.props.questions;
+    return (
+      <div className="report-card mt-3">
+        <Table
+          id={'report-card-' + dimension}
+          bordered
+          responsive
+          className="report-card-table"
+        >
+          <thead>
+            <tr role="row">
+              <th
+                role="columnheader"
+                scope="col"
+                className="report-card-headers"
+              >
+                Question
+              </th>
+              <th
+                role="columnheader"
+                scope="col"
+                className="report-card-headers"
+              >
+                Your Response
+              </th>
+              <th
+                role="columnheader"
+                scope="col"
+                className="report-card-headers"
+              >
+                Recommendation
+              </th>
+              <th
+                role="columnheader"
+                scope="col"
+                style={{ width: 283 }}
+                className="report-card-headers"
+              >
+                Recommended Links
+              </th>
             </tr>
-        )
-    }
-
-    render() {
-        var dimension = this.props.dimension;
-        var results = this.props.results;
-        var questions = this.props.questions;
-        return (
-            <div className="report-card mt-3">
-                <Table id={"report-card-" + dimension} bordered responsive className="report-card-table">
-                    <thead>
-                        <tr role="row">
-                            <th role="columnheader" scope="col" className="report-card-headers">
-                                Question
-                            </th>
-                            <th role="columnheader" scope="col" className="report-card-headers">
-                                Your Response
-                            </th>
-                            <th role="columnheader" scope="col" className="report-card-headers">
-                                Recommendation
-                            </th>
-                            <th role="columnheader" scope="col" style={{ width: 283 }} className="report-card-headers">
-                                Recommended Links
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {questions.map(question => {
-                            return this.displayQuestion(results[question?.name], question)
-                        })}
-                    </tbody>
-                </Table>
-            </div>
-        )
-    }
+          </thead>
+          <tbody>
+            {questions.map((question) => {
+              return this.displayQuestion(results[question?.name], question);
+            })}
+          </tbody>
+        </Table>
+      </div>
+    );
+  }
 }
-

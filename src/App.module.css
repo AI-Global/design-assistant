@@ -1,4 +1,3 @@
-
 .dimContainer {
   width: 100%;
   height: 110px;
@@ -21,7 +20,6 @@
   padding-right: 28px;
   display: inline-block;
   width: inherit;
-
 }
 
 .dimButton {

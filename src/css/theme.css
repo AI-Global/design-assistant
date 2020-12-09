@@ -2,15 +2,15 @@ html {
   background-color: #262626;
 }
 .banner {
-  padding-top: .5rem;
+  padding-top: 0.5rem;
 }
 .banner .company-logo {
   max-width: 191px;
 }
 .banner img {
   width: 100%;
-  display: block; 
-  margin-left: auto; 
+  display: block;
+  margin-left: auto;
   margin-right: auto;
 }
 .banner .logo {
@@ -37,31 +37,31 @@ html {
   }
   .banner .logo {
     width: 70vw;
-    margin-bottom: -.55vw
+    margin-bottom: -0.55vw;
   }
   .banner .logo-border {
-    width: 75vw; 
+    width: 75vw;
   }
 }
 
 @media screen and (max-width: 1800px) {
   .dimensionNav {
     position: relative;
-    top:0px;
+    top: 0px;
   }
 }
 
 .copyright-footer {
-  position: relative; 
-  bottom: 0px; 
-  width: 100%; 
+  position: relative;
+  bottom: 0px;
+  width: 100%;
   background-color: #262626;
 }
 
 .copyright {
   font-size: 12px;
-  height: 100%; 
-  width: 100%; 
+  height: 100%;
+  width: 100%;
   color: #777;
 }
 
@@ -103,36 +103,49 @@ html {
   margin-bottom: 0 !important;
 }
 
-main h1, main .h1 {
+main h1,
+main .h1 {
   font-size: 1.9em !important;
   font-weight: 600 !important;
   line-height: 1.1 !important;
 }
-main h2, main .h2 {
+main h2,
+main .h2 {
   font-size: 1.8em !important;
 }
-main h1, main h2, main .h1, main .h2 {
+main h1,
+main h2,
+main .h1,
+main .h2 {
   margin-top: 23px !important;
   margin-bottom: 11.5px !important;
 }
 
-.noUi-target, noUi-ltr, noUi-horizontal{
-  width:50%;
+.noUi-target,
+noUi-ltr,
+noUi-horizontal {
+  width: 50%;
 }
 
-.noUi-value, .noUi-value-horizontal, .noUi-value-large {
+.noUi-value,
+.noUi-value-horizontal,
+.noUi-value-large {
   visibility: hidden;
 }
 
-.noUi-value[style*="left: 100%"]::after, noUi-value-horizontal[style*="left: 100%"]::after, noUi-value-large[style*="left: 100%"]::after{
-  content: "High "!important;
+.noUi-value[style*='left: 100%']::after,
+noUi-value-horizontal[style*='left: 100%']::after,
+noUi-value-large[style*='left: 100%']::after {
+  content: 'High ' !important;
   color: black;
   visibility: visible;
   margin-right: 1.5rem;
 }
 
-.noUi-value[style*="left: 0%"]::after, noUi-value-horizontal[style*="left: 0%"]::after, noUi-value-large[style*="left: 0%"]::after{
-  content: "Low "!important;
+.noUi-value[style*='left: 0%']::after,
+noUi-value-horizontal[style*='left: 0%']::after,
+noUi-value-large[style*='left: 0%']::after {
+  content: 'Low ' !important;
   color: black;
   visibility: visible;
   margin-right: 0.4rem;
@@ -148,13 +161,13 @@ main h1, main h2, main .h1, main .h2 {
 .tooltip .tooltip-inner {
   color: #000 !important;
   background-color: #fff !important;
-  box-shadow: 1px 3px 10px rgba(77,77,77,0.75);
-  transition: box-shadow .2s ease-in-out;
+  box-shadow: 1px 3px 10px rgba(77, 77, 77, 0.75);
+  transition: box-shadow 0.2s ease-in-out;
 }
 .tooltip .tooltip-inner p {
   margin: 0 !important;
 }
-.tooltip.show  {
+.tooltip.show {
   opacity: 1 !important;
 }
 .tooltip.show ul {
@@ -203,15 +216,15 @@ form .btn:not(.btn-call-to-action) {
   padding-left: 5px;
 }
 
-#navCon{
+#navCon {
   position: sticky;
-  left:0;
-  right:0;
+  left: 0;
+  right: 0;
   bottom: 1em;
   z-index: 5;
 }
 
-#navCard{
+#navCard {
   padding-left: 1em;
   padding-right: 1em;
   padding-bottom: 0.5em;
@@ -223,7 +236,6 @@ form .btn:not(.btn-call-to-action) {
 }
 
 @media screen and (min-width: 1775px) {
-
   .dimensionNav {
     position: absolute;
     left: 3em;
@@ -240,8 +252,8 @@ form .btn:not(.btn-call-to-action) {
     max-width: 18em;
     min-width: 18em;
     min-height: 30em;
-    margin-left:auto;
-    margin-right:auto;
+    margin-left: auto;
+    margin-right: auto;
   }
 }
 
@@ -249,7 +261,7 @@ form .btn:not(.btn-call-to-action) {
   overflow: visible !important;
 }
 
-.filterDrop{
+.filterDrop {
   padding-bottom: 1em;
 }
 
@@ -284,7 +296,7 @@ form .btn:not(.btn-call-to-action) {
   display: flex;
   justify-content: space-between;
   border-top: 1px solid #dee2e6;
-  padding: .75rem; 
+  padding: 0.75rem;
   margin: 0 -6em;
 }
 
@@ -295,18 +307,15 @@ form .btn:not(.btn-call-to-action) {
   margin: 0 -6em; */
 }
 
-
 /* remove number buttons on input form */
 /* https://www.w3schools.com/howto/howto_css_hide_arrow_number.asp */
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button
-{
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
   -webkit-appearance: none;
-   margin: 0; 
+  margin: 0;
 }
 
-input[type=number]
-{
+input[type='number'] {
   -moz-appearance: textfield;
   border-radius: 5%;
 }
@@ -339,7 +348,7 @@ input[type=number]
 }
 
 #newSurvey {
-  margin-right: 1rem !important
+  margin-right: 1rem !important;
 }
 
 .sv_container {
@@ -347,18 +356,17 @@ input[type=number]
 }
 
 #DeleteSurveyButton {
-  background-color: #dc3545!important
-
+  background-color: #dc3545 !important;
 }
 
 #dropdown-item-button {
-  width: 70%
+  width: 70%;
 }
 
-.user-table .MuiTableCell-root{
-  border: 1px solid rgba(224, 224, 224, 1)
+.user-table .MuiTableCell-root {
+  border: 1px solid rgba(224, 224, 224, 1);
 }
 
-.submission-table .MuiTableCell-root{
-  border: 1px solid rgba(224, 224, 224, 1)
+.submission-table .MuiTableCell-root {
+  border: 1px solid rgba(224, 224, 224, 1);
 }

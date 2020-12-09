@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const path = require('path');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -19,7 +20,7 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
   if (
     !req.originalUrl.startsWith('/api/') &&
-    ['js', 'json', 'css', 'png', 'map', 'ico', 'txt'].filter((ext) =>
+    ['js', 'json', 'css', 'png', 'map', 'ico', 'txt', 'jpg'].filter((ext) =>
       req.originalUrl.endsWith('.' + ext)
     ).length == 0
   ) {
@@ -40,31 +41,21 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use('/', express.static(path.join(__dirname, 'build')));
 app.use(express.json());
 
 // need so that we don't use deprecated useFindAndModify method
 mongoose.set('useFindAndModify', false);
 
-// Import Routes
-const questionsRouter = require('./api/routes/questions');
-const responsesRouter = require('./api/routes/responses');
-const trustedAIProvidersRouter = require('./api/routes/trustedAIProviders');
-const trustedAIResourcesRouter = require('./api/routes/trustedAIResources');
-const usersRouter = require('./api/routes/users');
-const submissionsRouter = require('./api/routes/submissions');
-const metaDataRouter = require('./api/routes/metadata');
-const dimensionsRouter = require('./api/routes/dimensions');
-const analyticsRouter = require('./api/routes/analytics');
-
-app.use('/questions', questionsRouter);
-app.use('/responses', responsesRouter);
-app.use('/trustedAIProviders', trustedAIProvidersRouter);
-app.use('/trustedAIResources', trustedAIResourcesRouter);
-app.use('/users', usersRouter);
-app.use('/submissions', submissionsRouter);
-app.use('/metadata', metaDataRouter);
-app.use('/dimensions', dimensionsRouter);
-app.use('/analytics', analyticsRouter);
+app.use('/questions', require('./api/routes/questions'));
+app.use('/responses', require('./api/routes/responses'));
+app.use('/trustedAIProviders', require('./api/routes/trustedAIProviders'));
+app.use('/trustedAIResources', require('./api/routes/trustedAIResources'));
+app.use('/users', require('./api/routes/users'));
+app.use('/submissions', require('./api/routes/submissions'));
+app.use('/metadata', require('./api/routes/metadata'));
+app.use('/dimensions', require('./api/routes/dimensions'));
+app.use('/analytics', require('./api/routes/analytics'));
 
 mongoose.connect(
   process.env.MONGODB_URL,

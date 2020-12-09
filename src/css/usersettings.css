@@ -1,49 +1,49 @@
-.modal-usersettings {  
-    width: 400px ;
+.modal-usersettings {
+  width: 400px;
 }
 
 .modal-usersettings .modal-content {
-    padding: 20px;
-    border-radius: 5px;
-    border: none;
+  padding: 20px;
+  border-radius: 5px;
+  border: none;
 }
 
 .modal-usersettings .modal-header {
-    border-bottom: none;
-    position: relative;
-    justify-content: center;
-    padding-bottom: 0px;
+  border-bottom: none;
+  position: relative;
+  justify-content: center;
+  padding-bottom: 0px;
 }
 
 .modal-usersettings h4 {
-    text-align: center;
-    font-size: 26px;
+  text-align: center;
+  font-size: 26px;
 }
 
-.modal-usersettings  .form-group {
-    position: relative;
+.modal-usersettings .form-group {
+  position: relative;
 }
 
-
-.modal-usersettings .form-control, .modal-signup .btn {
-    min-height: 40px;
-    border-radius: 3px; 
+.modal-usersettings .form-control,
+.modal-signup .btn {
+  min-height: 40px;
+  border-radius: 3px;
 }
 
 .modal-usersettings .close {
-    position: absolute;
-    top: -5px;
-    right: -5px;
+  position: absolute;
+  top: -5px;
+  right: -5px;
 }
 
 .modal-usersettings .modal-footer a {
-    color: #999;
+  color: #999;
 }
 
 .modal-usersettings .description {
-    padding-bottom: 8px;
+  padding-bottom: 8px;
 }
 
 .usersettings-dropdown {
-    display: inline-block
+  display: inline-block;
 }

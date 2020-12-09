@@ -6,17 +6,17 @@ const Region = require('../models/region.model');
 const Role = require('../models/role.model');
 
 // Get all Trusted AI Providers
-router.get('/', async (req,res) => {
-    try{
-        const domain = await Domain.find();
-        const lifecycle = await Lifecycle.find();
-        const region = await Region.find();
-        const roles = await Role.find();
+router.get('/', async (req, res) => {
+  try {
+    const domain = await Domain.find();
+    const lifecycle = await Lifecycle.find();
+    const region = await Region.find();
+    const roles = await Role.find();
 
-        res.json({domain, lifecycle, region, roles});
-    }catch(err){
-        res.json({message: err});
-    }
+    res.json({ domain, lifecycle, region, roles });
+  } catch (err) {
+    res.json({ message: err });
+  }
 });
 
 module.exports = router;

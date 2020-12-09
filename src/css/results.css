@@ -1,64 +1,62 @@
-.report-card-nav{
-    border-bottom: 0;
+.report-card-nav {
+  border-bottom: 0;
 }
 
-.report-card-headers{
-    width: 33%;
-    background-color: #d0e0e3;
+.report-card-headers {
+  width: 33%;
+  background-color: #d0e0e3;
 }
 
 .report-card-table {
-    display: flex;
-    flex-flow: column;
-    width: 100%;
-  }
-  
-  
+  display: flex;
+  flex-flow: column;
+  width: 100%;
+}
+
 .report-card-table tbody {
-    display: block;
-    overflow-y: auto;
-    overflow-x: hidden;
-    max-height: 300px;
+  display: block;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 300px;
 }
-  
+
 .report-card-table tr {
-    width: 100%;
-    display: table;
-    table-layout: fixed;
+  width: 100%;
+  display: table;
+  table-layout: fixed;
 }
 
-.score-card-dheader{
-    background-color: #bfbfbf;
-    width: 25%;
+.score-card-dheader {
+  background-color: #bfbfbf;
+  width: 25%;
 }
 
-.score-card-headers{
-    background-color: #d0e0e3;
-    width: 25%;
+.score-card-headers {
+  background-color: #d0e0e3;
+  width: 25%;
 }
 
-.score-card-dimensions{
-    background-color: #efefef;
+.score-card-dimensions {
+  background-color: #efefef;
 }
 
-.dimension-chart{
-    height: 500px;
+.dimension-chart {
+  height: 500px;
 }
 
-
-.export-button{
-    float: right;
-    background-color: #007bff !important;
-    margin-top: -.2rem;
-    margin-bottom: -3rem!important;
-    padding: .5em!important;
+.export-button {
+  float: right;
+  background-color: #007bff !important;
+  margin-top: -0.2rem;
+  margin-bottom: -3rem !important;
+  padding: 0.5em !important;
 }
 
 .export-button-csv {
-    float: right;
-    background-color: #007bff !important;
-    margin-top: -.2rem;
-    margin-bottom: -3rem!important;
-    margin-right: 5rem!important;
-    padding: .5em!important;
+  float: right;
+  background-color: #007bff !important;
+  margin-top: -0.2rem;
+  margin-bottom: -3rem !important;
+  margin-right: 5rem !important;
+  padding: 0.5em !important;
 }
