@@ -1,0 +1,13 @@
+name: Build CI
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Node
+        uses: actions/setup-node@v1
+      - run: yarn install --frozen-lockfile
+      - run: yarn build

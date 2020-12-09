@@ -1,8 +1,33 @@
 {
-  "name": "frontend",
-  "version": "0.1.0",
-  "private": true,
+  "name": "design-assistant",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "watch": "concurrently \"yarn watch:react\" \"yarn watch:api\"",
+    "watch:react": "react-scripts start",
+    "watch:api": "nodemon server.js",
+    "start": "node server.js",
+    "build": "react-scripts build"
+  },
+  "license": "MIT",
   "dependencies": {
+    "chai": "^4.2.0",
+    "console": "^0.7.2",
+    "express": "^4.17.1",
+    "express-jwt": "^6.0.0",
+    "fs": "0.0.1-security",
+    "jquery": "^3.5.1",
+    "jsonwebtoken": "^8.5.1",
+    "mocha": "^8.2.0",
+    "mockgoose": "^8.0.4",
+    "mongoose": "^5.10.13",
+    "n-readlines": "^1.0.0",
+    "nodemailer": "^6.4.14",
+    "nodemon": "^2.0.4",
+    "owasp-password-strength-test": "^1.3.0",
+    "prompt-sync": "^4.2.0",
+    "supertest": "^5.0.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.31",
     "@fortawesome/free-regular-svg-icons": "^5.15.0",
     "@fortawesome/free-solid-svg-icons": "^5.15.0",
@@ -22,7 +47,6 @@
     "file-saver": "^2.0.5",
     "font-awesome": "^4.7.0",
     "jest-canvas-mock": "^2.3.0",
-    "jquery": "^3.5.1",
     "jspdf": "^2.1.1",
     "jspdf-autotable": "^3.5.13",
     "nivo": "^0.31.0",
@@ -44,15 +68,6 @@
     "style-loader": "^2.0.0",
     "survey-react": "^1.8.7",
     "surveyjs-widgets": "^1.8.13"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --silent --runInBand",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
   },
   "browserslist": {
     "production": [
