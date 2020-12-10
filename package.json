@@ -82,5 +82,8 @@
   },
   "devDependencies": {
     "concurrently": "^5.3.0"
+  },
+  "engines": {
+    "node": "14.x"
   }
 }
