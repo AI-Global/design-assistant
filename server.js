@@ -54,9 +54,6 @@ app.use((req, res, next) => {
 app.use('/', express.static(path.join(__dirname, 'build')));
 app.use(express.json());
 
-// need so that we don't use deprecated useFindAndModify method
-mongoose.set('useFindAndModify', false);
-
 app.use('/api/questions', require('./api/routes/questions'));
 app.use('/api/responses', require('./api/routes/responses'));
 app.use('/api/trustedAIProviders', require('./api/routes/trustedAIProviders'));
@@ -67,16 +64,21 @@ app.use('/api/metadata', require('./api/routes/metadata'));
 app.use('/api/dimensions', require('./api/routes/dimensions'));
 app.use('/api/analytics', require('./api/routes/analytics'));
 
-mongoose.connect(
-  process.env.MONGODB_URL,
-  { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true },
-  () => {
-    console.log('Connected to DB');
-    // Listen on port
-    app.listen(port, '0.0.0.0', () => {
-      console.log('Listening on port ' + port);
+let runServer = () => {
+  mongoose.connection
+    .on('error', console.warn)
+    .on('disconnected', console.warn)
+    .once('open', () => {
+      console.log(`Serving http://:${port}`);
+      app.listen(port);
     });
-  }
-);
+  return mongoose.connect(process.env.MONGODB_URL, {
+    keepAlive: 1,
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useFindAndModify: false,
+    autoReconnect: true,
+  });
+};
 
-module.exports = app;
+runServer();

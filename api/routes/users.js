@@ -17,7 +17,6 @@ owasp.config({
 
 // create user - for signup
 router.post('/create', async (req, res) => {
-  let errors = [];
   const {
     username,
     email,
@@ -48,7 +47,7 @@ router.post('/create', async (req, res) => {
     .save()
     .then((user) => {
       let emailSubject = 'Responsible AI Design Assistant Account Creation';
-      let emailTemplate = 'emailTemplates/accountCreation.html';
+      let emailTemplate = 'api/emailTemplates/accountCreation.html';
       mailService.sendEmail(email, emailSubject, emailTemplate);
       jwt.sign(
         { id: user.id },
@@ -98,7 +97,6 @@ router.post('/create', async (req, res) => {
 
 // authenticate user - for login
 router.post('/auth', async (req, res) => {
-  let errors = [];
   const { username, password } = req.body;
   if (!username || !password) {
     return res
@@ -122,12 +120,13 @@ router.post('/auth', async (req, res) => {
       jwtSecret,
       { expiresIn: sessionTimeout },
       (err, token) => {
-        if (err)
+        if (err) {
+          console.warn(err);
           return res
             .status(400)
             .json({ message: 'Authorization token could not be created' });
-        if (err) throw err;
-        res.json({
+        }
+        return res.json({
           token,
           user: {
             id: user.id,
