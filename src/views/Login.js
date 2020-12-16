@@ -71,7 +71,7 @@ export default class Login extends Component {
           }
           this.setState({ user: result['user'] });
           this.setState({ showLoginModal: false });
-          window.location.reload();
+          // window.location.reload();
         }
       })
       .catch((err) => {

@@ -15,8 +15,8 @@ export function getLoggedInUser() {
       },
     })
     .catch((err) => {
-      localStorage.removeItem(key);
-      sessionStorage.removeItem(key);
+      // localStorage.removeItem(key);
+      // sessionStorage.removeItem(key);
       return err;
     })
     .then((response) => {
