@@ -1,8 +1,12 @@
 const express = require('express');
 const router = express.Router();
+
+// TASK-TODO: Remove this and use calls to the portal's api
+// for getting/editing resources.
 const TrustedAIResources = require('../models/trustedAIResource.model');
 
 // Get all Trusted AI Providers
+// TASK-TODO: Secure endpoint.
 router.get('/', async (req, res) => {
   try {
     const trustedResources = await TrustedAIResources.find().sort('resource');
@@ -13,6 +17,7 @@ router.get('/', async (req, res) => {
 });
 
 // add a new resource
+// TASK-TODO: Secure endpoint.
 router.put('/', async (req, res) => {
   try {
     const resource = new TrustedAIResources(req.body);
@@ -21,20 +26,19 @@ router.put('/', async (req, res) => {
     res.json(savedResource);
   } catch (err) {
     if (err.code === 11000) {
-      res
-        .status(400)
-        .json({
-          source: {
-            isInvalid: true,
-            message: 'Trusted AI Resource with source already exists.',
-          },
-        });
+      res.status(400).json({
+        source: {
+          isInvalid: true,
+          message: 'Trusted AI Resource with source already exists.',
+        },
+      });
     }
     res.json({ message: err });
   }
 });
 
 // delete a resource
+// TASK-TODO: Secure endpoint.
 router.delete('/:id', async (req, res) => {
   try {
     // Delete existing question in DB
@@ -46,6 +50,7 @@ router.delete('/:id', async (req, res) => {
 });
 
 // update a resource
+// TASK-TODO: Secure endpoint.
 router.put('/:id', async (req, res) => {
   try {
     const ret = await TrustedAIResources.findOneAndUpdate(
@@ -56,14 +61,12 @@ router.put('/:id', async (req, res) => {
     res.json(ret);
   } catch (err) {
     if (err.code === 11000) {
-      res
-        .status(400)
-        .json({
-          source: {
-            isInvalid: true,
-            message: 'Trusted AI Resource with source already exists.',
-          },
-        });
+      res.status(400).json({
+        source: {
+          isInvalid: true,
+          message: 'Trusted AI Resource with source already exists.',
+        },
+      });
     }
     res.status(400).json({ message: err });
   }

@@ -224,14 +224,16 @@ export default function QuestionModal(props) {
         }
       }
       if (props.mode === 'edit') {
-        api.put('questions/' + props.question._id).then((res) => {
-          const result = res.data;
-          if (result.errors) {
-            console.log(result.errors);
-          } else {
-            console.log('Updated Question: ', result);
-          }
-        });
+        api
+          .put('questions/' + props.question._id, props.question)
+          .then((res) => {
+            const result = res.data;
+            if (result.errors) {
+              console.log(result.errors);
+            } else {
+              console.log('Updated Question: ', result);
+            }
+          });
         props.onHide();
       } else {
         api.post('questions/', props.question).then((res) => {

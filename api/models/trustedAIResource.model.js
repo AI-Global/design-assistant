@@ -1,3 +1,5 @@
+// TASK-TODO: Remove this since handled by portal.
+
 const mongoose = require('mongoose');
 
 const TrustedAIResourceSchema = mongoose.Schema({

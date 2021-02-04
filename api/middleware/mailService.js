@@ -1,7 +1,9 @@
 nodemailer = require('nodemailer');
 fs = require('fs');
 
-//const sender = "<noreply@ai-global.org>"
+// TASK-TODO: Replace all of this will a copy-paste
+// version of the email code in the portal using
+// sendgrid.
 const mailServiceSender = process.env.MAILSERVICE_USERNAME;
 const mailServicePassword = process.env.MAILSERVICE_PASSWORD;
 

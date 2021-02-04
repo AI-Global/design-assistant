@@ -118,9 +118,7 @@ function HomePage(props) {
           grant_type: 'authorization_code',
           code: code,
           client_id: appName,
-          code_verifier: localStorage.getItem(
-            'designassistent:oauth:codeVerifier'
-          ),
+          code_verifier: localStorage.getItem('codeVerifier'),
         }),
       })
         .then((resp) => resp.json())

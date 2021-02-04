@@ -32,7 +32,7 @@ export default function Login() {
       appName = 'localhost';
     }
     let codeVerifier = genRandomCode();
-    localStorage.setItem('designassistent:oauth:codeVerifier', codeVerifier);
+    localStorage.setItem('codeVerifier', codeVerifier);
     let codeChallenge = await sha256(codeVerifier);
     let oauthParams = {
       response_type: 'code',

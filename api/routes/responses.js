@@ -3,6 +3,7 @@ const router = express.Router();
 const Response = require('../models/submission.model');
 
 // Get all responses
+// TASK-TODO: Secure endpoint.
 router.get('/', async (req, res) => {
   try {
     const responses = await Response.find();
@@ -13,6 +14,7 @@ router.get('/', async (req, res) => {
 });
 
 // Get responses by id
+// TASK-TODO: Secure endpoint.
 router.get('/:responseId', async (req, res) => {
   try {
     const response = await Response.findById(req.params.responseId);
@@ -23,6 +25,7 @@ router.get('/:responseId', async (req, res) => {
 });
 
 // Add new response
+// TASK-TODO: Secure endpoint.
 router.post('/', async (req, res) => {
   const response = new Response({
     userID: req.body.userID,
