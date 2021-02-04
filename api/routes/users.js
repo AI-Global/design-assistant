@@ -5,116 +5,42 @@ const jwt = require('jsonwebtoken');
 const { json } = require('express');
 const auth = require('../middleware/auth');
 const mailService = require('../middleware/mailService');
-const owasp = require('owasp-password-strength-test');
 
 const jwtSecret = process.env.SECRET || 'devsecret';
 const sessionTimeout = process.env.SESSION_TIMEOUT;
 
-owasp.config({
-  minLength: 8,
-  minOptionalTestsToPass: 4,
-});
-
-// create user - for signup
-router.post('/create', async (req, res) => {
-  const {
-    username,
-    email,
-    password,
-    passwordConfirmation,
-    organization,
-  } = req.body;
-
-  let result = owasp.test(password);
-  if (result.strong == false) {
-    return res.status(400).json({
-      password: { isInvalid: true, message: result.errors.join('\n') },
-    });
-  }
-
-  // validation for password verification
-  if (password != passwordConfirmation)
-    return res.status(400).json({
-      passwordConfirmation: {
-        isInvalid: true,
-        message: "Those passwords didn't match. Try again.",
-      },
-    });
-
-  // create new user, send to db
-  let user = new User({ email, username, password, organization });
-  await user
-    .save()
-    .then((user) => {
-      let emailSubject = 'Responsible AI Design Assistant Account Creation';
-      let emailTemplate = 'api/emailTemplates/accountCreation.html';
-      mailService.sendEmail(email, emailSubject, emailTemplate);
-      jwt.sign(
-        { id: user.id },
-        jwtSecret,
-        { expiresIn: sessionTimeout },
-        (err, token) => {
-          if (err)
-            return res
-              .status(400)
-              .json({ message: 'Authorization token could not be created' });
-          if (err) throw err;
-          res.json({
-            token,
-            user: {
-              id: user.id,
-              username: user.username,
-              email: user.email,
-            },
-          });
-        }
-      );
-    })
-    .catch((err) => {
-      // user already exists
-      if (err.name === 'MongoError' && err.code === 11000) {
-        if (Object.keys(err.keyPattern).includes('username')) {
-          return res.status(422).json({
-            username: {
-              isInvalid: true,
-              message: 'Username already exists!',
-            },
-          });
-        }
-        if (Object.keys(err.keyPattern).includes('email')) {
-          return res.status(422).json({
-            email: {
-              isInvalid: true,
-              message: 'User with Email Address already exists!',
-            },
-          });
-        }
-      }
-      // unknown mongodb error
-      return res.status(400).json(err);
-    });
-});
+let createUser = async ({ username, email, organization, role }) => {
+  let user = new User({ email, username, organization, role });
+  await user.save();
+  let emailSubject = 'Responsible AI Design Assistant Account Creation';
+  let emailTemplate = 'api/emailTemplates/accountCreation.html';
+  mailService.sendEmail(email, emailSubject, emailTemplate);
+  return user;
+};
 
 // authenticate user - for login
 router.post('/auth', async (req, res) => {
-  const { username, password } = req.body;
-  if (!username || !password) {
-    return res
-      .status(400)
-      .json({ msg: 'Please fill in all the required fields' });
+  const { accessToken } = req.body;
+  let portal = require('./portal.util')(accessToken);
+  let { user: portalUser } = await portal.get('/api/context');
+  if (!portalUser) {
+    return res.status(400).json({ msg: 'Unknown user' });
   }
-  User.findOne({ username }).then((user) => {
-    if (!user)
-      return res.status(400).json({
-        username: {
-          isInvalid: true,
-          message: 'User does not exist. Please create an account.',
-        },
+  User.findOne({ username: portalUser.username }).then(async (user) => {
+    if (!user) {
+      // TASK-TODO: Decide what's the best way to map portal roles to DA roles
+      let newRole = portalUser.role;
+      if (newRole == 'admin') {
+        newRole = 'superadmin';
+      }
+      // TASK-TODO: Use portal API to determine organization
+      user = await createUser({
+        username: portalUser.username,
+        email: portalUser.email,
+        organization: 'AI Global Beta User',
+        role: newRole,
       });
-    if (!user.authenticate(password))
-      return res.status(400).json({
-        password: { isInvalid: true, message: 'Incorrect password entered' },
-      });
+    }
     jwt.sign(
       { id: user.id },
       jwtSecret,
@@ -140,6 +66,7 @@ router.post('/auth', async (req, res) => {
 });
 
 // find user by auth token
+// TASK-TODO: Secure endpoint.
 router.get('/user', auth, (req, res) => {
   User.findById(req.user.id)
     .select('-hashedPassword -salt')
@@ -147,6 +74,7 @@ router.get('/user', auth, (req, res) => {
 });
 
 // check if valid authentication token
+// TASK-TODO: Secure endpoint.
 router.get('/isLoggedIn', auth, (req, res) => {
   if (req.user) {
     res.json({ isLoggedIn: 'true' });
@@ -154,6 +82,7 @@ router.get('/isLoggedIn', auth, (req, res) => {
 });
 
 // Get all users
+// TASK-TODO: Secure endpoint.
 router.get('/', async (req, res) => {
   User.find()
     .then((users) => res.status(200).send(users))
@@ -161,6 +90,7 @@ router.get('/', async (req, res) => {
 });
 
 // Get user by id
+// TASK-TODO: Secure endpoint.
 router.get('/:userId', (req, res) => {
   User.findOne({ _id: req.params.userId })
     .select('-hashedPassword -salt')
@@ -168,12 +98,14 @@ router.get('/:userId', (req, res) => {
     .catch((err) => res.status(400).send(err));
 });
 
+// TASK-TODO: Secure endpoint.
 router.route('/:id').get((req, res) => {
   User.findById(req.params.id)
     .then((user) => res.json(user))
     .catch((err) => res.status(400).json('Error: ' + err));
 });
 
+// TASK-TODO: Secure endpoint.
 router.route('/:id').delete((req, res) => {
   User.findByIdAndDelete(req.params.id)
     .then(() => res.json('User deleted.'))
@@ -181,6 +113,7 @@ router.route('/:id').delete((req, res) => {
 });
 
 // update email of current user
+// TASK-TODO: Secure endpoint.
 router.post('/updateEmail', auth, (req, res) => {
   // error with authentication token
   if (!req.user) {
@@ -229,6 +162,7 @@ router.post('/updateEmail', auth, (req, res) => {
 });
 
 // update username of current user
+// TASK-TODO: Secure endpoint.
 router.post('/updateUsername', auth, (req, res) => {
   // error with authentication token
   if (!req.user) {
@@ -277,6 +211,7 @@ router.post('/updateUsername', auth, (req, res) => {
 });
 
 // /update password of current user
+// TASK-TODO: Secure endpoint.
 router.post('/updatePassword', auth, (req, res) => {
   // error with authentication token
   if (!req.user) {
@@ -321,6 +256,7 @@ router.post('/updatePassword', auth, (req, res) => {
     });
 });
 
+// TASK-TODO: Secure endpoint.
 router.post('/updateOrganization', auth, (req, res) => {
   // error with authentication token
   if (!req.user) {
@@ -356,6 +292,7 @@ router.post('/updateOrganization', auth, (req, res) => {
 
 // User Put endpoint
 // note findOneAndUpdate does not support validation
+// TASK-TODO: Secure endpoint.
 router.put('/:userId', async (req, res) => {
   try {
     // Update existing user in DB

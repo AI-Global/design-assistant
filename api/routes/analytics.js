@@ -3,6 +3,7 @@ const router = express.Router();
 const Analytic = require('../models/analytics.model');
 
 // Get all Analytics
+// TASK-TODO: Secure endpoint.
 router.get('/', async (req, res) => {
   Analytic.find()
     .then((analytics) => res.status(200).send({ analytics: analytics }))
@@ -10,6 +11,7 @@ router.get('/', async (req, res) => {
 });
 
 // Add new Analytics
+// TASK-TODO: Secure endpoint.
 router.post('/', async (req, res) => {
   try {
     // Create new Analytic and insert into DB

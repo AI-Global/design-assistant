@@ -19,6 +19,7 @@ const LogoutHandler = () => {
   });
 };
 
+// TASK-TODO: Removing anything that has to do will a password or redirect it to portal user settings.
 class UserSettings extends Component {
   constructor(props) {
     super(props);
@@ -294,7 +295,14 @@ class UserSettings extends Component {
               </Dropdown.Item>
             ) : null
           ) : null}
-          <Dropdown.Item onClick={() => this.changeEmailModal()}>
+          <Dropdown.Item
+            onClick={() =>
+              (window.location = 'https://portal.ai-global.org/settings')
+            }
+          >
+            <i className="fa fa-users fa-fw"></i> Edit Account in AI Portal
+          </Dropdown.Item>
+          {/* <Dropdown.Item onClick={() => this.changeEmailModal()}>
             <i className="fa fa-envelope fa-fw"></i> Change Email
           </Dropdown.Item>
           <Dropdown.Item onClick={() => this.changeUsernameModal()}>
@@ -306,7 +314,7 @@ class UserSettings extends Component {
           <Dropdown.Item onClick={() => this.changeOrganizationModal()}>
             {' '}
             <i className="fa fa-users fa-fw"></i> Change Organization
-          </Dropdown.Item>
+          </Dropdown.Item> */}
           <Dropdown.Item onClick={() => this.handleLogout()}>
             <i className="fa fa-sign-out fa-fw"></i> Log Out
           </Dropdown.Item>

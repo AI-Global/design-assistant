@@ -423,6 +423,7 @@ async function createPages(q, filters) {
 }
 
 // Get all questions. Assemble SurveyJS JSON here
+// TASK-TODO: Secure endpoint.
 router.get('/', async (req, res) => {
   // Optional filters in req body
   filters = req.query;
@@ -437,6 +438,7 @@ router.get('/', async (req, res) => {
 });
 
 // Get all questions as JSON from DB. No Assembly for SurveyJS
+// TASK-TODO: Secure endpoint.
 router.get('/all', async (req, res) => {
   let Dimensions = await getDimensions();
   Question.find()
@@ -445,6 +447,7 @@ router.get('/all', async (req, res) => {
 });
 
 // Get question by id
+// TASK-TODO: Secure endpoint.
 router.get('/:questionId', async (req, res) => {
   // Get dimensions from DB
   let Dimensions = await getDimensions();
@@ -455,6 +458,7 @@ router.get('/:questionId', async (req, res) => {
     .catch((err) => res.status(400).send(err));
 });
 
+// TASK-TODO: Secure endpoint.
 router.get('/all/export', async (req, res) => {
   Question.find()
     .then((questions) => res.status(200).send(questions))
@@ -462,7 +466,7 @@ router.get('/all/export', async (req, res) => {
 });
 
 // Add new question
-// TODO: Should be restricted to admin role
+// TASK-TODO: Secure endpoint.
 router.post('/', async (req, res) => {
   try {
     // Create new questions and insert into DB
@@ -475,6 +479,7 @@ router.post('/', async (req, res) => {
   }
 });
 
+// TASK-TODO: Secure endpoint.
 router.delete('/:questionId', async (req, res) => {
   try {
     // Delete existing question in DB
@@ -502,6 +507,7 @@ router.delete('/:questionId', async (req, res) => {
   }
 });
 
+// TASK-TODO: Secure endpoint.
 router.put('/:questionId', async (req, res) => {
   try {
     // Update existing question in DB
@@ -516,6 +522,7 @@ router.put('/:questionId', async (req, res) => {
   }
 });
 
+// TASK-TODO: Secure endpoint.
 router.put('/:startNumber/:endNumber', async (req, res) => {
   let startNum = parseInt(req.params.startNumber);
   let endNum = parseInt(req.params.endNumber);

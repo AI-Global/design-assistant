@@ -4,6 +4,7 @@ const auth = require('../middleware/auth');
 const Submission = require('../models/submission.model');
 
 // Get all submissions
+// TASK-TODO: Secure endpoint.
 router.get('/', async (req, res) => {
   try {
     const submissions = await Submission.find().sort({ date: -1 });
@@ -14,7 +15,7 @@ router.get('/', async (req, res) => {
 });
 
 // Get submissions by user id
-
+// TASK-TODO: Secure endpoint.
 router.get('/user/:userId', async (req, res) => {
   try {
     await Submission.find({ userId: req.params.userId })
@@ -27,6 +28,7 @@ router.get('/user/:userId', async (req, res) => {
   }
 });
 
+// TASK-TODO: Secure endpoint.
 router.post('/update/:submissionId', async (req, res) => {
   try {
     const submissions = await Submission.findOneAndUpdate(
@@ -50,6 +52,7 @@ router.post('/update/:submissionId', async (req, res) => {
   }
 });
 
+// TASK-TODO: Secure endpoint.
 router.delete('/delete/:id', async (req, res) => {
   await Submission.findByIdAndDelete(req.params.id)
     .then(() => res.status(200).json('User submission deleted.'))
@@ -57,6 +60,7 @@ router.delete('/delete/:id', async (req, res) => {
 });
 
 // Add new submission
+// TASK-TODO: Secure endpoint.
 router.post('/', async (req, res) => {
   const submission = new Submission({
     userId: req.body.userId,
@@ -78,6 +82,7 @@ router.post('/', async (req, res) => {
   }
 });
 
+// TASK-TODO: Secure endpoint.
 router.delete('/deleteAll/:uid', async (req, res) => {
   let uid = req.params.uid;
   Submission.deleteMany({ userId: uid })
