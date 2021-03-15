@@ -18,7 +18,7 @@ const QuestionSchema = mongoose.Schema({
 
   questionType: {
     type: String,
-    enum: [null, 'tombstone', 'risk', 'mitigation'],
+    enum: ['risk', 'mitigation', 'company'],
   },
 
   // question text

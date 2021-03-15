@@ -251,11 +251,11 @@ export default function QuestionModal(props) {
         props.question.question = null;
         props.question.reference = null;
         props.question.responseType = 'text';
-        props.question.questionType = 'tombstone';
+        props.question.questionType = 'Risk';
         props.question.responses = [];
         props.question.roles = [];
         props.question.trustIndexDimension = 1;
-        props.question.weighting = 0;
+        props.question.weighting = 1;
         props.question.child = child;
         props.question.trigger = trigger;
         props.question.domainApplicability = [];
@@ -327,16 +327,6 @@ export default function QuestionModal(props) {
   }
 
   function updateDimension(value) {
-    switch (value) {
-      case 1:
-        setQType('tombstone');
-        break;
-      case 2:
-        setQType('risk');
-        break;
-      default:
-        setQType('mitigation');
-    }
     setDimension(value);
   }
 
@@ -485,11 +475,24 @@ export default function QuestionModal(props) {
                   </Form.Control>
                 </Form.Group>
               </Col>
+              <Col xs={4} md={2}>
+                    <Form.Label>Question Type</Form.Label>
+                    <Form.Control
+                      value={questionType}
+                      as="select"
+                      onChange={(event) => setQType(event.target.value)}
+                    >
+                      <option>Risk</option>
+                      <option>Mitigation</option>
+                      <option>Company</option>
+                    </Form.Control>
+                  </Col>
               {responseType === 'dropdown' ||
               responseType === 'radiogroup' ||
               responseType === 'checkbox' ||
               responseType === 'slider' ? (
                 <React.Fragment>
+                  {/* Remove weighting as it's currently not used in scoring 
                   <Col xs={4} md={2}>
                     <Form.Label>Weight</Form.Label>
                     <Form.Control
@@ -502,7 +505,8 @@ export default function QuestionModal(props) {
                       <option>2</option>
                       <option>3</option>
                     </Form.Control>
-                  </Col>
+                  </Col>*/} 
+                  
                   {responseType === 'slider' ? (
                     <React.Fragment>
                       <Col xs={1} md={1}>
@@ -693,13 +697,13 @@ export default function QuestionModal(props) {
                 </Col>
               </Row>
             )}
-            {questionType === 'tombstone' ? null : (
+            {(
               <Row>
                 <Col xs={2} md={3}>
                   <Form.Group controlId="roles">
                     <Form.Label>Role</Form.Label>
                     <Card className="select-list-box">
-                      {roles.map((role, index) => (
+                      {roles?.map((role, index) => (
                         <Form.Check
                           type="checkbox"
                           checked={questionRole?.includes(index + 1)}
@@ -717,7 +721,7 @@ export default function QuestionModal(props) {
                   <Form.Group controlId="domains">
                     <Form.Label>Domain</Form.Label>
                     <Card className="select-list-box">
-                      {domains.map((domain, index) => (
+                      {domains?.map((domain, index) => (
                         <Form.Check
                           type="checkbox"
                           checked={questionDomain?.includes(index + 1)}
@@ -737,7 +741,7 @@ export default function QuestionModal(props) {
                   <Form.Group controlId="regions">
                     <Form.Label>Region</Form.Label>
                     <Card className="select-list-box">
-                      {regions.map((region, index) => (
+                      {regions?.map((region, index) => (
                         <Form.Check
                           type="checkbox"
                           checked={questionRegion?.includes(index + 1)}
@@ -757,7 +761,7 @@ export default function QuestionModal(props) {
                   <Form.Group controlId="lifecycles">
                     <Form.Label>Life-Cycle</Form.Label>
                     <Card className="select-list-box">
-                      {lifecycles.map((lifecycle, index) => (
+                      {lifecycles?.map((lifecycle, index) => (
                         <Form.Check
                           type="checkbox"
                           checked={questionLifecycle?.includes(index + 1)}
@@ -788,7 +792,7 @@ export default function QuestionModal(props) {
                 </Form.Group>
               </Col>
             </Row>
-            {questionType === 'tombstone' ? null : (
+            {(
               <React.Fragment>
                 <Row>
                   <Col xs={12} md={12}>

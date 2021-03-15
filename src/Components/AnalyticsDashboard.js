@@ -17,7 +17,7 @@ export default class AnalyticsDashboard extends Component {
         console.log(err);
       })
       .then((res) => {
-        this.setState({ analytics: res.data?.analytics });
+        this.setState({ analytics: res?.data?.analytics });
       });
   }
 

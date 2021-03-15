@@ -468,8 +468,10 @@ router.get('/all/export', async (req, res) => {
 // Add new question
 // TASK-TODO: Secure endpoint.
 router.post('/', async (req, res) => {
+  
   try {
     // Create new questions and insert into DB
+    req.body.questionType = req.body.questionType.toLowerCase();
     const question = new Question(req.body);
 
     const savedQuestions = await question.save();
@@ -510,6 +512,7 @@ router.delete('/:questionId', async (req, res) => {
 // TASK-TODO: Secure endpoint.
 router.put('/:questionId', async (req, res) => {
   try {
+    req.body.questionType = req.body.questionType.toLowerCase();
     // Update existing question in DB
     var response = await Question.findOneAndUpdate(
       { _id: req.params.questionId },
