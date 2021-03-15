@@ -251,11 +251,11 @@ export default function QuestionModal(props) {
         props.question.question = null;
         props.question.reference = null;
         props.question.responseType = 'text';
-        props.question.questionType = 'tombstone';
+        props.question.questionType = 'Risk';
         props.question.responses = [];
         props.question.roles = [];
         props.question.trustIndexDimension = 1;
-        props.question.weighting = 0;
+        props.question.weighting = 1;
         props.question.child = child;
         props.question.trigger = trigger;
         props.question.domainApplicability = [];
@@ -492,6 +492,7 @@ export default function QuestionModal(props) {
               responseType === 'checkbox' ||
               responseType === 'slider' ? (
                 <React.Fragment>
+                  {/* Remove weighting as it's currently not used in scoring 
                   <Col xs={4} md={2}>
                     <Form.Label>Weight</Form.Label>
                     <Form.Control
@@ -504,7 +505,7 @@ export default function QuestionModal(props) {
                       <option>2</option>
                       <option>3</option>
                     </Form.Control>
-                  </Col>
+                  </Col>*/} 
                   
                   {responseType === 'slider' ? (
                     <React.Fragment>
