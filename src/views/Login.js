@@ -58,7 +58,7 @@ export default function Login() {
           Login
         </Button>
         <Button style={{ marginLeft: '5px' }} onClick={createAccount}>
-          Create Account Test2
+          Create Account Deploy test
         </Button>
       </div>
     );
