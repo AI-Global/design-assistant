@@ -327,16 +327,6 @@ export default function QuestionModal(props) {
   }
 
   function updateDimension(value) {
-    switch (value) {
-      case 1:
-        setQType('tombstone');
-        break;
-      case 2:
-        setQType('risk');
-        break;
-      default:
-        setQType('mitigation');
-    }
     setDimension(value);
   }
 
@@ -485,6 +475,18 @@ export default function QuestionModal(props) {
                   </Form.Control>
                 </Form.Group>
               </Col>
+              <Col xs={4} md={2}>
+                    <Form.Label>Question Type</Form.Label>
+                    <Form.Control
+                      value={questionType}
+                      as="select"
+                      onChange={(event) => setQType(event.target.value)}
+                    >
+                      <option>Risk</option>
+                      <option>Mitigation</option>
+                      <option>Company</option>
+                    </Form.Control>
+                  </Col>
               {responseType === 'dropdown' ||
               responseType === 'radiogroup' ||
               responseType === 'checkbox' ||
@@ -503,6 +505,7 @@ export default function QuestionModal(props) {
                       <option>3</option>
                     </Form.Control>
                   </Col>
+                  
                   {responseType === 'slider' ? (
                     <React.Fragment>
                       <Col xs={1} md={1}>
@@ -693,7 +696,7 @@ export default function QuestionModal(props) {
                 </Col>
               </Row>
             )}
-            {questionType === 'tombstone' ? null : (
+            {(
               <Row>
                 <Col xs={2} md={3}>
                   <Form.Group controlId="roles">
@@ -788,7 +791,7 @@ export default function QuestionModal(props) {
                 </Form.Group>
               </Col>
             </Row>
-            {questionType === 'tombstone' ? null : (
+            {(
               <React.Fragment>
                 <Row>
                   <Col xs={12} md={12}>
