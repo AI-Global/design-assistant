@@ -215,9 +215,6 @@ export default class QuestionTable extends Component {
   }
 
   render() {
-    if (!this.state.questions.length) {
-      return null;
-    }
     const newQuestion = {
       questionNumber: this.state.questions.length + 1,
       __v: 0,
@@ -241,6 +238,61 @@ export default class QuestionTable extends Component {
       child: false,
       rec_links: [],
     };
+    if (!this.state.questions.length) {
+      return (
+      <div className="table-responsive mt-3">
+      {this.state.previousQuestion === null ? null : (
+        <ChildModal
+          show={this.state.showChildModal}
+          onHide={() => this.cancelQuestionUpdate()}
+          clickYes={() => this.updateQuestionNumbers()}
+          current_question={this.state.currentQuestion}
+          previous_question={this.state.previousQuestion}
+        />
+      )}
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>
+              <IconButton
+                aria-label="add question"
+                size="small"
+                onClick={() => this.addQuestion()}
+              >
+                <Add />
+              </IconButton>
+              <QuestionModal
+                show={this.state.modalShow}
+                onHide={this.handleCloseModal}
+                question={newQuestion}
+                mode={'new'}
+                dimensions={this.state.dimensions}
+                metadata={this.state.metadata}
+              />
+            </TableCell>
+            <TableCell>No.</TableCell>
+            <TableCell width="100%">Question</TableCell>
+            <TableCell align="right">Dimension</TableCell>
+            <TableCell>
+              <DropdownButton
+                className="export-dropdown"
+                title={<i className="fas fa-file-export fa-lg" />}
+              >
+                <Dropdown.Item onClick={() => this.export('json')}>
+                  .json
+                </Dropdown.Item>
+                <Dropdown.Item onClick={() => this.export('csv')}>
+                  .csv
+                </Dropdown.Item>
+              </DropdownButton>
+            </TableCell>
+          </TableRow>
+        </TableHead>
+        </Table>
+        </div>
+      );
+    }
+    
 
     return (
       <div className="table-responsive mt-3">
@@ -274,7 +326,7 @@ export default class QuestionTable extends Component {
                 />
               </TableCell>
               <TableCell>No.</TableCell>
-              <TableCell>Question</TableCell>
+              <TableCell width="100%">Question</TableCell>
               <TableCell align="right">Dimension</TableCell>
               <TableCell>
                 <DropdownButton
