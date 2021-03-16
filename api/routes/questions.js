@@ -42,10 +42,18 @@ async function getChildren() {
   let questions = await Question.find({ child: true });
   let children = {};
   for (let q of questions) {
-    children[q.trigger.parent] = {};
-    children[q.trigger.parent].question = q;
+    child = {};
+    child.question = q;
+    child.trigger = formatTrigger(q.trigger);
 
-    children[q.trigger.parent].trigger = formatTrigger(q.trigger);
+    // Append child to parent list
+    if (q.trigger.parent in children) {
+      children[q.trigger.parent].push(child)
+    }else{
+      children[q.trigger.parent] = []
+      children[q.trigger.parent].push(child)
+    }
+    
   }
 
   return children;
@@ -185,13 +193,15 @@ function chainChildren(q, Children) {
   // Given a question this function will recursivly check for deeper chains of heirarchy questions
   var childChain = [];
 
-  childChain.push(Children[q.id].question);
+  for (let c of Children[q.id]) {
+    childChain.push(c.question);
 
-  // Recursivly get children of children
-  if (Children[q.id].question.id in Children) {
-    childChain = childChain.concat(
-      chainChildren(Children[q.id].question, Children)
-    );
+    // Recursivly get children of children
+    if (c.question.id in Children) {
+      childChain = childChain.concat(
+        chainChildren(c.question, Children)
+      );
+    }
   }
 
   return childChain;
@@ -230,7 +240,8 @@ function createPage(questions, pageName, pageTitle, Dimensions, Children) {
   // Map MongoDB questions to surveyJS format
   page.elements = questionHeiarchy.map(function (q) {
     if (q.child) {
-      return formatQuestion(q, Dimensions, Children[q.trigger.parent].trigger);
+
+      return formatQuestion(q, Dimensions, Children[q.trigger.parent].find(c => c.question.id === q.id).trigger);
     } else {
       return formatQuestion(q, Dimensions);
     }
