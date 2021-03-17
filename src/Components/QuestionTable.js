@@ -163,11 +163,8 @@ export default class QuestionTable extends Component {
   async export(fileExt) {
     var fileName = fileExt === 'json' ? 'json' : 'csv';
     if (fileExt === 'json') {
-      await axios({
-        url: 'questions/all/export',
-        method: 'GET',
-        responseType: 'blob',
-      }).then((res) => {
+
+      await api.get('questions/all/export',{responseType: 'blob'}).then((res) => {
         const url = window.URL.createObjectURL(new Blob([res.data]));
         const link = document.createElement('a');
         link.href = url;
