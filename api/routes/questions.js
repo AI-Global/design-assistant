@@ -3,6 +3,7 @@ const router = express.Router();
 const Question = require('../models/question.model');
 
 const Dimension = require('../models/dimension.model');
+const SubDimension = require('../models/subdimension.model');
 const Lifecycles = require('../models/lifecycle.model');
 const Roles = require('../models/role.model');
 const Domain = require('../models/domain.model');
@@ -21,6 +22,23 @@ async function getDimensions() {
       label: d.label,
       name: d.name,
       page: d.name.replace(/\s+/g, ''),
+    };
+  }
+  return Dimensions;
+}
+
+async function getSubDimensions() {
+  // Get Lookup of Dimensions from DB
+  let dimensions = await SubDimension.find().sort({ subDimensionID: 1 });
+
+  let Dimensions = {};
+  for (let d of dimensions) {
+    Dimensions[d.subDimensionID] = {
+      dimensionID: d.dimensionID,
+      subDimensionID: d.subDimensionID,
+      name: d.name,
+      maxRisk: d.maxRisk,
+      maxMitigation: d.maxMitigation,
     };
   }
   return Dimensions;
@@ -452,8 +470,9 @@ router.get('/', async (req, res) => {
 // TASK-TODO: Secure endpoint.
 router.get('/all', async (req, res) => {
   let Dimensions = await getDimensions();
+  let subDimensions = await getSubDimensions();
   Question.find()
-    .then((questions) => res.status(200).send({ questions, Dimensions }))
+    .then((questions) => res.status(200).send({ questions, Dimensions, subDimensions }))
     .catch((err) => res.status(400).send(err));
 });
 
@@ -487,6 +506,8 @@ router.post('/', async (req, res) => {
     if (req.body.trustIndexDimension === 1) {
       req.body.weighting = 0;
       req.body.questionType = 'tombstone';
+    } else if (req.body.trustIndexDimension === 2) {
+      req.body.questionType = 'organization';
     } else {
       req.body.weighting = 1;
     }
@@ -532,6 +553,16 @@ router.delete('/:questionId', async (req, res) => {
 router.put('/:questionId', async (req, res) => {
   try {
     req.body.questionType = req.body.questionType.toLowerCase();
+
+    if (req.body.trustIndexDimension === 1) {
+      req.body.weighting = 0;
+      req.body.questionType = 'tombstone';
+    } else if (req.body.trustIndexDimension === 2) {
+      req.body.questionType = 'organization';
+    } else {
+      req.body.weighting = 1;
+    }
+
     // Update existing question in DB
     var response = await Question.findOneAndUpdate(
       { _id: req.params.questionId },

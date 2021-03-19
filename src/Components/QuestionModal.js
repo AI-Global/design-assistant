@@ -22,6 +22,7 @@ export default function QuestionModal(props) {
 
   // get metadata from props
   const dimensions = props.dimensions;
+  const subdimensions = props.subdimensions;
   const domains = props.metadata.domain;
   const lifecycles = props.metadata.lifecycle;
   const regions = props.metadata.region;
@@ -54,6 +55,10 @@ export default function QuestionModal(props) {
   const [dimension, setDimension] = useState(
     props.question.trustIndexDimension
   );
+  const [subdimension, setSubDimension] = useState(
+    props.question.subDimension
+  );
+  props.question.questionType = props.question.questionType[0].toUpperCase() + props.question.questionType.substring(1);
   const [weight, setWeight] = useState(props.question.weighting);
   const [questionType, setQType] = useState(props.question.questionType);
   const [questionLink, setLink] = useState(
@@ -142,6 +147,7 @@ export default function QuestionModal(props) {
     revertIndicators(props.question.responses);
     setRole(props.question.roles);
     setDimension(props.question.trustIndexDimension);
+    setSubDimension(props.question.subDimension);
     setWeight(props.question.weighting);
     setChild(props.question.child);
     setTrigger(props.question.trigger);
@@ -210,6 +216,7 @@ export default function QuestionModal(props) {
       props.question.responses = responses;
       props.question.roles = questionRole;
       props.question.trustIndexDimension = dimension;
+      props.question.subDimension = subdimension;
       props.question.weighting = weight;
       props.question.child = child;
       props.question.trigger = trigger;
@@ -255,6 +262,7 @@ export default function QuestionModal(props) {
         props.question.responses = [];
         props.question.roles = [];
         props.question.trustIndexDimension = 1;
+        props.question.subDimension = null;
         props.question.weighting = 1;
         props.question.child = child;
         props.question.trigger = trigger;
@@ -331,11 +339,10 @@ export default function QuestionModal(props) {
     // Set weight to zero if tombstone question
     if (value === 1) {
       setWeight(0);
-      setQType('Tombstone')
     }
-    if (value === 2) {
-      setQType('Organization')
-    }
+    setQType(questionType);
+
+    setSubDimension(Object.values(subdimensions).filter(sdim => sdim.dimensionID === value)[0]?.subDimensionID);
   }
 
   function updateType(type) {
@@ -466,6 +473,33 @@ export default function QuestionModal(props) {
                   </Form.Control>
                 </Form.Group>
               </Col>
+
+              {(dimension === 1) ? null :
+                (<Col xs={4} md={3}>
+                  <Form.Group controlId="questionSubDimension">
+                    <Form.Label>Sub-Dimension</Form.Label>
+                    <Form.Control
+                      value={subdimension === null ? '' : subdimension}
+                      as="select"
+                      onChange={(event) =>
+                        setSubDimension(parseInt(event.target.value))
+                      }
+                    >
+                      {Object.values(subdimensions)
+                        .filter(sdim => sdim.dimensionID === dimension)
+                        .map((subdimension, index) => (
+                          <option
+                            key={subdimension.subDimensionID}
+                            value={subdimension.subDimensionID}
+                            data-testid={subdimension.name}
+                          >
+                            {subdimension.name}
+                          </option>
+                        ))}
+                    </Form.Control>
+                  </Form.Group>
+                </Col>)}
+
               <Col xs={4} md={2}>
                 <Form.Group controlId="responseType">
                   <Form.Label>Response Type</Form.Label>
