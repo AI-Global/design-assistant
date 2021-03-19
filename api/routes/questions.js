@@ -49,11 +49,11 @@ async function getChildren() {
     // Append child to parent list
     if (q.trigger.parent in children) {
       children[q.trigger.parent].push(child)
-    }else{
+    } else {
       children[q.trigger.parent] = []
       children[q.trigger.parent].push(child)
     }
-    
+
   }
 
   return children;
@@ -479,10 +479,18 @@ router.get('/all/export', async (req, res) => {
 // Add new question
 // TASK-TODO: Secure endpoint.
 router.post('/', async (req, res) => {
-  
+
   try {
     // Create new questions and insert into DB
     req.body.questionType = req.body.questionType.toLowerCase();
+    // Tombstone questions have no weigth
+    if (req.body.trustIndexDimension === 1) {
+      req.body.weighting = 0;
+      req.body.questionType = 'tombstone';
+    } else {
+      req.body.weighting = 1;
+    }
+
     const question = new Question(req.body);
 
     const savedQuestions = await question.save();

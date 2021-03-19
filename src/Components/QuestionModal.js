@@ -328,6 +328,14 @@ export default function QuestionModal(props) {
 
   function updateDimension(value) {
     setDimension(value);
+    // Set weight to zero if tombstone question
+    if (value === 1) {
+      setWeight(0);
+      setQType('Tombstone')
+    }
+    if (value === 2) {
+      setQType('Organization')
+    }
   }
 
   function updateType(type) {
@@ -475,22 +483,22 @@ export default function QuestionModal(props) {
                   </Form.Control>
                 </Form.Group>
               </Col>
-              <Col xs={4} md={2}>
-                    <Form.Label>Question Type</Form.Label>
-                    <Form.Control
-                      value={questionType}
-                      as="select"
-                      onChange={(event) => setQType(event.target.value)}
-                    >
-                      <option>Risk</option>
-                      <option>Mitigation</option>
-                      <option>Company</option>
-                    </Form.Control>
-                  </Col>
+              {/*Dimension 1 is always tombstone and dimension 2 is always organization*/}
+              {(dimension === 1 || dimension === 2) ? null : (<Col xs={4} md={2}>
+                <Form.Label>Question Type</Form.Label>
+                <Form.Control
+                  value={questionType}
+                  as="select"
+                  onChange={(event) => setQType(event.target.value)}
+                >
+                  <option>Risk</option>
+                  <option>Mitigation</option>
+                </Form.Control>
+              </Col>)}
               {responseType === 'dropdown' ||
-              responseType === 'radiogroup' ||
-              responseType === 'checkbox' ||
-              responseType === 'slider' ? (
+                responseType === 'radiogroup' ||
+                responseType === 'checkbox' ||
+                responseType === 'slider' ? (
                 <React.Fragment>
                   {/* Remove weighting as it's currently not used in scoring 
                   <Col xs={4} md={2}>
@@ -505,8 +513,8 @@ export default function QuestionModal(props) {
                       <option>2</option>
                       <option>3</option>
                     </Form.Control>
-                  </Col>*/} 
-                  
+                  </Col>*/}
+
                   {responseType === 'slider' ? (
                     <React.Fragment>
                       <Col xs={1} md={1}>
@@ -609,8 +617,8 @@ export default function QuestionModal(props) {
               </Row>
             ) : null}
             {responseType === 'comment' ||
-            responseType === 'text' ||
-            responseType === 'slider' ? null : (
+              responseType === 'text' ||
+              responseType === 'slider' ? null : (
               <Row>
                 <Col xs={11} md={11} style={{ display: 'inline-block' }}>
                   <Form.Group>
