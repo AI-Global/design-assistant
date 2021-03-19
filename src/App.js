@@ -43,10 +43,11 @@ function WelcomeText() {
         ‌dimensions‌ ‌of‌ ‌a‌ ‌trusted‌ ‌AI‌ ‌program:‌
       </p>
       <ol style={{ fontWeight: 'bold' }}>
+        <li>Organization Maturity</li>
         <li>Accountability</li>
-        <li>Explainability and Interpretability</li>
-        <li>Data Quality</li>
-        <li>Bias and Fairness</li>
+        <li>Data</li>
+        <li>Fairness</li>
+        <li>Interpretability</li>
         <li>Robustness</li>
       </ol>
       <p>
