@@ -3,6 +3,7 @@ const router = express.Router();
 const Question = require('../models/question.model');
 
 const Dimension = require('../models/dimension.model');
+const SubDimension = require('../models/subdimension.model');
 const Lifecycles = require('../models/lifecycle.model');
 const Roles = require('../models/role.model');
 const Domain = require('../models/domain.model');
@@ -26,6 +27,23 @@ async function getDimensions() {
   return Dimensions;
 }
 
+async function getSubDimensions() {
+  // Get Lookup of Dimensions from DB
+  let dimensions = await SubDimension.find().sort({ subDimensionID: 1 });
+
+  let Dimensions = {};
+  for (let d of dimensions) {
+    Dimensions[d.subDimensionID] = {
+      dimensionID: d.dimensionID,
+      subDimensionID: d.subDimensionID,
+      name: d.name,
+      maxRisk: d.maxRisk,
+      maxMitigation: d.maxMitigation,
+    };
+  }
+  return Dimensions;
+}
+
 function formatTrigger(trigger) {
   // Formats the triggers into a string for SurveyJS
   triggerList = [];
@@ -42,10 +60,18 @@ async function getChildren() {
   let questions = await Question.find({ child: true });
   let children = {};
   for (let q of questions) {
-    children[q.trigger.parent] = {};
-    children[q.trigger.parent].question = q;
+    child = {};
+    child.question = q;
+    child.trigger = formatTrigger(q.trigger);
 
-    children[q.trigger.parent].trigger = formatTrigger(q.trigger);
+    // Append child to parent list
+    if (q.trigger.parent in children) {
+      children[q.trigger.parent].push(child)
+    } else {
+      children[q.trigger.parent] = []
+      children[q.trigger.parent].push(child)
+    }
+
   }
 
   return children;
@@ -185,13 +211,15 @@ function chainChildren(q, Children) {
   // Given a question this function will recursivly check for deeper chains of heirarchy questions
   var childChain = [];
 
-  childChain.push(Children[q.id].question);
+  for (let c of Children[q.id]) {
+    childChain.push(c.question);
 
-  // Recursivly get children of children
-  if (Children[q.id].question.id in Children) {
-    childChain = childChain.concat(
-      chainChildren(Children[q.id].question, Children)
-    );
+    // Recursivly get children of children
+    if (c.question.id in Children) {
+      childChain = childChain.concat(
+        chainChildren(c.question, Children)
+      );
+    }
   }
 
   return childChain;
@@ -230,7 +258,8 @@ function createPage(questions, pageName, pageTitle, Dimensions, Children) {
   // Map MongoDB questions to surveyJS format
   page.elements = questionHeiarchy.map(function (q) {
     if (q.child) {
-      return formatQuestion(q, Dimensions, Children[q.trigger.parent].trigger);
+
+      return formatQuestion(q, Dimensions, Children[q.trigger.parent].find(c => c.question.id === q.id).trigger);
     } else {
       return formatQuestion(q, Dimensions);
     }
@@ -441,8 +470,9 @@ router.get('/', async (req, res) => {
 // TASK-TODO: Secure endpoint.
 router.get('/all', async (req, res) => {
   let Dimensions = await getDimensions();
+  let subDimensions = await getSubDimensions();
   Question.find()
-    .then((questions) => res.status(200).send({ questions, Dimensions }))
+    .then((questions) => res.status(200).send({ questions, Dimensions, subDimensions }))
     .catch((err) => res.status(400).send(err));
 });
 
@@ -468,10 +498,20 @@ router.get('/all/export', async (req, res) => {
 // Add new question
 // TASK-TODO: Secure endpoint.
 router.post('/', async (req, res) => {
-  
+
   try {
     // Create new questions and insert into DB
     req.body.questionType = req.body.questionType.toLowerCase();
+    // Tombstone questions have no weigth
+    if (req.body.trustIndexDimension === 1) {
+      req.body.weighting = 0;
+      req.body.questionType = 'tombstone';
+    } else if (req.body.trustIndexDimension === 2) {
+      req.body.questionType = 'organization';
+    } else {
+      req.body.weighting = 1;
+    }
+
     const question = new Question(req.body);
 
     const savedQuestions = await question.save();
@@ -513,6 +553,16 @@ router.delete('/:questionId', async (req, res) => {
 router.put('/:questionId', async (req, res) => {
   try {
     req.body.questionType = req.body.questionType.toLowerCase();
+
+    if (req.body.trustIndexDimension === 1) {
+      req.body.weighting = 0;
+      req.body.questionType = 'tombstone';
+    } else if (req.body.trustIndexDimension === 2) {
+      req.body.questionType = 'organization';
+    } else {
+      req.body.weighting = 1;
+    }
+
     // Update existing question in DB
     var response = await Question.findOneAndUpdate(
       { _id: req.params.questionId },

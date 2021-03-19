@@ -10,6 +10,7 @@ const QuestionSchema = mongoose.Schema({
 
   // 5 possible dimensions
   trustIndexDimension: Number,
+  subDimension: Number,
   domainApplicability: [Number],
   regionalApplicability: [Number],
 
@@ -18,7 +19,7 @@ const QuestionSchema = mongoose.Schema({
 
   questionType: {
     type: String,
-    enum: ['risk', 'mitigation', 'company'],
+    enum: ['risk', 'mitigation', 'organization','tombstone'],
   },
 
   // question text

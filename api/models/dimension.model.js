@@ -9,21 +9,22 @@ const DimensionSchema = mongoose.Schema({
   name: {
     type: String,
     enum: [
+      'Project Details',
+      'Organization Maturity',
       'Accountability',
-      'Explainability and Interpretability',
-      'Data Quality',
-      'Bias and Fairness',
+      'Data',
+      'Fairness',
+      'Interpretability',
       'Robustness',
     ],
     required: true,
   },
   label: {
     type: String,
-    enum: ['A', 'EI', 'D', 'B', 'R'],
+    enum: ['T', 'O', 'A', 'D', 'F', 'I', 'R'],
     required: true,
   },
 
-  // TODO: Add test of schema to model
 });
 
 module.exports = mongoose.model('Dimension', DimensionSchema);

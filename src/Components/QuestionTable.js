@@ -35,6 +35,7 @@ export default class QuestionTable extends Component {
     this.state = {
       questions: {},
       dimensions: {},
+      subdimensions: {},
       metadata: {},
       previousQuestion: null,
       currentQuestion: null,
@@ -57,6 +58,7 @@ export default class QuestionTable extends Component {
   async getQuestions() {
     await api.get('questions/all').then((res) => {
       this.setState({ dimensions: res.data.Dimensions });
+      this.setState({ subdimensions: res.data.subDimensions });
       this.setState({
         questions: res.data.questions.sort((a, b) =>
           a.questionNumber > b.questionNumber ? 1 : -1
@@ -93,9 +95,9 @@ export default class QuestionTable extends Component {
         .then(() => {
           console.log(
             'Question: ' +
-              result.source.index.toString() +
-              'is now question: ' +
-              result.destination.index.toString()
+            result.source.index.toString() +
+            'is now question: ' +
+            result.destination.index.toString()
           );
           this.setState({
             questions,
@@ -122,17 +124,17 @@ export default class QuestionTable extends Component {
     api
       .put(
         'questions/' +
-          this.state.previousNumber.toString() +
-          '/' +
-          this.state.newNumber.toString(),
+        this.state.previousNumber.toString() +
+        '/' +
+        this.state.newNumber.toString(),
         this.state.currentQuestion.questionNumber
       )
       .then(() => {
         console.log(
           'Question: ' +
-            this.state.previousNumber.toString() +
-            'is now question: ' +
-            this.state.newNumber.toString()
+          this.state.previousNumber.toString() +
+          'is now question: ' +
+          this.state.newNumber.toString()
         );
       });
     // TODO: Add functionality to make question child of parent
@@ -163,11 +165,8 @@ export default class QuestionTable extends Component {
   async export(fileExt) {
     var fileName = fileExt === 'json' ? 'json' : 'csv';
     if (fileExt === 'json') {
-      await axios({
-        url: 'questions/all/export',
-        method: 'GET',
-        responseType: 'blob',
-      }).then((res) => {
+
+      await api.get('questions/all/export', { responseType: 'blob' }).then((res) => {
         const url = window.URL.createObjectURL(new Blob([res.data]));
         const link = document.createElement('a');
         link.href = url;
@@ -215,9 +214,6 @@ export default class QuestionTable extends Component {
   }
 
   render() {
-    if (!this.state.questions.length) {
-      return null;
-    }
     const newQuestion = {
       questionNumber: this.state.questions.length + 1,
       __v: 0,
@@ -241,6 +237,62 @@ export default class QuestionTable extends Component {
       child: false,
       rec_links: [],
     };
+    if (!this.state.questions.length) {
+      return (
+        <div className="table-responsive mt-3">
+          {this.state.previousQuestion === null ? null : (
+            <ChildModal
+              show={this.state.showChildModal}
+              onHide={() => this.cancelQuestionUpdate()}
+              clickYes={() => this.updateQuestionNumbers()}
+              current_question={this.state.currentQuestion}
+              previous_question={this.state.previousQuestion}
+            />
+          )}
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>
+                  <IconButton
+                    aria-label="add question"
+                    size="small"
+                    onClick={() => this.addQuestion()}
+                  >
+                    <Add />
+                  </IconButton>
+                  <QuestionModal
+                    show={this.state.modalShow}
+                    onHide={this.handleCloseModal}
+                    question={newQuestion}
+                    mode={'new'}
+                    dimensions={this.state.dimensions}
+                    subdimensions={this.state.subdimensions}
+                    metadata={this.state.metadata}
+                  />
+                </TableCell>
+                <TableCell>No.</TableCell>
+                <TableCell width="100%">Question</TableCell>
+                <TableCell align="right">Dimension</TableCell>
+                <TableCell>
+                  <DropdownButton
+                    className="export-dropdown"
+                    title={<i className="fas fa-file-export fa-lg" />}
+                  >
+                    <Dropdown.Item onClick={() => this.export('json')}>
+                      .json
+                </Dropdown.Item>
+                    <Dropdown.Item onClick={() => this.export('csv')}>
+                      .csv
+                </Dropdown.Item>
+                  </DropdownButton>
+                </TableCell>
+              </TableRow>
+            </TableHead>
+          </Table>
+        </div>
+      );
+    }
+
 
     return (
       <div className="table-responsive mt-3">
@@ -270,11 +322,12 @@ export default class QuestionTable extends Component {
                   question={newQuestion}
                   mode={'new'}
                   dimensions={this.state.dimensions}
+                  subdimensions={this.state.subdimensions}
                   metadata={this.state.metadata}
                 />
               </TableCell>
               <TableCell>No.</TableCell>
-              <TableCell>Question</TableCell>
+              <TableCell width="100%">Question</TableCell>
               <TableCell align="right">Dimension</TableCell>
               <TableCell>
                 <DropdownButton
@@ -301,6 +354,7 @@ export default class QuestionTable extends Component {
                 <QuestionRow
                   question={question}
                   dimensions={this.state.dimensions}
+                  subdimensions={this.state.subdimensions}
                   index={index}
                   onDelete={this.getQuestions}
                   metadata={this.state.metadata}
