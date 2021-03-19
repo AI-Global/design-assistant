@@ -9,6 +9,7 @@ const DimensionSchema = mongoose.Schema({
   name: {
     type: String,
     enum: [
+      'Project Details',
       'Organization Maturity',
       'Accountability',
       'Data',
@@ -20,11 +21,10 @@ const DimensionSchema = mongoose.Schema({
   },
   label: {
     type: String,
-    enum: ['O', 'A', 'D', 'F', 'I', 'R'],
+    enum: ['T', 'O', 'A', 'D', 'F', 'I', 'R'],
     required: true,
   },
 
-  // TODO: Add test of schema to model
 });
 
 module.exports = mongoose.model('Dimension', DimensionSchema);
