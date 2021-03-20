@@ -103,6 +103,14 @@ function formatQuestion(q, Dimensions, Triggers = null) {
     question.hideNumber = true;
   }
 
+  if (q.subDimension) {
+    question.subDimension = q.subDimension;
+  }
+
+  if (q.questionType) {
+    question.questionType = q.questionType;
+  }
+
   // The rest of these properties are dependant on the question
   if (q.alt_text) {
     question.alttext = {};

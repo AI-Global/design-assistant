@@ -14,7 +14,7 @@ import TrustedAIProviders from './TrustedAIProviders';
 import TrustedAIResources from './TrustedAIResources';
 import ReactGa from 'react-ga';
 import Login from './Login';
-import calculateQuestionScore from '../helper/QuestionScore';
+import QuestionScore from '../helper/QuestionScore';
 
 ReactGa.initialize(process.env.REACT_APP_GAID, {
   testMode: process.env.NODE_ENV !== 'production',
@@ -34,12 +34,6 @@ const ExportHandler = () => {
   });
 };
 
-const riskLevel = {
-  1: 'Low',
-  2: 'Medium',
-  3: 'High',
-};
-
 /**
  * Component processes the answers to the survey and
  * renders the results to the user in various different ways.
@@ -49,6 +43,8 @@ export default class Results extends Component {
     super(props);
     this.state = {
       Dimensions: [],
+      SubDimensions: [],
+      Settings: [],
     };
   }
 
@@ -56,6 +52,13 @@ export default class Results extends Component {
     ReactGa.pageview(window.location.pathname + window.location.search);
     api.get('dimensions').then((res) => {
       this.setState({ Dimensions: res.data });
+    });
+
+    api.get('subdimensions').then((res) => {
+      this.setState({ SubDimensions: res.data });
+    });
+    api.get('settings').then((res) => {
+      this.setState({ Settings: res.data });
     });
   }
 
@@ -65,22 +68,14 @@ export default class Results extends Component {
     // Calculate total risk based off user responses
     riskQuestions.map((question) => {
       let selectedChoices = results[question.name];
-      let questionScore = calculateQuestionScore(question, selectedChoices, 1);
+      let questionScore = QuestionScore.calculateQuestionScore(question, selectedChoices, 1);
       riskScore += questionScore.score;
       maxRiskScore += questionScore.maxScore;
 
       return maxRiskScore;
     });
 
-    // Calculate whether Risk level is low medium or high
-    var riskWeight = 1;
-    if (riskScore > maxRiskScore * 0.66) {
-      riskWeight = 3;
-    } else if (riskScore > maxRiskScore * 0.33) {
-      riskWeight = 2;
-    }
-
-    return riskWeight;
+    return riskScore;
   }
 
   downloadCSV(results, questionsObj) {
@@ -169,9 +164,68 @@ export default class Results extends Component {
     });
 
     var riskWeight = this.calculateRiskWeight(
-      allQuestions.filter((x) => x.score?.dimension === 'RK'),
+      allQuestions,
       surveyResults
     );
+
+    // Calculate risk/mitigation for each subdimension  
+    let subdimensionScores = {}
+
+    this.state.SubDimensions.map((subDimension) => {
+      subdimensionScores[subDimension.subDimensionID] = QuestionScore.calculateSubdimensionScore(allQuestions, surveyResults, subDimension);
+      // Scale down risk and mitigation scores if it goes beyond the maximum
+      if (subdimensionScores[subDimension.subDimensionID].riskScore > subDimension.maxRisk) {
+        subdimensionScores[subDimension.subDimensionID].riskScore = subDimension.maxRisk
+      }
+
+      if (subdimensionScores[subDimension.subDimensionID].mitigationScore > subDimension.maxmitigation) {
+        subdimensionScores[subDimension.subDimensionID].mitigationScore = subDimension.maxmitigation
+      }
+
+    });
+
+    let dimensionScores = {}
+    let totalRiskScore = 0;
+    let totalMitigationScore = 0;
+    let totalOrganizationScore = 0;
+
+    // Calculate total risk/mitigation for each dimension 
+    for (let key in subdimensionScores) {
+      let sd = subdimensionScores[key]
+
+      if (sd.dimensionID in dimensionScores) {
+        dimensionScores[sd.dimensionID].riskScore += sd.riskScore;
+        dimensionScores[sd.dimensionID].mitigationScore += sd.mitigationScore;
+      } else {
+        dimensionScores[sd.dimensionID] = { "riskScore": 0, "mitigationScore": 0, "name": this.state.Dimensions.filter(d => d.dimensionID === sd.dimensionID)[0]?.name }
+        dimensionScores[sd.dimensionID].riskScore += sd.riskScore;
+        dimensionScores[sd.dimensionID].mitigationScore += sd.mitigationScore;
+      }
+      totalRiskScore += sd.riskScore;
+      totalMitigationScore += sd.mitigationScore;
+      // Calculate organization score
+      if (sd.organizationScore) {
+        totalOrganizationScore += sd.organizationScore
+      }
+    }
+
+    //console.log(dimensionScores)
+    //console.log(totalOrganizationScore)
+    //console.log(totalRiskScore)
+    //console.log(totalMitigationScore)
+    // calc organization bonus to mitigation score
+    totalMitigationScore += QuestionScore.calculateOrganizationBonus(totalOrganizationScore, this.state.Settings.find(s => s.settingsName === "Organizational Maturity")?.data)
+    //console.log(totalMitigationScore)
+
+    // calculate risk level
+    let riskLevel = QuestionScore.calculateRiskLevel(totalRiskScore, this.state.Settings.find(s => s.settingsName === "Risk Score")?.data.lowerBound, this.state.Settings.find(s => s.settingsName === "Risk Score")?.data.upperBound)
+    //console.log(riskLevel)
+    // calculate certification level
+    let certification = QuestionScore.calculateCertification(totalMitigationScore, riskLevel, this.state.Settings.find(s => s.settingsName === "Score Card")?.data)
+    //console.log(certification)
+
+
+
 
     var titleQuestion = allQuestions.find(
       (question) => question.title.default === 'Title of project'
@@ -342,7 +396,8 @@ export default class Results extends Component {
             </Tab>
           </Tabs>
           <div className="dimension-chart">
-            <h4>Risk Level: {riskLevel[riskWeight ?? 1]}</h4>
+            <h4>Certification Level: {certification}</h4>
+            <p>Risk Score: {totalRiskScore} | Mitigation Score: {totalMitigationScore} | Organization Score: {totalOrganizationScore}</p>
             <ResponsiveRadar
               data={radarChartData}
               keys={['score']}

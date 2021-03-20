@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faCircle } from '@fortawesome/free-regular-svg-icons';
-import calculateQuestionScore from '../helper/QuestionScore';
+import QuestionScore from '../helper/QuestionScore';
 
 /**
  * Component renders a HTML Table row for a dimension which
@@ -20,7 +20,7 @@ export default class DimensionScore extends Component {
     var maxDimensionScore = 0;
     questions.map((question) => {
       let selectedChoices = results[question.name];
-      let questionScore = calculateQuestionScore(
+      let questionScore = QuestionScore.calculateQuestionScore(
         question,
         selectedChoices,
         riskWeight
