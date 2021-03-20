@@ -67,6 +67,7 @@ app.use('/api/metadata', require('./api/routes/metadata'));
 app.use('/api/dimensions', require('./api/routes/dimensions'));
 app.use('/api/analytics', require('./api/routes/analytics'));
 app.use('/api/subdimensions', require('./api/routes/subdimensions'));
+app.use('/api/settings', require('./api/routes/settings'));
 
 let runServer = () => {
   mongoose.connection
