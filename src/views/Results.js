@@ -218,7 +218,7 @@ export default class Results extends Component {
     //console.log(totalMitigationScore)
 
     // calculate risk level
-    let riskLevel = QuestionScore.calculateRiskLevel(totalRiskScore, this.state.Settings.find(s => s.settingsName === "Risk Score")?.data.lowerBound, this.state.Settings.find(s => s.settingsName === "Risk Score")?.data.upperBound)
+    let riskLevel = QuestionScore.calculateRiskLevel(totalRiskScore, this.state.Settings.find(s => s.settingsName === "Risk Score")?.data?.lowerBound, this.state.Settings.find(s => s.settingsName === "Risk Score")?.data?.upperBound)
     //console.log(riskLevel)
     // calculate certification level
     let certification = QuestionScore.calculateCertification(totalMitigationScore, riskLevel, this.state.Settings.find(s => s.settingsName === "Score Card")?.data)
