@@ -27,6 +27,12 @@ export default function Login() {
     // See portal oauth.routes.js
     let redirect = 'https://designassistant.dev.ai-global.org';
     let appName = 'designassistant-dev';
+    if (window.location.href.includes("https://rai-certification")) {
+      redirect = window.location.href
+      appName = "certificate-beta" + redirect.replace(/\D/g, '');
+      console.log('redirect', redirect)
+      console.log('appname', appName)
+    }
     if (window.location.origin == 'http://localhost:3000') {
       redirect = 'http://localhost:3000';
       appName = 'localhost';
