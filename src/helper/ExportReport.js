@@ -15,7 +15,7 @@ const Dimensions = {
 function addHeader(doc, y) {
   const title = 'Responsible AI Design Report Card';
   const img = new Image();
-  img.src = '../img/rail-logo.jpg';
+  img.src = '../img/aiglobal-logo.jpg';
   const iw = 1403,
     ih = 507,
     ratio = 0.025;
