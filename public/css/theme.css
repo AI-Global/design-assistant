@@ -18,9 +18,7 @@ html {
   max-width: 515.297px;
   margin-bottom: -3.124px;
 }
-.banner .logo-border {
-  max-width: 540.703px;
-}
+
 @media screen and (max-width: 1150px) {
   .banner {
     -ms-flex-direction: column !important;
@@ -39,9 +37,6 @@ html {
   .banner .logo {
     width: 70vw;
     margin-bottom: -0.55vw;
-  }
-  .banner .logo-border {
-    width: 75vw;
   }
 }
 
