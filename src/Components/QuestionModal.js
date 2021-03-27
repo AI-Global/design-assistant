@@ -731,18 +731,6 @@ export default function QuestionModal(props) {
                           type="text"
                           placeholder="0"
                           value={response.score}
-                          onChange={(event) =>
-                            editScore(
-                              event.target.value,
-                              index,
-                              response.indicator
-                            )
-                          }></Form.Control>
-                        {/* <Form.Control
-                          id={'response-score-' + index}
-                          type="number"
-                          placeholder="0"
-                          value={response.score || ''}
                           style={{ minHeight: '44px' }}
                           onChange={(event) =>
                             editScore(
@@ -750,8 +738,7 @@ export default function QuestionModal(props) {
                               index,
                               response.indicator
                             )
-                          }
-                        ></Form.Control> */}
+                          }></Form.Control>
                       </div>
                     ))}
                   </Form.Group>
