@@ -55,10 +55,10 @@ export default function QuestionModal(props) {
   const [dimension, setDimension] = useState(
     props.question.trustIndexDimension
   );
-  const [subdimension, setSubDimension] = useState(
-    props.question.subDimension
-  );
-  props.question.questionType = props.question.questionType[0].toUpperCase() + props.question.questionType.substring(1);
+  const [subdimension, setSubDimension] = useState(props.question.subDimension);
+  props.question.questionType =
+    props.question.questionType[0].toUpperCase() +
+    props.question.questionType.substring(1);
   const [weight, setWeight] = useState(props.question.weighting);
   const [questionType, setQType] = useState(props.question.questionType);
   const [questionLink, setLink] = useState(
@@ -342,7 +342,11 @@ export default function QuestionModal(props) {
     }
     setQType(questionType);
 
-    setSubDimension(Object.values(subdimensions).filter(sdim => sdim.dimensionID === value)[0]?.subDimensionID);
+    setSubDimension(
+      Object.values(subdimensions).filter(
+        (sdim) => sdim.dimensionID === value
+      )[0]?.subDimensionID
+    );
   }
 
   function updateType(type) {
@@ -474,8 +478,8 @@ export default function QuestionModal(props) {
                 </Form.Group>
               </Col>
 
-              {(dimension === 1) ? null :
-                (<Col xs={4} md={3}>
+              {dimension === 1 ? null : (
+                <Col xs={4} md={3}>
                   <Form.Group controlId="questionSubDimension">
                     <Form.Label>Sub-Dimension</Form.Label>
                     <Form.Control
@@ -486,7 +490,7 @@ export default function QuestionModal(props) {
                       }
                     >
                       {Object.values(subdimensions)
-                        .filter(sdim => sdim.dimensionID === dimension)
+                        .filter((sdim) => sdim.dimensionID === dimension)
                         .map((subdimension, index) => (
                           <option
                             key={subdimension.subDimensionID}
@@ -498,7 +502,8 @@ export default function QuestionModal(props) {
                         ))}
                     </Form.Control>
                   </Form.Group>
-                </Col>)}
+                </Col>
+              )}
 
               <Col xs={4} md={2}>
                 <Form.Group controlId="responseType">
@@ -518,17 +523,19 @@ export default function QuestionModal(props) {
                 </Form.Group>
               </Col>
               {/*Dimension 1 is always tombstone and dimension 2 is always organization*/}
-              {(dimension === 1 || dimension === 2) ? null : (<Col xs={4} md={2}>
-                <Form.Label>Question Type</Form.Label>
-                <Form.Control
-                  value={questionType}
-                  as="select"
-                  onChange={(event) => setQType(event.target.value)}
-                >
-                  <option>Risk</option>
-                  <option>Mitigation</option>
-                </Form.Control>
-              </Col>)}
+              {dimension === 1 || dimension === 2 ? null : (
+                <Col xs={4} md={2}>
+                  <Form.Label>Question Type</Form.Label>
+                  <Form.Control
+                    value={questionType}
+                    as="select"
+                    onChange={(event) => setQType(event.target.value)}
+                  >
+                    <option>Risk</option>
+                    <option>Mitigation</option>
+                  </Form.Control>
+                </Col>
+              )}
               {responseType === 'dropdown' ||
                 responseType === 'radiogroup' ||
                 responseType === 'checkbox' ||
@@ -654,7 +661,7 @@ export default function QuestionModal(props) {
               responseType === 'text' ||
               responseType === 'slider' ? null : (
               <Row>
-                <Col xs={11} md={11} style={{ display: 'inline-block' }}>
+                <Col xs={10} md={10} style={{ display: 'inline-block' }}>
                   <Form.Group>
                     <Form.Label>
                       Responses
@@ -710,7 +717,7 @@ export default function QuestionModal(props) {
                     ))}
                   </Form.Group>
                 </Col>
-                <Col xs={1} md={1}>
+                <Col xs={2} md={2}>
                   <Form.Group>
                     <Form.Label style={{ paddingBottom: '4px' }}>
                       {' '}
@@ -720,6 +727,18 @@ export default function QuestionModal(props) {
                     {responses.map((response, index) => (
                       <div key={index} style={{ paddingBottom: '1em' }}>
                         <Form.Control
+                          id={'response-score-' + index}
+                          type="text"
+                          placeholder="0"
+                          value={response.score}
+                          onChange={(event) =>
+                            editScore(
+                              event.target.value,
+                              index,
+                              response.indicator
+                            )
+                          }></Form.Control>
+                        {/* <Form.Control
                           id={'response-score-' + index}
                           type="number"
                           placeholder="0"
@@ -732,14 +751,14 @@ export default function QuestionModal(props) {
                               response.indicator
                             )
                           }
-                        ></Form.Control>
+                        ></Form.Control> */}
                       </div>
                     ))}
                   </Form.Group>
                 </Col>
               </Row>
             )}
-            {(
+            {
               <Row>
                 <Col xs={2} md={3}>
                   <Form.Group controlId="roles">
@@ -820,7 +839,7 @@ export default function QuestionModal(props) {
                   </Form.Group>
                 </Col>
               </Row>
-            )}
+            }
             <Row>
               <Col xs={12} md={12}>
                 <Form.Group controlId="altText">
@@ -834,7 +853,7 @@ export default function QuestionModal(props) {
                 </Form.Group>
               </Col>
             </Row>
-            {(
+            {
               <React.Fragment>
                 <Row>
                   <Col xs={12} md={12}>
@@ -862,7 +881,7 @@ export default function QuestionModal(props) {
                   </Col>
                 </Row>
               </React.Fragment>
-            )}
+            }
             <div id="modal-footer-border" />
             <div id="modal-footer" alt_text="footer">
               <Button id="resetButton" onClick={() => setWarningShow(true)}>
