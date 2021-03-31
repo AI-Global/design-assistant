@@ -1,7 +1,7 @@
 import api from '../api';
 import '../css/admin.css';
 import ChildModal from './ChildModal';
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import Add from '@material-ui/icons/Add';
 import Table from '@material-ui/core/Table';
 import QuestionModal from './QuestionModal';
@@ -11,8 +11,10 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import QuestionRow from '../Components/QuestionRow';
 import IconButton from '@material-ui/core/IconButton';
-import { DropdownButton, Dropdown } from 'react-bootstrap';
+import { DropdownButton, Dropdown, Button, Modal } from 'react-bootstrap';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+// import Files from "react-files";
+import FileModal from './FileModal';
 
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
@@ -28,6 +30,36 @@ const getItemStyle = (isDragging, draggableStyle) => ({
     background: 'rgb(235,235,235)',
   }),
 });
+
+// function FileModal(visible) {
+//   let [file, setFile] = useState(null)
+//   let onFileUpload = async () => {
+//     console.log('here', file)
+//   }
+//   let onFileChange = event => {
+//     setFile(event.target.files[0])
+//   };
+//   return (
+//     <React.Fragment>
+//       <Modal
+//         aria-labelledby="contained-modal-title-vcenter"
+//         centered
+//         show={visible}
+//         backdrop="static"
+//         keyboard={false}
+//       >
+//         {' '}
+//         <Modal.Body>
+//           Upload json file to populate questions
+//           <div>
+//             <input type="file" onChange={onFileChange} />
+//             <button onClick={onFileUpload}>Upload!</button>
+//           </div>
+//         </Modal.Body>
+//       </Modal>
+//     </React.Fragment>
+//   );
+// }
 
 export default class QuestionTable extends Component {
   constructor(props) {
@@ -165,15 +197,19 @@ export default class QuestionTable extends Component {
   async export(fileExt) {
     var fileName = fileExt === 'json' ? 'json' : 'csv';
     if (fileExt === 'json') {
-
-      await api.get('questions/all/export', { responseType: 'blob' }).then((res) => {
-        const url = window.URL.createObjectURL(new Blob([res.data]));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', 'questions_' + fileName + '.' + fileExt);
-        document.body.appendChild(link);
-        link.click();
-      });
+      await api
+        .get('questions/all/export', { responseType: 'blob' })
+        .then((res) => {
+          const url = window.URL.createObjectURL(new Blob([res.data]));
+          const link = document.createElement('a');
+          link.href = url;
+          link.setAttribute(
+            'download',
+            'questions_' + fileName + '.' + fileExt
+          );
+          document.body.appendChild(link);
+          link.click();
+        });
     } else {
       var contentArr = [];
       // push headers into the contentArray
@@ -269,6 +305,7 @@ export default class QuestionTable extends Component {
                     subdimensions={this.state.subdimensions}
                     metadata={this.state.metadata}
                   />
+                  <FileModal visible={true}></FileModal>
                 </TableCell>
                 <TableCell>No.</TableCell>
                 <TableCell width="100%">Question</TableCell>
@@ -280,19 +317,19 @@ export default class QuestionTable extends Component {
                   >
                     <Dropdown.Item onClick={() => this.export('json')}>
                       .json
-                </Dropdown.Item>
+                    </Dropdown.Item>
                     <Dropdown.Item onClick={() => this.export('csv')}>
                       .csv
-                </Dropdown.Item>
+                    </Dropdown.Item>
                   </DropdownButton>
                 </TableCell>
+                <TableCell></TableCell>
               </TableRow>
             </TableHead>
           </Table>
         </div>
       );
     }
-
 
     return (
       <div className="table-responsive mt-3">
@@ -325,6 +362,7 @@ export default class QuestionTable extends Component {
                   subdimensions={this.state.subdimensions}
                   metadata={this.state.metadata}
                 />
+                <FileModal visible={true}></FileModal>
               </TableCell>
               <TableCell>No.</TableCell>
               <TableCell width="100%">Question</TableCell>
@@ -341,6 +379,17 @@ export default class QuestionTable extends Component {
                     .csv
                   </Dropdown.Item>
                 </DropdownButton>
+              </TableCell>
+              <TableCell>
+                <Button
+                  // className="import-dropdown"
+                  title={
+                    <i
+                      onClick={() => console.log('here')}
+                    />
+                  }
+                >
+                </Button>
               </TableCell>
             </TableRow>
           </TableHead>
