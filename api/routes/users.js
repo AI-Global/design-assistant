@@ -140,6 +140,7 @@ router.post('/auth', async (req, res) => {
 });
 
 // find user by auth token
+// TASK-TODO: Secure endpoint.
 router.get('/user', auth, (req, res) => {
   User.findById(req.user.id)
     .select('-hashedPassword -salt')
@@ -147,6 +148,7 @@ router.get('/user', auth, (req, res) => {
 });
 
 // check if valid authentication token
+// TASK-TODO: Secure endpoint.
 router.get('/isLoggedIn', auth, (req, res) => {
   if (req.user) {
     res.json({ isLoggedIn: 'true' });
@@ -154,6 +156,7 @@ router.get('/isLoggedIn', auth, (req, res) => {
 });
 
 // Get all users
+// TASK-TODO: Secure endpoint.
 router.get('/', async (req, res) => {
   User.find()
     .then((users) => res.status(200).send(users))
@@ -161,6 +164,7 @@ router.get('/', async (req, res) => {
 });
 
 // Get user by id
+// TASK-TODO: Secure endpoint.
 router.get('/:userId', (req, res) => {
   User.findOne({ _id: req.params.userId })
     .select('-hashedPassword -salt')
@@ -168,12 +172,14 @@ router.get('/:userId', (req, res) => {
     .catch((err) => res.status(400).send(err));
 });
 
+// TASK-TODO: Secure endpoint.
 router.route('/:id').get((req, res) => {
   User.findById(req.params.id)
     .then((user) => res.json(user))
     .catch((err) => res.status(400).json('Error: ' + err));
 });
 
+// TASK-TODO: Secure endpoint.
 router.route('/:id').delete((req, res) => {
   User.findByIdAndDelete(req.params.id)
     .then(() => res.json('User deleted.'))
@@ -181,6 +187,7 @@ router.route('/:id').delete((req, res) => {
 });
 
 // update email of current user
+// TASK-TODO: Secure endpoint.
 router.post('/updateEmail', auth, (req, res) => {
   // error with authentication token
   if (!req.user) {
@@ -229,6 +236,7 @@ router.post('/updateEmail', auth, (req, res) => {
 });
 
 // update username of current user
+// TASK-TODO: Secure endpoint.
 router.post('/updateUsername', auth, (req, res) => {
   // error with authentication token
   if (!req.user) {
@@ -277,6 +285,7 @@ router.post('/updateUsername', auth, (req, res) => {
 });
 
 // /update password of current user
+// TASK-TODO: Secure endpoint.
 router.post('/updatePassword', auth, (req, res) => {
   // error with authentication token
   if (!req.user) {
@@ -321,6 +330,7 @@ router.post('/updatePassword', auth, (req, res) => {
     });
 });
 
+// TASK-TODO: Secure endpoint.
 router.post('/updateOrganization', auth, (req, res) => {
   // error with authentication token
   if (!req.user) {
@@ -356,6 +366,7 @@ router.post('/updateOrganization', auth, (req, res) => {
 
 // User Put endpoint
 // note findOneAndUpdate does not support validation
+// TASK-TODO: Secure endpoint.
 router.put('/:userId', async (req, res) => {
   try {
     // Update existing user in DB
