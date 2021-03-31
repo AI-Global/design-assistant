@@ -1,76 +1,190 @@
-import React, { useEffect, useState } from 'react';
-import { Button } from 'react-bootstrap';
+import React, { Component } from 'react';
+import { Modal, Form, Button } from 'react-bootstrap';
+import '../css/login.css';
+import Signup from './Signup';
+import api from '../api';
 import { getLoggedInUser, expireAuthToken } from '../helper/AuthHelper';
 import UserSettings from './UserSettings';
-import crypto from 'crypto';
+import ReactGa from 'react-ga';
 
-let genRandomCode = () => {
-  let text = '';
-  let chars =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
-  for (var i = 0; i < 30; i++) {
-    text += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return text;
+const LoginHandler = () => {
+  ReactGa.event({
+    category: 'Button',
+    action: 'Login clicked',
+  });
 };
 
-let sha256 = (message) => {
-  return crypto.createHash('sha256').update(message).digest('base64');
+const ContinueHandler = () => {
+  ReactGa.event({
+    category: 'Button',
+    action: 'User chose to continue without an account',
+  });
 };
 
-export default function Login() {
-  let [user, setUser] = useState(null);
-  let createAccount = () => {
-    window.location = 'https://portal.ai-global.org/register';
-  };
-  let login = async () => {
-    // See portal oauth.routes.js
-    let redirect = 'https://designassistant.dev.ai-global.org';
-    let appName = 'designassistant-dev';
-    if (window.location.href.includes("https://rai-certification")) {
-      redirect = window.location.href
-      appName = "certificate-beta" + redirect.replace(/\D/g, '');
-    }
-    if (window.location.origin == 'http://localhost:3000') {
-      redirect = 'http://localhost:3000';
-      appName = 'localhost';
-    }
-    let codeVerifier = genRandomCode();
-    localStorage.setItem('codeVerifier', codeVerifier);
-    let codeChallenge = await sha256(codeVerifier);
-    let oauthParams = {
-      response_type: 'code',
-      client_id: appName,
-      redirect_uri: redirect,
-      scope: '*',
-      state: 'verystatey',
-      code_challenge: codeChallenge,
-      code_challenge_method: 'S256',
+export default class Login extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showLoginModal: false,
+      username: { isInvalid: false, message: '' },
+      password: { isInvalid: false, message: '' },
+      user: undefined,
     };
-    let oauthURL = `https://portal.ai-global.org/auth?${Object.keys(oauthParams)
-      .map((k) => k + '=' + oauthParams[k])
-      .join('&')}`;
-    window.location = oauthURL;
-  };
-  useEffect(() => {
-    getLoggedInUser().then(setUser);
-  }, []);
-  if (!user) {
+  }
+
+  componentDidMount() {
+    getLoggedInUser().then((user) => {
+      this.setState({ user: user });
+    });
+  }
+
+  /**
+   * Upon submission of login form, function sends form
+   * values to the backend to be validated against the database
+   * and sends back authorization token and user information
+   */
+  handleSubmit(event) {
+    this.setState({
+      username: { isInvalid: false, message: '' },
+      password: { isInvalid: false, message: '' },
+    });
+    event.preventDefault();
+    let form = event.target.elements;
+    let username = form.loginUsername.value;
+    let password = form.loginPassword.value;
+    let remember = form.loginRemember.checked;
+    api
+      .post('users/auth', {
+        username: username?.toLowerCase(),
+        password: password,
+      })
+      .then((response) => {
+        const result = response.data;
+        if (result.errors) {
+          console.log(result.errors);
+        } else {
+          expireAuthToken();
+          if (remember) {
+            localStorage.setItem('authToken', result['token']);
+          } else {
+            sessionStorage.setItem('authToken', result['token']);
+          }
+          this.setState({ user: result['user'] });
+          this.setState({ showLoginModal: false });
+          // window.location.reload();
+        }
+      })
+      .catch((err) => {
+        let result = err.response.data;
+        this.setState(result);
+      });
+  }
+
+  /**
+   * Renders user information if there
+   * is a user logged in.
+   */
+  renderUser() {
+    const handleShow = () => this.setState({ showLoginModal: true });
+    let user = this.state.user;
+    if (user) {
+      return (
+        <div className="user-status">
+          <p className="msg">Logged in as: {user.username} &nbsp;</p>
+          <UserSettings />
+        </div>
+      );
+    } else {
+      return (
+        <Button
+          variant="primary"
+          onClick={() => {
+            handleShow();
+            LoginHandler();
+          }}
+          className="user-status"
+        >
+          Log in
+        </Button>
+      );
+    }
+  }
+
+  render() {
+    const showLogin = this.state.showLoginModal;
+    const handleClose = () => this.setState({ showLoginModal: false });
+
     return (
-      <div style={{ position: 'absolute', top: '20px', right: '150px' }}>
-        <Button variant="primary" onClick={login}>
-          Login
-        </Button>
-        <Button style={{ marginLeft: '5px' }} onClick={createAccount}>
-          Create Account
-        </Button>
+      <div>
+        {this.renderUser()}
+        <Modal
+          show={showLogin}
+          onHide={handleClose}
+          backdrop="static"
+          keyboard={false}
+          dialogClassName="modal-login modal-dialog-centered"
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>Log In</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form onSubmit={(e) => this.handleSubmit(e)}>
+              <Form.Group controlId="loginUsername">
+                <i className="fa fa-user"></i>
+                <Form.Control
+                  type="text"
+                  placeholder="Username"
+                  required="required"
+                  isInvalid={this.state.username.isInvalid}
+                  autoComplete="username"
+                  aria-label="username"
+                />
+                <Form.Control.Feedback type="invalid">
+                  {this.state.username.message}
+                </Form.Control.Feedback>
+              </Form.Group>
+              <Form.Group controlId="loginPassword">
+                <i className="fa fa-lock"></i>
+                <Form.Control
+                  type="password"
+                  placeholder="Password"
+                  required="required"
+                  isInvalid={this.state.password.isInvalid}
+                  autoComplete="current-password"
+                  aria-label="password"
+                />
+                <Form.Control.Feedback type="invalid">
+                  {this.state.password.message}
+                </Form.Control.Feedback>
+              </Form.Group>
+              <Form.Group controlId="loginRemember">
+                <Form.Check type="checkbox" label="Remember Me" />
+              </Form.Group>
+              <Form.Group controlId="formSubmit"></Form.Group>
+              <input
+                type="submit"
+                className="btn btn-primary btn-block btn-lg"
+                value="Login"
+              />
+            </Form>
+            <div className="create-account">
+              <p className="disabled">Not a member yet?&nbsp;</p>
+              <Signup />
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <a
+              href="#/"
+              onClick={() => {
+                handleClose();
+                ContinueHandler();
+              }}
+            >
+              Continue without an account
+            </a>
+          </Modal.Footer>
+        </Modal>
       </div>
     );
   }
-  return (
-    <div style={{ position: 'absolute', top: '20px', right: '150px' }}>
-      <p className="msg">Logged in as: {user.username} &nbsp;</p>
-      <UserSettings />
-    </div>
-  );
 }
