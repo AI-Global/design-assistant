@@ -32,12 +32,14 @@
 }
 
 .score-card-headers {
-  background-color: #d0e0e3;
+  background-color: #f6f6f6;
   width: 25%;
+  text-align: center;
 }
 
 .score-card-dimensions {
-  background-color: #efefef;
+  background-color: #f6f6f6;
+  font-weight: 500;
 }
 
 .dimension-chart {
@@ -46,7 +48,7 @@
 
 .export-button {
   float: right;
-  background-color: #007bff !important;
+  background-color: #1a92ce !important;
   margin-top: -0.2rem;
   margin-bottom: -3rem !important;
   padding: 0.5em !important;
@@ -54,9 +56,15 @@
 
 .export-button-csv {
   float: right;
-  background-color: #007bff !important;
+  background-color: #1a92ce !important;
   margin-top: -0.2rem;
   margin-bottom: -3rem !important;
   margin-right: 5rem !important;
   padding: 0.5em !important;
+}
+
+.results-button {
+  background-color: #fff !important;
+  border: 3px solid #1a92ce !important;
+  color: #1a92ce !important;
 }

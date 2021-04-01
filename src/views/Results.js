@@ -341,7 +341,7 @@ export default class Results extends Component {
               </Tab.Container>
             </Tab>
           </Tabs>
-          <div className="dimension-chart">
+          <div className="dimension-chart" style={{ marginBottom: '80px', marginTop: '40px' }}>
             <h4>Risk Level: {riskLevel[riskWeight ?? 1]}</h4>
             <ResponsiveRadar
               data={radarChartData}
@@ -391,7 +391,7 @@ export default class Results extends Component {
             ‌to‌ ‌start‌ ‌over‌ ‌again!‌
           </p>
           <Link to="/">
-            <Button id="restartButton" onClick={StartAgainHandler}>
+            <Button id="restartButton" onClick={StartAgainHandler} style={{ marginTop: '10px' }}>
               Start Again
             </Button>
           </Link>

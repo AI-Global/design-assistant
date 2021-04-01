@@ -5,11 +5,10 @@ html {
 .banner {
   padding-top: 0.5rem;
 }
-.banner .company-logo {
-  max-width: 191px;
-}
+
 .banner img {
-  width: 100%;
+  width: 50px;
+  height: auto;
   display: block;
   margin-left: auto;
   margin-right: auto;
@@ -32,9 +31,6 @@ html {
     -webkit-box-flex: 0;
     flex: 0 0 100%;
     max-width: 100%;
-  }
-  .banner .company-logo {
-    width: 27vw;
   }
   .banner .logo {
     width: 70vw;

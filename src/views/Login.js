@@ -57,10 +57,10 @@ export default function Login() {
   if (!user) {
     return (
       <div style={{ position: 'absolute', top: '20px', right: '150px' }}>
-        <Button variant="primary" onClick={login}>
+        <Button onClick={login}>
           Login
         </Button>
-        <Button style={{ marginLeft: '5px' }} onClick={createAccount}>
+        <Button style={{ marginLeft: '10px' }} onClick={createAccount}>
           Create Account
         </Button>
       </div>
@@ -68,7 +68,7 @@ export default function Login() {
   }
   return (
     <div style={{ position: 'absolute', top: '20px', right: '150px' }}>
-      <p className="msg">Logged in as: {user.username} &nbsp;</p>
+      <p className="msg">Logged in as: <strong>{user.username}</strong> &nbsp;</p>
       <UserSettings />
     </div>
   );
