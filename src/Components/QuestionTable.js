@@ -74,12 +74,15 @@ export default class QuestionTable extends Component {
       previousNumber: null,
       newNumber: null,
     };
+
     this.onDragEnd = this.onDragEnd.bind(this);
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
+    this.handleFileModal = this.handleFileModal.bind(this);
+    this.handleCloseFileModal = this.handleCloseFileModal.bind(this);
+
     this.getQuestions = this.getQuestions.bind(this);
   }
-
   componentDidMount() {
     api.get('metadata').then((res) => {
       this.setState({ metadata: res.data });
@@ -150,7 +153,12 @@ export default class QuestionTable extends Component {
     this.setState({ modalShow: false });
     this.getQuestions();
   }
-
+  handleFileModal() {
+    this.setState({ fmodalShow: true });
+  }
+  handleCloseFileModal() {
+    this.setState({ fmodalShow: false });
+  }
   updateQuestionNumbers() {
     this.setChildModalShow(false);
     api
@@ -248,7 +256,6 @@ export default class QuestionTable extends Component {
       link.click(); // This will download the data file named "my_data.csv".
     }
   }
-
   render() {
     const newQuestion = {
       questionNumber: this.state.questions.length + 1,
@@ -305,7 +312,11 @@ export default class QuestionTable extends Component {
                     subdimensions={this.state.subdimensions}
                     metadata={this.state.metadata}
                   />
-                  <FileModal visible={true}></FileModal>
+                  <FileModal
+                    show={this.state.fmodalShow}
+                    onHide={() => this.handleCloseFileModal}
+                    numQuestions={this.state.questions.length}
+                  ></FileModal>
                 </TableCell>
                 <TableCell>No.</TableCell>
                 <TableCell width="100%">Question</TableCell>
@@ -323,7 +334,11 @@ export default class QuestionTable extends Component {
                     </Dropdown.Item>
                   </DropdownButton>
                 </TableCell>
-                <TableCell></TableCell>
+                <TableCell>
+                  <Button onClick={() => this.handleFileModal()} >
+                    <p>Import</p>
+                  </Button>
+                </TableCell>
               </TableRow>
             </TableHead>
           </Table>
@@ -362,7 +377,11 @@ export default class QuestionTable extends Component {
                   subdimensions={this.state.subdimensions}
                   metadata={this.state.metadata}
                 />
-                <FileModal visible={true}></FileModal>
+                <FileModal
+                  show={this.state.fmodalShow}
+                  onHide={() => this.handleCloseFileModal}
+                  numQuestions={this.state.questions.length}
+                ></FileModal>
               </TableCell>
               <TableCell>No.</TableCell>
               <TableCell width="100%">Question</TableCell>
@@ -381,14 +400,8 @@ export default class QuestionTable extends Component {
                 </DropdownButton>
               </TableCell>
               <TableCell>
-                <Button
-                  // className="import-dropdown"
-                  title={
-                    <i
-                      onClick={() => console.log('here')}
-                    />
-                  }
-                >
+                <Button onClick={() => this.handleFileModal()}>
+                  <p>Import</p>
                 </Button>
               </TableCell>
             </TableRow>
