@@ -1,3 +1,10 @@
+/*
+* Prefixed by https://autoprefixer.github.io
+* PostCSS: v7.0.29,
+* Autoprefixer: v9.7.6
+* Browsers: last 4 version
+*/
+
 .progress {
   height: 23px !important;
 }
@@ -191,6 +198,15 @@ input:disabled {
 }
 
 .Toastify__progress-bar--default {
+  background: -webkit-gradient(
+    linear,
+    left top,
+    right top,
+    from(#1a92ce),
+    color-stop(#00cdff),
+    to(#42d3d4)
+  ) !important;
+  background: -o-linear-gradient(left, #1a92ce, #00cdff, #42d3d4) !important;
   background: linear-gradient(90deg, #1a92ce, #00cdff, #42d3d4) !important;
 }
 

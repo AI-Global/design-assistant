@@ -1,3 +1,10 @@
+/*
+* Prefixed by https://autoprefixer.github.io
+* PostCSS: v7.0.29,
+* Autoprefixer: v9.7.6
+* Browsers: last 4 version
+*/
+
 html {
   background-color: #262626;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
@@ -36,6 +43,7 @@ html {
   }
   .banner div {
     -webkit-box-flex: 0;
+    -ms-flex: 0 0 100%;
     flex: 0 0 100%;
     max-width: 100%;
   }
@@ -168,8 +176,13 @@ noUi-value-large[style*='left: 0%']::after {
 .tooltip .tooltip-inner {
   color: #000 !important;
   background-color: #fff !important;
+  -webkit-box-shadow: 1px 3px 10px rgba(77, 77, 77, 0.75);
   box-shadow: 1px 3px 10px rgba(77, 77, 77, 0.75);
+  -webkit-transition: -webkit-box-shadow 0.2s ease-in-out;
+  transition: -webkit-box-shadow 0.2s ease-in-out;
+  -o-transition: box-shadow 0.2s ease-in-out;
   transition: box-shadow 0.2s ease-in-out;
+  transition: box-shadow 0.2s ease-in-out, -webkit-box-shadow 0.2s ease-in-out;
 }
 .tooltip .tooltip-inner p {
   margin: 0 !important;
@@ -224,6 +237,7 @@ form .btn:not(.btn-call-to-action) {
 }
 
 #navCon {
+  position: -webkit-sticky;
   position: sticky;
   left: 0;
   right: 0;
@@ -300,7 +314,11 @@ form .btn:not(.btn-call-to-action) {
 }
 
 #modal-footer-border {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
   justify-content: space-between;
   border-top: 1px solid #dee2e6;
   padding: 0.75rem;
@@ -308,7 +326,11 @@ form .btn:not(.btn-call-to-action) {
 }
 
 #modal-footer {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
   justify-content: space-between;
   /* padding: .75rem; 
   margin: 0 -6em; */
@@ -328,7 +350,12 @@ input[type='number'] {
 }
 
 .survey-results-table {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-flow: column;
   flex-flow: column;
   width: 100%;
 }
