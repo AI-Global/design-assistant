@@ -18,7 +18,7 @@ function WelcomeText() {
   return (
     <div style={{ padding: '1em' }}>
       <p>
-        Welcome‌ ‌to‌ ‌the‌ <strong>RAI‌ ‌Design‌ ‌Assistant‌ ‌Beta</strong>.‌ ‌This‌
+        Welcome‌ ‌to‌ ‌the‌ <strong>RAI‌ ‌Design‌ ‌Assistant‌</strong>.‌ ‌This‌
         ‌is‌ ‌a‌ ‌virtual‌ ‌guide‌ ‌to‌ ‌help‌ ‌those‌ designing,‌ ‌developing,‌
         ‌and‌ ‌implementing‌ ‌AI‌ ‌systems‌ ‌do‌ ‌so‌ ‌in‌ ‌a‌ ‌responsible‌
         ‌way.‌
