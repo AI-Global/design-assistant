@@ -18,7 +18,7 @@ function WelcomeText() {
   return (
     <div style={{ padding: '1em' }}>
       <p>
-        Welcome‌ ‌to‌ ‌the‌ ‌Responsible‌ ‌Design‌ ‌Assistant‌ ‌beta.‌ ‌This‌
+        Welcome‌ ‌to‌ ‌the‌ <strong>RAI‌ ‌Design‌ ‌Assistant‌ ‌Beta</strong>.‌ ‌This‌
         ‌is‌ ‌a‌ ‌virtual‌ ‌guide‌ ‌to‌ ‌help‌ ‌those‌ designing,‌ ‌developing,‌
         ‌and‌ ‌implementing‌ ‌AI‌ ‌systems‌ ‌do‌ ‌so‌ ‌in‌ ‌a‌ ‌responsible‌
         ‌way.‌
@@ -73,7 +73,7 @@ function WelcomeText() {
         >
           ai-global.org
         </a>
-        ‌‌
+        ‌‌.
       </p>
       <p>
         For‌ ‌more‌ ‌information‌ ‌on‌ ‌how‌ ‌to‌ ‌use‌ ‌the‌ ‌Design‌
@@ -84,7 +84,7 @@ function WelcomeText() {
           href="https://docs.google.com/presentation/d/1EDPhyRhIsiOrujLcHQv_fezXfgOz4Rl7a8lyOM_guoA/edit#slide=id.p1"
         >
           Guide
-        </a>
+        </a>.
       </p>
     </div>
   );

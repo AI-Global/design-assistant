@@ -46,7 +46,7 @@
 
 .export-button {
   float: right;
-  background-color: #007bff !important;
+  background-color: #1a92ce !important;
   margin-top: -0.2rem;
   margin-bottom: -3rem !important;
   padding: 0.5em !important;
@@ -54,7 +54,7 @@
 
 .export-button-csv {
   float: right;
-  background-color: #007bff !important;
+  background-color: #1a92ce !important;
   margin-top: -0.2rem;
   margin-bottom: -3rem !important;
   margin-right: 5rem !important;

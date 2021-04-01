@@ -341,7 +341,7 @@ export default class Results extends Component {
               </Tab.Container>
             </Tab>
           </Tabs>
-          <div className="dimension-chart">
+          <div className="dimension-chart" style={{ marginBottom: '20px' }}>
             <h4>Risk Level: {riskLevel[riskWeight ?? 1]}</h4>
             <ResponsiveRadar
               data={radarChartData}

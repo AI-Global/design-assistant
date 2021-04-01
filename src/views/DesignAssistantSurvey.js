@@ -462,23 +462,23 @@ class DesignAssistantSurvey extends Component {
                           .toLowerCase()
                           .includes(dimension.substring(0, 4).toLowerCase())
                           ? page.elements.map((question, i) => {
-                              return !question.name.includes('other') &&
-                                (!question.visibleIf ||
-                                  this.shouldDisplayNav(question)) ? (
-                                <Button
-                                  style={{ margin: '0.75em' }}
-                                  key={i}
-                                  id={
-                                    this.state.model.data[question.name]
-                                      ? 'answered'
-                                      : 'unanswered'
-                                  }
-                                  onClick={() => this.navPage(index)}
-                                >
-                                  {question.visibleIf ? '' : number++}
-                                </Button>
-                              ) : null;
-                            })
+                            return !question.name.includes('other') &&
+                              (!question.visibleIf ||
+                                this.shouldDisplayNav(question)) ? (
+                              <Button
+                                style={{ margin: '0.75em' }}
+                                key={i}
+                                id={
+                                  this.state.model.data[question.name]
+                                    ? 'answered'
+                                    : 'unanswered'
+                                }
+                                onClick={() => this.navPage(index)}
+                              >
+                                {question.visibleIf ? '' : number++}
+                              </Button>
+                            ) : null;
+                          })
                           : null;
                       })}
                     </Card.Body>

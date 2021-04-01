@@ -3,11 +3,11 @@
 }
 
 .progress-bar .progress-bar-striped {
-  background-color: #097ae8 !important;
+  background-color: #1a92ce !important;
 }
 
 #saveButton {
-  background-color: #00cdff !important;
+  background-color: #1a92ce !important;
 }
 
 #resetButton {
@@ -15,7 +15,7 @@
 }
 
 #surveyNav {
-  background-color: #097ae8 !important;
+  background-color: #1a92ce !important;
 }
 .checkbox label,
 .radio label {
@@ -27,7 +27,7 @@
 }
 
 .btn-default {
-  color: #335075 !important;
+  color: #1a92ce !important;
   background-color: #eaebed !important;
   border-color: #dcdee1 !important;
 }
@@ -67,10 +67,10 @@ body {
 }
 
 h4 {
-  border-bottom: 1px solid #21737c;
+  border-bottom: 1px solid #1a92ce;
   border-bottom-width: 1px;
   border-bottom-style: solid;
-  border-bottom-color: rgb(44, 153, 164);
+  border-bottom-color: #1a92ce;
   margin-bottom: 1em;
   margin-top: 1em;
   padding-bottom: 0.2em;
@@ -129,7 +129,7 @@ a.btn {
   font-size: 16px !important;
   line-height: 1.4375 !important;
   border-radius: 4px !important;
-  background-color: #3ec2a1 !important;
+  background-color: #1a92ce !important;
 }
 
 .progress-bar {
@@ -146,7 +146,7 @@ input:disabled {
 }
 
 #answered {
-  background-color: #097ae8 !important;
+  background-color: #1a92ce !important;
   width: 58px !important;
 }
 
@@ -167,7 +167,7 @@ input:disabled {
 }
 
 .Toastify__progress-bar--default {
-  background: linear-gradient(90deg, #097ae8, #00cdff, #42d3d4) !important;
+  background: linear-gradient(90deg, #1a92ce, #00cdff, #42d3d4) !important;
 }
 
 .small {
