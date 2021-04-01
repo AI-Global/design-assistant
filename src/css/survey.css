@@ -33,7 +33,7 @@
 }
 
 p {
-  margin: 0 0 11.5px !important;
+  margin: 0 0 25px !important;
 }
 
 .col-md-2 {
@@ -59,9 +59,11 @@ p {
 }
 
 body {
-  font-family: 'Open Sans', sans-serif !important;
-  font-size: 16px !important;
-  line-height: 1.4375 !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif !important;
+  font-size: 18px !important;
+  line-height: 24px !important;
+  font-weight: 300;
   color: #333 !important;
   background-color: #fff !important;
 }
@@ -77,7 +79,7 @@ h4 {
 }
 
 .btn-default:visited {
-  color: #335075 !important;
+  color: #1a92ce !important;
 }
 a:not([href='#']):visited {
   color: #7834bc !important;
@@ -85,32 +87,39 @@ a:not([href='#']):visited {
 .nav a,
 a.btn {
   text-decoration: none !important;
+  color: #1a92ce;
+}
+
+td a {
+  color: #1a92ce;
 }
 
 .btn-default {
-  color: #335075 !important;
+  color: #182c37 !important;
   background-color: #eaebed !important;
   border-color: #dcdee1 !important;
 }
 
 .btn-default:visited {
-  color: #335075 !important;
+  color: #182c37 !important;
 }
 
 .btn-default:hover {
-  color: #335075 !important;
+  color: #fff !important;
   background-color: #cfd1d5 !important;
   border-color: #bbbfc5 !important;
 }
 .btn.focus,
 .btn:focus,
 .btn:hover {
-  color: #335075 !important;
+  background-color: #182c37 !important;
+  color: #fff !important;
   text-decoration: none !important;
 }
 
 .btn {
-  font-family: Open-sans, sans-serif !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif !important;
   border-style: outset !important;
   height: auto !important;
   min-height: 36px !important;
@@ -125,11 +134,11 @@ a.btn {
   cursor: pointer !important;
   background-image: none !important;
   border: 1px solid transparent !important;
-  padding: 10px 14px !important;
   font-size: 16px !important;
   line-height: 1.4375 !important;
-  border-radius: 4px !important;
   background-color: #1a92ce !important;
+  padding: 5px 40px 5px 40px !important;
+  border-radius: 0px !important;
 }
 
 .progress-bar {
@@ -141,18 +150,20 @@ a.btn {
 }
 
 input:disabled {
-  background-color: #9e9e9e !important;
+  background-color: #f6f6f6 !important;
   pointer-events: none;
 }
 
 #answered {
   background-color: #1a92ce !important;
-  width: 58px !important;
+  width: 80px !important;
+  padding: 0 !important;
 }
 
 #unanswered {
   background-color: #404040 !important;
-  width: 58px !important;
+  width: 80px !important;
+  padding: 0 !important;
 }
 
 #clearFilter {

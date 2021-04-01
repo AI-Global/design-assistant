@@ -42,7 +42,7 @@ function WelcomeText() {
         ‌a‌ ‌comprehensive‌ ‌evaluation‌ looking‌ ‌at‌ ‌the‌ ‌following‌
         ‌dimensions‌ ‌of‌ ‌a‌ ‌trusted‌ ‌AI‌ ‌program:‌
       </p>
-      <ol style={{ fontWeight: 'bold' }}>
+      <ol style={{ fontWeight: 'bold', marginBottom: '30px' }}>
         <li>Organization Maturity</li>
         <li>Accountability</li>
         <li>Data</li>
