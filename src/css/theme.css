@@ -377,3 +377,7 @@ input[type='number'] {
 .submission-table .MuiTableCell-root {
   border: 1px solid rgba(224, 224, 224, 1);
 }
+
+.progress-bar {
+  background-color: #1a92ce !important;
+}
