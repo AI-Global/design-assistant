@@ -87,7 +87,7 @@ export default class TrustedAIResources extends Component {
                 return (
                   <tr key={idx}>
                     <td>
-                      <a href={resource['source']}>{resource['resource']}</a>
+                      <a href={resource['source']} target="_blank" rel="noopener noreferrer">{resource['resource']}</a>
                     </td>
                     <td>{resource['description']}</td>
                   </tr>

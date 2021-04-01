@@ -23,7 +23,7 @@ class App extends Component {
         <h1 className="section-header">Welcome</h1>
         <div style={{ padding: '1em' }}>
           <p>
-            Welcome‌ ‌to‌ ‌the‌ ‌Responsible‌ ‌Design‌ ‌Assistant‌ ‌beta.‌
+            Welcome‌ ‌to‌ ‌the‌ ‌<strong>RAIL Certification Beta</strong>.‌
             ‌This‌ ‌is‌ ‌a‌ ‌virtual‌ ‌guide‌ ‌to‌ ‌help‌ ‌those‌ designing,‌
             ‌developing,‌ ‌and‌ ‌implementing‌ ‌AI‌ ‌systems‌ ‌do‌ ‌so‌ ‌in‌ ‌a‌
             ‌responsible‌ ‌way.‌
@@ -47,7 +47,7 @@ class App extends Component {
             ‌created‌ ‌a‌ ‌comprehensive‌ ‌evaluation‌ looking‌ ‌at‌ ‌the‌
             ‌following‌ ‌dimensions‌ ‌of‌ ‌a‌ ‌trusted‌ ‌AI‌ ‌program:‌
           </p>
-          <ol style={{ fontWeight: 'bold' }}>
+          <ol style={{ fontWeight: 'bold', marginBottom: '30px' }}>
             <li>Accountability</li>
             <li>Explainability and Interpretability</li>
             <li>Data Quality</li>
@@ -76,7 +76,7 @@ class App extends Component {
               href="https://ai-global.org/2020/04/28/creating-a-responsible-ai-trust-index-a-unified-assessment-to-assure-the-responsible-design-development-and-deployment-of-ai/"
             >
               ai-global.org
-            </a>
+            </a>.
             ‌‌
           </p>
           <p>
@@ -88,7 +88,7 @@ class App extends Component {
               href="https://docs.google.com/presentation/d/1EDPhyRhIsiOrujLcHQv_fezXfgOz4Rl7a8lyOM_guoA/edit#slide=id.p1"
             >
               Guide
-            </a>
+            </a>.
           </p>
         </div>
         <Login />

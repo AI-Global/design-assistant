@@ -87,7 +87,7 @@ export default class TrustedAIProviders extends Component {
                 return (
                   <tr key={idx}>
                     <td>
-                      <a href={provider['source']}>{provider['resource']}</a>
+                      <a href={provider['source']} target="_blank" rel="noopener noreferrer">{provider['resource']}</a>
                     </td>
                     <td>{provider['description']}</td>
                   </tr>

@@ -90,14 +90,13 @@ export default class Login extends Component {
     if (user) {
       return (
         <div className="user-status">
-          <p className="msg">Logged in as: {user.username} &nbsp;</p>
+          <p className="msg">Logged in as: <strong>{user.username}</strong> &nbsp;</p>
           <UserSettings />
         </div>
       );
     } else {
       return (
         <Button
-          variant="primary"
           onClick={() => {
             handleShow();
             LoginHandler();

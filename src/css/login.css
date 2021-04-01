@@ -1,5 +1,5 @@
 .modal-login {
-  width: 350px !important;
+  width: 500px !important;
 }
 
 .modal-login .modal-body {
@@ -83,8 +83,7 @@
 
 .user-status .msg {
   float: left;
-  margin: 0 !important;
-  margin-top: 10px !important;
+  margin: 10px 0 15px 0 !important;
 }
 
 @media screen and (max-width: 1570px) {

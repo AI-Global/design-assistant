@@ -1,11 +1,25 @@
+/*
+* Prefixed by https://autoprefixer.github.io
+* PostCSS: v7.0.29,
+* Autoprefixer: v9.7.6
+* Browsers: last 4 version
+*/
+
 html {
   background-color: #262626;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 18px;
+  line-height: 24px;
 }
 .banner {
   padding-top: 0.5rem;
 }
 .banner .company-logo {
-  max-width: 191px;
+  max-width: 150px;
+  padding: 10px;
 }
 .banner img {
   width: 100%;
@@ -14,8 +28,11 @@ html {
   margin-right: auto;
 }
 .banner .logo {
-  max-width: 515.297px;
+  max-width: 800px;
   margin-bottom: -3.124px;
+}
+.banner .logo-border {
+  max-width: 540.703px;
 }
 @media screen and (max-width: 1150px) {
   .banner {
@@ -26,6 +43,7 @@ html {
   }
   .banner div {
     -webkit-box-flex: 0;
+    -ms-flex: 0 0 100%;
     flex: 0 0 100%;
     max-width: 100%;
   }
@@ -35,6 +53,9 @@ html {
   .banner .logo {
     width: 70vw;
     margin-bottom: -0.55vw;
+  }
+  .banner .logo-border {
+    width: 75vw;
   }
 }
 
@@ -85,10 +106,10 @@ html {
 }
 
 .section-header {
-  border-bottom: 1px solid #21737c;
+  border-bottom: 1px solid #1a92ce;
   border-bottom-width: 1px;
   border-bottom-style: solid;
-  border-bottom-color: rgb(44, 153, 164);
+  border-bottom-color: #1a92ce;
   margin-bottom: 1em;
   margin-top: 1em;
   padding-bottom: 0.2em;
@@ -146,7 +167,7 @@ noUi-value-large[style*='left: 0%']::after {
 }
 
 .info-tooltip {
-  color: #007bff;
+  color: #1a92ce;
 }
 
 .bs-tooltip-top .arrow:before {
@@ -155,8 +176,13 @@ noUi-value-large[style*='left: 0%']::after {
 .tooltip .tooltip-inner {
   color: #000 !important;
   background-color: #fff !important;
+  -webkit-box-shadow: 1px 3px 10px rgba(77, 77, 77, 0.75);
   box-shadow: 1px 3px 10px rgba(77, 77, 77, 0.75);
+  -webkit-transition: -webkit-box-shadow 0.2s ease-in-out;
+  transition: -webkit-box-shadow 0.2s ease-in-out;
+  -o-transition: box-shadow 0.2s ease-in-out;
   transition: box-shadow 0.2s ease-in-out;
+  transition: box-shadow 0.2s ease-in-out, -webkit-box-shadow 0.2s ease-in-out;
 }
 .tooltip .tooltip-inner p {
   margin: 0 !important;
@@ -211,6 +237,7 @@ form .btn:not(.btn-call-to-action) {
 }
 
 #navCon {
+  position: -webkit-sticky;
   position: sticky;
   left: 0;
   right: 0;
@@ -224,7 +251,7 @@ form .btn:not(.btn-call-to-action) {
   padding-bottom: 0.5em;
   padding-top: 0.5em;
   border-radius: 0.25rem;
-  background-color: #f5f5f5;
+  background-color: #f6f6f6;
   border: none;
   border-top: 1px solid #ddd;
 }
@@ -287,7 +314,11 @@ form .btn:not(.btn-call-to-action) {
 }
 
 #modal-footer-border {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
   justify-content: space-between;
   border-top: 1px solid #dee2e6;
   padding: 0.75rem;
@@ -295,7 +326,11 @@ form .btn:not(.btn-call-to-action) {
 }
 
 #modal-footer {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
   justify-content: space-between;
   /* padding: .75rem; 
   margin: 0 -6em; */
@@ -315,7 +350,12 @@ input[type='number'] {
 }
 
 .survey-results-table {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-flow: column;
   flex-flow: column;
   width: 100%;
 }
@@ -338,7 +378,7 @@ input[type='number'] {
 }
 
 #ResultsButton {
-  background-color: #007bff !important;
+  background-color: #1a92ce !important;
 }
 
 #newSurvey {
@@ -363,4 +403,8 @@ input[type='number'] {
 
 .submission-table .MuiTableCell-root {
   border: 1px solid rgba(224, 224, 224, 1);
+}
+
+.progress-bar {
+  background-color: #1a92ce !important;
 }

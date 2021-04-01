@@ -395,9 +395,9 @@ export default class Results extends Component {
               </Tab.Container>
             </Tab>
           </Tabs>
-          <div className="dimension-chart">
+          <div className="dimension-chart" style={{ marginTop: '40px', marginBottom: '140px' }}>
             <h4>Certification Level: {certification}</h4>
-            <p>Risk Score: {totalRiskScore} | Mitigation Score: {totalMitigationScore} | Organization Score: {totalOrganizationScore}</p>
+            <p><strong>Risk Score: {totalRiskScore} | Mitigation Score: {totalMitigationScore} | Organization Score: {totalOrganizationScore}</strong></p>
             <ResponsiveRadar
               data={radarChartData}
               keys={['score']}

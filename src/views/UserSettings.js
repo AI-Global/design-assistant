@@ -285,11 +285,11 @@ class UserSettings extends Component {
           }
         >
           <Dropdown.Item onClick={() => this.navHome()}>
-            <i className="fa fa-home fa-fw"></i> Home
+            <i className="fa fa-home fa-fw" style={{ color: '#1a92ce' }}></i> Home
           </Dropdown.Item>
           {this.state.user ? (
             this.state.user.role === 'admin' ||
-            this.state.user.role === 'superadmin' ? (
+              this.state.user.role === 'superadmin' ? (
               <Dropdown.Item onClick={() => this.navAdmin()}>
                 <i className="fa fa-database fa-fw"></i> Admin Panel
               </Dropdown.Item>
@@ -300,23 +300,10 @@ class UserSettings extends Component {
               (window.location = 'https://portal.ai-global.org/settings')
             }
           >
-            <i className="fa fa-users fa-fw"></i> Edit Account in AI Portal
+            <i className="fa fa-users fa-fw" style={{ color: '#1a92ce' }}></i> Edit Account in AI Portal
           </Dropdown.Item>
-          {/* <Dropdown.Item onClick={() => this.changeEmailModal()}>
-            <i className="fa fa-envelope fa-fw"></i> Change Email
-          </Dropdown.Item>
-          <Dropdown.Item onClick={() => this.changeUsernameModal()}>
-            <i className="fa fa-user fa-fw"></i> Change Username
-          </Dropdown.Item>
-          <Dropdown.Item onClick={() => this.changePasswordModal()}>
-            <i className="fa fa-key fa-fw"></i> Change Password
-          </Dropdown.Item>
-          <Dropdown.Item onClick={() => this.changeOrganizationModal()}>
-            {' '}
-            <i className="fa fa-users fa-fw"></i> Change Organization
-          </Dropdown.Item> */}
           <Dropdown.Item onClick={() => this.handleLogout()}>
-            <i className="fa fa-sign-out fa-fw"></i> Log Out
+            <i className="fa fa-sign-out fa-fw" style={{ color: '#1a92ce' }}></i> Log Out
           </Dropdown.Item>
         </DropdownButton>
 
