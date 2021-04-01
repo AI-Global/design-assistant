@@ -68,7 +68,7 @@ export default function Login() {
   }
   return (
     <div style={{ position: 'absolute', top: '20px', right: '150px' }}>
-      <p className="msg">Logged in as: {user.username} &nbsp;</p>
+      <p className="msg">Logged in as: <strong>{user.username}</strong> &nbsp;</p>
       <UserSettings />
     </div>
   );

@@ -5,10 +5,9 @@ import api from '../api';
 import ReactGa from 'react-ga';
 import { withRouter } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faTrashAlt,
-  faEdit as faPencilAlt,
-} from '@fortawesome/free-solid-svg-icons';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
+import IconButton from '@material-ui/core/IconButton';
 
 const StartSurveyHandler = () => {
   ReactGa.event({
@@ -178,7 +177,7 @@ class UserSubmissions extends Component {
         </Modal>
         <div>
           <div className="card">
-            <div className="card-header">Continue existing survey</div>
+            <div className="card-header">Existing Surveys</div>
             <div className="card-body">
               <Table bordered responsive className="survey-results-table">
                 <thead>
@@ -221,12 +220,12 @@ class UserSubmissions extends Component {
                           )}
                           {submission.completed && (
                             <Button
-                              id="ResultsButton"
                               block
                               onClick={() => {
                                 this.resumeSurvey(index);
                                 StartSurveyHandler();
                               }}
+                              className="results-button"
                             >
                               Results
                             </Button>
@@ -244,29 +243,25 @@ class UserSubmissions extends Component {
                         </td>
                         <td width="75px" className="text-center">
                           {submission.completed && (
-                            <FontAwesomeIcon
+                            <IconButton
+                              aria-label="edit survey"
                               onClick={() => {
                                 this.editSurvey(index);
                               }}
-                              icon={faPencilAlt}
-                              size="lg"
-                              className="mt-2"
-                              cursor="pointer"
-                              title="Edit survey submission"
-                            />
+                            >
+                              <EditIcon />
+                            </IconButton>
                           )}
                         </td>
                         <td width="75px" className="text-center">
-                          <FontAwesomeIcon
+                          <IconButton
+                            aria-label="delete survey"
                             onClick={() => {
                               this.showDeleteWarning(index);
                             }}
-                            icon={faTrashAlt}
-                            size="lg"
-                            className="mt-2 text-danger"
-                            cursor="pointer"
-                            title="Delete survey submission"
-                          />
+                          >
+                            <DeleteOutlineIcon />
+                          </IconButton>
                         </td>
                       </tr>
                     );
