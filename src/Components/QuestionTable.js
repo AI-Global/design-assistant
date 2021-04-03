@@ -203,7 +203,6 @@ export default class QuestionTable extends Component {
   }
 
   async export(fileExt) {
-    var fileName = fileExt === 'json' ? 'json' : 'csv';
     if (fileExt === 'json') {
       await api
         .get('questions/all/export', { responseType: 'blob' })
@@ -218,7 +217,7 @@ export default class QuestionTable extends Component {
           document.body.appendChild(link);
           link.click();
         });
-    } else {
+    } else if (fileExt == 'csv') {
       var contentArr = [];
       // push headers into the contentArray
       const headers = Object.keys(this.state.questions[0]);
@@ -254,6 +253,85 @@ export default class QuestionTable extends Component {
       document.body.appendChild(link); // Required for FF
 
       link.click(); // This will download the data file named "my_data.csv".
+    }
+    else if (fileExt == "tsv") {
+      var contentArr = [];
+      const headers = ['Question Number', 'Question', 'Dimension', 'Subdimension', 'Question Type', 'points available', 'Trigger Parent', 'Trigger Response', 'Response Type', 'Responses', 'Score', 'weighting', 'Reference', 'Alt Text', 'Link'];
+      contentArr.push(headers);
+      // push question values into contentArray
+      // ['Question Number', 'Question', 'Dimension', 'Subdimension', 'Question Type', 'points available', 'Trigger Parent', 'Trigger Response', 'Response Type', 'Responses', 'Score', 'weighting', 'Reference', 'Alt Text', 'Link'];
+      this.state.questions.forEach((question) => {
+        var row = []
+        console.log('here', question)
+        row.push(question["questionNumber"])
+        row.push(question["question"])
+        var d_ID = question["trustIndexDimension"]
+        var dimensionName = Object.values(this.state.dimensions).filter(
+          (dim) => dim.dimensionID == d_ID
+        )[0]?.name
+        row.push(dimensionName)
+
+        var subdimension = ""
+        if ("subDimension" in question) {
+          subdimension = Object.values(this.state.subdimensions).filter(
+            (s_dim) => s_dim.subDimensionID == question["subDimension"]
+          )[0]?.name
+
+        }
+        row.push(subdimension)
+        row.push(question["questionType"])
+        row.push(question["pointsAvailable"])
+        row.push("") //for parent question for now; TODO implement this
+        row.push("")//for trigger resonponses for now TODO
+        //'Response Type', 'Responses', 'Score', 'weighting', 'Reference', 'Alt Text', 'Link'];
+        row.push(question["responseType"])
+        if (question["responses"].length > 0) {
+          row.push(question["responses"][0]["indicator"])
+          row.push(question["responses"][0]["score"])
+        }
+        else {
+          row.push("")
+          row.push("")
+        }
+        row.push(question["weighting"])
+        row.push(question["reference"])
+        row.push(question["alt_text"])
+        if (question["rec_links"].length > 0) {
+          row.push(question["rec_links"][0])
+        } else {
+          row.push("")
+        }
+        contentArr.push(row)
+        //TODO: handle links
+        var numExtraRows = Math.max(question["responses"].length, question["rec_links"].length)
+        //add the extra rows
+        for (var i = 1; i <= numExtraRows; i++) {
+          var extraRow = ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '']
+          if (question["responses"].length > i) {
+            extraRow[9] = question["responses"][i]["indicator"]
+            extraRow[10] = question["responses"][i]["score"]
+          }
+          if (question["rec_links"].length > i) {
+            extraRow[14] = question["rec_links"][i]
+          }
+          contentArr.push(extraRow)
+        }
+
+      });
+
+      let tsvContent = 'data:text/tab-separated-values,'
+
+      contentArr.forEach(function (rowArray) {
+        let row = rowArray.join('\t');
+        tsvContent += row + '\r\n';
+      });
+
+      var encodedUri = encodeURI(tsvContent);
+      var link = document.createElement('a');
+      link.setAttribute('href', encodedUri);
+      link.setAttribute('download', 'questions.' + fileExt);
+      document.body.appendChild(link); // Required for FF
+      link.click(); // This will download the data file named "my_data.csv"..location.href = "data:text/tab-separated-values," + encodeURIComponent(tsv);
     }
   }
   render() {
@@ -316,6 +394,9 @@ export default class QuestionTable extends Component {
                     show={this.state.fmodalShow}
                     onHide={() => this.handleCloseFileModal}
                     numQuestions={this.state.questions.length}
+                    dimensions={this.state.dimensions}
+                    subdimensions={this.state.subdimensions}
+                    questions={this.state.questions}
                   ></FileModal>
                 </TableCell>
                 <TableCell>No.</TableCell>
@@ -331,6 +412,9 @@ export default class QuestionTable extends Component {
                     </Dropdown.Item>
                     <Dropdown.Item onClick={() => this.export('csv')}>
                       .csv
+                    </Dropdown.Item>
+                    <Dropdown.Item onClick={() => this.export('tsv')}>
+                      .tsv (reupload questions on dashboard)
                     </Dropdown.Item>
                   </DropdownButton>
                 </TableCell>
@@ -381,6 +465,9 @@ export default class QuestionTable extends Component {
                   show={this.state.fmodalShow}
                   onHide={() => this.handleCloseFileModal}
                   numQuestions={this.state.questions.length}
+                  dimensions={this.state.dimensions}
+                  subdimensions={this.state.subdimensions}
+                  questions={this.state.questions}
                 ></FileModal>
               </TableCell>
               <TableCell>No.</TableCell>
@@ -397,6 +484,9 @@ export default class QuestionTable extends Component {
                   <Dropdown.Item onClick={() => this.export('csv')}>
                     .csv
                   </Dropdown.Item>
+                  <Dropdown.Item onClick={() => this.export('tsv')}>
+                    .tsv (reupload questions on dashboard)
+                    </Dropdown.Item>
                 </DropdownButton>
               </TableCell>
               <TableCell>
