@@ -18,6 +18,10 @@ export default function FileModal(props) {
     q_num_to_id[question['questionNumber']] = question['_id'];
   }
 
+  function close() {
+    props.onHide();
+  }
+
   let createQuestion = (question_rows, num_to_id_map) => {
     let row_data = question_rows[0];
     let current_q = {};
@@ -128,11 +132,7 @@ export default function FileModal(props) {
     }
 
     // window.location.reload(false);
-
-    //     }
-  };
-  let close = () => {
-    props.onHide();
+    close()
   };
   // let onFileChange = async event => {
   //   await setFile(event.target.files[0])
@@ -144,9 +144,9 @@ export default function FileModal(props) {
   return (
     <React.Fragment>
       <Modal
+        {...props}
         aria-labelledby="contained-modal-title-vcenter"
         centered
-        show={props.show}
         backdrop="static"
         keyboard={false}
       >
@@ -154,9 +154,9 @@ export default function FileModal(props) {
           <Modal.Title id="contained-modal-title-vcenter">
             Upload Questions
           </Modal.Title>
-          {/* <IconButton size="small" onClick={() => close()} label="Close">
+          <IconButton size="small" onClick={() => close()} label="Close">
             <CloseIcon />
-          </IconButton> */}
+          </IconButton>
         </Modal.Header>
         <Modal.Body>
           <Files

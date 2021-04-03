@@ -253,73 +253,130 @@ export default class QuestionTable extends Component {
       document.body.appendChild(link); // Required for FF
 
       link.click(); // This will download the data file named "my_data.csv".
-    }
-    else if (fileExt == "tsv") {
+    } else if (fileExt == 'tsv') {
       var contentArr = [];
-      const headers = ['Question Number', 'Question', 'Dimension', 'Subdimension', 'Question Type', 'points available', 'Trigger Parent', 'Trigger Response', 'Response Type', 'Responses', 'Score', 'weighting', 'Reference', 'Alt Text', 'Link'];
+      const headers = [
+        'Question Number',
+        'Question',
+        'Dimension',
+        'Subdimension',
+        'Question Type',
+        'points available',
+        'Trigger Parent',
+        'Trigger Response',
+        'Response Type',
+        'Responses',
+        'Score',
+        'weighting',
+        'Reference',
+        'Alt Text',
+        'Link',
+      ];
       contentArr.push(headers);
       // push question values into contentArray
       // ['Question Number', 'Question', 'Dimension', 'Subdimension', 'Question Type', 'points available', 'Trigger Parent', 'Trigger Response', 'Response Type', 'Responses', 'Score', 'weighting', 'Reference', 'Alt Text', 'Link'];
       this.state.questions.forEach((question) => {
-        var row = []
-        console.log('here', question)
-        row.push(question["questionNumber"])
-        row.push(question["question"])
-        var d_ID = question["trustIndexDimension"]
+        var row = [];
+        row.push(question['questionNumber']);
+        row.push(question['question']);
+        var d_ID = question['trustIndexDimension'];
         var dimensionName = Object.values(this.state.dimensions).filter(
           (dim) => dim.dimensionID == d_ID
-        )[0]?.name
-        row.push(dimensionName)
+        )[0]?.name;
+        row.push(dimensionName);
 
-        var subdimension = ""
-        if ("subDimension" in question) {
+        var subdimension = '';
+        if ('subDimension' in question) {
           subdimension = Object.values(this.state.subdimensions).filter(
-            (s_dim) => s_dim.subDimensionID == question["subDimension"]
-          )[0]?.name
-
+            (s_dim) => s_dim.subDimensionID == question['subDimension']
+          )[0]?.name;
         }
-        row.push(subdimension)
-        row.push(question["questionType"])
-        row.push(question["pointsAvailable"])
-        row.push("") //for parent question for now; TODO implement this
-        row.push("")//for trigger resonponses for now TODO
-        //'Response Type', 'Responses', 'Score', 'weighting', 'Reference', 'Alt Text', 'Link'];
-        row.push(question["responseType"])
-        if (question["responses"].length > 0) {
-          row.push(question["responses"][0]["indicator"])
-          row.push(question["responses"][0]["score"])
-        }
-        else {
-          row.push("")
-          row.push("")
-        }
-        row.push(question["weighting"])
-        row.push(question["reference"])
-        row.push(question["alt_text"])
-        if (question["rec_links"].length > 0) {
-          row.push(question["rec_links"][0])
+        row.push(subdimension);
+        row.push(question['questionType']);
+        row.push(question['pointsAvailable']);
+        if (
+          question['trigger'] != null &&
+          question['trigger']['parent'] != null
+        ) {
+          console.log('questions', this.state.questions)
+          console.log('trigger', question["trigger"]["parent"])
+          var parentQuestion = Object.values(this.state.questions).filter(
+            (q) => q._id == question["trigger"]["parent"]
+          )[0]
+          row.push(parentQuestion?.questionNumber)
+          console.log('here', parentQuestion)
+          let trigger_response = Object.values(parentQuestion?.responses).filter(
+            (response) => response._id == question["trigger"]["responses"][0]
+          )[0]
+          row.push(trigger_response?.indicator)
         } else {
-          row.push("")
+          row.push(''); //for parent question for now; TODO implement this
+          row.push(''); //for trigger resonponses for now TODO
         }
-        contentArr.push(row)
+        //'Response Type', 'Responses', 'Score', 'weighting', 'Reference', 'Alt Text', 'Link'];
+        row.push(question['responseType']);
+        if (question['responses'].length > 0) {
+          row.push(question['responses'][0]['indicator']);
+          row.push(question['responses'][0]['score']);
+        } else {
+          row.push('');
+          row.push('');
+        }
+        row.push(question['weighting']);
+        row.push(question['reference']);
+        row.push(question['alt_text']);
+        if (question['rec_links'].length > 0) {
+          row.push(question['rec_links'][0]);
+        } else {
+          row.push('');
+        }
+        contentArr.push(row);
         //TODO: handle links
-        var numExtraRows = Math.max(question["responses"].length, question["rec_links"].length)
+        var numExtraRows = Math.max(
+          question['responses'].length,
+          question['rec_links'].length
+        );
         //add the extra rows
         for (var i = 1; i <= numExtraRows; i++) {
-          var extraRow = ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '']
-          if (question["responses"].length > i) {
-            extraRow[9] = question["responses"][i]["indicator"]
-            extraRow[10] = question["responses"][i]["score"]
+          var extraRow = [
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+          ];
+          if (question['responses'].length > i) {
+            extraRow[9] = question['responses'][i]['indicator'];
+            extraRow[10] = question['responses'][i]['score'];
           }
-          if (question["rec_links"].length > i) {
-            extraRow[14] = question["rec_links"][i]
+          if (question['rec_links'].length > i) {
+            extraRow[14] = question['rec_links'][i];
           }
-          contentArr.push(extraRow)
+          if (
+            question['trigger'] != null &&
+            question['trigger']['parent'] != null &&
+            question["trigger"]['responses'] > i
+          ) {
+            let trigger_response = Object.values(parentQuestion?.responses).filter(
+              (response) => response._id == question["trigger"]["responses"][i]
+            )[0]
+            row.push(trigger_response?.indicator)
+          }
+          contentArr.push(extraRow);
         }
-
       });
 
-      let tsvContent = 'data:text/tab-separated-values,'
+      let tsvContent = 'data:text/tab-separated-values,';
 
       contentArr.forEach(function (rowArray) {
         let row = rowArray.join('\t');
@@ -392,7 +449,7 @@ export default class QuestionTable extends Component {
                   />
                   <FileModal
                     show={this.state.fmodalShow}
-                    onHide={() => this.handleCloseFileModal}
+                    onHide={this.handleCloseFileModal}
                     numQuestions={this.state.questions.length}
                     dimensions={this.state.dimensions}
                     subdimensions={this.state.subdimensions}
@@ -419,7 +476,7 @@ export default class QuestionTable extends Component {
                   </DropdownButton>
                 </TableCell>
                 <TableCell>
-                  <Button onClick={() => this.handleFileModal()} >
+                  <Button onClick={() => this.handleFileModal()}>
                     <p>Import</p>
                   </Button>
                 </TableCell>
@@ -463,7 +520,7 @@ export default class QuestionTable extends Component {
                 />
                 <FileModal
                   show={this.state.fmodalShow}
-                  onHide={() => this.handleCloseFileModal}
+                  onHide={this.handleCloseFileModal}
                   numQuestions={this.state.questions.length}
                   dimensions={this.state.dimensions}
                   subdimensions={this.state.subdimensions}
@@ -486,7 +543,7 @@ export default class QuestionTable extends Component {
                   </Dropdown.Item>
                   <Dropdown.Item onClick={() => this.export('tsv')}>
                     .tsv (reupload questions on dashboard)
-                    </Dropdown.Item>
+                  </Dropdown.Item>
                 </DropdownButton>
               </TableCell>
               <TableCell>
