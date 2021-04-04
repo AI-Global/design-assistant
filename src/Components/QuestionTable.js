@@ -1,7 +1,7 @@
 import api from '../api';
 import '../css/admin.css';
 import ChildModal from './ChildModal';
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import Add from '@material-ui/icons/Add';
 import Table from '@material-ui/core/Table';
 import QuestionModal from './QuestionModal';
@@ -11,8 +11,9 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import QuestionRow from '../Components/QuestionRow';
 import IconButton from '@material-ui/core/IconButton';
-import { DropdownButton, Dropdown } from 'react-bootstrap';
+import { DropdownButton, Dropdown, Button, Modal } from 'react-bootstrap';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import FileModal from './FileModal';
 
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
@@ -42,12 +43,15 @@ export default class QuestionTable extends Component {
       previousNumber: null,
       newNumber: null,
     };
+
     this.onDragEnd = this.onDragEnd.bind(this);
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
+    this.handleFileModal = this.handleFileModal.bind(this);
+    this.handleCloseFileModal = this.handleCloseFileModal.bind(this);
+
     this.getQuestions = this.getQuestions.bind(this);
   }
-
   componentDidMount() {
     api.get('metadata').then((res) => {
       this.setState({ metadata: res.data });
@@ -118,7 +122,12 @@ export default class QuestionTable extends Component {
     this.setState({ modalShow: false });
     this.getQuestions();
   }
-
+  handleFileModal() {
+    this.setState({ fmodalShow: true });
+  }
+  handleCloseFileModal() {
+    this.setState({ fmodalShow: false });
+  }
   updateQuestionNumbers() {
     this.setChildModalShow(false);
     api
@@ -163,18 +172,21 @@ export default class QuestionTable extends Component {
   }
 
   async export(fileExt) {
-    var fileName = fileExt === 'json' ? 'json' : 'csv';
     if (fileExt === 'json') {
-
-      await api.get('questions/all/export', { responseType: 'blob' }).then((res) => {
-        const url = window.URL.createObjectURL(new Blob([res.data]));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', 'questions_' + fileName + '.' + fileExt);
-        document.body.appendChild(link);
-        link.click();
-      });
-    } else {
+      await api
+        .get('questions/all/export', { responseType: 'blob' })
+        .then((res) => {
+          const url = window.URL.createObjectURL(new Blob([res.data]));
+          const link = document.createElement('a');
+          link.href = url;
+          link.setAttribute(
+            'download',
+            'questions_' + fileName + '.' + fileExt
+          );
+          document.body.appendChild(link);
+          link.click();
+        });
+    } else if (fileExt == 'csv') {
       var contentArr = [];
       // push headers into the contentArray
       const headers = Object.keys(this.state.questions[0]);
@@ -210,9 +222,144 @@ export default class QuestionTable extends Component {
       document.body.appendChild(link); // Required for FF
 
       link.click(); // This will download the data file named "my_data.csv".
+    } else if (fileExt == 'tsv') {
+      var contentArr = [];
+      const headers = [
+        'Question Number',
+        'Question',
+        'Dimension',
+        'Subdimension',
+        'Question Type',
+        'points available',
+        'Trigger Parent',
+        'Trigger Response',
+        'Response Type',
+        'Responses',
+        'Score',
+        'weighting',
+        'Reference',
+        'Alt Text',
+        'Link',
+      ];
+      contentArr.push(headers);
+      // push question values into contentArray
+      // ['Question Number', 'Question', 'Dimension', 'Subdimension', 'Question Type', 'points available', 'Trigger Parent', 'Trigger Response', 'Response Type', 'Responses', 'Score', 'weighting', 'Reference', 'Alt Text', 'Link'];
+      this.state.questions.forEach((question) => {
+        let row = [];
+        row.push(question['questionNumber']);
+        row.push(question['question']);
+        let d_ID = question['trustIndexDimension'];
+        let dimensionName = Object.values(this.state.dimensions).filter(
+          (dim) => dim.dimensionID == d_ID
+        )[0]?.name;
+        row.push(dimensionName);
+
+        let subdimension = '';
+        if ('subDimension' in question) {
+          subdimension = Object.values(this.state.subdimensions).filter(
+            (s_dim) => s_dim.subDimensionID == question['subDimension']
+          )[0]?.name;
+        }
+        row.push(subdimension);
+        row.push(question['questionType']);
+        row.push(question['pointsAvailable']);
+        if (
+          question['trigger'] != null &&
+          question['trigger']['parent'] != null
+        ) {
+          console.log('questions', this.state.questions)
+          console.log('trigger', question["trigger"]["parent"])
+          let parentQuestion = Object.values(this.state.questions).filter(
+            (q) => q._id == question["trigger"]["parent"]
+          )[0]
+          row.push(parentQuestion?.questionNumber)
+          console.log('here', parentQuestion)
+          let triggerResponse = Object.values(parentQuestion?.responses).filter(
+            (response) => response._id == question["trigger"]["responses"][0]
+          )[0]
+          row.push(triggerResponse?.indicator)
+        } else {
+          row.push(''); //for parent question for now; TODO implement this
+          row.push(''); //for trigger resonponses for now TODO
+        }
+        //'Response Type', 'Responses', 'Score', 'weighting', 'Reference', 'Alt Text', 'Link'];
+        row.push(question['responseType']);
+        if (question['responses'].length > 0) {
+          row.push(question['responses'][0]['indicator']);
+          row.push(question['responses'][0]['score']);
+        } else {
+          row.push('');
+          row.push('');
+        }
+        row.push(question['weighting']);
+        row.push(question['reference']);
+        row.push(question['alt_text']);
+        if (question['rec_links'].length > 0) {
+          row.push(question['rec_links'][0]);
+        } else {
+          row.push('');
+        }
+        contentArr.push(row);
+        //TODO: handle links
+        let numExtraRows = Math.max(
+          question['responses'].length,
+          question['rec_links'].length
+        );
+        //add the extra rows
+        for (var i = 1; i <= numExtraRows; i++) {
+          var extraRow = [
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+          ];
+          if (question['responses'].length > i) {
+            extraRow[9] = question['responses'][i]['indicator'];
+            extraRow[10] = question['responses'][i]['score'];
+          }
+          if (question['rec_links'].length > i) {
+            extraRow[14] = question['rec_links'][i];
+          }
+          if (
+            question['trigger'] != null &&
+            question['trigger']['parent'] != null &&
+            question["trigger"]['responses'] > i
+          ) {
+            let triggerResponse = Object.values(parentQuestion?.responses).filter(
+              (response) => response._id == question["trigger"]["responses"][i]
+            )[0]
+            row.push(triggerResponse?.indicator)
+          }
+          contentArr.push(extraRow);
+        }
+      });
+
+      let tsvContent = 'data:text/tab-separated-values,';
+
+      contentArr.forEach(function (rowArray) {
+        let row = rowArray.join('\t');
+        tsvContent += row + '\r\n';
+      });
+
+      var encodedUri = encodeURI(tsvContent);
+      var link = document.createElement('a');
+      link.setAttribute('href', encodedUri);
+      link.setAttribute('download', 'questions.' + fileExt);
+      document.body.appendChild(link); // Required for FF
+      link.click(); // This will download the data file named "my_data.csv"..location.href = "data:text/tab-separated-values," + encodeURIComponent(tsv);
     }
   }
-
   render() {
     const newQuestion = {
       questionNumber: this.state.questions.length + 1,
@@ -269,6 +416,14 @@ export default class QuestionTable extends Component {
                     subdimensions={this.state.subdimensions}
                     metadata={this.state.metadata}
                   />
+                  <FileModal
+                    show={this.state.fmodalShow}
+                    onHide={this.handleCloseFileModal}
+                    numQuestions={this.state.questions.length}
+                    dimensions={this.state.dimensions}
+                    subdimensions={this.state.subdimensions}
+                    questions={this.state.questions}
+                  ></FileModal>
                 </TableCell>
                 <TableCell>No.</TableCell>
                 <TableCell width="100%">Question</TableCell>
@@ -280,11 +435,19 @@ export default class QuestionTable extends Component {
                   >
                     <Dropdown.Item onClick={() => this.export('json')}>
                       .json
-                </Dropdown.Item>
+                    </Dropdown.Item>
                     <Dropdown.Item onClick={() => this.export('csv')}>
                       .csv
-                </Dropdown.Item>
+                    </Dropdown.Item>
+                    <Dropdown.Item onClick={() => this.export('tsv')}>
+                      .tsv (reupload questions on dashboard)
+                    </Dropdown.Item>
                   </DropdownButton>
+                </TableCell>
+                <TableCell>
+                  <Button onClick={() => this.handleFileModal()}>
+                    Upload
+                  </Button>
                 </TableCell>
               </TableRow>
             </TableHead>
@@ -292,7 +455,6 @@ export default class QuestionTable extends Component {
         </div>
       );
     }
-
 
     return (
       <div className="table-responsive mt-3">
@@ -325,6 +487,13 @@ export default class QuestionTable extends Component {
                   subdimensions={this.state.subdimensions}
                   metadata={this.state.metadata}
                 />
+                <FileModal
+                  show={this.state.fmodalShow}
+                  onHide={this.handleCloseFileModal}
+                  dimensions={this.state.dimensions}
+                  subdimensions={this.state.subdimensions}
+                  questions={this.state.questions}
+                ></FileModal>
               </TableCell>
               <TableCell>No.</TableCell>
               <TableCell width="100%">Question</TableCell>
@@ -340,7 +509,15 @@ export default class QuestionTable extends Component {
                   <Dropdown.Item onClick={() => this.export('csv')}>
                     .csv
                   </Dropdown.Item>
+                  <Dropdown.Item onClick={() => this.export('tsv')}>
+                    .tsv (reupload questions on dashboard)
+                  </Dropdown.Item>
                 </DropdownButton>
+              </TableCell>
+              <TableCell>
+                <Button onClick={() => this.handleFileModal()}>
+                  Upload
+                </Button>
               </TableCell>
             </TableRow>
           </TableHead>
