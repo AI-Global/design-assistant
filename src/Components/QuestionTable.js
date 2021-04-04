@@ -13,7 +13,6 @@ import QuestionRow from '../Components/QuestionRow';
 import IconButton from '@material-ui/core/IconButton';
 import { DropdownButton, Dropdown, Button, Modal } from 'react-bootstrap';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-// import Files from "react-files";
 import FileModal from './FileModal';
 
 const reorder = (list, startIndex, endIndex) => {
@@ -30,36 +29,6 @@ const getItemStyle = (isDragging, draggableStyle) => ({
     background: 'rgb(235,235,235)',
   }),
 });
-
-// function FileModal(visible) {
-//   let [file, setFile] = useState(null)
-//   let onFileUpload = async () => {
-//     console.log('here', file)
-//   }
-//   let onFileChange = event => {
-//     setFile(event.target.files[0])
-//   };
-//   return (
-//     <React.Fragment>
-//       <Modal
-//         aria-labelledby="contained-modal-title-vcenter"
-//         centered
-//         show={visible}
-//         backdrop="static"
-//         keyboard={false}
-//       >
-//         {' '}
-//         <Modal.Body>
-//           Upload json file to populate questions
-//           <div>
-//             <input type="file" onChange={onFileChange} />
-//             <button onClick={onFileUpload}>Upload!</button>
-//           </div>
-//         </Modal.Body>
-//       </Modal>
-//     </React.Fragment>
-//   );
-// }
 
 export default class QuestionTable extends Component {
   constructor(props) {
@@ -276,16 +245,16 @@ export default class QuestionTable extends Component {
       // push question values into contentArray
       // ['Question Number', 'Question', 'Dimension', 'Subdimension', 'Question Type', 'points available', 'Trigger Parent', 'Trigger Response', 'Response Type', 'Responses', 'Score', 'weighting', 'Reference', 'Alt Text', 'Link'];
       this.state.questions.forEach((question) => {
-        var row = [];
+        let row = [];
         row.push(question['questionNumber']);
         row.push(question['question']);
-        var d_ID = question['trustIndexDimension'];
-        var dimensionName = Object.values(this.state.dimensions).filter(
+        let d_ID = question['trustIndexDimension'];
+        let dimensionName = Object.values(this.state.dimensions).filter(
           (dim) => dim.dimensionID == d_ID
         )[0]?.name;
         row.push(dimensionName);
 
-        var subdimension = '';
+        let subdimension = '';
         if ('subDimension' in question) {
           subdimension = Object.values(this.state.subdimensions).filter(
             (s_dim) => s_dim.subDimensionID == question['subDimension']
@@ -300,15 +269,15 @@ export default class QuestionTable extends Component {
         ) {
           console.log('questions', this.state.questions)
           console.log('trigger', question["trigger"]["parent"])
-          var parentQuestion = Object.values(this.state.questions).filter(
+          let parentQuestion = Object.values(this.state.questions).filter(
             (q) => q._id == question["trigger"]["parent"]
           )[0]
           row.push(parentQuestion?.questionNumber)
           console.log('here', parentQuestion)
-          let trigger_response = Object.values(parentQuestion?.responses).filter(
+          let triggerResponse = Object.values(parentQuestion?.responses).filter(
             (response) => response._id == question["trigger"]["responses"][0]
           )[0]
-          row.push(trigger_response?.indicator)
+          row.push(triggerResponse?.indicator)
         } else {
           row.push(''); //for parent question for now; TODO implement this
           row.push(''); //for trigger resonponses for now TODO
@@ -332,7 +301,7 @@ export default class QuestionTable extends Component {
         }
         contentArr.push(row);
         //TODO: handle links
-        var numExtraRows = Math.max(
+        let numExtraRows = Math.max(
           question['responses'].length,
           question['rec_links'].length
         );
@@ -367,10 +336,10 @@ export default class QuestionTable extends Component {
             question['trigger']['parent'] != null &&
             question["trigger"]['responses'] > i
           ) {
-            let trigger_response = Object.values(parentQuestion?.responses).filter(
+            let triggerResponse = Object.values(parentQuestion?.responses).filter(
               (response) => response._id == question["trigger"]["responses"][i]
             )[0]
-            row.push(trigger_response?.indicator)
+            row.push(triggerResponse?.indicator)
           }
           contentArr.push(extraRow);
         }
@@ -477,7 +446,7 @@ export default class QuestionTable extends Component {
                 </TableCell>
                 <TableCell>
                   <Button onClick={() => this.handleFileModal()}>
-                    <p>Import</p>
+                    Upload
                   </Button>
                 </TableCell>
               </TableRow>
@@ -521,7 +490,6 @@ export default class QuestionTable extends Component {
                 <FileModal
                   show={this.state.fmodalShow}
                   onHide={this.handleCloseFileModal}
-                  numQuestions={this.state.questions.length}
                   dimensions={this.state.dimensions}
                   subdimensions={this.state.subdimensions}
                   questions={this.state.questions}
@@ -548,7 +516,7 @@ export default class QuestionTable extends Component {
               </TableCell>
               <TableCell>
                 <Button onClick={() => this.handleFileModal()}>
-                  <p>Import</p>
+                  Upload
                 </Button>
               </TableCell>
             </TableRow>

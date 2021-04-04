@@ -1,145 +1,180 @@
-import ReactDOM from 'react-dom';
-import React, { Component, useState, useEffect } from 'react';
-import { DropdownButton, Dropdown, Button, Modal } from 'react-bootstrap';
+import React, { useState } from 'react';
+import {
+  Button,
+  Modal,
+} from 'react-bootstrap';
 import api from '../api';
-import Files from 'react-files';
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
+import '../css/admin.css';
 
 export default function FileModal(props) {
-  let [questionsFile, setQuestionsFile] = useState([]);
-  let fileReader = new FileReader();
+  const [questionsFile, setQuestionsFile] = useState(null);
+  const [fileName, setFileName] = useState(null);
+  const fileReader = new FileReader();
   const dimensions = props.dimensions;
   const subdimensions = props.subdimensions;
-  let all_questions = props.questions;
-  var q_num_to_id = {}
-  for (var i = 0; i < all_questions.length; i++) {
-    let question = all_questions[i]
-    q_num_to_id[question['questionNumber']] = question['_id'];
+  const allQuestions = props.questions;
+  let qNumToId = {};
+  //map questionNumber to _id for easy access (for parent-child editing)
+  for (var i = 0; i < allQuestions.length; i++) {
+    let question = allQuestions[i];
+    qNumToId[question['questionNumber']] = question['_id'];
   }
-
+  //close modal
   function close() {
     props.onHide();
   }
 
-  let createQuestion = (question_rows, num_to_id_map) => {
-    let row_data = question_rows[0];
-    let current_q = {};
-    current_q.__v = 0;
-    current_q.alt_text = row_data[13];
-    current_q.domainApplicability = [];
-    current_q.lifecycle = [];
-    current_q.mandatory = true;
-    current_q.parent = null;
-    current_q.pointsAvailable = 1;
-    current_q.prompt = null;
-    current_q.question = row_data[1];
-    current_q.questionNumber = row_data[0];
-    current_q.questionType = row_data[4];
-    current_q.reference = row_data[12];
-    current_q.regionalApplicability = [];
-    current_q.responseType = row_data[8];
-    current_q.roles = [];
-    current_q.weighting = 1;
+  //add a question 
+  //questionRows: a list for one question. The first element has all the information about a quesiton
+  //the remaining elements holds the data for multiple responses, multiple trigger responses, or multiple
+  //rec_links
+  let createQuestion = (questionRows, numToIdMap) => {
+    let rowData = questionRows[0];
+    let currentQ = {};
+    currentQ.__v = 0;
+    currentQ.alt_text = rowData[13];
+    currentQ.domainApplicability = [];
+    currentQ.lifecycle = [];
+    currentQ.mandatory = true;
+    currentQ.parent = null;
+    currentQ.pointsAvailable = 1;
+    currentQ.prompt = null;
+    currentQ.question = rowData[1];
+    currentQ.questionNumber = rowData[0];
+    currentQ.questionType = rowData[4];
+    currentQ.reference = rowData[12];
+    currentQ.regionalApplicability = [];
+    currentQ.responseType = rowData[8];
+    currentQ.roles = [];
+    currentQ.weighting = 1;
 
     //handle parent-child
-    var parentQNum = row_data[6];
+    let parentQNum = rowData[6];
     if (parentQNum == '') {
-      current_q.child = false;
-      current_q.trigger = { responses: [] };
+      currentQ.child = false;
+      currentQ.trigger = { responses: [] };
     } else {
-      var parentQID = num_to_id_map[parseInt(parentQNum)];
-      var parentQuestion = Object.values(all_questions).filter(
+      let parentQID = numToIdMap[parseInt(parentQNum)];
+      let parentQuestion = Object.values(allQuestions).filter(
         (q) => q._id === parentQID
       )[0];
-      current_q.child = true;
-      current_q.trigger = {
+      currentQ.child = true;
+      currentQ.trigger = {
         parent: parentQID,
         parentQuestion: parentQuestion['question'],
       };
-      let trigger_response_ids = []
-      console.log('q', question_rows)
-      for (var i = 0; i < question_rows.length; i++) {
-        let trigger_response = question_rows[i][7];
-        if (trigger_response != '') {
-          let response_obj = Object.values(parentQuestion["responses"]).filter(
-            (response) => response.indicator === trigger_response
+      let triggerResponseIds = [];
+      console.log('q', questionRows);
+      for (var i = 0; i < questionRows.length; i++) {
+        let triggerResponse = questionRows[i][7];
+        if (triggerResponse != '') {
+          let responseObj = Object.values(parentQuestion['responses']).filter(
+            (response) => response.indicator === triggerResponse
           )[0];
-          trigger_response_ids.push(response_obj._id)
+          triggerResponseIds.push(responseObj._id);
         }
       }
-      current_q.trigger["responses"] = trigger_response_ids
+      currentQ.trigger['responses'] = triggerResponseIds;
     }
 
     //set the dimension index
     let dimension = Object.values(dimensions).filter(
-      (sdim) => sdim.name === row_data[2]
+      (sdim) => sdim.name === rowData[2]
     );
-    current_q.trustIndexDimension = dimension[0].dimensionID;
+    currentQ.trustIndexDimension = dimension[0].dimensionID;
 
     if (dimension[0].dimensionID != 1) {
       let subdimension = Object.values(subdimensions).filter(
-        (sdim) => sdim.name === row_data[3]
+        (sdim) => sdim.name === rowData[3]
       );
-      current_q.subDimension = subdimension[0].subDimensionID;
+      currentQ.subDimension = subdimension[0].subDimensionID;
     }
     let responses = [];
-    let rec_links = [];
-    for (var i = 0; i < question_rows.length; i++) {
-      let row_i = question_rows[i];
+    let recLinks = [];
+    for (var i = 0; i < questionRows.length; i++) {
+      let rowI = questionRows[i];
       let r = {};
       r['responseNumber'] = i;
-      if (row_i[9] != '') {
-        r['indicator'] = row_i[9];
-        r['score'] = parseFloat(row_i[10]);
+      if (rowI[9] != '') {
+        r['indicator'] = rowI[9];
+        r['score'] = parseFloat(rowI[10]);
         responses.push(r);
       }
-      if (row_i[14] != '' && row_i[14] != null) {
-        rec_links.push(row_i[14]);
+      if (rowI[14] != '' && rowI[14] != null) {
+        recLinks.push(rowI[14]);
       }
     }
-    current_q.responses = responses;
-    current_q.rec_links = rec_links;
-    return current_q;
+    currentQ.responses = responses;
+    currentQ.rec_links = recLinks;
+    return currentQ;
   };
 
+  //add all the questions from .tsv file
   let onFileUpload = async () => {
+    if (questionsFile == null || fileName.split(".").slice(-1)[0] != "tsv") {
+      return
+    }
     let questions = questionsFile.split('\r\n');
-    // let q_num_to_id = {};
     let fields = questions[0];
     for (var i = 1; i < questions.length; i++) {
-      let row_data = questions[i].split('\t');
-      if (row_data[0] != '') {
-        let rows_for_question = [];
-        rows_for_question.push(row_data);
+      let rowData = questions[i].split('\t');
+      if (rowData[0] != '') {
+        let rowsForQuestion = [];
+        rowsForQuestion.push(rowData);
         let localI = i + 1;
         while (localI < questions.length && questions[localI][0] == '\t') {
-          rows_for_question.push(questions[localI].split('\t'));
+          rowsForQuestion.push(questions[localI].split('\t'));
           localI += 1;
         }
-        let q = createQuestion(rows_for_question, q_num_to_id);
+        let q = createQuestion(rowsForQuestion, qNumToId);
         await api.post('questions/', q).then((res) => {
           const result = res.data;
           if (result.errors) {
             console.log(result.errors);
           } else {
             console.log('Added Question: ', result);
-            q_num_to_id[result['questionNumber']] = result['_id'];
-            all_questions.push(result);
+            qNumToId[result['questionNumber']] = result['_id'];
+            allQuestions.push(result);
           }
         });
       }
     }
-
-    // window.location.reload(false);
-    close()
+    window.location.reload(false);
   };
-  // let onFileChange = async event => {
-  //   await setFile(event.target.files[0])
 
-  // };
-  fileReader.onload = async (event) => {
-    await setQuestionsFile(event.target.result);
+  //delete all questions and then add questions from .tsv
+  let deleteAndUpload = async () => {
+    if (questionsFile == null || fileName.split(".").slice(-1)[0] != "tsv") {
+      return
+    }
+    for (var i = 0; i < allQuestions.length; i++) {
+      let qID = allQuestions[i]['_id']
+      await api.delete('questions/' + qID).then((res) => {
+        const result = res.data;
+        if (result.errors) {
+          console.log(result.errors);
+        } else {
+          console.log('Delete Question: ', result);
+        }
+      });
+    }
+    onFileUpload()
+  }
+
+  let onFileChange = (event) => {
+    const reader = new FileReader();
+    reader.addEventListener('load', (eventData) => {
+      setQuestionsFile(eventData.target.result);
+    });
+    reader.readAsText(event.target.files[0]);
+    setFileName(event.target.files[0].name);
+  };
+
+  const hiddenFileInput = React.useRef(null);
+  const handleClick = (event) => {
+    hiddenFileInput.current.click();
   };
   return (
     <React.Fragment>
@@ -159,26 +194,23 @@ export default function FileModal(props) {
           </IconButton>
         </Modal.Header>
         <Modal.Body>
-          <Files
-            className="files-dropzone"
-            onChange={(file) => {
-              fileReader.readAsText(file[0]);
-            }}
-            onError={(err) => console.log(err)}
-            accepts={['.tsv']}
-            multiple
-            maxFiles={3}
-            maxFileSize={10000000}
-            minFileSize={0}
-            clickable
-          >
-            <button>Choose .tsv file</button>
-          </Files>
+          <p>Upload a .tsv file to batch add questions (add more questions OR delete all current questions and add questions from .tsv file).</p>
+          <div>
+            <Button onClick={handleClick}>Browse</Button>
+            <input
+              type="file"
+              ref={hiddenFileInput}
+              onChange={onFileChange}
+              style={{ display: 'none' }}
+            ></input>
+            {fileName ? " " + fileName : " No file uploaded"}
+          </div>
         </Modal.Body>
         <Modal.Body>
-          {/* <input type="file" onChange={onFileChange} /> */}
-          <button onClick={onFileUpload}>Upload!</button>
-          {/* </div> */}
+          <div>
+            <Button onClick={onFileUpload} style={{ marginRight: '10px' }}>Add more questions</Button>
+            <Button onClick={deleteAndUpload}>Delete all & add questions</Button>
+          </div>
         </Modal.Body>
       </Modal>
     </React.Fragment>
