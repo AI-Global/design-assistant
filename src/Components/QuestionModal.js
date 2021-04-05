@@ -243,6 +243,7 @@ export default function QuestionModal(props) {
           });
         props.onHide();
       } else {
+        console.log('heeere', props.question)
         api.post('questions/', props.question).then((res) => {
           const result = res.data;
           if (result.errors) {
