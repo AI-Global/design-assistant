@@ -269,7 +269,7 @@ export default class QuestionTable extends Component {
         ) {
           console.log('questions', this.state.questions)
           console.log('trigger', question["trigger"]["parent"])
-          let parentQuestion = Object.values(this.state.questions).filter(
+          var parentQuestion = Object.values(this.state.questions).filter(
             (q) => q._id == question["trigger"]["parent"]
           )[0]
           row.push(parentQuestion?.questionNumber)
@@ -305,6 +305,7 @@ export default class QuestionTable extends Component {
           question['responses'].length,
           question['rec_links'].length
         );
+        numExtraRows = Math.max(numExtraRows, question['trigger']['responses'].length)
         //add the extra rows
         for (var i = 1; i <= numExtraRows; i++) {
           var extraRow = [
@@ -334,12 +335,12 @@ export default class QuestionTable extends Component {
           if (
             question['trigger'] != null &&
             question['trigger']['parent'] != null &&
-            question["trigger"]['responses'] > i
+            question["trigger"]['responses'].length > i
           ) {
             let triggerResponse = Object.values(parentQuestion?.responses).filter(
               (response) => response._id == question["trigger"]["responses"][i]
             )[0]
-            row.push(triggerResponse?.indicator)
+            extraRow[7] = triggerResponse?.indicator
           }
           contentArr.push(extraRow);
         }
