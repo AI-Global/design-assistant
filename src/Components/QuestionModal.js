@@ -557,73 +557,75 @@ export default function QuestionModal(props) {
                     </Form.Control>
                   </Col>*/}
 
-                  {responseType === 'slider' ? (
-                    <React.Fragment>
-                      <Col xs={1} md={1}>
-                        <Form.Label>Low</Form.Label>
-                        <Form.Control
-                          className="slider-points"
-                          required="required"
-                          isInvalid={sliderLowValid}
-                          value={
-                            responses[0]?.score === 0
-                              ? 0
-                              : responses[0]?.score ?? ''
-                          }
-                          type="number"
-                          onChange={(event) =>
-                            setSliderPoint(event.target.value, 'low')
-                          }
-                        />
-                        <Form.Control.Feedback type="invalid">
-                          Invalid
-                        </Form.Control.Feedback>
-                      </Col>
-                      <Col xs={1} md={1}>
-                        <Form.Label>Med</Form.Label>
-                        <Form.Control
-                          className="slider-points"
-                          required="required"
-                          isInvalid={sliderMedValid}
-                          value={
-                            responses[1]?.score === 0
-                              ? 0
-                              : responses[1]?.score ?? ''
-                          }
-                          type="number"
-                          onChange={(event) =>
-                            setSliderPoint(event.target.value, 'med')
-                          }
-                        />
-                        <Form.Control.Feedback type="invalid">
-                          Invalid
-                        </Form.Control.Feedback>
-                      </Col>
-                      <Col xs={1} md={1}>
-                        <Form.Label>High</Form.Label>
-                        <Form.Control
-                          className="slider-points"
-                          required="required"
-                          isInvalid={sliderHighValid}
-                          value={
-                            responses[2]?.score === 0
-                              ? 0
-                              : responses[2]?.score ?? ''
-                          }
-                          type="number"
-                          onChange={(event) =>
-                            setSliderPoint(event.target.value, 'high')
-                          }
-                        />
-                        <Form.Control.Feedback type="invalid">
-                          Invalid
-                        </Form.Control.Feedback>
-                      </Col>
-                    </React.Fragment>
-                  ) : null}
                 </React.Fragment>
               ) : null}
             </Row>
+            {responseType === 'slider' ? (
+              <Row>
+                <React.Fragment>
+                  <Col xs={1} md={2}>
+                    <Form.Label>Low</Form.Label>
+                    <Form.Control
+                      className="slider-points"
+                      required="required"
+                      isInvalid={sliderLowValid}
+                      value={
+                        responses[0]?.score === 0
+                          ? 0
+                          : responses[0]?.score ?? ''
+                      }
+                      type="number"
+                      onChange={(event) =>
+                        setSliderPoint(event.target.value, 'low')
+                      }
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      Invalid
+                        </Form.Control.Feedback>
+                  </Col>
+                  <Col xs={1} md={2}>
+                    <Form.Label>Med</Form.Label>
+                    <Form.Control
+                      className="slider-points"
+                      required="required"
+                      isInvalid={sliderMedValid}
+                      value={
+                        responses[1]?.score === 0
+                          ? 0
+                          : responses[1]?.score ?? ''
+                      }
+                      type="number"
+                      onChange={(event) =>
+                        setSliderPoint(event.target.value, 'med')
+                      }
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      Invalid
+                        </Form.Control.Feedback>
+                  </Col>
+                  <Col xs={1} md={2}>
+                    <Form.Label>High</Form.Label>
+                    <Form.Control
+                      className="slider-points"
+                      required="required"
+                      isInvalid={sliderHighValid}
+                      value={
+                        responses[2]?.score === 0
+                          ? 0
+                          : responses[2]?.score ?? ''
+                      }
+                      type="number"
+                      onChange={(event) =>
+                        setSliderPoint(event.target.value, 'high')
+                      }
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      Invalid
+                        </Form.Control.Feedback>
+                  </Col>
+                </React.Fragment>
+              </Row>
+            ) : null}
             <Row>
               <Col xs={12} md={12}>
                 <Form.Group controlId="question">
