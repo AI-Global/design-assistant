@@ -198,8 +198,8 @@ export default class AdminResources extends Component {
         <Table className="mt-3">
           <TableHead>
             <TableRow className="edit-trusted-headers">
-              <TableCell> Trusted AI Resource</TableCell>
-              <TableCell>Description</TableCell>
+              <TableCell style={{ textAlign: 'center' }}> Trusted AI Resource</TableCell>
+              <TableCell style={{ textAlign: 'center' }}>Description</TableCell>
               <TableCell className="text-center">
                 <IconButton
                   aria-label="add resource"
