@@ -267,13 +267,10 @@ export default class QuestionTable extends Component {
           question['trigger'] != null &&
           question['trigger']['parent'] != null
         ) {
-          console.log('questions', this.state.questions)
-          console.log('trigger', question["trigger"]["parent"])
           var parentQuestion = Object.values(this.state.questions).filter(
             (q) => q._id == question["trigger"]["parent"]
           )[0]
           row.push(parentQuestion?.questionNumber)
-          console.log('here', parentQuestion)
           let triggerResponse = Object.values(parentQuestion?.responses).filter(
             (response) => response._id == question["trigger"]["responses"][0]
           )[0]
@@ -446,7 +443,7 @@ export default class QuestionTable extends Component {
                   </DropdownButton>
                 </TableCell>
                 <TableCell>
-                  <Button onClick={() => this.handleFileModal()}>
+                  <Button disabled onClick={() => this.handleFileModal()}>
                     Upload
                   </Button>
                 </TableCell>
@@ -516,7 +513,7 @@ export default class QuestionTable extends Component {
                 </DropdownButton>
               </TableCell>
               <TableCell>
-                <Button onClick={() => this.handleFileModal()}>
+                <Button disabled onClick={() => this.handleFileModal()}>
                   Upload
                 </Button>
               </TableCell>
