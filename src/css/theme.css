@@ -374,7 +374,8 @@ input[type='number'] {
 }
 
 .survey-results-table th {
-  background-color: #d0e0e3;
+  background-color: #f6f6f6;
+  border: none !important;
 }
 
 #ResultsButton {
