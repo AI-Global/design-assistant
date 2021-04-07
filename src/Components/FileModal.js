@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Button,
-  Modal,
-} from 'react-bootstrap';
+import { Button, Modal, Spinner } from 'react-bootstrap';
 import api from '../api';
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
@@ -11,6 +8,7 @@ import '../css/admin.css';
 export default function FileModal(props) {
   const [questionsFile, setQuestionsFile] = useState(null);
   const [fileName, setFileName] = useState(null);
+  const [loadingQuestions, setLoadingQuestions] = useState(false);
   const fileReader = new FileReader();
   const dimensions = props.dimensions;
   const subdimensions = props.subdimensions;
@@ -26,7 +24,7 @@ export default function FileModal(props) {
     props.onHide();
   }
 
-  //add a question 
+  //add a question
   //questionRows: a list for one question. The first element has all the information about a quesiton
   //the remaining elements holds the data for multiple responses, multiple trigger responses, or multiple
   //rec_links
@@ -113,8 +111,11 @@ export default function FileModal(props) {
 
   //add all the questions from .tsv file
   let onFileUpload = async () => {
-    if (questionsFile == null || fileName.split(".").slice(-1)[0] != "tsv") {
-      return
+    if (questionsFile == null || fileName.split('.').slice(-1)[0] != 'tsv') {
+      return;
+    }
+    if (!loadingQuestions) {
+      setLoadingQuestions(true);
     }
     let questions = questionsFile.split('\r\n');
     let fields = questions[0];
@@ -141,16 +142,18 @@ export default function FileModal(props) {
         });
       }
     }
-    window.location.reload(false);
+    setLoadingQuestions(false);
+    // window.location.reload(false);
   };
 
   //delete all questions and then add questions from .tsv
   let deleteAndUpload = async () => {
-    if (questionsFile == null || fileName.split(".").slice(-1)[0] != "tsv") {
-      return
+    if (questionsFile == null || fileName.split('.').slice(-1)[0] != 'tsv') {
+      return;
     }
+    setLoadingQuestions(true);
     for (var i = 0; i < allQuestions.length; i++) {
-      let qID = allQuestions[i]['_id']
+      let qID = allQuestions[i]['_id'];
       await api.delete('questions/' + qID).then((res) => {
         const result = res.data;
         if (result.errors) {
@@ -160,8 +163,8 @@ export default function FileModal(props) {
         }
       });
     }
-    onFileUpload()
-  }
+    onFileUpload();
+  };
 
   let onFileChange = (event) => {
     const reader = new FileReader();
@@ -193,25 +196,37 @@ export default function FileModal(props) {
             <CloseIcon />
           </IconButton>
         </Modal.Header>
-        <Modal.Body>
-          <p>Upload a .tsv file to batch add questions (add more questions OR delete all current questions and add questions from .tsv file).</p>
-          <div>
-            <Button onClick={handleClick}>Browse</Button>
-            <input
-              type="file"
-              ref={hiddenFileInput}
-              onChange={onFileChange}
-              style={{ display: 'none' }}
-            ></input>
-            {fileName ? " " + fileName : " No file uploaded"}
-          </div>
-        </Modal.Body>
-        <Modal.Body>
-          <div>
-            <Button onClick={onFileUpload} style={{ marginRight: '10px' }}>Add more questions</Button>
-            <Button onClick={deleteAndUpload}>Delete all & add questions</Button>
-          </div>
-        </Modal.Body>
+        {!loadingQuestions && (
+          <>
+            <Modal.Body>
+              <p>
+                Upload a .tsv file to batch add questions (add more questions OR
+                delete all current questions and add questions from .tsv file).
+              </p>
+              <div>
+                <Button onClick={handleClick}>Browse</Button>
+                <input
+                  type="file"
+                  ref={hiddenFileInput}
+                  onChange={onFileChange}
+                  style={{ display: 'none' }}
+                ></input>
+                {fileName ? ' ' + fileName : ' No file uploaded'}
+              </div>
+            </Modal.Body>
+            <Modal.Body>
+              <div style={{ paddingBottom: '10px' }}>
+                <Button onClick={onFileUpload}>Add more questions</Button>
+              </div>
+              <div>
+                <Button onClick={deleteAndUpload}>
+                  Delete all & add questions
+                </Button>
+              </div>
+            </Modal.Body>
+          </>
+        )}
+        {loadingQuestions && (<Modal.Body>  <Spinner animation="border" variant="secondary" /></Modal.Body>)}
       </Modal>
     </React.Fragment>
   );
