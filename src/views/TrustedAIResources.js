@@ -59,20 +59,20 @@ export default class TrustedAIResources extends Component {
           className="report-card-table"
         >
           <thead>
-            <tr role="row">
+            <tr>
               <th
                 role="columnheader"
                 scope="col"
                 className="report-card-headers"
               >
-                <div>Trusted AI Resource</div>
+                Trusted AI Resource
               </th>
               <th
                 role="columnheader"
                 scope="col"
                 className="report-card-headers"
               >
-                <div>Description</div>
+                Description
               </th>
             </tr>
           </thead>

@@ -63,16 +63,16 @@ export default class TrustedAIProviders extends Component {
               <th
                 role="columnheader"
                 scope="col"
-                className="report-card-headers"
+                className="score-card-headers"
               >
-                <div>Trusted AI Provider</div>
+                Trusted AI Provider
               </th>
               <th
                 role="columnheader"
                 scope="col"
-                className="report-card-headers"
+                className="score-card-headers"
               >
-                <div>Description</div>
+                Description
               </th>
             </tr>
           </thead>

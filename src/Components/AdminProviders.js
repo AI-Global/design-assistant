@@ -194,7 +194,8 @@ export default class AdminProviders extends Component {
             </Modal.Footer>
           </Form>
         </Modal>
-
+        <br />
+        <p style={{ marginTop: '40px' }}><strong>Note:</strong> Trusted AI Providers is NOT currently displayed on the report card.</p>
         <Table className="mt-3">
           <TableHead>
             <TableRow className="edit-trusted-headers">

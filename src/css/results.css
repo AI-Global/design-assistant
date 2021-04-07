@@ -10,8 +10,9 @@
 }
 
 .report-card-headers {
-  width: 33%;
-  background-color: #d0e0e3;
+  background-color: #f6f6f6;
+  text-align: center;
+  border: none !important;
 }
 
 .report-card-table {
@@ -47,18 +48,20 @@
   background-color: #f6f6f6;
   width: 25%;
   text-align: center;
+  border: none !important;
 }
 
 .score-card-dimensions {
   background-color: #f6f6f6;
   font-weight: 500;
+  border: none !important;
 }
 
 .dimension-chart {
   height: 500px;
 }
 
-.export-button {
+.export-button-pdf {
   float: right;
   background-color: #1a92ce !important;
   margin-top: -0.2rem;
@@ -71,7 +74,7 @@
   background-color: #1a92ce !important;
   margin-top: -0.2rem;
   margin-bottom: -3rem !important;
-  margin-right: 5rem !important;
+  margin-right: 8rem !important;
   padding: 0.5em !important;
 }
 

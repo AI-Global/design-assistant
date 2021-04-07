@@ -155,12 +155,25 @@ export default class Results extends Component {
   render() {
     var json = this?.props?.location?.state?.questions;
     var surveyResults = this?.props?.location?.state?.responses;
+    var submission = this?.props?.location?.state?.submission;
     if (json === undefined || surveyResults === undefined) {
       this.props.history.push({
         pathname: '/',
       });
       return null;
     }
+
+    // // edit a survey that has already been completed
+    // const editSurvey = () => {
+    //   this.props.history.push({
+    //     pathname: '/DesignAssistantSurvey',
+    //     state: {
+    //       prevResponses: submission.submission,
+    //       submission_id: submission._id,
+    //     },
+    //   });
+    // }
+
     var pages = json['pages'];
     var allQuestions = [];
     pages.map((page) => {
@@ -217,7 +230,7 @@ export default class Results extends Component {
           <button
             id="exportButton"
             type="button"
-            className="btn btn-save mr-2 btn btn-primary export-button"
+            className="btn btn-save mr-2 btn btn-primary export-button-pdf"
             onClick={() => {
               ExportHandler();
               exportReport(
@@ -229,7 +242,7 @@ export default class Results extends Component {
               );
             }}
           >
-            Export
+            Export as PDF
           </button>
           <button
             id="exportButtonCSV"
@@ -324,14 +337,14 @@ export default class Results extends Component {
                 </Nav>
               </Tab.Container>
             </Tab>
-            <Tab eventKey="ai-providers" title="Trusted AI Providers">
+            {/* <Tab eventKey="ai-providers" title="Trusted AI Providers">
               <Tab.Container
                 id="left-tabs-example"
                 defaultActiveKey={this.state.Dimensions[0].label}
               >
                 <TrustedAIProviders />
               </Tab.Container>
-            </Tab>
+            </Tab> */}
             <Tab eventKey="ai-resources" title="Trusted AI Resources">
               <Tab.Container
                 id="left-tabs-example"
@@ -395,6 +408,24 @@ export default class Results extends Component {
               Start Again
             </Button>
           </Link>
+          <button
+            id="exportButton"
+            type="button"
+            className="btn btn-save mr-2 btn btn-primary"
+            style={{ marginTop: '10px', marginLeft: '13px' }}
+            onClick={() => {
+              ExportHandler();
+              exportReport(
+                projectTitle,
+                projectDescription,
+                projectIndustry,
+                projectRegion,
+                riskLevel[riskWeight ?? 1]
+              );
+            }}
+          >
+            Export as PDF
+          </button>
           <Login />
         </main>
       );
