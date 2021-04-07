@@ -291,7 +291,7 @@ class UserSettings extends Component {
             this.state.user.role === 'admin' ||
               this.state.user.role === 'superadmin' ? (
               <Dropdown.Item onClick={() => this.navAdmin()}>
-                <i className="fa fa-database fa-fw"></i> Admin Panel
+                <i className="fa fa-database fa-fw" style={{ color: '#1a92ce' }}></i> Admin Panel
               </Dropdown.Item>
             ) : null
           ) : null}

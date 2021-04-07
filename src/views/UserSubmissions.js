@@ -270,7 +270,7 @@ class UserSubmissions extends Component {
           </div>
         </div>
         <div className="float-right mr-3 mt-2">
-          <Button onClick={() => this.startSurvey()}>Start New Survey</Button>
+          {this.state?.user && (<Button onClick={() => this.startSurvey()}>Start New Survey</Button>)}
         </div>
       </div>
     );

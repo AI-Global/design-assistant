@@ -271,7 +271,7 @@ export default class Results extends Component {
           <button
             id="exportButton"
             type="button"
-            className="btn btn-save mr-2 btn btn-primary export-button"
+            className="btn btn-save mr-2 btn btn-primary export-button-pdf"
             onClick={() => {
               ExportHandler();
               exportReport(
@@ -283,7 +283,7 @@ export default class Results extends Component {
               );
             }}
           >
-            Export
+            Export as PDF
           </button>
           <button
             id="exportButtonCSV"
@@ -378,14 +378,14 @@ export default class Results extends Component {
                 </Nav>
               </Tab.Container>
             </Tab>
-            <Tab eventKey="ai-providers" title="Trusted AI Providers">
+            {/* <Tab eventKey="ai-providers" title="Trusted AI Providers">
               <Tab.Container
                 id="left-tabs-example"
                 defaultActiveKey={this.state.Dimensions[0].label}
               >
                 <TrustedAIProviders />
               </Tab.Container>
-            </Tab>
+            </Tab> */}
             <Tab eventKey="ai-resources" title="Trusted AI Resources">
               <Tab.Container
                 id="left-tabs-example"
@@ -450,6 +450,23 @@ export default class Results extends Component {
               Start Again
             </Button>
           </Link>
+          <button
+            id="exportButton"
+            type="button"
+            className="btn btn-save mr-2 btn btn-primary export-button"
+            onClick={() => {
+              ExportHandler();
+              exportReport(
+                projectTitle,
+                projectDescription,
+                projectIndustry,
+                projectRegion,
+                riskLevel[riskWeight ?? 1]
+              );
+            }}
+          >
+            Export as PDF
+          </button>
           <Login />
         </main>
       );

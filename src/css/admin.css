@@ -7,7 +7,7 @@
 
 .MuiTableCell-head {
   font-size: 16px !important;
-  background-color: #d0e0e3;
+  background-color: #f6f6f6;
 }
 
 .modal-question {
@@ -73,7 +73,7 @@ input[type='number'] {
 }
 
 .edit-trusted-headers {
-  background-color: #d0e0e3;
+  background-color: #f6f6f6 !important;
 }
 
 .export-dropdown .btn {

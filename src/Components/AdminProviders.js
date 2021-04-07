@@ -194,12 +194,13 @@ export default class AdminProviders extends Component {
             </Modal.Footer>
           </Form>
         </Modal>
-
+        <br />
+        <p><strong>Note:</strong> Trusted AI Providers are NOT displayed on the Report Card.</p>
         <Table className="mt-3">
           <TableHead>
             <TableRow className="edit-trusted-headers">
-              <TableCell width="33%">Trusted AI Provider</TableCell>
-              <TableCell>Description</TableCell>
+              <TableCell width="33%" style={{ textAlign: 'center' }}>Trusted AI Provider</TableCell>
+              <TableCell style={{ textAlign: 'center' }}>Description</TableCell>
               <TableCell className="text-center">
                 <IconButton
                   aria-label="add provider"
