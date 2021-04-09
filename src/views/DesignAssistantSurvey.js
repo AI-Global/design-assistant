@@ -17,7 +17,7 @@ import ModalFooter from 'react-bootstrap/ModalFooter';
 import ModalHeader from 'react-bootstrap/ModalHeader';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import { ToastContainer, toast } from 'react-toastify';
-import { getLoggedInUser } from '../helper/AuthHelper';
+import { isLoggedIn, getLoggedInUser } from '../helper/AuthHelper';
 
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -63,15 +63,15 @@ class DesignAssistantSurvey extends Component {
     this.handleCloseModal = this.handleCloseModal.bind(this);
     this.handleOpenEmptyModal = this.handleOpenEmptyModal.bind(this);
     this.handleCloseEmptyModal = this.handleCloseEmptyModal.bind(this);
-    if (this?.props?.location?.state?.user_id == undefined) {
-      this.props.history.push("/");
-    }
-  }
 
+  }
   // Request questions JSON from backend
   componentDidMount() {
     widgets.nouislider(Survey);
-
+    if (!isLoggedIn()) {
+      //questions aren't available to people without accounts (for now)
+      this.props.history.push("/");
+    }
     ReactGa.pageview(window.location.pathname + window.location.search);
 
     api.get('dimensions/names').then((res) => {
@@ -119,7 +119,6 @@ class DesignAssistantSurvey extends Component {
       .then((res) => {
         this.setState({ mount: false });
         var json = res.data;
-
         if (json.pages.length < 1) {
           this.handleOpenEmptyModal();
         }
