@@ -80,6 +80,7 @@ class UserSubmissions extends Component {
         state: {
           prevResponses: submission.submission,
           submission_id: submission._id,
+          user_id: this.state?.user?._id,
           filters: {
             roles: submission.roles,
             domain: submission.domain,
@@ -145,6 +146,7 @@ class UserSubmissions extends Component {
       state: {
         prevResponses: submission.submission,
         submission_id: submission._id,
+        user_id: this.state?.user?._id
       },
     });
   }

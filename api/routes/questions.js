@@ -198,7 +198,8 @@ function formatQuestion(q, Dimensions, Triggers = null) {
       low = q.responses.filter((resp) => resp.indicator == 'low')[0].score;
       med = q.responses.filter((resp) => resp.indicator == 'med')[0].score;
       high = q.responses.filter((resp) => resp.indicator == 'high')[0].score;
-
+      question.pipsValues = [low, high];
+      question.pipsDensity = high;
       question.choices = [low, med, high];
     }
 
@@ -206,10 +207,12 @@ function formatQuestion(q, Dimensions, Triggers = null) {
     question.score.max = question.choices[2] * q.weighting;
     question.score.weight = q.weighting;
 
-    // Low Medium and High
-    question.pipsValues = [0, 100];
-    question.pipsDensity = 100;
     question.tooltips = false;
+    question.rangeMin = low;
+    question.rangeMax = high;
+    question.step = 1
+
+
   }
 
   return question;
