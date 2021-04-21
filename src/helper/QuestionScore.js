@@ -62,53 +62,69 @@ function calculateSubdimensionScore(allQuestions, surveyResults, subDimension) {
   var organizationScore = 0;
 
   // Calculate total risk based off user responses
-  allQuestions.filter(question => question.subDimension === subDimension.subDimensionID).map((question) => {
-    //console.log(question)
-    let selectedChoices = surveyResults[question.name];
-    let questionScore = calculateQuestionScore(question, selectedChoices, 1);
-    if (question.questionType === "risk") {
-      riskScore += questionScore.score;
-    } else if (question.questionType === "mitigation") {
-      mitigationScore += questionScore.score;
-    } else if (question.questionType === "organization") {
-      organizationScore += questionScore.score;
-    }
+  allQuestions
+    .filter((question) => question.subDimension === subDimension.subDimensionID)
+    .map((question) => {
+      //console.log(question)
+      let selectedChoices = surveyResults[question.name];
+      let questionScore = calculateQuestionScore(question, selectedChoices, 1);
+      if (question.questionType === 'risk') {
+        riskScore += questionScore.score;
+      } else if (question.questionType === 'mitigation') {
+        mitigationScore += questionScore.score;
+      } else if (question.questionType === 'organization') {
+        organizationScore += questionScore.score;
+      }
 
-    return true
-  });
+      return true;
+    });
   //console.log(riskScore)
   //console.log(mitigationScore)
   if (organizationScore) {
-    return { "subDimensionID": subDimension.subDimensionID, "subDimensionID": subDimension.name, "dimensionID": subDimension.dimensionID, "riskScore": riskScore, "mitigationScore": mitigationScore, "organizationScore": organizationScore, };
+    return {
+      subDimensionID: subDimension.subDimensionID,
+      subDimensionID: subDimension.name,
+      dimensionID: subDimension.dimensionID,
+      riskScore: riskScore,
+      mitigationScore: mitigationScore,
+      organizationScore: organizationScore,
+    };
   } else {
-    return { "subDimensionID": subDimension.subDimensionID, "subDimensionID": subDimension.name, "dimensionID": subDimension.dimensionID, "riskScore": riskScore, "mitigationScore": mitigationScore, };
+    return {
+      subDimensionID: subDimension.subDimensionID,
+      subDimensionID: subDimension.name,
+      dimensionID: subDimension.dimensionID,
+      riskScore: riskScore,
+      mitigationScore: mitigationScore,
+    };
   }
-
 }
 
-function calculateOrganizationBonus(organizationScore, bonusSettings) {
-  console.log(bonusSettings)
+function calculateOrganization(organizationScore, bonusSettings) {
+  console.log(bonusSettings);
   for (let bonus in bonusSettings) {
     let floor = bonusSettings[bonus].floor;
     let ceil = bonusSettings[bonus].ceil;
     //console.log(bonusSettings[bonus])
     if (organizationScore >= floor && organizationScore <= ceil) {
       //console.log(bonusSettings[bonus].bonus)
-      return bonusSettings[bonus].bonus
+      return {
+        bonus: bonusSettings[bonus].bonus,
+        label: bonus,
+      };
     }
   }
-  return 0
+  return { bonus: 0, label: 'N/A' };
 }
 
 function calculateRiskLevel(riskScore, lowerBound, upperBound) {
   if (riskScore > upperBound) {
-    return 'High'
+    return 'High';
   } else if (riskScore < lowerBound) {
-    return 'Low'
+    return 'Low';
   } else {
-    return 'Medium'
+    return 'Medium';
   }
-
 }
 
 function calculateCertification(mitigationScore, riskLevel, certSettings) {
@@ -116,16 +132,21 @@ function calculateCertification(mitigationScore, riskLevel, certSettings) {
     let mitigationRequired = certSettings[riskLevel];
     for (let mitigation in mitigationRequired) {
       if (mitigationScore > mitigationRequired[mitigation]) {
-        return mitigation
+        return mitigation;
       }
     }
   }
 }
 
 export default {
-  calculateQuestionScore: (question, selectedChoices, riskWeight) => calculateQuestionScore(question, selectedChoices, riskWeight),
-  calculateSubdimensionScore: (allQuestions, surveyResults, subDimension) => calculateSubdimensionScore(allQuestions, surveyResults, subDimension),
-  calculateOrganizationBonus: (organizationScore, bonusSettings) => calculateOrganizationBonus(organizationScore, bonusSettings),
-  calculateRiskLevel: (riskScore, lowerBound, upperBound) => calculateRiskLevel(riskScore, lowerBound, upperBound),
-  calculateCertification: (mitigationScore, riskLevel, certSettings) => calculateCertification(mitigationScore, riskLevel, certSettings),
+  calculateQuestionScore: (question, selectedChoices, riskWeight) =>
+    calculateQuestionScore(question, selectedChoices, riskWeight),
+  calculateSubdimensionScore: (allQuestions, surveyResults, subDimension) =>
+    calculateSubdimensionScore(allQuestions, surveyResults, subDimension),
+  calculateOrganization: (organizationScore, bonusSettings) =>
+    calculateOrganization(organizationScore, bonusSettings),
+  calculateRiskLevel: (riskScore, lowerBound, upperBound) =>
+    calculateRiskLevel(riskScore, lowerBound, upperBound),
+  calculateCertification: (mitigationScore, riskLevel, certSettings) =>
+    calculateCertification(mitigationScore, riskLevel, certSettings),
 };
