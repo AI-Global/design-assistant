@@ -87,3 +87,45 @@
   border: 3px solid #1a92ce !important;
   color: #1a92ce !important;
 }
+.row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.column-left {
+  display: flex;
+  flex-direction: column;
+  /* flex-basis: 100%; */
+  width: 30%;
+}
+.column-right {
+  display: flex;
+  flex-direction: column;
+  /* flex-basis: 100%; */
+  width: 70%;
+}
+.column {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 100%;
+  flex: 1;
+}
+.rectangle-black {
+  height: 15px;
+  width: 80px;
+  background-color: #555;
+  margin: 1px;
+}
+
+.rectangle-grey {
+  height: 15px;
+  width: 80px;
+  background-color: #cdcdcd;
+  margin: 1px;
+}
+.levels-name {
+  width: 80px;
+  margin: 1px;
+}

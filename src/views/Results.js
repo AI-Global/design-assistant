@@ -4,10 +4,19 @@ import { saveAs } from 'file-saver';
 import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'font-awesome/css/font-awesome.css';
-import { Tabs, Tab, Table, Button, Nav } from 'react-bootstrap';
+import {
+  Tabs,
+  Tab,
+  Table,
+  Button,
+  Nav,
+  Container,
+  Row,
+  Col,
+} from 'react-bootstrap';
 import '../css/results.css';
 import { ResponsiveRadar } from '@nivo/radar';
-import exportReport from '../helper/ExportReport';
+import exportReport from '../helper/ExportReportSecond';
 import ReportCard from './ReportCard';
 import DimensionScore from './DimensionScore';
 import TrustedAIProviders from './TrustedAIProviders';
@@ -15,6 +24,7 @@ import TrustedAIResources from './TrustedAIResources';
 import ReactGa from 'react-ga';
 import Login from './Login';
 import QuestionScore from '../helper/QuestionScore';
+import Badge from '../media/Badge.png';
 
 ReactGa.initialize(process.env.REACT_APP_GAID, {
   testMode: process.env.NODE_ENV !== 'production',
@@ -33,6 +43,24 @@ const ExportHandler = () => {
     action: 'Exported report as PDF',
   });
 };
+
+function LevelBar(props) {
+  return (
+    <>
+      <div className="row" style={{ justifyContent: 'center' }}>
+        <div className="levels-name">LIMITED</div>
+        <div className="levels-name">MATURE</div>
+        <div className="levels-name">PROFICIENT</div>
+
+      </div>
+      <div className="row" style={{ justifyContent: 'center' }}>
+        <div className="rectangle-black" />
+        <div className="rectangle-black" />
+        <div className="rectangle-grey" />
+      </div>
+    </>
+  );
+}
 
 /**
  * Component processes the answers to the survey and
@@ -68,7 +96,11 @@ export default class Results extends Component {
     // Calculate total risk based off user responses
     riskQuestions.map((question) => {
       let selectedChoices = results[question.name];
-      let questionScore = QuestionScore.calculateQuestionScore(question, selectedChoices, 1);
+      let questionScore = QuestionScore.calculateQuestionScore(
+        question,
+        selectedChoices,
+        1
+      );
       riskScore += questionScore.score;
       maxRiskScore += questionScore.maxScore;
 
@@ -163,41 +195,57 @@ export default class Results extends Component {
       return allQuestions;
     });
 
-    var riskWeight = this.calculateRiskWeight(
-      allQuestions,
-      surveyResults
-    );
+    var riskWeight = this.calculateRiskWeight(allQuestions, surveyResults);
 
-    // Calculate risk/mitigation for each subdimension  
-    let subdimensionScores = {}
+    // Calculate risk/mitigation for each subdimension
+    let subdimensionScores = {};
 
     this.state.SubDimensions.map((subDimension) => {
-      subdimensionScores[subDimension.subDimensionID] = QuestionScore.calculateSubdimensionScore(allQuestions, surveyResults, subDimension);
+      subdimensionScores[
+        subDimension.subDimensionID
+      ] = QuestionScore.calculateSubdimensionScore(
+        allQuestions,
+        surveyResults,
+        subDimension
+      );
       // Scale down risk and mitigation scores if it goes beyond the maximum
-      if (subdimensionScores[subDimension.subDimensionID].riskScore > subDimension.maxRisk) {
-        subdimensionScores[subDimension.subDimensionID].riskScore = subDimension.maxRisk
+      if (
+        subdimensionScores[subDimension.subDimensionID].riskScore >
+        subDimension.maxRisk
+      ) {
+        subdimensionScores[subDimension.subDimensionID].riskScore =
+          subDimension.maxRisk;
       }
 
-      if (subdimensionScores[subDimension.subDimensionID].mitigationScore > subDimension.maxmitigation) {
-        subdimensionScores[subDimension.subDimensionID].mitigationScore = subDimension.maxmitigation
+      if (
+        subdimensionScores[subDimension.subDimensionID].mitigationScore >
+        subDimension.maxmitigation
+      ) {
+        subdimensionScores[subDimension.subDimensionID].mitigationScore =
+          subDimension.maxmitigation;
       }
-
     });
 
-    let dimensionScores = {}
+    let dimensionScores = {};
     let totalRiskScore = 0;
     let totalMitigationScore = 0;
     let totalOrganizationScore = 0;
 
-    // Calculate total risk/mitigation for each dimension 
+    // Calculate total risk/mitigation for each dimension
     for (let key in subdimensionScores) {
-      let sd = subdimensionScores[key]
+      let sd = subdimensionScores[key];
 
       if (sd.dimensionID in dimensionScores) {
         dimensionScores[sd.dimensionID].riskScore += sd.riskScore;
         dimensionScores[sd.dimensionID].mitigationScore += sd.mitigationScore;
       } else {
-        dimensionScores[sd.dimensionID] = { "riskScore": 0, "mitigationScore": 0, "name": this.state.Dimensions.filter(d => d.dimensionID === sd.dimensionID)[0]?.name }
+        dimensionScores[sd.dimensionID] = {
+          riskScore: 0,
+          mitigationScore: 0,
+          name: this.state.Dimensions.filter(
+            (d) => d.dimensionID === sd.dimensionID
+          )[0]?.name,
+        };
         dimensionScores[sd.dimensionID].riskScore += sd.riskScore;
         dimensionScores[sd.dimensionID].mitigationScore += sd.mitigationScore;
       }
@@ -205,27 +253,40 @@ export default class Results extends Component {
       totalMitigationScore += sd.mitigationScore;
       // Calculate organization score
       if (sd.organizationScore) {
-        totalOrganizationScore += sd.organizationScore
+        totalOrganizationScore += sd.organizationScore;
       }
     }
 
-    //console.log(dimensionScores)
-    //console.log(totalOrganizationScore)
-    //console.log(totalRiskScore)
-    //console.log(totalMitigationScore)
+    // console.log('d scores', dimensionScores)
+    // console.log('total org', totalOrganizationScore)
+    // console.log('total risk', totalRiskScore)
+    // console.log('total mitigia', totalMitigationScore)
     // calc organization bonus to mitigation score
-    totalMitigationScore += QuestionScore.calculateOrganizationBonus(totalOrganizationScore, this.state.Settings.find(s => s.settingsName === "Organizational Maturity")?.data)
-    //console.log(totalMitigationScore)
-
+    var organizationResults = QuestionScore.calculateOrganization(
+      totalOrganizationScore,
+      this.state.Settings.find(
+        (s) => s.settingsName === 'Organizational Maturity'
+      )?.data
+    );
+    totalMitigationScore += organizationResults['bonus']
+    let organizationMaturityLabel = organizationResults['label']
+    // console.log(totalMitigationScore)
+    // 
     // calculate risk level
-    let riskLevel = QuestionScore.calculateRiskLevel(totalRiskScore, this.state.Settings.find(s => s.settingsName === "Risk Score")?.data?.lowerBound, this.state.Settings.find(s => s.settingsName === "Risk Score")?.data?.upperBound)
-    //console.log(riskLevel)
+    let riskLevel = QuestionScore.calculateRiskLevel(
+      totalRiskScore,
+      this.state.Settings.find((s) => s.settingsName === 'Risk Score')?.data
+        ?.lowerBound,
+      this.state.Settings.find((s) => s.settingsName === 'Risk Score')?.data
+        ?.upperBound
+    );
+    // console.log('risk level', riskLevel)
     // calculate certification level
-    let certification = QuestionScore.calculateCertification(totalMitigationScore, riskLevel, this.state.Settings.find(s => s.settingsName === "Score Card")?.data)
-    //console.log(certification)
-
-
-
+    let certification = QuestionScore.calculateCertification(
+      totalMitigationScore,
+      riskLevel,
+      this.state.Settings.find((s) => s.settingsName === 'Score Card')?.data
+    );
 
     var titleQuestion = allQuestions.find(
       (question) => question.title.default === 'Title of project'
@@ -236,8 +297,21 @@ export default class Results extends Component {
     var industryQuestion = allQuestions.find(
       (question) => question.title.default === 'Industry'
     );
+    var cityQuestion = allQuestions.find(
+      (question) => question.title.default === 'City'
+    );
     var regionQuestion = allQuestions.find(
       (question) => question.title.default === 'Country'
+    );
+
+    var organizationQuestion = allQuestions.find(
+      (question) => question.title.default === 'Company or Organization'
+    );
+    var representativeQuestion = allQuestions.find(
+      (question) => question.title.default === 'Representative'
+    );
+    var contactQuestion = allQuestions.find(
+      (question) => question.title.default === 'Contact information'
     );
 
     var projectTitle = surveyResults[titleQuestion?.name];
@@ -247,9 +321,15 @@ export default class Results extends Component {
       (choice) => choice.value === surveyResults[industryQuestion?.name]
     )?.text?.default;
 
+    var projectCity = surveyResults[cityQuestion?.name];
+
     var projectRegion = regionQuestion?.choices?.find(
       (choice) => choice.value === surveyResults[regionQuestion?.name]
     )?.text?.default;
+
+    var projectOrganization = surveyResults[organizationQuestion?.name];
+    var projectRepresentative = surveyResults[representativeQuestion?.name];
+    var projectContact = surveyResults[contactQuestion?.name];
 
     var questions = allQuestions.filter((question) =>
       Object.keys(surveyResults).includes(question.name)
@@ -295,8 +375,8 @@ export default class Results extends Component {
           >
             Export as CSV
           </button>
-          <Tabs defaultActiveKey="score">
-            <Tab eventKey="score" title="Score">
+          <Tabs defaultActiveKey="report-card">
+            {/* <Tab eventKey="score" title="Score">
               <div className="table-responsive mt-3">
                 <Table
                   id="score"
@@ -334,15 +414,132 @@ export default class Results extends Component {
                   </tbody>
                 </Table>
               </div>
-            </Tab>
+            </Tab> */}
             <Tab eventKey="report-card" title="Report Card">
               <Tab.Container
                 id="left-tabs-example"
                 defaultActiveKey={this.state?.Dimensions[2]?.label}
               >
                 <Tab.Content>
+                  <div style={{ textAlign: 'center', marginBottom: '50px' }}>
+                    <h1 style={{ paddingBottom: '50px' }}>REPORT CARD</h1>
+                    <img
+                      src={Badge}
+                      width="20%"
+                      style={{ paddingBottom: '10px' }}
+                    />
+                    <h3>
+                      <strong>CERTIFIED</strong>
+                    </h3>
+                  </div>
+                  <hr
+                    style={{
+                      color: 'black',
+                      backgroundColor: 'black',
+                      height: 1,
+                    }}
+                  />
+                  <div className="row">
+                    <div
+                      className="column-left"
+                      style={{ borderRightStyle: 'solid', padding: '10px' }}
+                    >
+                      <h5>PROJECT INFORMATION</h5>
+                      <p>
+                        <strong>TITLE</strong>:<br /> {projectTitle}
+                        <br />
+                        <strong>DESCRIPTION</strong>:<br /> {projectDescription}
+                        <br />
+                        <strong>ORGANIZATION</strong>:<br />
+                        {projectOrganization}
+                        <br />
+                        <strong>INDUSTRY</strong>:<br />
+                        {projectIndustry}
+                        <br />
+                        <strong>CITY</strong>:<br />
+                        {projectCity}
+                        <br />
+                        <strong>COUNTRY</strong>:<br /> {projectRegion}
+                        <br />
+                        <strong>Representative</strong>:<br />
+                        {projectRepresentative}
+                        <br />
+                        <strong>Contact Information</strong>:<br />
+                        {projectContact}
+                        <br />
+                      </p>
+                    </div>
+                    <div
+                      className="column-right"
+                      style={{
+                        padding: '10px',
+                      }}
+                    >
+                      <h5>CERTIFICATION RESULTS</h5>
+                      {/* DEPENDING ON SCORES */}
+                      <p>
+                        <strong>CERTIFICATION LEVEL:{certification ? certication : "NOT CERTIFIED"}</strong> <br />
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        Integer sit amet rhoncus libero, id gravida tellus.
+                        Nulla sit amet dignissim erat. Cras ut dolor ipsum. Nunc
+                        at semper augue. Mauris aliquet porta quam, ut maximus
+                        ipsum tempus vitae. Sed pharetra dui justo, sed pulvinar
+                        dolor elementum rhoncus.
+                        <br />
+                        <br />
+                        <strong>ORGANIZATIONAL MATURITY LEVEL: {organizationMaturityLabel}</strong>
+                        <br />
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        Proin nec nibh arcu.
+                        <br />
+                        <br />
+                        <strong>PROJECT RISK LEVEL: {riskLevel}</strong>
+                        <br />
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        Sed eget ultricies elit. Maecenas quis erat et dolor
+                        gravida vehicula. Suspendisse.
+                        <br />
+                      </p>
+                      <hr
+                        style={{
+                          color: 'black',
+                          backgroundColor: 'black',
+                          width: '100%',
+                          height: 2,
+                        }}
+                      />
+                      <h5>RESULTS SUMMARY:</h5>
+                      <h6>MITIGATION</h6>
+                      {this.state.Dimensions.map((dimension, idx) => {
+                        if (dimension.label !== 'T') {
+                          return (
+                            <div className="row">
+                              <div
+                                className="column"
+                                style={{ padding: '15px' }}
+                              >
+                                <p>
+                                  {dimension.name.toUpperCase()}
+                                  <br /> Lorem ipsum dolor sit amet, consectetur
+                                  adipiscing elit. Integer sit amet rhoncus
+                                  libero, id gravida tellus.
+                                </p>
+                              </div>
+                              <div
+                                className="column"
+                                style={{ paddingTop: '10%' }}
+                              >
+                                <LevelBar />
+                              </div>
+                            </div>
+                          );
+                        }
+                        return null;
+                      })}
+                    </div>
+                  </div>
                   {this.state.Dimensions.map((dimension, idx) => {
-                    if (dimension.label !== 'T') {
+                    if (dimension.label !== 'T' && dimension.label != 'O') {
                       return (
                         <Tab.Pane key={idx} eventKey={dimension.label}>
                           <ReportCard
