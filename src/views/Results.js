@@ -115,7 +115,7 @@ export default class Results extends Component {
     var contentArr = [];
 
     // push headers into the csv
-    contentArr.push('Question,Response,Recommendation\n');
+    contentArr.push('Question,Response,Recommendation,Comments\n');
 
     // iterate through all questions that user has answered
     for (let i = 0; i < questionsObj.length; ++i) {
@@ -163,6 +163,15 @@ export default class Results extends Component {
           if (questionRecommendation) {
             contentArr.push(
               '"' + questionRecommendation.replaceAll('"', '""') + '"'
+            );
+          }
+          else {
+            contentArr.push(',');
+          }
+          let comments = results['other' + question.name];
+          if (comments) {
+            contentArr.push(
+              '"' + comments.replaceAll('"', '""') + '"'
             );
           }
           contentArr.push('\n');
