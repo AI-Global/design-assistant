@@ -16,7 +16,7 @@ function addHeader(doc, y) {
   const title = 'Responsible AI Leadership Fair';
   const title2 = 'Lending Beta Report'
   const img = new Image();
-  img.src = '../img/rail_logo.jpg';
+  img.src = '../img/rail-logo.jpg';
   const iw = 1600,
     ih = 897,
     ratio = 0.05;
