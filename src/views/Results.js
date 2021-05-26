@@ -24,7 +24,7 @@ import TrustedAIResources from './TrustedAIResources';
 import ReactGa from 'react-ga';
 import Login from './Login';
 import QuestionScore from '../helper/QuestionScore';
-import Badge from '../media/Badge.png';
+import Badge from '../media/certification.png';
 
 ReactGa.initialize(process.env.REACT_APP_GAID, {
   testMode: process.env.NODE_ENV !== 'production',
@@ -45,15 +45,20 @@ const ExportHandler = () => {
 };
 
 function LevelBar(props) {
+  let paddingBottom = props.show ? '60px' : '75px';
   return (
     <>
-      <div className="row" style={{ justifyContent: 'center' }}>
-        <div className="levels-name">LIMITED</div>
-        <div className="levels-name">MATURE</div>
-        <div className="levels-name">PROFICIENT</div>
-
-      </div>
-      <div className="row" style={{ justifyContent: 'center' }}>
+      {props.show && (
+        <div className="row" style={{ justifyContent: 'center' }}>
+          <div className="levels-name">{props.title[0]}</div>
+          <div className="levels-name">{props.title[1]}</div>
+          <div className="levels-name">{props.title[2]}</div>
+        </div>
+      )}
+      <div
+        className="row"
+        style={{ justifyContent: 'center', marginBottom: paddingBottom }}
+      >
         <div className="rectangle-black" />
         <div className="rectangle-black" />
         <div className="rectangle-grey" />
@@ -62,6 +67,37 @@ function LevelBar(props) {
   );
 }
 
+function ScoreLevelBar(props) {
+  let paddingBottom = props.show ? '60px' : '75px';
+  return (
+    <div className="row">
+      <div className="col">
+        {props.name}
+        <br />
+        {props.definition}
+        <br />
+        <br />
+      </div>
+      <div className="col">
+        {props.show && (
+          <div className="row" style={{ justifyContent: 'center' }}>
+            <div className="levels-name">{props.title[0]}</div>
+            <div className="levels-name">{props.title[1]}</div>
+            <div className="levels-name">{props.title[2]}</div>
+          </div>
+        )}
+        <div
+          className="row"
+          style={{ justifyContent: 'center', marginBottom: paddingBottom }}
+        >
+          <div className="rectangle-black" />
+          <div className="rectangle-black" />
+          <div className="rectangle-grey" />
+        </div>
+      </div>
+    </div>
+  );
+}
 /**
  * Component processes the answers to the survey and
  * renders the results to the user in various different ways.
@@ -210,13 +246,12 @@ export default class Results extends Component {
     let subdimensionScores = {};
 
     this.state.SubDimensions.map((subDimension) => {
-      subdimensionScores[
-        subDimension.subDimensionID
-      ] = QuestionScore.calculateSubdimensionScore(
-        allQuestions,
-        surveyResults,
-        subDimension
-      );
+      subdimensionScores[subDimension.subDimensionID] =
+        QuestionScore.calculateSubdimensionScore(
+          allQuestions,
+          surveyResults,
+          subDimension
+        );
       // Scale down risk and mitigation scores if it goes beyond the maximum
       if (
         subdimensionScores[subDimension.subDimensionID].riskScore >
@@ -239,11 +274,9 @@ export default class Results extends Component {
     let totalRiskScore = 0;
     let totalMitigationScore = 0;
     let totalOrganizationScore = 0;
-
     // Calculate total risk/mitigation for each dimension
     for (let key in subdimensionScores) {
       let sd = subdimensionScores[key];
-
       if (sd.dimensionID in dimensionScores) {
         dimensionScores[sd.dimensionID].riskScore += sd.riskScore;
         dimensionScores[sd.dimensionID].mitigationScore += sd.mitigationScore;
@@ -265,8 +298,7 @@ export default class Results extends Component {
         totalOrganizationScore += sd.organizationScore;
       }
     }
-
-    // console.log('d scores', dimensionScores)
+    console.log('ds', dimensionScores);
     // console.log('total org', totalOrganizationScore)
     // console.log('total risk', totalRiskScore)
     // console.log('total mitigia', totalMitigationScore)
@@ -277,10 +309,10 @@ export default class Results extends Component {
         (s) => s.settingsName === 'Organizational Maturity'
       )?.data
     );
-    totalMitigationScore += organizationResults['bonus']
-    let organizationMaturityLabel = organizationResults['label']
+    totalMitigationScore += organizationResults['bonus'];
+    let organizationMaturityLabel = organizationResults['label'];
     // console.log(totalMitigationScore)
-    // 
+    //
     // calculate risk level
     let riskLevel = QuestionScore.calculateRiskLevel(
       totalRiskScore,
@@ -296,6 +328,15 @@ export default class Results extends Component {
       riskLevel,
       this.state.Settings.find((s) => s.settingsName === 'Score Card')?.data
     );
+
+    var subDimScoresDict = {};
+    for (let key in dimensionScores) {
+      let scoreDict = dimensionScores[key];
+      subDimScoresDict[scoreDict['name']] = {
+        riskScore: scoreDict['riskScore'],
+        mitigationScore: scoreDict['mitigationScore'],
+      };
+    }
 
     var titleQuestion = allQuestions.find(
       (question) => question.title.default === 'Title of project'
@@ -385,45 +426,6 @@ export default class Results extends Component {
             Export as CSV
           </button>
           <Tabs defaultActiveKey="report-card">
-            {/* <Tab eventKey="score" title="Score">
-              <div className="table-responsive mt-3">
-                <Table
-                  id="score"
-                  bordered
-                  hover
-                  responsive
-                  className="report-card-table"
-                >
-                  <thead>
-                    <tr>
-                      <th className="score-card-dheader">Dimensions</th>
-                      <th className="score-card-headers">Needs to improve</th>
-                      <th className="score-card-headers">Acceptable</th>
-                      <th className="score-card-headers">Proficient</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {this.state.Dimensions.map((dimension, idx) => {
-                      if (dimension.label !== 'T' && dimension.label !== 'RK') {
-                        return (
-                          <DimensionScore
-                            key={idx}
-                            radarChartData={radarChartData}
-                            dimensionName={dimension.name}
-                            riskWeight={riskWeight}
-                            results={surveyResults}
-                            questions={allQuestions.filter(
-                              (x) => x.score?.dimension === dimension.label
-                            )}
-                          />
-                        );
-                      }
-                      return null;
-                    })}
-                  </tbody>
-                </Table>
-              </div>
-            </Tab> */}
             <Tab eventKey="report-card" title="Report Card">
               <Tab.Container
                 id="left-tabs-example"
@@ -431,25 +433,123 @@ export default class Results extends Component {
               >
                 <Tab.Content>
                   <div style={{ textAlign: 'center', marginBottom: '50px' }}>
-                    <h1 style={{ paddingBottom: '50px' }}>REPORT CARD</h1>
-                    <img
+                    <h1>RAI Certification for Finance</h1>
+                    <h1 style={{ paddingBottom: '50px' }}>
+                      SYSTEM REPORT CARD
+                    </h1>
+
+                    {/* <img
                       src={Badge}
                       width="20%"
                       style={{ paddingBottom: '10px' }}
                     />
                     <h3>
                       <strong>CERTIFIED</strong>
-                    </h3>
+                    </h3> */}
                   </div>
                   <hr
                     style={{
                       color: 'black',
                       backgroundColor: 'black',
                       height: 1,
+                      margin: '0 0 2px 0',
+                      padding: '0',
                     }}
                   />
-                  <div className="row">
-                    <div
+                  <hr
+                    style={{
+                      color: 'black',
+                      backgroundColor: 'black',
+                      height: 1,
+                      margin: '0',
+                      padding: '0',
+                    }}
+                  />
+                  <div className="row" style={{ padding: '10px' }}>
+                    <div className="column">
+                      <h5>
+                        <strong>PROJECT INFORMATION</strong>
+                      </h5>
+                      <p>
+                        TITLE:
+                        <br /> {projectTitle}
+                        <br />
+                        ORGANIZATION:
+                        <br />
+                        {projectOrganization}
+                        <br />
+                        DESCRIPTION:
+                        <br /> {projectDescription}
+                        <br />
+                        INDUSTRY:
+                        <br />
+                        {projectIndustry}
+                        <br />
+                        CITY:
+                        <br />
+                        {projectCity}
+                        <br />
+                        COUNTRY:
+                        <br /> {projectRegion}
+                        <br />
+                      </p>
+                    </div>
+                    <div className="column">
+                      <h5>
+                        <strong>CERTIFICATION RESULTS</strong>
+                      </h5>
+                      {/* DEPENDING ON SCORES */}
+                      <p>
+                        <strong>
+                          CERTIFICATION LEVEL:
+                          {certification
+                            ? certication
+                            : ' Certification not achieved'}
+                        </strong>{' '}
+                        <br />
+                        The RAIL Certification is an accredited independent
+                        review program assessing the responsible use of AI
+                        systems. This program incorporates four levels of
+                        achievement ranging from certified to platinum. By
+                        achieving the silver certification level, the basic
+                        certification level has been surpassed demonstrating
+                        more advanced practices have been achieved.
+                        <br />
+                        <br />
+                        <strong>
+                          ORGANIZATIONAL MATURITY LEVEL:{' '}
+                          {organizationMaturityLabel}
+                        </strong>
+                        <br />
+                        The RAIL certification program incorporates an
+                        organizational maturity assessment given that complex
+                        projects like AI require a solid foundation.
+                        Organizational maturity ranges from tactical, to
+                        strategic, to transformative.
+                        <br />
+                        <br />
+                        <strong>PROJECT RISK LEVEL: {riskLevel}</strong>
+                        <br />
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        Sed eget ultricies elit. Maecenas quis erat et dolor
+                        gravida vehicula. Suspendisse.
+                        <br />
+                      </p>
+                    </div>
+                    <div className="column" style={{ textAlign: 'center' }}>
+                      <img
+                        src={Badge}
+                        width="70%"
+                        style={{
+                          paddingBottom: '10px',
+                          marginLeft: 'auto',
+                          marginRight: 'auto',
+                          marginTop: 'auto',
+                          marginBottom: 'auto',
+                        }}
+                      />
+                    </div>
+                    {/* <div
                       className="column-left"
                       style={{ borderRightStyle: 'solid', padding: '10px' }}
                     >
@@ -477,16 +577,16 @@ export default class Results extends Component {
                         {projectContact}
                         <br />
                       </p>
-                    </div>
-                    <div
+                    </div> */}
+                    {/* <div
                       className="column-right"
                       style={{
                         padding: '10px',
                       }}
                     >
-                      <h5>CERTIFICATION RESULTS</h5>
-                      {/* DEPENDING ON SCORES */}
-                      <p>
+                      <h5>CERTIFICATION RESULTS</h5> */}
+                    {/* DEPENDING ON SCORES */}
+                    {/* <p>
                         <strong>CERTIFICATION LEVEL:{certification ? certication : "NOT CERTIFIED"}</strong> <br />
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                         Integer sit amet rhoncus libero, id gravida tellus.
@@ -545,8 +645,218 @@ export default class Results extends Component {
                         }
                         return null;
                       })}
+                    </div> */}
+                  </div>
+                  <hr
+                    style={{
+                      color: 'black',
+                      backgroundColor: 'black',
+                      height: 1,
+                      margin: '0 0 2px 0',
+                      padding: '0',
+                    }}
+                  />
+                  <hr
+                    style={{
+                      color: 'black',
+                      backgroundColor: 'black',
+                      height: 1,
+                      margin: '0',
+                      padding: '0',
+                    }}
+                  />
+                  <div className="row" style={{ padding: '10px' }}>
+                    <div className="column-left">
+                      <h5>
+                        <strong>RESULTS SUMMARY:</strong>
+                      </h5>
+                      <br />
+                      <h6>
+                        <strong>MITIGATION LEVEL</strong>
+                      </h6>
+                      <div className="row">
+                        <div className="col">
+                          ROBUSTNESS
+                          <br />
+                          Ensuring the efficacy of the underlying technology in
+                          the system.
+                          <br />
+                          <br />
+                        </div>
+                        <div className="col">
+                          <LevelBar
+                            show={true}
+                            title={['LIMITED', 'MATURE', 'PROFICIENT']}
+                          />
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col">
+                          ACCOUNTABILITY
+                          <br />
+                          Overseeing measures and procedures required for AI
+                          systems.
+                          <br />
+                          <br />
+                        </div>
+                        <div className="col">
+                          <LevelBar />
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col">
+                          BIAS & FAIRNESS
+                          <br />
+                          Ensuring equity in the implementation of these
+                          systems.
+                          <br />
+                          <br />
+                        </div>
+                        <div className="col">
+                          <LevelBar />
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col">
+                          DATA
+                          <br />
+                          Providing high-quality data to ensure the effective
+                          operation of AI Systems. <br />
+                          <br />
+                        </div>
+                        <div className="col">
+                          <LevelBar />
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col">
+                          INTERPRETABILITY
+                          <br />
+                          Understanding how AI systems make or interpret
+                          decisions. <br />
+                          <br />
+                        </div>
+                        <div className="col">
+                          <LevelBar />
+                        </div>
+                      </div>
+                      <br />
+                      <br />
+                      <h6>
+                        <strong>ORGANIZATIONAL MATURITY LEVEL</strong>
+                      </h6>
+                      <div className="row">
+                        <div className="col">
+                          STRATEGY
+                          <br />
+                          Demonstrating predetermined planning for the design,
+                          development, and deployment of AI systems.
+                          <br />
+                          <br />
+                        </div>
+                        <div className="col">
+                          <LevelBar
+                            show={true}
+                            title={['TACTICAL', 'STRATEGIC', 'TRANSFORMATIVE']}
+                          />
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col">
+                          GOVERNANCE
+                          <br />
+                          Ensuring accountability and oversight of the people
+                          and processes building and managing AI systems..
+                          <br />
+                          <br />
+                        </div>
+                        <div className="col">
+                          <LevelBar />
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col">
+                          PEOPLE
+                          <br />
+                          Verifying the capabilities and competencies of team
+                          members involved in the design and development of AI
+                          systems.
+                          <br />
+                          <br />
+                        </div>
+                        <div className="col">
+                          <LevelBar />
+                        </div>
+                      </div>
+                      <br />
+                      <br />
+                      <h6>
+                        <strong>PROJECT RISK LEVEL</strong>
+                      </h6>
+                      <div className="row">
+                        <div className="col">
+                          DATA
+                          <br />
+                          Assessment of the data input to the AI system.
+                          <br />
+                        </div>
+                        <div className="col">
+                          <LevelBar
+                            show={true}
+                            title={['LOW', 'MEDIUM', 'HIGH']}
+                          />
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col">
+                          MODELS
+                          <br />
+                          Overseeing measures and procedures required for AI
+                          systems.
+                          <br />
+                          <br />
+                        </div>
+                        <div className="col">
+                          <LevelBar />
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col">
+                          PROCESSES
+                          <br />
+                          The context in which the system is being deployed.{' '}
+                          <br />
+                          <br />
+                        </div>
+                        <div className="col">
+                          <LevelBar />
+                        </div>
+                      </div>
+                    </div>
+                    {/* <div className="column" style={{ paddingTop: '60px' }}>
+                      <LevelBar show={true} />
+                      <LevelBar />
+                      <LevelBar />
+                      <LevelBar />
+                      <LevelBar />
+                    </div> */}
+                    <div
+                      className="column-right"
+                      style={{
+                        textAlign: 'center',
+                        alignItems: 'center',
+                        paddingTop: '10px',
+                      }}
+                    >
+                      <h6>
+                        <strong>BADGES ACHIEVED</strong>
+                      </h6>
                     </div>
                   </div>
+                  <div className="row" style={{ padding: '10px' }}>
+                    <div className="column"></div>
+                  </div>
+
                   {this.state.Dimensions.map((dimension, idx) => {
                     if (dimension.label !== 'T' && dimension.label != 'O') {
                       return (

@@ -37,6 +37,7 @@ export default class QuestionTable extends Component {
       questions: {},
       dimensions: {},
       subdimensions: {},
+      systemDimensions: {},
       metadata: {},
       previousQuestion: null,
       currentQuestion: null,
@@ -63,6 +64,7 @@ export default class QuestionTable extends Component {
     await api.get('questions/all').then((res) => {
       this.setState({ dimensions: res.data.Dimensions });
       this.setState({ subdimensions: res.data.subDimensions });
+      this.setState({ systemDimensions: res.data.systemDimensions })
       this.setState({
         questions: res.data.questions.sort((a, b) =>
           a.questionNumber > b.questionNumber ? 1 : -1
@@ -412,6 +414,7 @@ export default class QuestionTable extends Component {
                     mode={'new'}
                     dimensions={this.state.dimensions}
                     subdimensions={this.state.subdimensions}
+                    systemDimensions={this.state.systemDimensions}
                     metadata={this.state.metadata}
                   />
                   <FileModal
@@ -483,6 +486,7 @@ export default class QuestionTable extends Component {
                   mode={'new'}
                   dimensions={this.state.dimensions}
                   subdimensions={this.state.subdimensions}
+                  systemDimensions={this.state.systemDimensions}
                   metadata={this.state.metadata}
                 />
                 <FileModal
@@ -530,6 +534,7 @@ export default class QuestionTable extends Component {
                   question={question}
                   dimensions={this.state.dimensions}
                   subdimensions={this.state.subdimensions}
+                  systemDimensions={this.state.systemDimensions}
                   index={index}
                   onDelete={this.getQuestions}
                   metadata={this.state.metadata}

@@ -4,6 +4,7 @@ const Question = require('../models/question.model');
 
 const Dimension = require('../models/dimension.model');
 const SubDimension = require('../models/subdimension.model');
+const SystemDimension = require('../models/systemdimension.model');
 const Lifecycles = require('../models/lifecycle.model');
 const Roles = require('../models/role.model');
 const Domain = require('../models/domain.model');
@@ -41,6 +42,19 @@ async function getSubDimensions() {
       maxRisk: d.maxRisk,
       maxMitigation: d.maxMitigation,
     };
+  }
+  return Dimensions;
+}
+
+async function getSystemDimensions() {
+  let systemDimensions = await SystemDimension.find().sort({ systemID: 1 });
+  console.log('hereqwe', systemDimensions)
+  let Dimensions = {};
+  for (let d of systemDimensions) {
+    Dimensions[d.systemID] = {
+      systemID: d.systemID,
+      name: d.name
+    }
   }
   return Dimensions;
 }
@@ -483,9 +497,10 @@ router.get('/', async (req, res) => {
 router.get('/all', async (req, res) => {
   let Dimensions = await getDimensions();
   let subDimensions = await getSubDimensions();
+  let systemDimensions = await getSystemDimensions();
   Question.find()
     .then((questions) =>
-      res.status(200).send({ questions, Dimensions, subDimensions })
+      res.status(200).send({ questions, Dimensions, subDimensions, systemDimensions })
     )
     .catch((err) => res.status(400).send(err));
 });
