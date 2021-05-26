@@ -12,7 +12,7 @@ const useRowStyles = makeStyles({
 });
 
 export default function QuestionRow(props) {
-  const { question, dimensions, subdimensions, index, metadata } = props;
+  const { question, dimensions, subdimensions, systemDimensions, index, metadata } = props;
   const [modalShow, setModalShow] = React.useState(false);
   const classes = useRowStyles();
   return (
@@ -27,6 +27,7 @@ export default function QuestionRow(props) {
         mode={'edit'}
         dimensions={dimensions}
         subdimensions={subdimensions}
+        systemDimensions={systemDimensions}
         metadata={metadata}
       />
       <TableCell className={classes.tablecell}>

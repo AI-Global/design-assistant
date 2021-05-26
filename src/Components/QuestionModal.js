@@ -23,6 +23,7 @@ export default function QuestionModal(props) {
   // get metadata from props
   const dimensions = props.dimensions;
   const subdimensions = props.subdimensions;
+  const systemDimensions = props.systemDimensions;
   const domains = props.metadata.domain;
   const lifecycles = props.metadata.lifecycle;
   const regions = props.metadata.region;
@@ -56,6 +57,7 @@ export default function QuestionModal(props) {
     props.question.trustIndexDimension
   );
   const [subdimension, setSubDimension] = useState(props.question.subDimension);
+  const [systemDimension, setSystemDimension] = useState(props.question.systemDimension)
   props.question.questionType =
     props.question.questionType[0].toUpperCase() +
     props.question.questionType.substring(1);
@@ -148,6 +150,7 @@ export default function QuestionModal(props) {
     setRole(props.question.roles);
     setDimension(props.question.trustIndexDimension);
     setSubDimension(props.question.subDimension);
+    setSystemDimension(props.question.systemDimension)
     setWeight(props.question.weighting);
     setChild(props.question.child);
     setTrigger(props.question.trigger);
@@ -217,6 +220,7 @@ export default function QuestionModal(props) {
       props.question.roles = questionRole;
       props.question.trustIndexDimension = dimension;
       props.question.subDimension = subdimension;
+      props.question.systemDimension = systemDimension;
       props.question.weighting = weight;
       props.question.child = child;
       props.question.trigger = trigger;
@@ -243,7 +247,6 @@ export default function QuestionModal(props) {
           });
         props.onHide();
       } else {
-        console.log('heeere', props.question)
         api.post('questions/', props.question).then((res) => {
           const result = res.data;
           if (result.errors) {
@@ -264,6 +267,7 @@ export default function QuestionModal(props) {
         props.question.roles = [];
         props.question.trustIndexDimension = 1;
         props.question.subDimension = null;
+        props.question.systemDimension = null;
         props.question.weighting = 1;
         props.question.child = child;
         props.question.trigger = trigger;
@@ -525,18 +529,41 @@ export default function QuestionModal(props) {
               </Col>
               {/*Dimension 1 is always tombstone and dimension 2 is always organization*/}
               {dimension === 1 || dimension === 2 ? null : (
-                <Col xs={4} md={2}>
-                  <Form.Label>Question Type</Form.Label>
-                  <Form.Control
-                    value={questionType}
-                    as="select"
-                    onChange={(event) => setQType(event.target.value)}
-                  >
-                    <option>Risk</option>
-                    <option>Mitigation</option>
-                  </Form.Control>
-                </Col>
+                <>
+                  <Col xs={4} md={2}>
+                    <Form.Label>Question Type</Form.Label>
+                    <Form.Control
+                      value={questionType}
+                      as="select"
+                      onChange={(event) => setQType(event.target.value)}
+                    >
+                      <option>Risk</option>
+                      <option>Mitigation</option>
+                    </Form.Control>
+                  </Col>
+                  <Col xs={4} md={2}>
+                    <Form.Label>System Type</Form.Label>
+                    <Form.Control
+                      value={systemDimension}
+                      as="select"
+                      onChange={(event) => setSystemDimension(event.target.value)}
+                    >
+                      {Object.values(systemDimensions)
+                        .map((sysdimension) => (
+                          <option
+                            key={sysdimension.systemID}
+                            value={sysdimension.systemID}
+                            data-testid={sysdimension.name}
+                          >
+                            {sysdimension.name}
+                          </option>
+                        ))}
+                      <option value={null}>None</option>
+                    </Form.Control>
+                  </Col>
+                </>
               )}
+
               {responseType === 'dropdown' ||
                 responseType === 'radiogroup' ||
                 responseType === 'checkbox' ||
