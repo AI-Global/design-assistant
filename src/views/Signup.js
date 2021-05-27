@@ -4,6 +4,8 @@ import '../css/signup.css';
 import api from '../api';
 import { expireAuthToken } from '../helper/AuthHelper';
 import ReactGa from 'react-ga';
+import IconButton from '@material-ui/core/IconButton';
+import Add from '@material-ui/icons/Add';
 
 const CreateAccHandler = () => {
   ReactGa.event({
@@ -119,15 +121,30 @@ export default class Signup extends Component {
     const handleSignupShow = () => this.setState({ showSignupModal: true });
     return (
       <div style={{ display: 'inline-block' }}>
-        <a
-          href="#/"
-          onClick={() => {
-            handleSignupShow();
-            CreateAccHandler();
-          }}
-        >
-          Create your account
-        </a>
+        {this.props.onLanding && (
+          <a
+            href="#/"
+            onClick={() => {
+              handleSignupShow();
+              CreateAccHandler();
+            }}
+          >
+            Create your account
+          </a>
+        )}
+        {!this.props.onLanding &&
+          <IconButton
+            aria-label="add new user"
+            size="small"
+            onClick={() => {
+              handleSignupShow();
+              CreateAccHandler();
+            }}
+          >
+            <Add />
+          </IconButton>
+        }
+
         <Modal
           show={showSignup}
           onHide={handleSignupClose}

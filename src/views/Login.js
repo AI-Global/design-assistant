@@ -167,10 +167,11 @@ export default class Login extends Component {
                 value="Login"
               />
             </Form>
-            <div className="create-account">
+            {/* TODO: remove this once ready for more users */}
+            {/* <div className="create-account">
               <p className="disabled">Not a member yet?&nbsp;</p>
-              <Signup />
-            </div>
+              <Signup onLanding={true} />
+            </div> */}
           </Modal.Body>
           <Modal.Footer>
             <a

@@ -34,13 +34,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faEdit as faPencilAlt,
 } from '@fortawesome/free-solid-svg-icons';
-
+import Signup from './Signup';
 ReactGa.initialize(process.env.REACT_APP_GAID, {
   testMode: process.env.NODE_ENV !== 'production',
 });
 
 const User = (props) => (
   <TableRow>
+    <TableCell>{null}</TableCell>
     <TableCell style={{ textAlign: 'left' }}>{props.user.email}</TableCell>
     <TableCell style={{ textAlign: 'left' }}>{props.user.username}</TableCell>
     <TableCell style={{ textAlign: 'left' }}>
@@ -617,6 +618,9 @@ export default class AdminPanel extends Component {
                 <Table id="users" className="user-table">
                   <TableHead>
                     <TableRow>
+                      <TableCell>
+                        <Signup onLanding={false} />
+                      </TableCell>
                       <TableCell
                         className="score-card-headers"
                         style={{ textAlign: 'left' }}
