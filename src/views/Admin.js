@@ -319,13 +319,14 @@ export default class AdminPanel extends Component {
                 cursor="pointer"
                 title="Edit survey submission"
               />
-              <div></div>
+            </TableCell>
+            <TableCell>
               <IconButton
                 size="small"
                 style={{ paddingTop: '0.10em' }}
                 color="secondary"
                 onClick={() => {
-                  this.enterSurvey(currentsubmission ?? {})
+                  this.showDeleteSubmisionModal(currentsubmission);
                 }}
               >
                 <DeleteIcon style={{ color: red[500] }} />{' '}
@@ -712,7 +713,13 @@ export default class AdminPanel extends Component {
                         className="score-card-headers"
                         style={{ textAlign: 'center' }}
                       >
-                        Action
+                        Edit
+                      </TableCell>
+                      <TableCell
+                        className="score-card-headers"
+                        style={{ textAlign: 'center' }}
+                      >
+                        Delete
                       </TableCell>
                     </TableRow>
                   </TableHead>
