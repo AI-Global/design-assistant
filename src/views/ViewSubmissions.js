@@ -218,7 +218,7 @@ export default class ViewSubmissions extends Component {
                   className="score-card-headers"
                   style={{ textAlign: 'center' }}
                 >
-                  Action
+                  Delete
                 </th>
               </tr>
             </thead>
