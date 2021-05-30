@@ -48,7 +48,6 @@ async function getSubDimensions() {
 
 async function getSystemDimensions() {
   let systemDimensions = await SystemDimension.find().sort({ systemID: 1 });
-  console.log('hereqwe', systemDimensions)
   let Dimensions = {};
   for (let d of systemDimensions) {
     Dimensions[d.systemID] = {
