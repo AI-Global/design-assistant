@@ -179,39 +179,43 @@ export default class Results extends Component {
 
       // if we have any responses left
       if (user_response_ids) {
+        var questionText = question?.title?.default;
+        var questionResponse = '';
+        var questionRecommendation = question?.recommendation?.default;
+        let comments = results['other' + question.name];
         for (let j = 0; j < user_response_ids.length; ++j) {
-          var questionText = question?.title?.default;
-          var questionResponse = user_response_ids[j]?.text?.default;
-          var questionRecommendation = question?.recommendation?.default;
-
+          if (j != 0) {
+            questionResponse += ', '
+          }
+          questionResponse += user_response_ids[j]?.text?.default
           // we need to check that the field exists, and if it does,
           // replace quotes with double quotes, and surround with quotes
           // this will make the string csv safe
           // if no field, append nothing, a column will still populate
-          if (questionText) {
-            contentArr.push('"' + questionText.replaceAll('"', '""') + '"');
-          }
-          contentArr.push(',');
-          if (questionResponse) {
-            contentArr.push('"' + questionResponse.replaceAll('"', '""') + '"');
-          }
-          contentArr.push(',');
-          if (questionRecommendation) {
-            contentArr.push(
-              '"' + questionRecommendation.replaceAll('"', '""') + '"'
-            );
-          }
-          else {
-            contentArr.push(',');
-          }
-          let comments = results['other' + question.name];
-          if (comments) {
-            contentArr.push(
-              '"' + comments.replaceAll('"', '""') + '"'
-            );
-          }
-          contentArr.push('\n');
+
         }
+        if (questionText) {
+          contentArr.push('"' + questionText.replaceAll('"', '""') + '"');
+        }
+        contentArr.push(',');
+        if (questionResponse) {
+          contentArr.push('"' + questionResponse.replaceAll('"', '""') + '"');
+        }
+        contentArr.push(',');
+        if (questionRecommendation) {
+          contentArr.push(
+            '"' + questionRecommendation.replaceAll('"', '""') + '"'
+          );
+        }
+        else {
+          contentArr.push(',');
+        }
+        if (comments) {
+          contentArr.push(
+            '"' + comments.replaceAll('"', '""') + '"'
+          );
+        }
+        contentArr.push('\n');
       }
     }
 
