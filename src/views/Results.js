@@ -16,7 +16,7 @@ import {
 } from 'react-bootstrap';
 import '../css/results.css';
 import { ResponsiveRadar } from '@nivo/radar';
-import exportReport from '../helper/ExportReportSecond';
+import exportReport from '../helper/ExportReport';
 import ReportCard from './ReportCard';
 import DimensionScore from './DimensionScore';
 import TrustedAIProviders from './TrustedAIProviders';
@@ -185,14 +185,13 @@ export default class Results extends Component {
         let comments = results['other' + question.name];
         for (let j = 0; j < user_response_ids.length; ++j) {
           if (j != 0) {
-            questionResponse += ', '
+            questionResponse += ', ';
           }
-          questionResponse += user_response_ids[j]?.text?.default
+          questionResponse += user_response_ids[j]?.text?.default;
           // we need to check that the field exists, and if it does,
           // replace quotes with double quotes, and surround with quotes
           // this will make the string csv safe
           // if no field, append nothing, a column will still populate
-
         }
         if (questionText) {
           contentArr.push('"' + questionText.replaceAll('"', '""') + '"');
@@ -206,14 +205,11 @@ export default class Results extends Component {
           contentArr.push(
             '"' + questionRecommendation.replaceAll('"', '""') + '"'
           );
-        }
-        else {
+        } else {
           contentArr.push(',');
         }
         if (comments) {
-          contentArr.push(
-            '"' + comments.replaceAll('"', '""') + '"'
-          );
+          contentArr.push('"' + comments.replaceAll('"', '""') + '"');
         }
         contentArr.push('\n');
       }
@@ -436,7 +432,10 @@ export default class Results extends Component {
                 defaultActiveKey={this.state?.Dimensions[2]?.label}
               >
                 <Tab.Content>
-                  <div style={{ textAlign: 'center', marginBottom: '50px' }}>
+                  <div
+                    id="pdf-header"
+                    style={{ textAlign: 'center', marginBottom: '50px' }}
+                  >
                     <h1>RAI Certification for Finance</h1>
                     <h1 style={{ paddingBottom: '50px' }}>
                       SYSTEM REPORT CARD
@@ -469,7 +468,11 @@ export default class Results extends Component {
                       padding: '0',
                     }}
                   />
-                  <div className="row" style={{ padding: '10px' }}>
+                  <div
+                    id="project-info"
+                    className="row"
+                    style={{ padding: '10px' }}
+                  >
                     <div className="column">
                       <h5>
                         <strong>PROJECT INFORMATION</strong>
@@ -534,9 +537,11 @@ export default class Results extends Component {
                         <br />
                         <strong>PROJECT RISK LEVEL: {riskLevel}</strong>
                         <br />
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                        Sed eget ultricies elit. Maecenas quis erat et dolor
-                        gravida vehicula. Suspendisse.
+                        Not all AI systems carry the same risk. Recognizing
+                        this, the RAI Certification program factors the risk of
+                        the system into the overall evaluation. The lower the
+                        risk of the system, the fewer mitigation requirements
+                        are required.
                         <br />
                       </p>
                     </div>
@@ -669,7 +674,7 @@ export default class Results extends Component {
                       padding: '0',
                     }}
                   />
-                  <div className="row" style={{ padding: '10px' }}>
+                  <div id="results" className="row" style={{ padding: '10px' }}>
                     <div className="column-left">
                       <h5>
                         <strong>RESULTS SUMMARY:</strong>
@@ -915,78 +920,73 @@ export default class Results extends Component {
               </Tab.Container>
             </Tab>
           </Tabs>
-          <div className="dimension-chart" style={{ marginTop: '40px', marginBottom: '140px' }}>
-            <h4>Certification Level: {certification}</h4>
-            <p><strong>Risk Score: {totalRiskScore} | Mitigation Score: {totalMitigationScore} | Organization Score: {totalOrganizationScore}</strong></p>
-            <ResponsiveRadar
-              data={radarChartData}
-              keys={['score']}
-              indexBy="dimension"
-              maxValue={100}
-              margin={{ top: 70, right: 80, bottom: 40, left: 80 }}
-              curve="linearClosed"
-              borderWidth={2}
-              gridLevels={5}
-              gridShape="circular"
-              colors="rgb(31, 119, 180)"
-              isInteractive={true}
-              dotSize={8}
-            />
-          </div>
-          <p>
-            As‌ ‌AI‌ ‌continues‌ ‌to‌ ‌evolve‌ ‌so‌ ‌will‌ ‌the‌ ‌Design‌
-            ‌Assistant.‌ ‌ We‌ ‌are‌ ‌working‌ ‌now‌ ‌to‌ ‌add‌ questions‌
-            ‌that‌ ‌are‌ ‌more‌ ‌industry‌ ‌specific‌ ‌and‌ ‌tailored‌ ‌for‌
-            ‌your‌ ‌location.‌ ‌To‌ ‌do‌ ‌this,‌ ‌we‌ can‌ ‌use‌ ‌your‌ ‌help!‌
-            ‌Share‌ ‌with‌ ‌us‌ ‌the‌ ‌results‌ ‌of‌ ‌your‌ ‌report.‌ ‌Let‌ ‌us‌
-            ‌know‌ ‌where‌ ‌you‌ ‌need‌ more‌ ‌clarification,‌ ‌and‌ ‌where‌
-            ‌more‌ ‌guidance‌ ‌might‌ ‌be‌ ‌needed.‌ If‌ ‌you‌ ‌weren’t‌ ‌ready‌
-            ‌to‌ ‌answer‌ ‌all‌ ‌of‌ ‌the‌ ‌questions‌ ‌today,‌ ‌that’s‌ ‌ok,‌
-            ‌save‌ ‌your‌ ‌report,‌ ‌and‌ you‌ ‌can‌ ‌reload‌ ‌it‌ ‌the‌ ‌next‌
-            ‌time‌ ‌you‌ ‌return.‌
-          </p>
-          <p>
-            As‌ ‌an‌ ‌open‌ ‌source‌ ‌tool,‌ ‌we‌ ‌will‌ ‌continue‌ ‌to‌
-            ‌adjust‌ ‌quickly‌ ‌based‌ ‌on‌ ‌our‌ ‌communities‌ needs.‌ ‌Please‌
-            ‌let‌ ‌us‌ ‌know‌ ‌if‌ ‌you‌ ‌find‌ ‌any‌ ‌issues‌ ‌and‌ ‌we‌ ‌will‌
-            ‌be‌ ‌happy‌ ‌to‌ ‌update!‌
-          </p>
-          <p>
-            If‌ ‌you‌ ‌are‌ ‌wondering‌ ‌what‌ ‌to‌ ‌do‌ ‌with‌ ‌your‌
-            ‌results,‌ ‌and‌ ‌how‌ ‌you‌ ‌can‌ ‌improve,‌ ‌check‌ ‌out‌ the
-            Responsible AI Design Assistant Guide ‌that‌ ‌includes‌
-            ‌definitions‌ ‌and‌ ‌lots‌ ‌of‌ additional‌ ‌information.‌ ‌ If‌
-            ‌you‌ ‌are‌ ‌in‌ ‌need‌ ‌of‌ ‌additional‌ ‌support,‌ ‌contact‌ ‌us,‌
-            ‌and‌ ‌we‌ ‌can‌ put‌ ‌you‌ ‌in‌ ‌touch‌ ‌with‌ ‌a‌ ‌trusted‌
-            ‌service‌ ‌provider.‌
-          </p>
-          <p>
-            Since‌ ‌we‌ ‌want‌ ‌you‌ ‌to‌ ‌use‌ ‌the‌ ‌Design‌ ‌Assistant‌
-            ‌early‌ ‌and‌ ‌often,‌ ‌you‌ ‌can‌ ‌click‌ ‌the‌ ‌button‌ below‌
-            ‌to‌ ‌start‌ ‌over‌ ‌again!‌
-          </p>
-          <Link to="/">
-            <Button id="restartButton" onClick={StartAgainHandler}>
-              Start Again
-            </Button>
-          </Link>
-          <button
-            id="exportButton"
-            type="button"
-            className="btn btn-save mr-2 btn btn-primary export-button"
-            onClick={() => {
-              ExportHandler();
-              exportReport(
-                projectTitle,
-                projectDescription,
-                projectIndustry,
-                projectRegion,
-                riskLevel[riskWeight ?? 1]
-              );
-            }}
+          <div
+            style={{ marginTop: '40px', marginBottom: '140px' }}
           >
-            Export as PDF
-          </button>
+            <h4>Certification Level: {certification}</h4>
+            <p>
+              <strong>
+                Risk Score: {totalRiskScore} | Mitigation Score:{' '}
+                {totalMitigationScore} | Organization Score:{' '}
+                {totalOrganizationScore}
+              </strong>
+            </p>
+
+            <p>
+              As‌ ‌AI‌ ‌continues‌ ‌to‌ ‌evolve‌ ‌so‌ ‌will‌ ‌the‌ ‌Design‌
+              ‌Assistant.‌ ‌ We‌ ‌are‌ ‌working‌ ‌now‌ ‌to‌ ‌add‌ questions‌
+              ‌that‌ ‌are‌ ‌more‌ ‌industry‌ ‌specific‌ ‌and‌ ‌tailored‌ ‌for‌
+              ‌your‌ ‌location.‌ ‌To‌ ‌do‌ ‌this,‌ ‌we‌ can‌ ‌use‌ ‌your‌
+              ‌help!‌ ‌Share‌ ‌with‌ ‌us‌ ‌the‌ ‌results‌ ‌of‌ ‌your‌ ‌report.‌
+              ‌Let‌ ‌us‌ ‌know‌ ‌where‌ ‌you‌ ‌need‌ more‌ ‌clarification,‌
+              ‌and‌ ‌where‌ ‌more‌ ‌guidance‌ ‌might‌ ‌be‌ ‌needed.‌ If‌ ‌you‌
+              ‌weren’t‌ ‌ready‌ ‌to‌ ‌answer‌ ‌all‌ ‌of‌ ‌the‌ ‌questions‌
+              ‌today,‌ ‌that’s‌ ‌ok,‌ ‌save‌ ‌your‌ ‌report,‌ ‌and‌ you‌ ‌can‌
+              ‌reload‌ ‌it‌ ‌the‌ ‌next‌ ‌time‌ ‌you‌ ‌return.‌
+            </p>
+            <p>
+              As‌ ‌an‌ ‌open‌ ‌source‌ ‌tool,‌ ‌we‌ ‌will‌ ‌continue‌ ‌to‌
+              ‌adjust‌ ‌quickly‌ ‌based‌ ‌on‌ ‌our‌ ‌communities‌ needs.‌
+              ‌Please‌ ‌let‌ ‌us‌ ‌know‌ ‌if‌ ‌you‌ ‌find‌ ‌any‌ ‌issues‌ ‌and‌
+              ‌we‌ ‌will‌ ‌be‌ ‌happy‌ ‌to‌ ‌update!‌
+            </p>
+            <p>
+              If‌ ‌you‌ ‌are‌ ‌wondering‌ ‌what‌ ‌to‌ ‌do‌ ‌with‌ ‌your‌
+              ‌results,‌ ‌and‌ ‌how‌ ‌you‌ ‌can‌ ‌improve,‌ ‌check‌ ‌out‌ the
+              Responsible AI Design Assistant Guide ‌that‌ ‌includes‌
+              ‌definitions‌ ‌and‌ ‌lots‌ ‌of‌ additional‌ ‌information.‌ ‌ If‌
+              ‌you‌ ‌are‌ ‌in‌ ‌need‌ ‌of‌ ‌additional‌ ‌support,‌ ‌contact‌
+              ‌us,‌ ‌and‌ ‌we‌ ‌can‌ put‌ ‌you‌ ‌in‌ ‌touch‌ ‌with‌ ‌a‌
+              ‌trusted‌ ‌service‌ ‌provider.‌
+            </p>
+            <p>
+              Since‌ ‌we‌ ‌want‌ ‌you‌ ‌to‌ ‌use‌ ‌the‌ ‌Design‌ ‌Assistant‌
+              ‌early‌ ‌and‌ ‌often,‌ ‌you‌ ‌can‌ ‌click‌ ‌the‌ ‌button‌ below‌
+              ‌to‌ ‌start‌ ‌over‌ ‌again!‌
+            </p>
+            <Link to="/">
+              <Button id="restartButton" onClick={StartAgainHandler}>
+                Start Again
+              </Button>
+            </Link>
+            <button
+              id="exportButton"
+              type="button"
+              className="btn btn-save mr-2 btn btn-primary export-button"
+              onClick={() => {
+                ExportHandler();
+                exportReport(
+                  projectTitle,
+                  projectDescription,
+                  projectIndustry,
+                  projectRegion,
+                  riskLevel[riskWeight ?? 1]
+                );
+              }}
+            >
+              Export as PDF
+            </button>
+          </div>
           <Login />
         </main>
       );

@@ -1,5 +1,6 @@
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
+import html2canvas from 'html2canvas';
 
 const Dimensions = {
   Accountability: { label: 'A', name: 'Accountability' },
@@ -13,21 +14,22 @@ const Dimensions = {
  * Function adds the Header and Logo from the survey to the PDF.
  */
 function addHeader(doc, y) {
-  const title = 'Responsible AI Design Report Card';
+  const title = 'Responsible AI Leadership Fair';
+  const title2 = 'Lending Beta Report'
   const img = new Image();
-  img.src = '../img/aiglobal-logo.jpg';
-  const iw = 1403,
-    ih = 507,
-    ratio = 0.025;
+  img.src = '../img/certification.png';
+  const iw = 496,
+    ih = 497,
+    ratio = .12;
   doc.addImage(
     img,
-    'jpg',
-    10,
-    10,
+    'png',
+    80,
+    75,
     Math.floor(iw * ratio),
     Math.floor(ih * ratio)
   );
-  doc.setFontSize(24);
+  doc.setFontSize(34);
   doc.text(
     title,
     doc.internal.pageSize.getWidth() / 2,
@@ -36,58 +38,93 @@ function addHeader(doc, y) {
     null,
     'center'
   );
-  y += doc.getTextDimensions(title).h + 5; // padding
+  y += doc.getTextDimensions(title).h + 3
+  doc.text(
+    title2,
+    doc.internal.pageSize.getWidth() / 2,
+    y,
+    null,
+    null,
+    'center'
+  );
+  y += doc.getTextDimensions(title).h + 30; // padding
+  doc.addPage();
   return y;
 }
 
 /**
  * Function adds the Title and Description of the project surveyed to the PDF.
  */
-function addTitleDescription(
-  title,
-  description,
-  region,
-  industry,
-  risk,
+function addSystemInfo(
   doc,
   y
 ) {
-  doc.setFontSize(16);
-  doc.text(title, 10, y);
 
-  if (region || industry) {
-    y += doc.getTextDimensions(title).h + 1;
-    doc.setFontSize(10);
+  var text = 'AI System Reviewed'
+  doc.setFontSize(20);
+  doc.text(text, 10, y);
+  y += doc.getTextDimensions(text).h + 1;
 
-    let RI = [];
-    if (risk) {
-      RI.push('Risk Level: ' + risk);
-    }
+  text = 'Accountability'
+  doc.setFontSize(14);
+  doc.text(text, 10, y)
+  doc.setFontSize(12)
+  y += 2
+  doc.autoTable({
+    startY: y,
+    theme: 'grid',
+    // html: '#score',
+    head: [["Position", "Name", "Email"]],
+    body: [
+      ['System Lead', 'Kara Scully', 'kara@responsible.ai'],
+      ['System Engineer', '', ''],
+      ['Data Lead', '', ''],
+      ['Model Engineer', '', ''],
+      ['Product Owner', '', ''],
+      ['Internal Independent Review Lead', '', ''],
+      ['Independent Audit Lead', '', ''],
+      ['Independent Audit Team member', '', ''],
+      ['Independent Audit Team member', '', ''],
+      ['Independent Audit Team', '', ''],
+      ['Member', '', ''],
 
-    if (region) {
-      RI.push('Region: ' + region);
-    }
-    if (industry) {
-      RI.push('Industry: ' + industry);
-    }
+      // ...
+    ]
 
-    //"Region: " + region + "    Industry: " + industry;
-    doc.text(RI.join('      '), 10, y);
-  }
+  })
 
-  y += 2; // Padding between title and horizontal line.
-  doc.setDrawColor(0, 0, 0);
+  y = doc.autoTableEndPosY() + 10
+  text = "About the Organization"
+  doc.setFontSize(20);
+  doc.text(text, 10, y)
+  y += 5
 
-  doc.line(10, y, 200, y); // Horizontal line.
-  y += doc.getTextDimensions(title).h + 1; // Padding between title.
-  doc.setFontSize(10);
-  let length = 118;
+  text = "An organization with maturity related to the design, development, and deployment of AI systems will have increased success deploying trustworthy AI as these practices have been integrated into many aspects of their operation."
+  doc.setFontSize(12)
+  // doc.text(text, 10, y)
+  var lMargin = 15; //left margin in mm
+  var rMargin = 15; //right margin in mm
+  var pdfInMM = 210;  // width of A4 in mm
+  var lines = doc.splitTextToSize(text, (pdfInMM - lMargin - rMargin));
+  doc.text(lMargin, y, lines);
 
-  for (let i = 0; i < description.length; i += length) {
-    doc.text(description.substring(i, i + length), 15, y);
-    y += doc.getTextDimensions(description.substring(i, i + length)).h + 1;
-  }
-  y += 10; // padding
+  y += 20
+
+  doc.setFontSize(14);
+  text = "Organization Maturity"
+  doc.text(text, 10, y)
+  doc.setDrawColor(0, 0, 10);
+  y += 5
+  doc.setFontSize(12);
+
+  doc.text('Transformative', 10, y)
+  y += 4
+  // doc.setFontType(undefined, "bold");
+  doc.text('Strategic', 10, y)
+  y += 4
+  // doc.setFontType(undefined, "normal");
+  doc.text('Tactical', 10, y)
+  y += 10
   return y;
 }
 
@@ -357,36 +394,49 @@ function addReportCard(doc, y) {
   return y;
 }
 
+export async function addHTMLSection(doc, title, y) {
+  await html2canvas(document.getElementById(title)).then(function (canvas) {
+    var wid;
+    var hgt;
+    var img = canvas.toDataURL("image/png", wid = canvas.width, hgt = canvas.height);
+    var hratio = hgt / wid
+    var width = doc.internal.pageSize.width;
+    var height = width * hratio
+    doc.addImage(img, 'JPEG', 0, y, width, height);
+  });
+}
+
 /**
  * exports the results of the survey to PDF.
  * @param title
  * @param description
  */
-export function exportReport(title, description, industry, region, risk) {
+export async function exportReport(title, description, industry, region, risk) {
   const doc = new jsPDF();
-  // eslint-disable-next-line
-  var y = 35;
-  y = addHeader(doc, y);
-  if (
-    title !== undefined ||
-    description !== undefined ||
-    region ||
-    industry ||
-    risk
-  ) {
-    y = addTitleDescription(
-      title ?? ' ',
-      description ?? ' ',
-      region,
-      industry,
-      risk,
-      doc,
-      y
-    );
-  }
 
-  y = addAbout(doc, y);
-  y = addScore(doc, y);
+
+  // eslint-disable-next-line
+
+  var y = 150;
+  y = addHeader(doc, y);
+  y = 20;
+  await addHTMLSection(doc, 'pdf-header', y);
+  y += 35;
+  await addHTMLSection(doc, 'project-info', y);
+  doc.addPage();
+  y = 20;
+  await addHTMLSection(doc, 'results', y);
+  doc.addPage();
+  y = 20;
+
+  y = addSystemInfo(
+    doc,
+    y
+  );
+
+  //Applies to design assistant and not certification
+  // y = addAbout(doc, y);
+  // y = addScore(doc, y);
   addReportCard(doc, y);
   doc.save('Responsible AI Design Report Card.pdf');
 }
