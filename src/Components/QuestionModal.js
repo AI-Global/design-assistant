@@ -761,7 +761,7 @@ export default function QuestionModal(props) {
                           type="text"
                           placeholder="0"
                           value={response.score}
-                          style={{ minHeight: '44px' }}
+                          style={{ minHeight: '49px' }}
                           onChange={(event) =>
                             editScore(
                               event.target.value,

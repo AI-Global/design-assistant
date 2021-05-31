@@ -1,18 +1,18 @@
 # AI-Global Responsible Design Assistant
 
-### Demo
+### Design Assistant Demo (used as the base for certification)
+
 [Presentation](https://docs.google.com/presentation/d/1DI0MNAUXckx0i4YQVYPd8MPbshR-7BhZwzKhLxSTU-w/edit?usp=sharing)
 
 [Screencast Youtube Link](https://youtu.be/cp9tbfmL__U)
 
-[Screencast Google Drive Link](https://drive.google.com/file/d/1dP-a6K9vYou1YlDauHm0zBxuED7dQ3OG/view?usp=sharing)
-
 ### Links
-[Responsible AI Trust Index](http://162.246.157.168/)
+
+[Responsible AI Trust Index](https://rai-certification-beta-1.herokuapp.com/)
 
 [API documentation](docs/API.md)
 
-[Deployment Documentation](docs/Deployment&#32;Document.md)
+[Deployment Documentation](<docs/Deployment Document.md>)
 
 [Project Structure Text Overview](docs/project_structure.md)
 
@@ -24,15 +24,13 @@
 
 [Testing Documentation](docs/Testing%20Document.pdf)
 
-### .env Files 
-The frontend and backend .env files are skeleton files without any values. 
+### Environment Variables to Set
 
-These values need to be filled in for the app to work. You can use the values from the sprint4 .env files for testing purposes.
-
-[frontend/.env](https://github.com/UAlberta-CMPUT401/ai-global/blob/sprint4/frontend/.env)
-
-[backend/.env](https://github.com/UAlberta-CMPUT401/ai-global/blob/sprint4/backend/.env)
-
+MONGODB_URL=mongodb+srv...secret...
+REACT_APP_API_BASE_URL=http://localhost:5000
+SESSION_TIMEOUT=292000
+MAILSERVICE_USERNAME = noreplyaiglobal@gmail.com
+MAILSERVICE_PASSWORD = [password for mail service]
 
 ### License
 
