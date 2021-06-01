@@ -208,22 +208,22 @@ function formatQuestion(q, Dimensions, Triggers = null) {
     question.choices = [-1, 0, 1];
 
     if (q.responses) {
-      low = q.responses.filter((resp) => resp.indicator == 'low')[0].score;
-      med = q.responses.filter((resp) => resp.indicator == 'med')[0].score;
-      high = q.responses.filter((resp) => resp.indicator == 'high')[0].score;
+      var low = q.responses.filter((resp) => resp.indicator == 'low')[0].score;
+      var med = q.responses.filter((resp) => resp.indicator == 'med')[0].score;
+      var high = q.responses.filter((resp) => resp.indicator == 'high')[0].score;
       question.pipsValues = [low, high];
       question.pipsDensity = high;
-      question.choices = [low, med, high];
+      //uncomment if only want low, medium, and high to be answers
+      // question.choices = [low, med, high];
     }
 
     // Calculate max score
     question.score.max = question.choices[2] * q.weighting;
     question.score.weight = q.weighting;
-
     question.tooltips = false;
     question.rangeMin = low;
     question.rangeMax = high;
-    question.step = 1
+    question.step = 1;
 
 
   }

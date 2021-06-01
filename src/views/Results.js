@@ -15,10 +15,11 @@ import {
   Col,
 } from 'react-bootstrap';
 import '../css/results.css';
-import { ResponsiveRadar } from '@nivo/radar';
+// import { ResponsiveRadar } from '@nivo/radar';
 import exportReport from '../helper/ExportReport';
 import ReportCard from './ReportCard';
-import DimensionScore from './DimensionScore';
+//Table no longer being used for certification report card
+// import DimensionScore from './DimensionScore';
 import TrustedAIProviders from './TrustedAIProviders';
 import TrustedAIResources from './TrustedAIResources';
 import ReactGa from 'react-ga';

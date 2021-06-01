@@ -1,6 +1,4 @@
-
-
-# Responsible‌ ‌Design‌ ‌Assistant‌ API documentation
+# Certification API documentation
 
 ## Questions Management
 
@@ -51,7 +49,7 @@ response:
 
 ### GET /questions/all
 
-Returns an object with a list of all survey questions in the database.
+Returns an object with a list of all survey questions in the database. It also returns the dimensions, subdimension, and systemDimensions a question is tagged with.
 Questions are not formatted for surveyJS.
 
 #### example
@@ -101,7 +99,33 @@ response:
          "weighting":0
       },
       ...
-   ]
+   ],
+   "Dimensions": {
+       1: {
+        "dimensionID": 1, 
+        "label": "T", 
+        "name":"Project Details", 
+        "page": "ProjectDetails"},
+        ...
+   },
+    "subDimensions": {
+        1: {
+        "dimensionID": 2, 
+        "subDimensionID": 1,
+        "name":"Strategy (AI/Technology Experience)", 
+        "maxRisk": 190,
+        "maxMitigation": 0},
+        ...
+    },
+    "systemDimensions": {
+        1: {
+            "systemID": 1,
+            "name": "Data"
+        }
+        ....
+    }
+
+
 }
 ```
 
@@ -125,10 +149,22 @@ response:
     },
     "name": "5f85d5e7157a3b15fcc8e468",
     "type": "checkbox",
-    "recommendation": {
+    "subDimension": 2,
+    "questionType": "organization",
+
+    "recommendedLinks": {
         "default": "We recommend that the terms of reference should be clearly communicated to the intended audience. Purpose, objectives, context, and work plan are established and made clear.  ",
         "fr": ""
     },
+    "score": {
+        "dimension": "O",
+        "choices": [
+            "5f8a3fbfe4e29a55c3c18955" :0,
+            "5f8a3fbfe4e29a55c3c18956": 10,
+            "5f8a3fbfe4e29a55c3c18957": 15
+        ],
+        "max": 1
+    }
     "choices": [
         {
             "value": "5f8a3fbfe4e29a55c3c18955",
@@ -159,60 +195,103 @@ response:
 
 Add a new question to the database
 
+A question will have belong to one dimension, subDimension, and systemDimension
+
+**questionType** : Options are tombstone, organization, risk, and mitigation
+
+**responseType**: Options are text, comment, dropdown, radiogroup, checkbox, slider
+
 #### example
 
 request:
-```
+This example question has a parent question that can trigger it to appear in the survey.
+```json
 POST /questions
 
 {
-   "trigger":null,
+   "trigger": {
+       "parent": "<id of parent question>",
+       "responses": [
+           "<id of parent questions' responses that  
+           will trigger current question>"
+       ],
+       "parentQuestion": "Parent question text?"
+   },
    "domainApplicability":[],
    "regionalApplicability":[],
    "roles":[],
    "lifecycle":[],
    "rec_links":[],
-   "questionNumber":1,
+   "questionNumber":10,
    "alt_text":null,
-   "child":false,
    "mandatory":true,
-   "pointsAvailable":0,
+   "pointsAvailable":1,
    "prompt":null,
    "question":"Test Question",
-   "questionType":"tombstone",
+   "questionType":"organization",  
    "reference":null,
-   "responseType":"text",
-   "responses":[],
-   "trustIndexDimension":1,
-   "weighting":0
+   "responseType":"radiogroup",
+   "responses":[
+        {
+            "responseNumber": 0,
+            "indicator": "Yes",
+            "score": 10
+        },
+        {
+            "responseNumber": 1,
+            "indicator": "No",
+            "score": 0
+        }
+   ],
+   "trustIndexDimension":2,
+   "weighting":1,
+   "child": true,
+   "subDimension": 2
 }
 ```
 
 response:
 ```json
 {
-    "trigger": {
-        "responses": []
-    },
+   "trigger": {
+       "parent": "<id of parent question>",
+       "responses": [
+           "<id of parent questions' responses that  
+           will trigger current question>"
+       ],
+       "parentQuestion": "Parent question text?"
+   }
     "domainApplicability": [],
     "regionalApplicability": [],
     "roles": [],
     "lifecycle": [],
     "rec_links": [],
     "_id": "5fbf91b74323703d62d24df3",
-    "questionNumber": 1,
+    "questionNumber": 10,
     "alt_text": null,
-    "child": false,
+    "child": true,
     "mandatory": true,
-    "pointsAvailable": 0,
+    "pointsAvailable": 1,
     "prompt": null,
     "question": "Test Question",
-    "questionType": "tombstone",
+    "questionType": "organization",
     "reference": null,
-    "responseType": "text",
-    "responses": [],
-    "trustIndexDimension": 1,
-    "weighting": 0,
+    "responseType": "radiogroup",
+    "responses": [
+        {
+            "responseNumber": 0,
+            "indicator": "Yes",
+            "score": 10
+        },
+        {
+            "responseNumber": 1,
+            "indicator": "No",
+            "score": 0
+        }
+    ],
+    "trustIndexDimension": 2,
+    "weighting": 1,
+    "subDimension": 2,
     "__v": 0
 }
 ```
@@ -367,6 +446,79 @@ response:
         "Data Quality"
     ]
 }
+```
+## SubDimensions
+
+### GET /subdimensions
+
+Returns a list of all subdimensions in the database.
+
+#### example
+
+request:
+```
+GET /subdimensions
+```
+
+response:
+```json
+[
+    {
+        "_id": "5fbe13fd4b93713a34bf747d",
+        "subDimensionID": 1,
+        "dimensionID": 2,
+        "__v": 0,
+        "name": "Strategy (AI/Technology Experience)",
+        "maxRisk": 190,
+        "maxMitigation": 0
+    },
+    {
+        "_id": "60545b136eb2823cd98155cf",
+        "subDimensionID": 2,
+        "dimensionID": 2,
+        "__v": 0,
+        "name": "Governance",
+        "maxRisk": 190,
+        "maxMitigation": 0
+
+    },
+    ...
+]
+```
+
+## SystemDimensions
+
+### GET /systemdimensions
+
+Returns a list of all system dimensions in the database.
+
+#### example
+
+request:
+```
+GET /systemdimensions
+```
+
+response:
+```json
+[
+    {
+        "_id": "5fbe13fd4b93713a34bf747d",
+        "name": "Data",
+        "systemID": 1
+    },
+    {
+        "_id": "60545b136eb2823cd98155cf",
+        "name": "Processes",
+        "systemID": 2
+    },
+    {
+        "_id": "60a6b31d65e83a5217b38922",
+        "name": "Models",
+        "systemID": 3
+    }
+    ...
+]
 ```
 
 ## Metadata
