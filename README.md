@@ -4,7 +4,7 @@
 
 ## Development
 
-[Original Documentation](https://github.com/AI-Global/design-assistant/tree/rai-certification-beta-1/docs)
+### [**Design and Technical Documentation**](https://github.com/AI-Global/design-assistant/tree/rai-certification-beta-1/docs)
 
 > You will need to use [vscode](https://code.visualstudio.com/) in order to use our auto-formatting tools and linting.
 

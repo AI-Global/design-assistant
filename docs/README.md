@@ -10,17 +10,17 @@
 
 [Responsible AI Trust Index](https://rai-certification-beta-1.herokuapp.com/)
 
-[API documentation](docs/Technical%20Overview/API.md)
+[API documentation](Technical%20Overview/API.md)
 
-[Project Structure Text Overview](docs/Technical%20Overview/project_structure.md)
+[Project Structure Text Overview](Technical%20Overview/project_structure.md)
 
-[Admin Panel ReadMe Guide](docs/User%20Guides/admin_guide.md)
+[Admin Panel ReadMe Guide](User%20Guides/admin_guide.md)
 
-[Responsible AI Assistant Administrator User Manual](docs/User%20Guides/Responsible%20AI%20Assistant%20Administrator%20User%20Manual.pdf)
+[Responsible AI Assistant Administrator User Manual](User%20Guides/Responsible%20AI%20Assistant%20Administrator%20User%20Manual.pdf)
 
-[Responsible AI Assistant Member User Manual](docs/User%20Guides/Responsible%20AI%20Assistant%20Member%20User%20Manual.pdf)
+[Responsible AI Assistant Member User Manual](User%20Guides/Responsible%20AI%20Assistant%20Member%20User%20Manual.pdf)
 
-[Testing Documentation](docs/Testing%20Document.pdf)
+[Testing Documentation](Testing%20Document.pdf)
 
 ### Environment Variables to Set
 
