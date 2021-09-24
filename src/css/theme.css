@@ -17,6 +17,13 @@ html {
 .banner {
   padding-top: 0.5rem;
 }
+
+.banner .logo {
+  max-width: 260px;
+  padding: 20px;
+  margin-left: 20px;
+}
+
 .banner .company-logo {
   max-width: 80px;
   padding: 10px;

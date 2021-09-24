@@ -3,6 +3,9 @@ import './css/theme.css';
 import './css/survey.css';
 import ReactGa from 'react-ga';
 import Login from './views/Login';
+import Button from '@material-ui/core/Button';
+import Box from '@material-ui/core/Box';
+import { withStyles } from '@material-ui/core';
 import UserSubmissions from './views/UserSubmissions';
 import React, { useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
@@ -13,22 +16,85 @@ import 'nouislider/distribute/nouislider.min.css';
 ReactGa.initialize(process.env.REACT_APP_GAID, {
   testMode: process.env.NODE_ENV != 'production',
 });
+const img = new Image();
+const backgroundImage = (img.src = '../img/landing-background.png');
+
+const LandingButton = withStyles(() => ({
+  root: {
+    borderRadius: '8px',
+    border: '1px solid',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#386EDA',
+    color: '#386EDA',
+    '&:hover': {
+      backgroundColor: '#386EDA',
+      borderColor: '#386EDA',
+      color: '#FFFFFF',
+    },
+  },
+}))(Button);
 
 function WelcomeText() {
   return (
-    <div style={{ padding: '1em' }}>
-      <p>
-        Welcome‌ ‌to‌ ‌the‌ <strong>RAI‌ ‌Design‌ ‌Assistant‌</strong>.‌ ‌This‌
-        ‌is‌ ‌a‌ ‌virtual‌ ‌guide‌ ‌to‌ ‌help‌ ‌those‌ designing,‌ ‌developing,‌
-        ‌and‌ ‌implementing‌ ‌AI‌ ‌systems‌ ‌do‌ ‌so‌ ‌in‌ ‌a‌ ‌responsible‌
-        ‌way.‌
-      </p>
-      <p>
-        Committed‌ ‌to‌ ‌making‌ ‌responsible‌ ‌AI‌ ‌systems,‌ ‌we’ve‌ ‌done‌
-        ‌the‌ ‌hard‌ ‌work‌ ‌of‌ ‌deciphering‌ the‌ ‌best‌ ‌practices,‌
+    // <div
+    //   style={{
+    //     backgroundImage: `url(${backgroundImage})`,
+    //     width: '100%',
+    //   }}
+    // >
+    <div
+      style={{
+        padding: '1em',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}
+    >
+      <h1>RAI Certification: Fair landing</h1>
+      <Box mt={2} />
+      <h5>
+        Welcome‌ ‌to‌ ‌the‌ ‌RAIL Certification Beta.‌ ‌This‌ ‌is‌ ‌a‌ ‌virtual‌
+        ‌guide‌ ‌to‌ ‌help‌ ‌those‌ designing,‌ ‌developing,‌ ‌and‌
+        ‌implementing‌ ‌AI‌ ‌systems‌ ‌do‌ ‌so‌ ‌in‌ ‌a‌ ‌responsible‌
+        ‌way.‌Committed‌ ‌to‌ ‌making‌ ‌responsible‌ ‌AI‌ ‌systems,‌ ‌we’ve‌
+        ‌done‌ ‌the‌ ‌hard‌ ‌work‌ ‌of‌ ‌deciphering‌ the‌ ‌best‌ ‌practices,‌
         ‌policies,‌ ‌and‌ ‌principles‌ ‌and‌ ‌put‌ ‌them‌ ‌into‌ ‌a‌ ‌simple‌
         ‌online‌ ‌survey.‌
-      </p>
+      </h5>
+      <Box mt={6} />
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          width: '70%',
+          justifyContent: 'space-between',
+        }}
+      >
+        <LandingButton variant="outlined" type="button">
+          START NEW SURVEY
+        </LandingButton>
+        <LandingButton
+          variant="outlined"
+          type="button"
+          className="landing-button"
+        >
+          FAQ's
+        </LandingButton>
+        <LandingButton
+          variant="outlined"
+          type="button"
+          className="landing-button"
+        >
+          GUIDE LINK
+        </LandingButton>
+      </div>
+    </div>
+  );
+}
+
+function LandingDescription() {
+  return (
+    <div>
       <p>
         With‌ ‌our‌ ‌esteemed‌ ‌community‌ ‌of‌ ‌subject‌ ‌matter‌ ‌experts‌
         ‌ranging‌ ‌from‌ ‌engineers,‌ ‌to‌ ethicists,‌ ‌to‌ ‌policy‌ ‌makers,‌
@@ -61,30 +127,6 @@ function WelcomeText() {
         ‌start‌ ‌of‌ ‌your‌ ‌project,‌ ‌however,‌ ‌we‌ ‌do‌ ‌think‌ ‌that‌ ‌the‌
         ‌Design‌ ‌Assistant‌ ‌can‌ ‌be‌ used‌ ‌throughout‌ ‌the‌ ‌lifecycle‌
         ‌of‌ ‌your‌ ‌project!‌
-      </p>
-      <p>
-        To‌ ‌learn‌ ‌more‌ ‌about‌ ‌the‌ ‌background‌ ‌of‌ ‌this‌ ‌project,‌
-        ‌check‌ ‌out‌ ‌our‌ ‌post‌ ‌about‌ ‌the‌ creation‌ ‌of‌ ‌the‌ ‌Design‌
-        ‌Assistant‌ ‌on‌{' '}
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://ai-global.org/2020/04/28/creating-a-responsible-ai-trust-index-a-unified-assessment-to-assure-the-responsible-design-development-and-deployment-of-ai/"
-        >
-          ai-global.org
-        </a>
-        ‌‌.
-      </p>
-      <p>
-        For‌ ‌more‌ ‌information‌ ‌on‌ ‌how‌ ‌to‌ ‌use‌ ‌the‌ ‌Design‌
-        ‌Assistant,‌ ‌including‌ ‌FAQ’s,‌ ‌check‌ ‌out‌ our{' '}
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://docs.google.com/presentation/d/1EDPhyRhIsiOrujLcHQv_fezXfgOz4Rl7a8lyOM_guoA/edit#slide=id.p1"
-        >
-          Guide
-        </a>.
       </p>
     </div>
   );
@@ -147,10 +189,10 @@ function HomePage(props) {
   }, [code]);
   return (
     <div>
-      <h1 className="section-header">Welcome</h1>
       <WelcomeText />
       <Login />
       <UserSubmissions />
+      <LandingDescription />
     </div>
   );
 }
