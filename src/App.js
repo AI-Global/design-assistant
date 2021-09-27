@@ -178,25 +178,6 @@ function HomePage(props) {
   return (
     <div>
       <WelcomeText />
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-evenly',
-        }}
-      >
-        <LandingButton variant="outlined" type="button">
-          START NEW SURVEY
-        </LandingButton>
-        <LandingButton variant="outlined" type="button">
-          FREQUENTLY ASKED QUESTIONS
-        </LandingButton>
-        <LandingButton variant="outlined" type="button">
-          GUIDE LINK
-        </LandingButton>
-      </div>
-      <div class="divider"></div>
-      <Box mt={5} />
       <Login />
       <UserSubmissions />
       <Box mt={5} />

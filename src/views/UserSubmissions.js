@@ -1,11 +1,29 @@
 import React, { Component } from 'react';
-import { Button } from 'react-bootstrap';
 import { getLoggedInUser } from '../helper/AuthHelper';
+import Button from '@material-ui/core/Button';
+import Box from '@material-ui/core/Box';
+
 import ProjectCard from '../Components/ProjectCard';
 import api from '../api';
 import ReactGa from 'react-ga';
 import { withRouter } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core';
+
+const LandingButton = withStyles(() => ({
+  root: {
+    borderRadius: '8px',
+    border: '1px solid',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#386EDA',
+    color: '#386EDA',
+    '&:hover': {
+      backgroundColor: '#386EDA',
+      borderColor: '#386EDA',
+      color: '#FFFFFF',
+    },
+  },
+}))(Button);
 
 const useStyles = makeStyles({
   root: {
@@ -35,6 +53,11 @@ const StartSurveyHandler = () => {
   });
 };
 
+const faqPath =
+  '/https://ai-global.org/2020/04/28/creating-a-responsible-ai-trust-index-a-unified-assessment-to-assure-the-responsible-design-development-and-deployment-of-ai/';
+
+const guidancePath =
+  '/https://docs.google.com/presentation/d/1EDPhyRhIsiOrujLcHQv_fezXfgOz4Rl7a8lyOM_guoA/edit#slide=id.p1';
 class UserSubmissions extends Component {
   constructor(props) {
     super(props);
@@ -60,7 +83,6 @@ class UserSubmissions extends Component {
   }
 
   startSurvey() {
-    console.log('fire?');
     this.props.history.push({
       pathname: '/DesignAssistantSurvey',
       state: { user_id: this.state?.user?._id },
@@ -174,32 +196,56 @@ class UserSubmissions extends Component {
     const handleClose = () => this.setState({ showDeleteWarning: false });
     return (
       <div>
-        <ProjectCard
-          projectName={'test'}
-          assessmentType={'test'}
-          updatedBy={'test'}
-          updatedOn={'test'}
-          handleDeleteClick={this.startSurvey()}
-        ></ProjectCard>
-
-        {this.state.submissions.map((submission, index) => {
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-evenly',
+          }}
+        >
+          <LandingButton
+            variant="outlined"
+            type="button"
+            onClick={this.startSurvey}
+          >
+            START NEW SURVEY
+          </LandingButton>
+          <LandingButton variant="outlined" type="button" href={faqPath}>
+            FREQUENTLY ASKED QUESTIONS
+          </LandingButton>
+          <LandingButton variant="outlined" type="button" href={guidancePath}>
+            GUIDE LINK
+          </LandingButton>
+        </div>
+        <div class="divider"></div>
+        <Box mb={5} />
+        <div>
           <ProjectCard
-            key={index}
-            projectName={
-              submission?.projectName
-                ? submission?.projectName
-                : 'No Project Name'
-            }
+            projectName={'test'}
             assessmentType={'test'}
-            updatedBy={this.state.user}
-            updatedOn={new Date(submission.date).toLocaleString('en-US', {
-              timeZone:
-                Intl?.DateTimeFormat()?.resolvedOptions()?.timeZone ?? 'UTC',
-            })}
-            handleDeleteClick={this.deleteSurvey()}
-          ></ProjectCard>;
-        })}
-        <Button onClick={() => this.startSurvey()}>Start New Survey</Button>
+            updatedBy={'test'}
+            updatedOn={'test'}
+            handleDeleteClick={this.deleteSurvey}
+          ></ProjectCard>
+
+          {this.state.submissions.map((submission, index) => {
+            <ProjectCard
+              key={index}
+              projectName={
+                submission?.projectName
+                  ? submission?.projectName
+                  : 'No Project Name'
+              }
+              assessmentType={'test'}
+              updatedBy={this.state.user}
+              updatedOn={new Date(submission.date).toLocaleString('en-US', {
+                timeZone:
+                  Intl?.DateTimeFormat()?.resolvedOptions()?.timeZone ?? 'UTC',
+              })}
+              handleDeleteClick={this.deleteSurvey()}
+            ></ProjectCard>;
+          })}
+        </div>
       </div>
     );
   }
