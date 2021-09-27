@@ -96,7 +96,7 @@ function LandingDescription() {
         ‌a‌ ‌comprehensive‌ ‌evaluation‌ looking‌ ‌at‌ ‌the‌ ‌following‌
         ‌dimensions‌ ‌of‌ ‌a‌ ‌trusted‌ ‌AI‌ ‌program:‌
       </p>
-      <ol style={{ fontWeight: 'bold', marginBottom: '30px' }}>
+      <ol style={{ marginBottom: '30px' }}>
         <li>Organization Maturity</li>
         <li>Accountability</li>
         <li>Data</li>
@@ -189,7 +189,7 @@ function HomePage(props) {
           START NEW SURVEY
         </LandingButton>
         <LandingButton variant="outlined" type="button">
-          FAQ
+          FREQUENTLY ASKED QUESTIONS
         </LandingButton>
         <LandingButton variant="outlined" type="button">
           GUIDE LINK

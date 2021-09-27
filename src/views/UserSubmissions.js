@@ -1,20 +1,11 @@
 import React, { Component } from 'react';
-import { Button, Table, Modal } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import { getLoggedInUser } from '../helper/AuthHelper';
 import ProjectCard from '../Components/ProjectCard';
 import api from '../api';
 import ReactGa from 'react-ga';
 import { withRouter } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
-import IconButton from '@material-ui/core/IconButton';
-
 import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles({
   root: {
@@ -69,6 +60,7 @@ class UserSubmissions extends Component {
   }
 
   startSurvey() {
+    console.log('fire?');
     this.props.history.push({
       pathname: '/DesignAssistantSurvey',
       state: { user_id: this.state?.user?._id },
@@ -187,6 +179,7 @@ class UserSubmissions extends Component {
           assessmentType={'test'}
           updatedBy={'test'}
           updatedOn={'test'}
+          handleDeleteClick={this.startSurvey()}
         ></ProjectCard>
 
         {this.state.submissions.map((submission, index) => {
@@ -206,6 +199,7 @@ class UserSubmissions extends Component {
             handleDeleteClick={this.deleteSurvey()}
           ></ProjectCard>;
         })}
+        <Button onClick={() => this.startSurvey()}>Start New Survey</Button>
       </div>
     );
   }
