@@ -16,6 +16,7 @@ import 'nouislider/distribute/nouislider.min.css';
 ReactGa.initialize(process.env.REACT_APP_GAID, {
   testMode: process.env.NODE_ENV != 'production',
 });
+
 const img = new Image();
 const backgroundImage = (img.src = '../img/landing-background.png');
 
@@ -36,57 +37,44 @@ const LandingButton = withStyles(() => ({
 
 function WelcomeText() {
   return (
-    // <div
-    //   style={{
-    //     backgroundImage: `url(${backgroundImage})`,
-    //     width: '100%',
-    //   }}
-    // >
     <div
       style={{
-        padding: '1em',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
+        backgroundImage: `url(${backgroundImage})`,
+        width: '99.6vw',
+        height: '52vh',
+        position: 'relative',
+        left: '50%',
+        right: '50%',
+        top: '-100px',
+        marginLeft: '-50vw',
+        marginRight: '-50vw',
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
       }}
     >
-      <h1>RAI Certification: Fair landing</h1>
-      <Box mt={2} />
-      <h5>
-        Welcome‌ ‌to‌ ‌the‌ ‌RAIL Certification Beta.‌ ‌This‌ ‌is‌ ‌a‌ ‌virtual‌
-        ‌guide‌ ‌to‌ ‌help‌ ‌those‌ designing,‌ ‌developing,‌ ‌and‌
-        ‌implementing‌ ‌AI‌ ‌systems‌ ‌do‌ ‌so‌ ‌in‌ ‌a‌ ‌responsible‌
-        ‌way.‌Committed‌ ‌to‌ ‌making‌ ‌responsible‌ ‌AI‌ ‌systems,‌ ‌we’ve‌
-        ‌done‌ ‌the‌ ‌hard‌ ‌work‌ ‌of‌ ‌deciphering‌ the‌ ‌best‌ ‌practices,‌
-        ‌policies,‌ ‌and‌ ‌principles‌ ‌and‌ ‌put‌ ‌them‌ ‌into‌ ‌a‌ ‌simple‌
-        ‌online‌ ‌survey.‌
-      </h5>
-      <Box mt={6} />
       <div
         style={{
+          padding: '10em',
           display: 'flex',
-          flexDirection: 'row',
-          width: '70%',
-          justifyContent: 'space-between',
+          flexDirection: 'column',
+          alignItems: 'center',
         }}
       >
-        <LandingButton variant="outlined" type="button">
-          START NEW SURVEY
-        </LandingButton>
-        <LandingButton
-          variant="outlined"
-          type="button"
-          className="landing-button"
+        <h1>RAI Certification: Fair landing</h1>
+        <Box mt={2} />
+        <div
+          style={{
+            width: '55%',
+          }}
         >
-          FAQ's
-        </LandingButton>
-        <LandingButton
-          variant="outlined"
-          type="button"
-          className="landing-button"
-        >
-          GUIDE LINK
-        </LandingButton>
+          Welcome‌ ‌to‌ ‌the‌ ‌RAIL Certification Beta.‌ ‌This‌ ‌is‌ ‌a‌
+          ‌virtual‌ ‌guide‌ ‌to‌ ‌help‌ ‌those‌ designing,‌ ‌developing,‌ ‌and‌
+          ‌implementing‌ ‌AI‌ ‌systems‌ ‌do‌ ‌so‌ ‌in‌ ‌a‌ ‌responsible‌
+          ‌way.‌Committed‌ ‌to‌ ‌making‌ ‌responsible‌ ‌AI‌ ‌systems,‌ ‌we’ve‌
+          ‌done‌ ‌the‌ ‌hard‌ ‌work‌ ‌of‌ ‌deciphering‌ the‌ ‌best‌ ‌practices,‌
+          ‌policies,‌ ‌and‌ ‌principles‌ ‌and‌ ‌put‌ ‌them‌ ‌into‌ ‌a‌ ‌simple‌
+          ‌online‌ ‌survey.‌
+        </div>
       </div>
     </div>
   );
@@ -190,8 +178,28 @@ function HomePage(props) {
   return (
     <div>
       <WelcomeText />
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-evenly',
+        }}
+      >
+        <LandingButton variant="outlined" type="button">
+          START NEW SURVEY
+        </LandingButton>
+        <LandingButton variant="outlined" type="button">
+          FAQ
+        </LandingButton>
+        <LandingButton variant="outlined" type="button">
+          GUIDE LINK
+        </LandingButton>
+      </div>
+      <div class="divider"></div>
+      <Box mt={5} />
       <Login />
       <UserSubmissions />
+      <Box mt={5} />
       <LandingDescription />
     </div>
   );

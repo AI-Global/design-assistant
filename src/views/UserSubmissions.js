@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Button, Table, Modal } from 'react-bootstrap';
 import { getLoggedInUser } from '../helper/AuthHelper';
+import ProjectCard from '../Components/ProjectCard';
 import api from '../api';
 import ReactGa from 'react-ga';
 import { withRouter } from 'react-router-dom';
@@ -8,6 +9,33 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import IconButton from '@material-ui/core/IconButton';
+
+import { makeStyles } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import Typography from '@material-ui/core/Typography';
+
+const useStyles = makeStyles({
+  root: {
+    width: 264,
+    borderRadius: '10px 10px 0px 0px',
+  },
+  bullet: {
+    display: 'inline-block',
+    margin: '0 2px',
+    transform: 'scale(0.8)',
+  },
+  title: {
+    fontSize: 14,
+  },
+  pos: {
+    marginBottom: 12,
+  },
+  cardContent: {
+    backgroundColor: '#E5EEFF',
+  },
+});
 
 const StartSurveyHandler = () => {
   ReactGa.event({
@@ -97,6 +125,7 @@ class UserSubmissions extends Component {
   }
 
   deleteSurvey() {
+    console.log('fire?');
     let currentSubmissionIdx = this.state.currentSubmissionIdx;
     let submissions = this.state.submissions;
     let submission = submissions[currentSubmissionIdx];
@@ -153,127 +182,30 @@ class UserSubmissions extends Component {
     const handleClose = () => this.setState({ showDeleteWarning: false });
     return (
       <div>
-        <Modal
-          aria-labelledby="contained-modal-title-vcenter"
-          centered
-          show={this.state.showDeleteWarning}
-          backdrop="static"
-          keyboard={false}
-        >
-          <Modal.Header>
-            <Modal.Title id="contained-modal-title-vcenter">
-              Warning!
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            Are you sure you would like to delete this submission?
-          </Modal.Body>
-          <Modal.Footer>
-            <Button id="DeleteSurveyButton" onClick={() => this.deleteSurvey()}>
-              Yes
-            </Button>
-            <Button onClick={() => handleClose()}>Cancel</Button>
-          </Modal.Footer>
-        </Modal>
-        <div>
-          <div className="card">
-            <div className="card-header">Existing Surveys</div>
-            <div className="card-body">
-              <Table bordered responsive className="survey-results-table">
-                <thead>
-                  <tr>
-                    <th>Project Name</th>
-                    <th>Last Updated</th>
-                    <th width="120px"></th>
-                    <th width="100px"></th>
-                    <th width="75px"></th>
-                    <th width="75px"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {this.state.submissions.map((submission, index) => {
-                    return (
-                      <tr key={index}>
-                        <td>
-                          {submission?.projectName
-                            ? submission?.projectName
-                            : 'No Project Name'}
-                        </td>
-                        <td>
-                          {new Date(submission.date).toLocaleString('en-US', {
-                            timeZone:
-                              Intl?.DateTimeFormat()?.resolvedOptions()
-                                ?.timeZone ?? 'UTC',
-                          })}
-                        </td>
-                        <td width="120px" className="text-center">
-                          {!submission.completed && (
-                            <Button
-                              block
-                              onClick={() => {
-                                this.resumeSurvey(index);
-                                StartSurveyHandler();
-                              }}
-                            >
-                              Resume
-                            </Button>
-                          )}
-                          {submission.completed && (
-                            <Button
-                              block
-                              onClick={() => {
-                                this.resumeSurvey(index);
-                                StartSurveyHandler();
-                              }}
-                              className="results-button"
-                            >
-                              Results
-                            </Button>
-                          )}
-                        </td>
-                        <td width="100px">
-                          <Button
-                            block
-                            onClick={() => {
-                              this.cloneSurvey(index);
-                            }}
-                          >
-                            Clone
-                          </Button>
-                        </td>
-                        <td width="75px" className="text-center">
-                          {submission.completed && (
-                            <IconButton
-                              aria-label="edit survey"
-                              onClick={() => {
-                                this.editSurvey(index);
-                              }}
-                            >
-                              <EditIcon />
-                            </IconButton>
-                          )}
-                        </td>
-                        <td width="75px" className="text-center">
-                          <IconButton
-                            aria-label="delete survey"
-                            onClick={() => {
-                              this.showDeleteWarning(index);
-                            }}
-                          >
-                            <DeleteOutlineIcon />
-                          </IconButton>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </Table>
-            </div>
-          </div>
-        </div>
-        <div className="float-right mr-3 mt-2">
-          <Button onClick={() => this.startSurvey()}>Start New Survey</Button>
-        </div>
+        <ProjectCard
+          projectName={'test'}
+          assessmentType={'test'}
+          updatedBy={'test'}
+          updatedOn={'test'}
+        ></ProjectCard>
+
+        {this.state.submissions.map((submission, index) => {
+          <ProjectCard
+            key={index}
+            projectName={
+              submission?.projectName
+                ? submission?.projectName
+                : 'No Project Name'
+            }
+            assessmentType={'test'}
+            updatedBy={this.state.user}
+            updatedOn={new Date(submission.date).toLocaleString('en-US', {
+              timeZone:
+                Intl?.DateTimeFormat()?.resolvedOptions()?.timeZone ?? 'UTC',
+            })}
+            handleDeleteClick={this.deleteSurvey()}
+          ></ProjectCard>;
+        })}
       </div>
     );
   }
