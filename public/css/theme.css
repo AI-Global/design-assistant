@@ -220,3 +220,27 @@ form .btn:not(.btn-call-to-action) {
   background-color: #386eda;
   border-color: #ffffff;
 }
+
+.footer-color {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.anthem-footer-theme {
+  background-color: #386eda;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 40px 0;
+}
+
+.anthem-footer-theme .footerButton {
+  border: 1px solid #ffffff;
+  border-radius: 8px;
+  color: #ffffff;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+}
