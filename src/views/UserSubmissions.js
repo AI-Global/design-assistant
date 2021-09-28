@@ -2,13 +2,11 @@ import React, { Component } from 'react';
 import { getLoggedInUser } from '../helper/AuthHelper';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
-
+import { withStyles } from '@material-ui/core/styles';
 import ProjectCard from '../Components/ProjectCard';
 import api from '../api';
 import ReactGa from 'react-ga';
 import { withRouter } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core/styles';
-import { withStyles } from '@material-ui/core';
 
 const LandingButton = withStyles(() => ({
   root: {
@@ -40,27 +38,6 @@ const ViewAllButton = withStyles(() => ({
     },
   },
 }))(Button);
-
-const useStyles = makeStyles({
-  root: {
-    width: 264,
-    borderRadius: '10px 10px 0px 0px',
-  },
-  bullet: {
-    display: 'inline-block',
-    margin: '0 2px',
-    transform: 'scale(0.8)',
-  },
-  title: {
-    fontSize: 14,
-  },
-  pos: {
-    marginBottom: 12,
-  },
-  cardContent: {
-    backgroundColor: '#E5EEFF',
-  },
-});
 
 const StartSurveyHandler = () => {
   ReactGa.event({
@@ -245,59 +222,91 @@ class UserSubmissions extends Component {
         <div
           style={{
             display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-evenly',
+            justifyContent: 'center',
+            width: '100%',
           }}
         >
-          <Box
-            height={800}
-            width={650}
-            border={1}
-            borderColor="#DEE6F0"
-            borderRadius={10}
+          <div
+            style={{
+              width: '60%',
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-around',
+            }}
           >
-            In Progress
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
+            <Box
+              height={900}
+              width={650}
+              border={1}
+              borderColor="#DEE6F0"
+              borderRadius={10}
             >
-              <ProjectCard
-                status={'pending Review'}
-                projectName={'Project Name'}
-                updatedBy={'John'}
-                updatedOn={'May 26, 2019'}
-                handleDeleteClick={this.deleteSurvey}
-              ></ProjectCard>
-            </div>
-          </Box>
+              <div className="surveyTitle">In Progress</div>
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'space-evenly',
+                  height: '85%',
+                }}
+              >
+                <ProjectCard
+                  status={'pending Review'}
+                  projectName={'Project Name'}
+                  updatedBy={'John'}
+                  updatedOn={'May 26, 2019'}
+                  handleDeleteClick={this.deleteSurvey}
+                ></ProjectCard>
+                <ProjectCard
+                  status={'pending Review'}
+                  projectName={'Project Name'}
+                  updatedBy={'John'}
+                  updatedOn={'May 26, 2019'}
+                  handleDeleteClick={this.deleteSurvey}
+                ></ProjectCard>
+                <Box mt={4} />
+                <ViewAllButton>View All</ViewAllButton>
+              </div>
+            </Box>
 
-          <Box
-            height={800}
-            width={650}
-            border={1}
-            borderColor="#DEE6F0"
-            borderRadius={10}
-          >
-            Completed
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
+            <Box
+              height={900}
+              width={650}
+              border={1}
+              borderColor="#DEE6F0"
+              borderRadius={10}
             >
-              <ProjectCard
-                status={'pending Review'}
-                projectName={'Project Name'}
-                updatedBy={'John'}
-                updatedOn={'May 26, 2019'}
-                handleDeleteClick={this.deleteSurvey}
-              ></ProjectCard>
-            </div>
-          </Box>
+              <div className="surveyTitle">Completed</div>
+
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'space-evenly',
+                  height: '85%',
+                }}
+              >
+                <ProjectCard
+                  status={'pending Review'}
+                  projectName={'Project Name'}
+                  updatedBy={'John'}
+                  updatedOn={'May 26, 2019'}
+                  handleDeleteClick={this.deleteSurvey}
+                ></ProjectCard>
+                <ProjectCard
+                  status={'pending Review'}
+                  projectName={'Project Name'}
+                  updatedBy={'John'}
+                  updatedOn={'May 26, 2019'}
+                  handleDeleteClick={this.deleteSurvey}
+                ></ProjectCard>
+                <Box mt={4} />
+                <ViewAllButton>View All</ViewAllButton>
+              </div>
+            </Box>
+          </div>
           {this.state.submissions.map((submission, index) => {
             <ProjectCard
               key={index}
@@ -317,15 +326,6 @@ class UserSubmissions extends Component {
           })}
         </div>
         <Box mt={4} />
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'center',
-          }}
-        >
-          <ViewAllButton>View All</ViewAllButton>
-        </div>
       </div>
     );
   }
