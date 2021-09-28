@@ -249,14 +249,55 @@ class UserSubmissions extends Component {
             justifyContent: 'space-evenly',
           }}
         >
-          <ProjectCard
-            status={'pending Review'}
-            projectName={'Project Name'}
-            updatedBy={'John'}
-            updatedOn={'May 26, 2019'}
-            handleDeleteClick={this.deleteSurvey}
-          ></ProjectCard>
+          <Box
+            height={800}
+            width={650}
+            border={1}
+            borderColor="#DEE6F0"
+            borderRadius={10}
+          >
+            In Progress
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <ProjectCard
+                status={'pending Review'}
+                projectName={'Project Name'}
+                updatedBy={'John'}
+                updatedOn={'May 26, 2019'}
+                handleDeleteClick={this.deleteSurvey}
+              ></ProjectCard>
+            </div>
+          </Box>
 
+          <Box
+            height={800}
+            width={650}
+            border={1}
+            borderColor="#DEE6F0"
+            borderRadius={10}
+          >
+            Completed
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <ProjectCard
+                status={'pending Review'}
+                projectName={'Project Name'}
+                updatedBy={'John'}
+                updatedOn={'May 26, 2019'}
+                handleDeleteClick={this.deleteSurvey}
+              ></ProjectCard>
+            </div>
+          </Box>
           {this.state.submissions.map((submission, index) => {
             <ProjectCard
               key={index}

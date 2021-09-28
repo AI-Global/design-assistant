@@ -1,6 +1,7 @@
 import React from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
+import Chip from '@material-ui/core/Chip';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
@@ -33,6 +34,16 @@ const useStyles = makeStyles({
     columnGap: '2em',
     width: '100%',
   },
+  statusRow: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  statusColor: {
+    color: '#386EDA',
+    fontSize: 18,
+  },
 });
 
 export default function ProjectCard(props) {
@@ -51,8 +62,12 @@ export default function ProjectCard(props) {
     <React.Fragment>
       <Card className={classes.root}>
         <CardContent className={classes.cardContent}>
-          <Typography className={classes.title}>{status}</Typography>
-          <Typography className={classes.title}>{projectName}</Typography>
+          <div className={classes.statusRow}>
+            <Typography className={classes.statusColor}>{status}</Typography>
+            <Chip label="Deployment" color="primary" />
+          </div>
+
+          <div className={classes.title}>{projectName}</div>
           <div>Updated by: {updatedBy}</div>
         </CardContent>
         <CardActions>
