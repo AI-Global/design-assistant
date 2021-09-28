@@ -60,7 +60,7 @@ function WelcomeText() {
           alignItems: 'center',
         }}
       >
-        <h1>RAI Certification: Fair landing</h1>
+        <h1>RAI Certification: Fair Landing</h1>
         <Box mt={2} />
         <div
           style={{

@@ -25,6 +25,22 @@ const LandingButton = withStyles(() => ({
   },
 }))(Button);
 
+const ViewAllButton = withStyles(() => ({
+  root: {
+    width: '290px',
+    borderRadius: '8px',
+    border: '1px solid',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#C9D7E9',
+    color: '#386EDA',
+    '&:hover': {
+      backgroundColor: '#386EDA',
+      borderColor: '#386EDA',
+      color: '#FFFFFF',
+    },
+  },
+}))(Button);
+
 const useStyles = makeStyles({
   root: {
     width: 264,
@@ -200,7 +216,8 @@ class UserSubmissions extends Component {
           style={{
             display: 'flex',
             flexDirection: 'row',
-            justifyContent: 'space-evenly',
+            justifyContent: 'space-around',
+            width: '94%',
           }}
         >
           <LandingButton
@@ -219,12 +236,33 @@ class UserSubmissions extends Component {
         </div>
         <div class="divider"></div>
         <Box mb={5} />
-        <div>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-evenly',
+          }}
+        >
           <ProjectCard
-            projectName={'test'}
-            assessmentType={'test'}
-            updatedBy={'test'}
-            updatedOn={'test'}
+            projectName={'Project Name'}
+            assessmentType={'Design'}
+            updatedBy={'John'}
+            updatedOn={'May 26, 2019'}
+            handleDeleteClick={this.deleteSurvey}
+          ></ProjectCard>
+
+          <ProjectCard
+            projectName={'Project Name'}
+            assessmentType={'Design'}
+            updatedBy={'John'}
+            updatedOn={'Aug 2, 2018'}
+            handleDeleteClick={this.deleteSurvey}
+          ></ProjectCard>
+          <ProjectCard
+            projectName={'Project Name'}
+            assessmentType={'Design'}
+            updatedBy={'John'}
+            updatedOn={'Jan 2, 2018'}
             handleDeleteClick={this.deleteSurvey}
           ></ProjectCard>
 
@@ -245,6 +283,16 @@ class UserSubmissions extends Component {
               handleDeleteClick={this.deleteSurvey()}
             ></ProjectCard>;
           })}
+        </div>
+        <Box mt={4} />
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'center',
+          }}
+        >
+          <ViewAllButton>View All</ViewAllButton>
         </div>
       </div>
     );
