@@ -6,13 +6,6 @@ html {
   padding-top: 0.5rem;
 }
 
-.divider {
-  width: 1120px;
-  height: 0px;
-  border: 1px solid #dee6f0;
-  margin-top: 20px;
-}
-
 .logo-index {
   z-index: 1;
 }

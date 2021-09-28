@@ -416,3 +416,7 @@ input[type='number'] {
 .progress-bar {
   background-color: #1a92ce !important;
 }
+
+.mainContainer {
+  width: 100%;
+}

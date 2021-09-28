@@ -179,9 +179,18 @@ function HomePage(props) {
     <div>
       <WelcomeText />
       <Login />
-      <UserSubmissions />
-      <Box mt={5} />
-      <LandingDescription />
+      <div
+        style={{
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          flexDirection: 'column',
+        }}
+      >
+        <UserSubmissions />
+        <Box mt={5} />
+        <LandingDescription />
+      </div>
     </div>
   );
 }

@@ -215,26 +215,32 @@ class UserSubmissions extends Component {
         <div
           style={{
             display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-around',
-            width: '94%',
+            justifyContent: 'center',
           }}
         >
-          <LandingButton
-            variant="outlined"
-            type="button"
-            onClick={this.startSurvey}
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-around',
+              width: '50%',
+            }}
           >
-            START NEW SURVEY
-          </LandingButton>
-          <LandingButton variant="outlined" type="button" href={faqPath}>
-            FREQUENTLY ASKED QUESTIONS
-          </LandingButton>
-          <LandingButton variant="outlined" type="button" href={guidancePath}>
-            GUIDE LINK
-          </LandingButton>
+            <LandingButton
+              variant="outlined"
+              type="button"
+              onClick={this.startSurvey}
+            >
+              START NEW SURVEY
+            </LandingButton>
+            <LandingButton variant="outlined" type="button" href={faqPath}>
+              FREQUENTLY ASKED QUESTIONS
+            </LandingButton>
+            <LandingButton variant="outlined" type="button" href={guidancePath}>
+              GUIDE LINK
+            </LandingButton>
+          </div>
         </div>
-        <div class="divider"></div>
         <Box mb={5} />
         <div
           style={{
@@ -244,25 +250,10 @@ class UserSubmissions extends Component {
           }}
         >
           <ProjectCard
+            status={'pending Review'}
             projectName={'Project Name'}
-            assessmentType={'Design'}
             updatedBy={'John'}
             updatedOn={'May 26, 2019'}
-            handleDeleteClick={this.deleteSurvey}
-          ></ProjectCard>
-
-          <ProjectCard
-            projectName={'Project Name'}
-            assessmentType={'Design'}
-            updatedBy={'John'}
-            updatedOn={'Aug 2, 2018'}
-            handleDeleteClick={this.deleteSurvey}
-          ></ProjectCard>
-          <ProjectCard
-            projectName={'Project Name'}
-            assessmentType={'Design'}
-            updatedBy={'John'}
-            updatedOn={'Jan 2, 2018'}
             handleDeleteClick={this.deleteSurvey}
           ></ProjectCard>
 

@@ -8,18 +8,20 @@ import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles({
   root: {
-    width: 300,
+    width: '523px',
+    height: '278px',
     borderRadius: '10px',
   },
   title: {
     fontSize: 24,
   },
   cardContent: {
-    backgroundColor: '#E5EEFF',
+    backgroundColor: '#F3F5F7',
   },
   buttonColumn: {
     display: 'flex',
     flexDirection: 'column',
+    alignItems: 'center',
   },
   trashIcon: {
     height: '40px',
@@ -27,7 +29,8 @@ const useStyles = makeStyles({
   buttonRow: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
+    columnGap: '2em',
     width: '100%',
   },
 });
@@ -35,8 +38,8 @@ const useStyles = makeStyles({
 export default function ProjectCard(props) {
   const classes = useStyles();
   const {
+    status,
     projectName,
-    assessmentType,
     updatedBy,
     updatedOn,
     handleDeleteClick,
@@ -48,11 +51,13 @@ export default function ProjectCard(props) {
     <React.Fragment>
       <Card className={classes.root}>
         <CardContent className={classes.cardContent}>
+          <Typography className={classes.title}>{status}</Typography>
           <Typography className={classes.title}>{projectName}</Typography>
-          <div>Assessment Type: {assessmentType}</div>
           <div>Updated by: {updatedBy}</div>
-          <div>Updated on: {updatedOn}</div>
         </CardContent>
+        <CardActions>
+          <div>Updated on: {updatedOn}</div>
+        </CardActions>
         <CardActions>
           <div className={classes.buttonRow}>
             <div className={classes.buttonColumn}>
