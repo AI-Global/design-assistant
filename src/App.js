@@ -149,7 +149,6 @@ function HomePage(props) {
           flexDirection: 'column',
         }}
       >
-        <Box mt={5} />
         <UserSubmissions />
         <Box mt={5} />
       </div>

@@ -14,6 +14,8 @@ const useStyles = makeStyles({
   },
   background: {
     backgroundColor: '#EFF0F2',
+    position: 'relative',
+    top: '-100px',
   },
   expandBackground: {
     height: '300px',
@@ -50,6 +52,30 @@ const useStyles = makeStyles({
   otherColor: {
     backgroundColor: '#C9D7E9',
     marginTop: '23px',
+  },
+  center: {
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  test: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    width: '95%',
+    padding: 30,
+  },
+  end: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    width: '33%',
+  },
+  assessmentTitle: {
+    fontSize: '36px',
+    marginRight: 100,
+  },
+  expandedAssessmentTitle: {
+    fontSize: '52px',
   },
 });
 
@@ -94,17 +120,23 @@ export default function AssessmentCards(props) {
 
   return (
     <div className={classes.background}>
-      {!expandButton && (
-        <div>
-          What Does Assessment cover
-          <div>
-            <ExpandButton onClick={handleExpandButton}>Expand</ExpandButton>
-          </div>
+      <div className={classes.test}>
+        <div
+          className={
+            expandButton
+              ? classes.expandedAssessmentTitle
+              : classes.assessmentTitle
+          }
+        >
+          What do Assessments Cover?
         </div>
-      )}
+
+        <div className={classes.end}>
+          <ExpandButton onClick={handleExpandButton}>Expand</ExpandButton>
+        </div>
+      </div>
       {expandButton && (
         <div className={classes.expandBackground}>
-          <div>What does Assessment cover? </div>
           <div className={classes.cardRow}>
             {assessmentCardsData.map((cards, i) => (
               <Card className={classes.root}>
