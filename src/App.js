@@ -11,6 +11,7 @@ import React, { useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { expireAuthToken } from './helper/AuthHelper';
 import api from './api';
+import AssessmentCards from './Components/AssessmentCards';
 import 'nouislider/distribute/nouislider.min.css';
 
 ReactGa.initialize(process.env.REACT_APP_GAID, {
@@ -138,6 +139,7 @@ function HomePage(props) {
   return (
     <div>
       <WelcomeText />
+      <AssessmentCards />
       <Login />
       <div
         style={{
@@ -147,6 +149,7 @@ function HomePage(props) {
           flexDirection: 'column',
         }}
       >
+        <Box mt={5} />
         <UserSubmissions />
         <Box mt={5} />
       </div>
