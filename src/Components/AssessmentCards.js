@@ -26,8 +26,8 @@ const useStyles = makeStyles({
     padding: '10px',
     fontWeight: 'bold',
   },
-  cardActionStyle: {
-    backgroundColor: 'red',
+  cardContent: {
+    fontSize: '16px',
   },
   cardRow: {
     display: 'flex',
@@ -35,19 +35,21 @@ const useStyles = makeStyles({
     justifyContent: 'space-around',
   },
   robustColor: {
-    color: '#4653EF',
+    backgroundColor: '#4653EF',
+    marginTop: '23px',
   },
   accountabilityColor: {
-    color: '#9CA3FF',
+    backgroundColor: '#9CA3FF',
   },
   dataQualityColor: {
-    color: '#8D9FB6',
+    backgroundColor: '#8D9FB6',
   },
   biasColor: {
-    color: '#A998A7',
+    backgroundColor: '#A998A7',
   },
   otherColor: {
-    color: '#C9D7E9',
+    backgroundColor: '#C9D7E9',
+    marginTop: '23px',
   },
 });
 
@@ -76,19 +78,20 @@ export default function AssessmentCards(props) {
 
   const handleCardColor = (color) => {
     switch (color) {
-      case 'settings':
-        return classses.robustColor;
-      case 'library':
-        return classses.accountabilityColor;
-      case 'find':
-        return classses.dataQualityColor;
-      case 'people':
-        return classses.biasColor;
-      case 'people':
-        return classses.otherColor;
+      case 'robustColor':
+        return classes.robustColor;
+      case 'accountabilityColor':
+        return classes.accountabilityColor;
+      case 'dataQualityColor':
+        return classes.dataQualityColor;
+      case 'biasColor':
+        return classes.biasColor;
+      case 'otherColor':
+        return classes.otherColor;
       default:
     }
   };
+
   return (
     <div className={classes.background}>
       {!expandButton && (
@@ -109,7 +112,9 @@ export default function AssessmentCards(props) {
                 <CardContent className={classes.cardContent}>
                   {cards.description}
                 </CardContent>
-                <CardActions className={classes.cardActionStyle}></CardActions>
+                <CardActions
+                  className={handleCardColor(cards.color)}
+                ></CardActions>
               </Card>
             ))}
           </div>
