@@ -132,7 +132,9 @@ export default function AssessmentCards(props) {
         </div>
 
         <div className={classes.end}>
-          <ExpandButton onClick={handleExpandButton}>Expand</ExpandButton>
+          <ExpandButton onClick={handleExpandButton}>
+            {expandButton ? 'Collapse' : 'Expand'}
+          </ExpandButton>
         </div>
       </div>
       {expandButton && (
