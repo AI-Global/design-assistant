@@ -25,6 +25,7 @@ const useStyles = makeStyles({
   },
   expandBackground: {
     backgroundColor: '#EFF0F2',
+    height: '1000px',
   },
   cardTitle: {
     display: 'flex',
