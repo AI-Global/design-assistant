@@ -6,6 +6,9 @@
 trigger:
 - master
 
+resources:
+- repo: self
+
 pool:
   vmImage: ubuntu-latest
 
@@ -19,3 +22,12 @@ steps:
     npm install
     npm run build
   displayName: 'npm install and build'
+
+stages:
+- stage: Build
+  displayName: Build and push stage
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: $(vmImageName)
