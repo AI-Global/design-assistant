@@ -2,9 +2,15 @@ import React from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
+import Box from '@material-ui/core/Box';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import assessmentCardsData from '../assets/data/assessmentCardData.json';
+
+const img = new Image();
+const user1 = (img.src = '../img/user1.png');
+const user2 = (img.src = '../img/user2.png');
+const user3 = (img.src = '../img/user3.png');
 
 const useStyles = makeStyles({
   root: {
@@ -18,7 +24,6 @@ const useStyles = makeStyles({
     top: '-100px',
   },
   expandBackground: {
-    height: '300px',
     backgroundColor: '#EFF0F2',
   },
   cardTitle: {
@@ -74,8 +79,29 @@ const useStyles = makeStyles({
     fontSize: '36px',
     marginRight: 100,
   },
-  expandedAssessmentTitle: {
+  largeTitleText: {
     fontSize: '52px',
+  },
+  assessmentButtonRow: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  row: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+  },
+  column: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  imgStyle: {
+    height: '120px',
+    width: '120px',
   },
 });
 
@@ -90,6 +116,16 @@ const ExpandButton = withStyles(() => ({
       borderColor: '#386EDA',
       color: '#FFFFFF',
     },
+  },
+}))(Button);
+
+const AssessmentButton = withStyles(() => ({
+  root: {
+    borderRadius: '12px',
+    border: '1px solid',
+    color: '#000000',
+    backgroundColor: '#ECB22E',
+    borderColor: '#ECB22E',
   },
 }))(Button);
 
@@ -123,9 +159,7 @@ export default function AssessmentCards(props) {
       <div className={classes.test}>
         <div
           className={
-            expandButton
-              ? classes.expandedAssessmentTitle
-              : classes.assessmentTitle
+            expandButton ? classes.largeTitleText : classes.assessmentTitle
           }
         >
           What do Assessments Cover?
@@ -151,6 +185,34 @@ export default function AssessmentCards(props) {
                 ></CardActions>
               </Card>
             ))}
+          </div>
+          <AssessmentButton>Data</AssessmentButton>
+          <AssessmentButton>Model</AssessmentButton>
+          <AssessmentButton>Context</AssessmentButton>
+          <Box mt={20} />
+          <div className={classes.center}>
+            <div className={classes.largeTitleText}>
+              Do I do the assessment alone or with my colleague?
+            </div>
+          </div>
+          <Box mt={20} />
+          <div className={classes.row}>
+            <div className={classes.column}>
+              <div className={classes.largeTitleText}>You can start alone</div>
+              <Box mt={10} />
+              <img className={classes.imgStyle} src={user1}></img>
+            </div>
+            <div className={classes.column}>
+              <div className={classes.largeTitleText}>
+                But later you will need a team
+              </div>
+              <Box mt={10} />
+              <div className={classes.row}>
+                <img src={user2}></img>
+                <img src={user1}></img>
+                <img src={user3}></img>
+              </div>
+            </div>
           </div>
         </div>
       )}

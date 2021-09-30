@@ -132,7 +132,6 @@ class UserSubmissions extends Component {
   }
 
   deleteSurvey() {
-    console.log('fire?');
     let currentSubmissionIdx = this.state.currentSubmissionIdx;
     let submissions = this.state.submissions;
     let submission = submissions[currentSubmissionIdx];
