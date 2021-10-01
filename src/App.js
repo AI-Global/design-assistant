@@ -11,7 +11,9 @@ import React, { useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { expireAuthToken } from './helper/AuthHelper';
 import api from './api';
-import AssessmentCards from './Components/AssessmentCards';
+// import AssessmentCards from './Components/AssessmentCards';
+import Assessment from './Components/Assessment';
+
 import 'nouislider/distribute/nouislider.min.css';
 
 ReactGa.initialize(process.env.REACT_APP_GAID, {
@@ -139,7 +141,8 @@ function HomePage(props) {
   return (
     <div>
       <WelcomeText />
-      <AssessmentCards />
+      <Assessment />
+      {/* <AssessmentCards /> */}
       <Login />
       <div
         style={{
