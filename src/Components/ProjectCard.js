@@ -6,74 +6,55 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-
-const useStyles = makeStyles({
-  root: {
-    width: '523px',
-    height: '278px',
-    borderRadius: '10px',
-  },
-  title: {
-    fontSize: 24,
-  },
-  cardContent: {
-    backgroundColor: '#F3F5F7',
-  },
-  buttonColumn: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  trashIcon: {
-    height: '40px',
-  },
-  buttonRow: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    columnGap: '2em',
-    width: '100%',
-  },
-  statusRow: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-  },
-  statusColor: {
-    color: '#386EDA',
-    fontSize: 18,
-  },
-});
+import { useStyles } from './ProjectCardStyle';
 
 export default function ProjectCard(props) {
   const classes = useStyles();
   const {
-    status,
+    projectStatus,
+    statusTitle,
     projectName,
     updatedBy,
+    startedOn,
     updatedOn,
+    completedOn,
     handleDeleteClick,
     handleCloneClick,
     handleResumeClick,
   } = props;
-  const [modalShow, setModalShow] = React.useState(false);
   return (
     <React.Fragment>
       <Card className={classes.root}>
         <CardContent className={classes.cardContent}>
           <div className={classes.statusRow}>
-            <Typography className={classes.statusColor}>{status}</Typography>
-            <Chip label="Deployment" color="primary" />
+            <Typography
+              className={
+                projectStatus ? classes.statusColor : classes.riskFactor
+              }
+            >
+              {statusTitle}
+            </Typography>
+            <Chip
+              className={
+                projectStatus ? classes.chipColor : classes.designChipColor
+              }
+              label={projectStatus ? 'Deployment' : 'Design'}
+            />
           </div>
 
           <div className={classes.title}>{projectName}</div>
           <div>Updated by: {updatedBy}</div>
         </CardContent>
         <CardActions>
-          <div>Updated on: {updatedOn}</div>
+          <div className={classes.statusRow}>
+            <div className={classes.startOnStyle}>Started on: {updatedOn}</div>
+            <div className={classes.completedStyle}>
+              Updated on: {updatedOn}
+            </div>
+          </div>
         </CardActions>
         <CardActions>
+          <div className={classes.viewAuditLog}>View Audit Log</div>
           <div className={classes.buttonRow}>
             <div className={classes.buttonColumn}>
               <Button onClick={handleResumeClick}>

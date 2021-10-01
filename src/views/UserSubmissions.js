@@ -251,14 +251,16 @@ class UserSubmissions extends Component {
                 }}
               >
                 <ProjectCard
-                  status={'pending Review'}
+                  projectStatus={true}
+                  statusTitle={'Pending Review - LOD 1'}
                   projectName={'Project Name'}
                   updatedBy={'John'}
                   updatedOn={'May 26, 2019'}
                   handleDeleteClick={this.deleteSurvey}
                 ></ProjectCard>
                 <ProjectCard
-                  status={'pending Review'}
+                  projectStatus={true}
+                  statusTitle={'Preparing Responses'}
                   projectName={'Project Name'}
                   updatedBy={'John'}
                   updatedOn={'May 26, 2019'}
@@ -288,14 +290,16 @@ class UserSubmissions extends Component {
                 }}
               >
                 <ProjectCard
-                  status={'pending Review'}
+                  projectStatus={false}
+                  statusTitle={'Risk Factors'}
                   projectName={'Project Name'}
                   updatedBy={'John'}
                   updatedOn={'May 26, 2019'}
                   handleDeleteClick={this.deleteSurvey}
                 ></ProjectCard>
                 <ProjectCard
-                  status={'pending Review'}
+                  projectStatus={false}
+                  statusTitle={'Risk Factors'}
                   projectName={'Project Name'}
                   updatedBy={'John'}
                   updatedOn={'May 26, 2019'}

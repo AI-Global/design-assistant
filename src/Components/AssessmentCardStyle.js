@@ -14,7 +14,7 @@ export const useStyles = makeStyles({
   },
   expandBackground: {
     backgroundColor: '#EFF0F2',
-    height: '1000px',
+    height: '1100px',
   },
   cardTitle: {
     display: 'flex',
