@@ -25,12 +25,10 @@ export const useStyles = makeStyles({
   cardContent: {
     fontSize: '16px',
   },
-
   cardContainer: {
     display: 'flex',
     justifyContent: 'center',
   },
-
   cardRow: {
     display: 'flex',
     flexDirection: 'row',
@@ -89,12 +87,10 @@ export const useStyles = makeStyles({
     justifyContent: 'space-around',
     width: '100%',
   },
-
   chipContainer: {
     display: 'flex',
     justifyContent: 'center',
   },
-
   chipRow: {
     display: 'flex',
     flexDirection: 'row',
@@ -110,6 +106,14 @@ export const useStyles = makeStyles({
   imgStyle: {
     height: '120px',
     width: '120px',
+  },
+  cardContentContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+  },
+  stepperBackgroundColor: {
+    backgroundColor: 'white',
   },
 });
 
@@ -132,7 +136,7 @@ export const AssessmentButton = withStyles(() => ({
     borderRadius: '12px',
     border: '1px solid',
     color: '#000000',
-    backgroundColor: '#ECB22E',
-    borderColor: '#ECB22E',
+    backgroundColor: '#8D9FB6',
+    borderColor: '#8D9FB6',
   },
 }))(Button);

@@ -128,12 +128,12 @@ export const ExpandButton = withStyles(() => ({
   },
 }))(Button);
 
-export const AssessmentButton = withStyles(() => ({
-  root: {
-    borderRadius: '12px',
-    border: '1px solid',
-    color: '#000000',
-    backgroundColor: '#ECB22E',
-    borderColor: '#ECB22E',
-  },
-}))(Button);
+// export const AssessmentButton = withStyles(() => ({
+//   root: {
+//     borderRadius: '12px',
+//     border: '1px solid',
+//     color: '#000000',
+//     backgroundColor: '#8D9FB6',
+//     borderColor: '#8D9FB6',
+//   },
+// }))(Button);
