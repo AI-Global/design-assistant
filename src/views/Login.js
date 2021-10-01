@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Button } from 'react-bootstrap';
+import Button from '@material-ui/core/Button';
+
 import { getLoggedInUser, expireAuthToken } from '../helper/AuthHelper';
 import UserSettings from './UserSettings';
 import crypto from 'crypto';
@@ -28,7 +29,7 @@ export default function Login() {
     let redirect = 'https://designassistant.dev.ai-global.org';
     let appName = 'designassistant-dev';
     if (window.location.origin.includes('https://rai-certification')) {
-      let redirect = window.location.origin
+      let redirect = window.location.origin;
     }
     if (window.location.origin == 'http://localhost:3000') {
       redirect = 'http://localhost:3000';
@@ -57,9 +58,7 @@ export default function Login() {
   if (!user) {
     return (
       <div style={{ position: 'absolute', top: '20px', right: '150px' }}>
-        <Button onClick={login}>
-          Login
-        </Button>
+        <Button onClick={login}>Login</Button>
         <Button style={{ marginLeft: '10px' }} onClick={createAccount}>
           Create Account
         </Button>
@@ -68,7 +67,9 @@ export default function Login() {
   }
   return (
     <div style={{ position: 'absolute', top: '20px', right: '150px' }}>
-      <p className="msg">Logged in as: <strong>{user.username}</strong> &nbsp;</p>
+      <p className="msg">
+        Logged in as: <strong>{user.username}</strong> &nbsp;
+      </p>
       <UserSettings />
     </div>
   );
