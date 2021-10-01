@@ -1,134 +1,20 @@
 import React from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import Box from '@material-ui/core/Box';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import assessmentCardsData from '../assets/data/assessmentCardData.json';
 
+import {
+  ExpandButton,
+  AssessmentButton,
+  useStyles,
+} from './AssessmentCardStyle';
+
 const img = new Image();
 const user1 = (img.src = '../img/user1.png');
 const user2 = (img.src = '../img/user2.png');
 const user3 = (img.src = '../img/user3.png');
-
-const useStyles = makeStyles({
-  root: {
-    width: '240px',
-    height: '210px',
-    borderRadius: '10px',
-  },
-  background: {
-    backgroundColor: '#EFF0F2',
-    position: 'relative',
-    top: '-100px',
-  },
-  expandBackground: {
-    backgroundColor: '#EFF0F2',
-    height: '1000px',
-  },
-  cardTitle: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: '10px',
-    fontWeight: 'bold',
-  },
-  cardContent: {
-    fontSize: '16px',
-  },
-  cardRow: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-  },
-  robustColor: {
-    backgroundColor: '#4653EF',
-    marginTop: '23px',
-  },
-  accountabilityColor: {
-    backgroundColor: '#9CA3FF',
-  },
-  dataQualityColor: {
-    backgroundColor: '#8D9FB6',
-  },
-  biasColor: {
-    backgroundColor: '#A998A7',
-  },
-  otherColor: {
-    backgroundColor: '#C9D7E9',
-    marginTop: '23px',
-  },
-  center: {
-    display: 'flex',
-    justifyContent: 'center',
-  },
-  test: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    width: '95%',
-    padding: 30,
-  },
-  end: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    width: '33%',
-  },
-  assessmentTitle: {
-    fontSize: '36px',
-    marginRight: 100,
-  },
-  largeTitleText: {
-    fontSize: '52px',
-  },
-  assessmentButtonRow: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  row: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
-  },
-  column: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  imgStyle: {
-    height: '120px',
-    width: '120px',
-  },
-});
-
-const ExpandButton = withStyles(() => ({
-  root: {
-    borderRadius: '8px',
-    border: '1px solid',
-    borderColor: '#386EDA',
-    color: '#386EDA',
-    '&:hover': {
-      backgroundColor: '#386EDA',
-      borderColor: '#386EDA',
-      color: '#FFFFFF',
-    },
-  },
-}))(Button);
-
-const AssessmentButton = withStyles(() => ({
-  root: {
-    borderRadius: '12px',
-    border: '1px solid',
-    color: '#000000',
-    backgroundColor: '#ECB22E',
-    borderColor: '#ECB22E',
-  },
-}))(Button);
 
 export default function AssessmentCards(props) {
   const classes = useStyles();
@@ -158,6 +44,7 @@ export default function AssessmentCards(props) {
   return (
     <div className={classes.background}>
       <div className={classes.test}>
+        <Box mt={20} />
         <div
           className={
             expandButton ? classes.largeTitleText : classes.assessmentTitle
@@ -174,23 +61,30 @@ export default function AssessmentCards(props) {
       </div>
       {expandButton && (
         <div className={classes.expandBackground}>
-          <div className={classes.cardRow}>
-            {assessmentCardsData.map((cards, i) => (
-              <Card className={classes.root}>
-                <div className={classes.cardTitle}>{cards.title}</div>
-                <CardContent className={classes.cardContent}>
-                  {cards.description}
-                </CardContent>
-                <CardActions
-                  className={handleCardColor(cards.color)}
-                ></CardActions>
-              </Card>
-            ))}
+          <div className={classes.cardContainer}>
+            <div className={classes.cardRow}>
+              {assessmentCardsData.map((cards, i) => (
+                <Card className={classes.root}>
+                  <div className={classes.cardTitle}>{cards.title}</div>
+                  <CardContent className={classes.cardContent}>
+                    {cards.description}
+                  </CardContent>
+                  <CardActions
+                    className={handleCardColor(cards.color)}
+                  ></CardActions>
+                </Card>
+              ))}
+            </div>
           </div>
-          <AssessmentButton>Data</AssessmentButton>
-          <AssessmentButton>Model</AssessmentButton>
-          <AssessmentButton>Context</AssessmentButton>
-          <Box mt={20} />
+          <Box mt={5} />
+          <div className={classes.chipContainer}>
+            <div className={classes.chipRow}>
+              <AssessmentButton>Data</AssessmentButton>
+              <AssessmentButton>Model</AssessmentButton>
+              <AssessmentButton>Context</AssessmentButton>
+            </div>
+          </div>
+          <Box mt={40} />
           <div className={classes.center}>
             <div className={classes.largeTitleText}>
               Do I do the assessment alone or with my colleague?
