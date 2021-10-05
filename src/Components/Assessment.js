@@ -32,35 +32,21 @@ export default function Assessment(props) {
 
   return (
     <div>
-      <div className={classes.test}>
+      <div className={classes.outterContainer}>
         <Box mt={20} />
         <div className={classes.assessmentTitle}>
           What do Assessments Cover?
         </div>
 
-        <div className={classes.end}>
+        <div className={classes.expandButtonEnd}>
           <ExpandButton onClick={handleExpandButton}>
             {expandButton ? 'Collapse' : 'Expand'}
           </ExpandButton>
         </div>
       </div>
       {expandButton && (
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '100%',
-          }}
-        >
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              width: '60%',
-            }}
-          >
+        <div className={classes.assessmentContainer}>
+          <div className={classes.assessmentCardContainer}>
             <Button
               size="small"
               onClick={handleBack}
@@ -81,7 +67,7 @@ export default function Assessment(props) {
               borderColor="#DEE6F0"
               borderRadius={10}
             >
-              <div className={classes.column}>
+              <div className={classes.assessmentColumn}>
                 <h1>{assessmentsData[activeStep].title}</h1>
                 <div style={{ width: '80%', paddingTop: 20 }}>
                   <h3>{assessmentsData[activeStep].description}</h3>
@@ -110,7 +96,7 @@ export default function Assessment(props) {
             </Button>
           </div>
           <Box mt={6} />
-          <div className={classes.column}>
+          <div className={classes.stepperColumn}>
             <MobileStepper
               variant="dots"
               steps={5}

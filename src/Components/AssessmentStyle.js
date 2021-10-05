@@ -7,56 +7,19 @@ export const useStyles = makeStyles({
     height: '210px',
     borderRadius: '10px',
   },
-  background: {
-    backgroundColor: '#EFF0F2',
-    position: 'relative',
-    top: '-100px',
-  },
-  expandBackground: {
-    backgroundColor: '#FFFFFF',
-  },
-  cardTitle: {
+  assessmentContainer: {
     display: 'flex',
+    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: '10px',
-    fontWeight: 'bold',
-  },
-  cardContent: {
-    fontSize: '16px',
-  },
-  cardContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-  },
-  cardRow: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
     width: '100%',
   },
-  robustColor: {
-    backgroundColor: '#4653EF',
-    marginTop: '23px',
-  },
-  accountabilityColor: {
-    backgroundColor: '#9CA3FF',
-  },
-  dataQualityColor: {
-    backgroundColor: '#8D9FB6',
-  },
-  biasColor: {
-    backgroundColor: '#A998A7',
-  },
-  otherColor: {
-    backgroundColor: '#C9D7E9',
-    marginTop: '23px',
-  },
-  center: {
+  assessmentCardContainer: {
     display: 'flex',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
+    width: '60%',
   },
-  test: {
+  outterContainer: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'flex-end',
@@ -64,27 +27,13 @@ export const useStyles = makeStyles({
     width: '94%',
     padding: 30,
   },
-  end: {
+  expandButtonEnd: {
     display: 'flex',
     justifyContent: 'flex-end',
     width: '33%',
   },
   assessmentTitle: {
     fontSize: '36px',
-  },
-  largeTitleText: {
-    fontSize: '52px',
-  },
-  assessmentButtonRow: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  row: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
   },
   chipContainer: {
     display: 'flex',
@@ -97,27 +46,20 @@ export const useStyles = makeStyles({
     justifyContent: 'space-around',
     width: '65%',
   },
-  column: {
+  stepperColumn: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  imgStyle: {
-    height: '120px',
-    width: '120px',
-  },
-  cardContentContainer: {
+  assessmentColumn: {
     display: 'flex',
     flexDirection: 'column',
+    alignItems: 'center',
     justifyContent: 'center',
   },
   stepperBackgroundColor: {
     backgroundColor: 'white',
-  },
-  arrow: {
-    width: '100%',
-    height: '100%',
   },
 });
 
