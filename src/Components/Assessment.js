@@ -100,12 +100,13 @@ export default function Assessment(props) {
                   <div className={classes.peopleRow}>
                     <div className={classes.peopleColumn}>
                       <h3>{assessmentsData[activeStep].title}</h3>
+                      <Box mt={5} />
                       <img src={user1} />
                     </div>
                     <div className={classes.peopleColumn}>
                       <h3>{assessmentsData[activeStep].description}</h3>
 
-                      <img className={classes.peopleImg} src={user2} />
+                      <img src={user2} />
                     </div>
                   </div>
                 </div>

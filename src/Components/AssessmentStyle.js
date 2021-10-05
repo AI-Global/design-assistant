@@ -78,10 +78,6 @@ export const useStyles = makeStyles({
     flexDirection: 'column',
     alignItems: 'center',
   },
-  peopleImg: {
-    height: '60%',
-    width: '32%',
-  },
 });
 
 export const ExpandButton = withStyles(() => ({
