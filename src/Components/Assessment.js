@@ -11,6 +11,10 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import { ExpandButton, AssessmentButton, useStyles } from './AssessmentStyle';
 
 export default function Assessment(props) {
+  const img = new Image();
+  const leftArrow = (img.src = '../img/leftArrow.png');
+  const rightArrow = (img.src = '../img/rightArrow.png');
+
   const classes = useStyles();
   const theme = useTheme();
 
@@ -50,30 +54,41 @@ export default function Assessment(props) {
       <div
         style={{
           display: 'flex',
-          justifyContent: 'space-between',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
           width: '100%',
         }}
       >
-        <Button size="small" onClick={handleNext} disabled={activeStep === 5}>
-          {theme.direction === 'rtl' ? (
-            <KeyboardArrowRight />
-          ) : (
-            <KeyboardArrowLeft />
-          )}
-        </Button>
-
-        <Box
-          height={467}
-          width={962}
-          border={1}
-          bgcolor="#DEE6F0"
-          borderColor="#DEE6F0"
-          borderRadius={10}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            width: '60%',
+          }}
         >
-          {/* <div>
-              <h1>{assessmentCardsData[activeStep].title}</h1>
-              <div>{assessmentCardsData[activeStep].description}</div>
+          <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
+            {theme.direction === 'rtl' ? (
+              <img src={rightArrow} />
+            ) : (
+              <img src={leftArrow} />
+            )}
+          </Button>
 
+          <Box
+            height={467}
+            width={962}
+            border={1}
+            bgcolor="#DEE6F0"
+            borderColor="#DEE6F0"
+            borderRadius={10}
+          >
+            <div className={classes.column}>
+              <h1>{assessmentCardsData[activeStep].title}</h1>
+              <div style={{ width: '80%', paddingTop: 20 }}>
+                <h3>{assessmentCardsData[activeStep].description}</h3>
+              </div>
+              <Box mt={6} />
               <div className={classes.chipContainer}>
                 <div className={classes.chipRow}>
                   <AssessmentButton>Data</AssessmentButton>
@@ -81,26 +96,30 @@ export default function Assessment(props) {
                   <AssessmentButton>Context</AssessmentButton>
                 </div>
               </div>
-            </div> */}
-        </Box>
+            </div>
+          </Box>
 
-        <Button size="small" onClick={handleNext} disabled={activeStep === 5}>
-          {theme.direction === 'rtl' ? (
-            <KeyboardArrowLeft />
-          ) : (
-            <KeyboardArrowRight />
-          )}
-        </Button>
+          <Button size="small" onClick={handleNext} disabled={activeStep === 4}>
+            {theme.direction === 'rtl' ? (
+              <img src={leftArrow} />
+            ) : (
+              <img src={rightArrow} />
+            )}
+          </Button>
+        </div>
       </div>
-
-      <MobileStepper
-        variant="dots"
-        steps={6}
-        position="static"
-        className={classes.stepperBackgroundColor}
-        activeStep={activeStep}
-        sx={{ maxWidth: 400, flexGrow: 1 }}
-      />
+      <Box mt={6} />
+      <div className={classes.column}>
+        <MobileStepper
+          variant="dots"
+          steps={5}
+          position="static"
+          className={classes.stepperBackgroundColor}
+          activeStep={activeStep}
+          sx={{ maxWidth: 400, flexGrow: 1 }}
+        />
+      </div>
+      <Box mt={6} />
 
       {/* {expandButton && (
         <div>

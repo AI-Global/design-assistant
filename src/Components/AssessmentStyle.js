@@ -71,7 +71,6 @@ export const useStyles = makeStyles({
   },
   assessmentTitle: {
     fontSize: '36px',
-    marginRight: 100,
   },
   largeTitleText: {
     fontSize: '52px',
@@ -90,12 +89,13 @@ export const useStyles = makeStyles({
   chipContainer: {
     display: 'flex',
     justifyContent: 'center',
+    width: '100%',
   },
   chipRow: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-around',
-    width: '20%',
+    width: '50%',
   },
   column: {
     display: 'flex',
@@ -114,6 +114,10 @@ export const useStyles = makeStyles({
   },
   stepperBackgroundColor: {
     backgroundColor: 'white',
+  },
+  arrow: {
+    width: '100%',
+    height: '100%',
   },
 });
 
