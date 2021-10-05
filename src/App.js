@@ -142,7 +142,6 @@ function HomePage(props) {
     <div>
       <WelcomeText />
       <Assessment />
-      {/* <AssessmentCards /> */}
       <Login />
       <div
         style={{
