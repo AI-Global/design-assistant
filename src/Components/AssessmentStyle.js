@@ -33,7 +33,7 @@ export const useStyles = makeStyles({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-around',
-    width: '60%',
+    width: '100%',
   },
   robustColor: {
     backgroundColor: '#4653EF',

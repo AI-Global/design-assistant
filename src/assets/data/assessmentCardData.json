@@ -1,27 +1,50 @@
 [
   {
-    "title": "Robustness",
-    "description": "Organizations developing or operating AI systems should be held accountable for their proper functioning.",
-    "color": "robustColor"
+    "assessment": [
+      {
+        "title": "Robustness",
+        "description": "Organizations developing or operating AI systems should be held accountable for their proper functioning."
+      },
+      {
+        "title": "Robustness",
+        "description": "Organizations developing or operating AI systems should be held accountable for their proper functioning."
+      },
+      {
+        "title": "Robustness",
+        "description": "Organizations developing or operating AI systems should be held accountable for their proper functioning."
+      }
+    ]
   },
   {
-    "title": "Accountability",
-    "description": "AI System must perform consistently and safely under noisy and dianamic cicumstances and not pose reasonable safety risks",
-    "color": "accountabilityColor"
+    "assessment": [
+      {
+        "title": "Robustness",
+        "description": "Organizations developing or operating AI systems should be held accountable for their proper functioning."
+      },
+      {
+        "title": "Robustness",
+        "description": "Organizations developing or operating AI systems should be held accountable for their proper functioning."
+      },
+      {
+        "title": "Robustness",
+        "description": "Organizations developing or operating AI systems should be held accountable for their proper functioning."
+      }
+    ]
   },
   {
-    "title": "Data Quality",
-    "description": "AI systems should respect data privacy and avoid using customer data beyond its intended and stated use.",
-    "color": "dataQualityColor"
-  },
-  {
-    "title": "Bias and Fairness",
-    "description": "AI systems should be explainable to ensure that people understand AI-based outcomes and can challenge them.",
-    "color": "biasColor"
-  },
-  {
-    "title": "Robustness",
-    "description": "AI systems must function in a robust, secure, and safe way throughout their life cycles",
-    "color": "otherColor"
+    "assessment": [
+      {
+        "title": "Robustness",
+        "description": "Organizations developing or operating AI systems should be held accountable for their proper functioning."
+      },
+      {
+        "title": "Robustness",
+        "description": "Organizations developing or operating AI systems should be held accountable for their proper functioning."
+      },
+      {
+        "title": "Robustness",
+        "description": "Organizations developing or operating AI systems should be held accountable for their proper functioning."
+      }
+    ]
   }
 ]

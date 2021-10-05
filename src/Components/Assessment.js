@@ -1,8 +1,7 @@
 import React from 'react';
 import Box from '@material-ui/core/Box';
-import assessmentCardsData from '../assets/data/assessmentCardData.json';
+import assessmentsData from '../assets/data/assessmentData.json';
 import { useTheme } from '@material-ui/core/styles';
-
 import MobileStepper from '@material-ui/core/MobileStepper';
 import Button from '@material-ui/core/Button';
 
@@ -83,9 +82,9 @@ export default function Assessment(props) {
               borderRadius={10}
             >
               <div className={classes.column}>
-                <h1>{assessmentCardsData[activeStep].title}</h1>
+                <h1>{assessmentsData[activeStep].title}</h1>
                 <div style={{ width: '80%', paddingTop: 20 }}>
-                  <h3>{assessmentCardsData[activeStep].description}</h3>
+                  <h3>{assessmentsData[activeStep].description}</h3>
                 </div>
                 <Box mt={15} />
                 <div className={classes.chipContainer}>
@@ -121,21 +120,9 @@ export default function Assessment(props) {
               sx={{ maxWidth: 400, flexGrow: 1 }}
             />
           </div>
-          <Box mt={6} />
+          <Box mt={4} />
         </div>
       )}
-
-      {/* {expandButton && (
-        <div>
-          <div className={classes.cardContainer}>
-            <div className={classes.cardRow}>
-              {assessmentCardsData.map((cards, i) => (
-                <div>yo</div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )} */}
     </div>
   );
 }

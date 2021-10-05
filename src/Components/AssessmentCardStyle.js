@@ -3,9 +3,10 @@ import Button from '@material-ui/core/Button';
 
 export const useStyles = makeStyles({
   root: {
-    width: '240px',
+    width: '277px',
     height: '210px',
-    borderRadius: '10px',
+    borderRadius: '30px',
+    backgroundColor: '#F3F5F7',
   },
   background: {
     backgroundColor: '#EFF0F2',
