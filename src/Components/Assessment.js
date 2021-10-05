@@ -4,6 +4,8 @@ import assessmentsData from '../assets/data/assessmentData.json';
 import { useTheme } from '@material-ui/core/styles';
 import MobileStepper from '@material-ui/core/MobileStepper';
 import Button from '@material-ui/core/Button';
+import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
 
 import { ExpandButton, AssessmentButton, useStyles } from './AssessmentStyle';
 
@@ -40,7 +42,17 @@ export default function Assessment(props) {
 
         <div className={classes.expandButtonEnd}>
           <ExpandButton onClick={handleExpandButton}>
-            {expandButton ? 'Collapse' : 'Expand'}
+            {expandButton ? (
+              <div>
+                Collapse
+                <KeyboardArrowUp />
+              </div>
+            ) : (
+              <div>
+                Expand
+                <KeyboardArrowDown />
+              </div>
+            )}
           </ExpandButton>
         </div>
       </div>
