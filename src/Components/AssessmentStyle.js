@@ -61,17 +61,26 @@ export const useStyles = makeStyles({
   stepperBackgroundColor: {
     backgroundColor: 'white',
   },
+  peopleContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
+  },
   peopleRow: {
     display: 'flex',
     flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '90%',
   },
   peopleColumn: {
     display: 'flex',
     flexDirection: 'column',
+    alignItems: 'center',
   },
   peopleImg: {
-    height: '50%',
-    width: '50%',
+    height: '60%',
+    width: '32%',
   },
 });
 
