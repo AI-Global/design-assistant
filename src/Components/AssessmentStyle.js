@@ -61,7 +61,7 @@ export const useStyles = makeStyles({
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center',
-    width: '95%',
+    width: '94%',
     padding: 30,
   },
   end: {
@@ -95,7 +95,7 @@ export const useStyles = makeStyles({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-around',
-    width: '50%',
+    width: '65%',
   },
   column: {
     display: 'flex',
@@ -142,5 +142,7 @@ export const AssessmentButton = withStyles(() => ({
     color: '#000000',
     backgroundColor: '#8D9FB6',
     borderColor: '#8D9FB6',
+    width: '180px',
+    height: '62px',
   },
 }))(Button);

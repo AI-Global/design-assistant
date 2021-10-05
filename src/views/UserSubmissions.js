@@ -227,7 +227,7 @@ class UserSubmissions extends Component {
         >
           <div
             style={{
-              width: '60%',
+              width: '75%',
               display: 'flex',
               flexDirection: 'row',
               justifyContent: 'space-around',
