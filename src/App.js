@@ -11,7 +11,6 @@ import React, { useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { expireAuthToken } from './helper/AuthHelper';
 import api from './api';
-// import AssessmentCards from './Components/AssessmentCards';
 import Assessment from './Components/Assessment';
 
 import 'nouislider/distribute/nouislider.min.css';
@@ -22,21 +21,6 @@ ReactGa.initialize(process.env.REACT_APP_GAID, {
 
 const img = new Image();
 const backgroundImage = (img.src = '../img/landing-background.png');
-
-const LandingButton = withStyles(() => ({
-  root: {
-    borderRadius: '8px',
-    border: '1px solid',
-    backgroundColor: '#FFFFFF',
-    borderColor: '#386EDA',
-    color: '#386EDA',
-    '&:hover': {
-      backgroundColor: '#386EDA',
-      borderColor: '#386EDA',
-      color: '#FFFFFF',
-    },
-  },
-}))(Button);
 
 function WelcomeText() {
   return (
