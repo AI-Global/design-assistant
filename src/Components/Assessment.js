@@ -13,6 +13,8 @@ export default function Assessment(props) {
   const img = new Image();
   const leftArrow = (img.src = '../img/leftArrow.png');
   const rightArrow = (img.src = '../img/rightArrow.png');
+  const user1 = (img.src = '../img/user1.png');
+  const user2 = (img.src = '../img/user2.png');
 
   const classes = useStyles();
   const theme = useTheme();
@@ -70,7 +72,6 @@ export default function Assessment(props) {
                 <img src={leftArrow} />
               )}
             </Button>
-
             <Box
               height={467}
               width={962}
@@ -79,26 +80,39 @@ export default function Assessment(props) {
               borderColor="#DEE6F0"
               borderRadius={10}
             >
-              <div className={classes.assessmentColumn}>
-                <h1>{assessmentsData[activeStep].title}</h1>
-                <div style={{ width: '80%', paddingTop: 20 }}>
-                  <h3>{assessmentsData[activeStep].description}</h3>
-                </div>
-                <Box mt={15} />
-                <div className={classes.chipContainer}>
-                  <div className={classes.chipRow}>
-                    <AssessmentButton>Data</AssessmentButton>
-                    <AssessmentButton>Model</AssessmentButton>
-                    <AssessmentButton>Context</AssessmentButton>
+              {activeStep < 5 ? (
+                <div className={classes.assessmentColumn}>
+                  <h1>{assessmentsData[activeStep].title}</h1>
+                  <div style={{ width: '80%', paddingTop: 20 }}>
+                    <h3>{assessmentsData[activeStep].description}</h3>
+                  </div>
+                  <Box mt={15} />
+                  <div className={classes.chipContainer}>
+                    <div className={classes.chipRow}>
+                      <AssessmentButton>Data</AssessmentButton>
+                      <AssessmentButton>Model</AssessmentButton>
+                      <AssessmentButton>Context</AssessmentButton>
+                    </div>
                   </div>
                 </div>
-              </div>
+              ) : (
+                <div className={classes.peopleRow}>
+                  <div className={classes.peopleColumn}>
+                    <h3>{assessmentsData[activeStep].title}</h3>
+                    <img className={classes.peopleImg} src={user1} />
+                  </div>
+                  <div className={classes.peopleColumn}>
+                    <h3>{assessmentsData[activeStep].description}</h3>
+                    <img className={classes.peopleImg} src={user2} />
+                  </div>
+                </div>
+              )}
             </Box>
 
             <Button
               size="small"
               onClick={handleNext}
-              disabled={activeStep === 4}
+              disabled={activeStep === 5}
             >
               {theme.direction === 'rtl' ? (
                 <img src={leftArrow} />
@@ -111,7 +125,7 @@ export default function Assessment(props) {
           <div className={classes.stepperColumn}>
             <MobileStepper
               variant="dots"
-              steps={5}
+              steps={6}
               position="static"
               className={classes.stepperBackgroundColor}
               activeStep={activeStep}

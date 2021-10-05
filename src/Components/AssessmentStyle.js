@@ -61,6 +61,18 @@ export const useStyles = makeStyles({
   stepperBackgroundColor: {
     backgroundColor: 'white',
   },
+  peopleRow: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  peopleColumn: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  peopleImg: {
+    height: '50%',
+    width: '50%',
+  },
 });
 
 export const ExpandButton = withStyles(() => ({
