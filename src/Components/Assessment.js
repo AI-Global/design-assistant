@@ -63,11 +63,7 @@ export default function Assessment(props) {
               onClick={handleBack}
               disabled={activeStep === 0}
             >
-              {theme.direction === 'rtl' ? (
-                <img src={rightArrow} />
-              ) : (
-                <img src={leftArrow} />
-              )}
+              {activeStep === 1 && <img src={leftArrow} />}
             </Button>
             <Box
               height={600}
@@ -93,11 +89,7 @@ export default function Assessment(props) {
               onClick={handleNext}
               disabled={activeStep === 1}
             >
-              {theme.direction === 'rtl' ? (
-                <img src={leftArrow} />
-              ) : (
-                <img src={rightArrow} />
-              )}
+              {activeStep === 0 && <img src={rightArrow} />}
             </Button>
           </div>
           <Box mt={6} />
