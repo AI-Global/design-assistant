@@ -82,18 +82,13 @@ export default function Assessment(props) {
             >
               {activeStep < 5 ? (
                 <div className={classes.assessmentColumn}>
+                  <img src={assessmentsData[activeStep].img}></img>
+
                   <h1>{assessmentsData[activeStep].title}</h1>
                   <div style={{ width: '80%', paddingTop: 20 }}>
                     <h3>{assessmentsData[activeStep].description}</h3>
                   </div>
                   <Box mt={15} />
-                  <div className={classes.chipContainer}>
-                    <div className={classes.chipRow}>
-                      <AssessmentButton>Data</AssessmentButton>
-                      <AssessmentButton>Model</AssessmentButton>
-                      <AssessmentButton>Context</AssessmentButton>
-                    </div>
-                  </div>
                 </div>
               ) : (
                 <div className={classes.peopleContainer}>

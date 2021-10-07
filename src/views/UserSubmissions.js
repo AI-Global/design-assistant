@@ -291,7 +291,7 @@ class UserSubmissions extends Component {
               >
                 <ProjectCard
                   projectStatus={false}
-                  statusTitle={'Risk Factors'}
+                  statusTitle={'View Reports'}
                   projectName={'Project Name'}
                   updatedBy={'John'}
                   updatedOn={'May 26, 2019'}
@@ -299,7 +299,7 @@ class UserSubmissions extends Component {
                 ></ProjectCard>
                 <ProjectCard
                   projectStatus={false}
-                  statusTitle={'Risk Factors'}
+                  statusTitle={'View Reports'}
                   projectName={'Project Name'}
                   updatedBy={'John'}
                   updatedOn={'May 26, 2019'}

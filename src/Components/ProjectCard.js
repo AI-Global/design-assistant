@@ -29,7 +29,7 @@ export default function ProjectCard(props) {
           <div className={classes.statusRow}>
             <Typography
               className={
-                projectStatus ? classes.statusColor : classes.riskFactor
+                projectStatus ? classes.statusColor : classes.viewReports
               }
             >
               {statusTitle}

@@ -37,8 +37,8 @@ export const useStyles = makeStyles({
     color: '#5A6C83',
     fontSize: 18,
   },
-  riskFactor: {
-    color: '#BF4051',
+  viewReports: {
+    color: '#446A32',
     fontSize: 18,
   },
   startOnStyle: {
