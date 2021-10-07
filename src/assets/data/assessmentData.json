@@ -1,42 +1,10 @@
 [
   {
-    "img": "/img/assessment1.png",
-    "title": "",
-    "description": ""
+    "title": "What does Assessment cover?",
+    "img": "/img/assessment1.png"
   },
   {
-    "img": "/img/assessment2.png",
-    "title": "",
-    "description": ""
-  },
-  {
-    "img": "",
-    "title": "Robustness",
-    "description": "Organizations developing or operating AI systems should be held accountable for their proper functioning."
-  },
-  {
-    "img": "",
-    "title": "Accountability",
-    "description": "AI System must perform consistently and safely under noisy and dianamic cicumstances and not pose reasonable safety risks"
-  },
-  {
-    "img": "",
-    "title": "Data Quality",
-    "description": "AI systems should respect data privacy and avoid using customer data beyond its intended and stated use."
-  },
-  {
-    "img": "",
-    "title": "Bias and Fairness",
-    "description": "AI systems should be explainable to ensure that people understand AI-based outcomes and can challenge them."
-  },
-  {
-    "img": "",
-    "title": "Robustness",
-    "description": "AI systems must function in a robust, secure, and safe way throughout their life cycles"
-  },
-  {
-    "img": "",
-    "title": "You Can Start Alone",
-    "description": "But Later You Will Need a Team"
+    "title": "Overview of RAI certification",
+    "img": "/img/assessment2.png"
   }
 ]

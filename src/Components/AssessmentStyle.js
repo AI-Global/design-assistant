@@ -24,7 +24,7 @@ export const useStyles = makeStyles({
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center',
-    width: '94%',
+    width: '90%',
     padding: 30,
   },
   expandButtonEnd: {
@@ -77,6 +77,9 @@ export const useStyles = makeStyles({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+  },
+  assessmentImages: {
+    width: '80%',
   },
 });
 
