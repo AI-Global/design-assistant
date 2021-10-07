@@ -18,6 +18,12 @@ import ModalHeader from 'react-bootstrap/ModalHeader';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import { ToastContainer, toast } from 'react-toastify';
 import { getLoggedInUser } from '../helper/AuthHelper';
+import Stepper from '@material-ui/core/Stepper';
+import Step from '@material-ui/core/Step';
+import StepLabel from '@material-ui/core/StepLabel';
+import StepContent from '@material-ui/core/StepContent';
+
+import Box from '@material-ui/core/Box';
 
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -58,6 +64,7 @@ class DesignAssistantSurvey extends Component {
       submission_id: this?.props?.location?.state?.submission_id,
       user_id: this?.props?.location?.state?.user_id,
       localResponses: JSON.parse(localStorage.getItem('localResponses')),
+      activeStep: [],
     };
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
@@ -295,6 +302,7 @@ class DesignAssistantSurvey extends Component {
 
   nextPage() {
     this.state.model.nextPage();
+    this.state.activeStep + 1;
     this.setState(this.state); // force re-render to update buttons and % complete
   }
 
@@ -448,45 +456,44 @@ class DesignAssistantSurvey extends Component {
     return this.state.model ? (
       <div>
         <div className="dimensionNav">
-          <Accordion>
+          <Stepper orientation="vertical" activeStep={activeStep}>
             {this.state.dimArray.map((dimension, index) => {
               return (
-                <Card key={index}>
-                  <Accordion.Toggle as={Card.Header} eventKey={index + 1}>
-                    {dimension}
-                  </Accordion.Toggle>
+                <Step key={index}>
+                  <StepLabel>{dimension}</StepLabel>
                   <Accordion.Collapse eventKey={index + 1}>
-                    <Card.Body>
+                    <StepContent>
                       {this?.state?.json?.pages?.map((page, index) => {
                         return page.name
                           .toLowerCase()
                           .includes(dimension.substring(0, 4).toLowerCase())
                           ? page.elements.map((question, i) => {
-                            return !question.name.includes('other') &&
-                              (!question.visibleIf ||
-                                this.shouldDisplayNav(question)) ? (
-                              <Button
-                                style={{ margin: '0.75em' }}
-                                key={i}
-                                id={
-                                  this.state.model.data[question.name]
-                                    ? 'answered'
-                                    : 'unanswered'
-                                }
-                                onClick={() => this.navPage(index)}
-                              >
-                                {question.visibleIf ? '' : number++}
-                              </Button>
-                            ) : null;
-                          })
+                              return !question.name.includes('other') &&
+                                (!question.visibleIf ||
+                                  this.shouldDisplayNav(question)) ? (
+                                <Button
+                                  style={{ margin: '0.75em' }}
+                                  key={i}
+                                  id={
+                                    this.state.model.data[question.name]
+                                      ? 'answered'
+                                      : 'unanswered'
+                                  }
+                                  onClick={() => this.navPage(index)}
+                                >
+                                  {question.visibleIf ? '' : number++}
+                                </Button>
+                              ) : null;
+                            })
                           : null;
                       })}
-                    </Card.Body>
+                    </StepContent>
                   </Accordion.Collapse>
-                </Card>
+                </Step>
               );
             })}
-          </Accordion>
+          </Stepper>
+
           <Accordion className="questionFilter">
             <Card>
               <Accordion.Toggle as={Card.Header} eventKey="9">

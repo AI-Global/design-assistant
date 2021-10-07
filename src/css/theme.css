@@ -407,5 +407,13 @@ input[type='number'] {
 }
 
 .progress-bar {
-  background-color: #1a92ce !important;
+  background-color: #386eda !important;
+}
+
+.progress {
+  width: 301px !important;
+  height: 25px !important;
+  border-radius: 20px !important;
+  border: 1px solid #dee6f0;
+  box-sizing: border-box;
 }

@@ -5,6 +5,7 @@ const path = require('path');
 
 const app = express();
 const port = process.env.PORT || 5000;
+require('dotenv').config();
 
 // Force HTTPS
 app.use((req, res, next) => {
