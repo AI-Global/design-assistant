@@ -1,6 +1,7 @@
 import React from 'react';
 import Box from '@material-ui/core/Box';
 import assessmentsData from '../assets/data/assessmentData.json';
+import AssessmentSlider from './AssessmentSlider';
 import { useTheme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
@@ -11,10 +12,6 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import { ExpandButton, useStyles } from './AssessmentStyle';
 
 export default function Assessment(props) {
-  const img = new Image();
-  const leftArrow = (img.src = '../img/leftArrow.png');
-  const rightArrow = (img.src = '../img/rightArrow.png');
-
   const classes = useStyles();
   const theme = useTheme();
 
@@ -57,49 +54,7 @@ export default function Assessment(props) {
           </ExpandButton>
         </div>
       </div>
-      {expandButton && (
-        <div className={classes.assessmentContainer}>
-          <div className={classes.assessmentCardContainer}>
-            {activeStep === 1 && (
-              <KeyboardArrowLeft
-                className={classes.arrowStyle}
-                onClick={handleBack}
-                disabled={activeStep === 0}
-              />
-            )}
-            <Box
-              height={600}
-              width={962}
-              border={1}
-              bgcolor="#F0F0F0"
-              borderColor="#F0F0F0"
-              borderRadius={10}
-            >
-              <div className={classes.assessmentColumn}>
-                <h1>{assessmentsData[activeStep].title}</h1>
-                <Box mt={5} />
-
-                <img
-                  className={classes.assessmentImages}
-                  src={assessmentsData[activeStep].img}
-                ></img>
-              </div>
-            </Box>
-
-            {activeStep === 0 && (
-              <KeyboardArrowRight
-                className={classes.arrowStyle}
-                onClick={handleNext}
-                disabled={activeStep === 1}
-                className={classes.arrowStyle}
-              />
-            )}
-          </div>
-          <Box mt={6} />
-          <div className={classes.stepperColumn}></div>
-          <Box mt={4} />
-        </div>
-      )}
+      {expandButton && <AssessmentSlider expandButton={false} />}
     </div>
   );
 }
