@@ -7,18 +7,6 @@ export const useStyles = makeStyles({
     height: '210px',
     borderRadius: '10px',
   },
-  assessmentContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-  },
-  assessmentCardContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    width: '40%',
-  },
   outterContainer: {
     display: 'flex',
     flexDirection: 'row',
@@ -34,59 +22,6 @@ export const useStyles = makeStyles({
   },
   assessmentTitle: {
     fontSize: '36px',
-  },
-  chipContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-    width: '100%',
-  },
-  chipRow: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '65%',
-  },
-  stepperColumn: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  assessmentColumn: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  stepperBackgroundColor: {
-    backgroundColor: 'white',
-  },
-  peopleContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100%',
-  },
-  peopleRow: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '90%',
-  },
-  peopleColumn: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  assessmentImages: {
-    width: '80%',
-  },
-  arrowStyle: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '5%',
-    height: '5%',
   },
 });
 

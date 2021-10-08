@@ -6,7 +6,7 @@ import { useTheme } from '@material-ui/core/styles';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 
-import { useStyles } from './AssessmentStyle';
+import { useStyles } from './AssessmentSliderStyle';
 
 export default function Assessment(props) {
   const { expandButton } = props;
@@ -14,10 +14,6 @@ export default function Assessment(props) {
   const theme = useTheme();
 
   const [activeStep, setActiveStep] = React.useState(0);
-
-  const handleExpandButton = () => {
-    setExpandButton(!expandButton);
-  };
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
