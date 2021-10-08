@@ -23,8 +23,6 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import StepContent from '@material-ui/core/StepContent';
 
-import Box from '@material-ui/core/Box';
-
 import 'react-toastify/dist/ReactToastify.css';
 
 // set up survey styles and properties for rendering html
@@ -60,11 +58,11 @@ class DesignAssistantSurvey extends Component {
       lifecycleFilters: [],
       dimArray: [],
       showModal: false,
+      activeStep: 0,
       authToken: localStorage.getItem('authToken'),
       submission_id: this?.props?.location?.state?.submission_id,
       user_id: this?.props?.location?.state?.user_id,
       localResponses: JSON.parse(localStorage.getItem('localResponses')),
-      activeStep: [],
     };
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
@@ -302,7 +300,6 @@ class DesignAssistantSurvey extends Component {
 
   nextPage() {
     this.state.model.nextPage();
-    this.state.activeStep + 1;
     this.setState(this.state); // force re-render to update buttons and % complete
   }
 
@@ -456,7 +453,7 @@ class DesignAssistantSurvey extends Component {
     return this.state.model ? (
       <div>
         <div className="dimensionNav">
-          <Stepper orientation="vertical" activeStep={activeStep}>
+          <Stepper orientation="vertical" activeStep={this.state.activeStep}>
             {this.state.dimArray.map((dimension, index) => {
               return (
                 <Step key={index}>
