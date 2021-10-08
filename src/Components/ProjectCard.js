@@ -7,6 +7,9 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { useStyles } from './ProjectCardStyle';
+import RefreshRounded from '@material-ui/icons/RefreshRounded';
+import FileCopyRounded from '@material-ui/icons/FileCopyRounded';
+import DeleteRounded from '@material-ui/icons/DeleteRounded';
 
 export default function ProjectCard(props) {
   const classes = useStyles();
@@ -24,7 +27,7 @@ export default function ProjectCard(props) {
   } = props;
   return (
     <React.Fragment>
-      <Card className={classes.root}>
+      <Card className={classes.root} raised={true}>
         <CardContent className={classes.cardContent}>
           <div className={classes.statusRow}>
             <Typography
@@ -58,25 +61,21 @@ export default function ProjectCard(props) {
           <div className={classes.buttonRow}>
             <div className={classes.buttonColumn}>
               <Button onClick={handleResumeClick}>
-                <img src="/img/refresh.png" alt="refresh" />
+                <RefreshRounded className={classes.iconStyle} />
               </Button>
-              Resume
+              <div className={classes.iconFont}>Resume</div>
             </div>
             <div className={classes.buttonColumn}>
               <Button onClick={handleCloneClick}>
-                <img src="/img/clone.png" alt="clone" />
+                <FileCopyRounded className={classes.iconStyle} />
               </Button>
-              Clone
+              <div className={classes.iconFont}>Clone</div>
             </div>
             <div className={classes.buttonColumn}>
               <Button onClick={handleDeleteClick}>
-                <img
-                  className={classes.trashIcon}
-                  src="/img/trash.png"
-                  alt="trash"
-                />
+                <DeleteRounded className={classes.iconFont}></DeleteRounded>
               </Button>
-              Delete
+              <div className={classes.iconFont}>Delete</div>
             </div>
           </div>
         </CardActions>

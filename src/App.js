@@ -5,7 +5,6 @@ import ReactGa from 'react-ga';
 import Login from './views/Login';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
-import { withStyles } from '@material-ui/core';
 import UserSubmissions from './views/UserSubmissions';
 import React, { useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
@@ -28,7 +27,7 @@ function WelcomeText() {
       style={{
         backgroundImage: `url(${backgroundImage})`,
         width: '99.6vw',
-        height: '52vh',
+        height: '35vh',
         position: 'relative',
         left: '50%',
         right: '50%',
@@ -47,7 +46,7 @@ function WelcomeText() {
           alignItems: 'center',
         }}
       >
-        <h1>RAI Certification: Fair Landing</h1>
+        <h1>RAI Assessment</h1>
         <Box mt={2} />
         <div
           style={{

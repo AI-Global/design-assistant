@@ -5,6 +5,8 @@ import { useTheme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
+import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
+import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 
 import { ExpandButton, useStyles } from './AssessmentStyle';
 
@@ -58,13 +60,13 @@ export default function Assessment(props) {
       {expandButton && (
         <div className={classes.assessmentContainer}>
           <div className={classes.assessmentCardContainer}>
-            <Button
-              size="small"
-              onClick={handleBack}
-              disabled={activeStep === 0}
-            >
-              {activeStep === 1 && <img src={leftArrow} />}
-            </Button>
+            {activeStep === 1 && (
+              <KeyboardArrowLeft
+                className={classes.arrowStyle}
+                onClick={handleBack}
+                disabled={activeStep === 0}
+              />
+            )}
             <Box
               height={600}
               width={962}
@@ -84,13 +86,14 @@ export default function Assessment(props) {
               </div>
             </Box>
 
-            <Button
-              size="small"
-              onClick={handleNext}
-              disabled={activeStep === 1}
-            >
-              {activeStep === 0 && <img src={rightArrow} />}
-            </Button>
+            {activeStep === 0 && (
+              <KeyboardArrowRight
+                className={classes.arrowStyle}
+                onClick={handleNext}
+                disabled={activeStep === 1}
+                className={classes.arrowStyle}
+              />
+            )}
           </div>
           <Box mt={6} />
           <div className={classes.stepperColumn}></div>

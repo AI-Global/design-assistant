@@ -16,8 +16,8 @@ export const useStyles = makeStyles({
   },
   assessmentCardContainer: {
     display: 'flex',
-    justifyContent: 'space-between',
-    width: '60%',
+    alignItems: 'center',
+    width: '40%',
   },
   outterContainer: {
     display: 'flex',
@@ -80,6 +80,13 @@ export const useStyles = makeStyles({
   },
   assessmentImages: {
     width: '80%',
+  },
+  arrowStyle: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '5%',
+    height: '5%',
   },
 });
 

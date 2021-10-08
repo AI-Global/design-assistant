@@ -61,4 +61,10 @@ export const useStyles = makeStyles({
     whiteSpace: 'nowrap',
     padding: 10,
   },
+  iconFont: {
+    color: '#5A6C83',
+  },
+  iconStyle: {
+    color: '#386EDA',
+  },
 });
