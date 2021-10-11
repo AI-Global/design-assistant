@@ -223,3 +223,13 @@ input:disabled {
   box-sizing: border-box;
   border-radius: 10px;
 }
+
+.filter-text {
+  color: #386eda;
+  font-size: 16px;
+  font-weight: 600px;
+}
+
+.checkbox-text {
+  color: #5a6c83;
+}

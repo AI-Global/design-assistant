@@ -21,6 +21,7 @@ import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import StepContent from '@material-ui/core/StepContent';
+import Box from '@material-ui/core/Box';
 
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -55,6 +56,7 @@ class DesignAssistantSurvey extends Component {
       domainFilters: [],
       regionFilters: [],
       lifecycleFilters: [],
+      SystemType: [],
       dimArray: [],
       showModal: false,
       activeStep: 0,
@@ -71,6 +73,15 @@ class DesignAssistantSurvey extends Component {
 
   // Request questions JSON from backend
   componentDidMount() {
+    let SystemType = [
+      'System 1',
+      'System 2',
+      'System 3',
+      'System 4',
+      'System 5',
+      'System 6',
+    ];
+    this.setState({ SystemType: SystemType });
     widgets.nouislider(Survey);
 
     ReactGa.pageview(window.location.pathname + window.location.search);
@@ -491,12 +502,14 @@ class DesignAssistantSurvey extends Component {
               })}
             </Stepper>
           </div>
-
-          <div>Dimensions</div>
+          <Box mt={4} />
+          <div class="filter-text">Dimensions</div>
+          <Box mt={4} />
           <Form>
             {this.state.dimArray.map((dimension, index) => {
               return index + 1 !== this.state.dimArray.length ? (
                 <Form.Check
+                  className="checkbox-text"
                   type="checkbox"
                   checked={this.state.dimArray.includes(index + 1)}
                   label={dimension}
@@ -508,15 +521,17 @@ class DesignAssistantSurvey extends Component {
               ) : null;
             })}
           </Form>
-
-          <div>SystemType</div>
+          <Box mt={4} />
+          <div class="filter-text">SystemType</div>
+          <Box mt={4} />
           <Form>
-            {this.state.metadata.roles.map((role, index) => {
-              return index + 1 !== this.state.metadata.roles.length ? (
+            {this.state.SystemType.map((SystemType, index) => {
+              return index + 1 !== this.state.SystemType.length ? (
                 <Form.Check
+                  className="checkbox-text"
                   type="checkbox"
-                  checked={this.state.roleFilters.includes(index + 1)}
-                  label={role.name}
+                  checked={this.state.SystemType.includes(index + 1)}
+                  label={SystemType}
                   id={index}
                   key={index}
                   value={index + 1}
