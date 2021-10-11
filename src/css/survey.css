@@ -238,3 +238,12 @@ input:disabled {
 .checkbox-text {
   color: #5a6c83;
 }
+
+.stepper-progress-bar {
+  width: 167px;
+  height: 15px;
+  background: #f3f5f7;
+  border: 1px solid #dee6f0;
+  box-sizing: border-box;
+  border-radius: 20px;
+}

@@ -21,6 +21,7 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import StepContent from '@material-ui/core/StepContent';
 import Box from '@material-ui/core/Box';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -58,7 +59,8 @@ class DesignAssistantSurvey extends Component {
       domainFilters: [],
       regionFilters: [],
       lifecycleFilters: [],
-      SystemType: [],
+      systemType: [],
+      stepperTitle: [],
       dimArray: [],
       showModal: false,
       activeStep: 0,
@@ -75,7 +77,7 @@ class DesignAssistantSurvey extends Component {
 
   // Request questions JSON from backend
   componentDidMount() {
-    let SystemType = [
+    let systemType = [
       'System 1',
       'System 2',
       'System 3',
@@ -83,7 +85,15 @@ class DesignAssistantSurvey extends Component {
       'System 5',
       'System 6',
     ];
-    this.setState({ SystemType: SystemType });
+    let stepperTitle = [
+      'Project Information',
+      'Organization Maturity',
+      'Team Maturity',
+      'System Information',
+    ];
+    this.setState({ systemType: systemType });
+    this.setState({ stepperTitle: stepperTitle });
+
     widgets.nouislider(Survey);
 
     ReactGa.pageview(window.location.pathname + window.location.search);
@@ -467,16 +477,27 @@ class DesignAssistantSurvey extends Component {
         <div className="dimensionNav">
           <div className="stepper-box">
             <Stepper orientation="vertical" activeStep={this.state.activeStep}>
-              {this.state.dimArray.map((dimension, index) => {
+              {this.state.stepperTitle.map((stepperTitle, index) => {
                 return (
                   <Step key={index}>
-                    <StepLabel>{dimension}</StepLabel>
+                    <StepLabel>{stepperTitle}</StepLabel>
+                    <StepContent> 25% Complete </StepContent>
+                    <StepContent>
+                      <LinearProgress
+                        className="stepper-progress-bar"
+                        variant="determinate"
+                        value={25}
+                      ></LinearProgress>
+                    </StepContent>
+
                     <Accordion.Collapse eventKey={index + 1}>
                       <StepContent>
                         {this?.state?.json?.pages?.map((page, index) => {
                           return page.name
                             .toLowerCase()
-                            .includes(dimension.substring(0, 4).toLowerCase())
+                            .includes(
+                              stepperTitle.substring(0, 4).toLowerCase()
+                            )
                             ? page.elements.map((question, i) => {
                                 return !question.name.includes('other') &&
                                   (!question.visibleIf ||
@@ -527,13 +548,13 @@ class DesignAssistantSurvey extends Component {
           <div class="filter-text">SystemType</div>
           <Box mt={4} />
           <Form>
-            {this.state.SystemType.map((SystemType, index) => {
-              return index + 1 !== this.state.SystemType.length ? (
+            {this.state.systemType.map((systemType, index) => {
+              return index + 1 !== this.state.systemType.length ? (
                 <Form.Check
                   className="checkbox-text"
                   type="checkbox"
-                  checked={this.state.SystemType.includes(index + 1)}
-                  label={SystemType}
+                  checked={this.state.systemType.includes(index + 1)}
+                  label={systemType}
                   id={index}
                   key={index}
                   value={index + 1}
