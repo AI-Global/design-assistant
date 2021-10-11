@@ -81,10 +81,6 @@ html {
 }
 
 .section-header {
-  border-bottom: 1px solid #21737c;
-  border-bottom-width: 1px;
-  border-bottom-style: solid;
-  border-bottom-color: rgb(44, 153, 164);
   margin-bottom: 1em;
   margin-top: 1em;
   padding-bottom: 0.2em;
