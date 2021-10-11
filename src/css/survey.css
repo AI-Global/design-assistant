@@ -158,7 +158,7 @@ td .btn {
   line-height: 1.4375 !important;
   background-color: #1a92ce !important;
   padding: 5px 40px 5px 40px !important;
-  border-radius: 0px !important;
+  border-radius: 8px !important;
 }
 
 .progress-bar {
@@ -212,4 +212,14 @@ input:disabled {
 
 .small {
   padding-left: 2.3em !important;
+}
+
+.stepper-box {
+  width: 306px;
+  height: 464px;
+  left: 0px;
+  top: 0px;
+  border: 1px solid #c9d7e9;
+  box-sizing: border-box;
+  border-radius: 10px;
 }
