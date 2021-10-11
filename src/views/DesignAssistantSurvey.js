@@ -4,7 +4,6 @@ import Login from './Login';
 import ReactGa from 'react-ga';
 import showdown from 'showdown';
 import * as Survey from 'survey-react';
-
 import { Button, Form } from 'react-bootstrap';
 import React, { Component } from 'react';
 import Modal from 'react-bootstrap/Modal';
@@ -29,6 +28,9 @@ import 'react-toastify/dist/ReactToastify.css';
 Survey.StylesManager.applyTheme('bootstrapmaterial');
 
 Survey.defaultBootstrapMaterialCss.progressBar =
+  'progress-bar bg-custom progress-bar-striped';
+
+Survey.defaultBootstrapMaterialCss.checkBox =
   'progress-bar bg-custom progress-bar-striped';
 
 Survey.Serializer.addProperty('page', {
@@ -192,7 +194,7 @@ class DesignAssistantSurvey extends Component {
 
         // add tooltip
         model.onAfterRenderPage.add(function (model, options) {
-          const node = options.htmlElement.querySelector('h4');
+          const node = options.htmlElement.querySelector('h1');
           if (node) {
             node.classList.add('section-header');
           }
