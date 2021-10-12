@@ -502,43 +502,55 @@ class DesignAssistantSurvey extends Component {
             </Stepper>
           </div>
           <Box mt={4} />
-          <div class="filter-text">Dimensions</div>
+          <Accordion>
+            <Accordion.Toggle className="accordian-style" eventKey="9">
+              Dimensions
+            </Accordion.Toggle>
+            <Box mt={4} />
+            <Accordion.Collapse eventKey="9">
+              <Form>
+                {this.state.dimArray.map((dimension, index) => {
+                  return index + 1 !== this.state.dimArray.length ? (
+                    <Form.Check
+                      className="checkbox-text"
+                      type="checkbox"
+                      checked={this.state.dimArray.includes(index + 1)}
+                      label={dimension}
+                      id={index}
+                      key={index}
+                      value={index + 1}
+                      onChange={(e) => this.addRole(e.target.value)}
+                    />
+                  ) : null;
+                })}
+              </Form>
+            </Accordion.Collapse>
+          </Accordion>
           <Box mt={4} />
-          <Form>
-            {this.state.dimArray.map((dimension, index) => {
-              return index + 1 !== this.state.dimArray.length ? (
-                <Form.Check
-                  className="checkbox-text"
-                  type="checkbox"
-                  checked={this.state.dimArray.includes(index + 1)}
-                  label={dimension}
-                  id={index}
-                  key={index}
-                  value={index + 1}
-                  onChange={(e) => this.addRole(e.target.value)}
-                />
-              ) : null;
-            })}
-          </Form>
-          <Box mt={4} />
-          <div class="filter-text">SystemType</div>
-          <Box mt={4} />
-          <Form>
-            {this.state.systemType.map((systemType, index) => {
-              return index + 1 !== this.state.systemType.length ? (
-                <Form.Check
-                  className="checkbox-text"
-                  type="checkbox"
-                  checked={this.state.systemType.includes(index + 1)}
-                  label={systemType}
-                  id={index}
-                  key={index}
-                  value={index + 1}
-                  onChange={(e) => this.addRole(e.target.value)}
-                />
-              ) : null;
-            })}
-          </Form>
+          <Accordion>
+            <Accordion.Toggle className="accordian-style" eventKey="9">
+              System Types
+            </Accordion.Toggle>
+            <Box mt={4} />
+            <Accordion.Collapse eventKey="9">
+              <Form>
+                {this.state.systemType.map((systemType, index) => {
+                  return index + 1 !== this.state.systemType.length ? (
+                    <Form.Check
+                      className="checkbox-text"
+                      type="checkbox"
+                      checked={this.state.systemType.includes(index + 1)}
+                      label={systemType}
+                      id={index}
+                      key={index}
+                      value={index + 1}
+                      onChange={(e) => this.addRole(e.target.value)}
+                    />
+                  ) : null;
+                })}
+              </Form>
+            </Accordion.Collapse>
+          </Accordion>
         </div>
 
         <div className="container" style={{ paddingTop: '2em' }}>
