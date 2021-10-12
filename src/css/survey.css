@@ -237,3 +237,9 @@ input:disabled {
   box-sizing: border-box;
   border-radius: 20px;
 }
+
+.filter-button {
+  color: #303e50 !important;
+  background-color: #ffffff !important;
+  border-color: #386eda !important;
+}

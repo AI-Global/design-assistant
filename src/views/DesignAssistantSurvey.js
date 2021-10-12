@@ -475,11 +475,10 @@ class DesignAssistantSurvey extends Component {
       <div>
         <Box mt={8} />
         <div className="d-flex justify-content-end col">
-          <div className="mr-2">clear filters</div>
-          <Button className="btn btn-save mr-2" id="saveButton">
-            System Type 1
-          </Button>
-          <Button className="bt btn-primary">Dimension 1</Button>
+          <div>CLEAR FILTERS</div>
+          <Box mr={8} />
+          <Button className="filter-button mr-2">System Type 1</Button>
+          <Button className="filter-button">Dimension 1</Button>
         </div>
         <Box mt={8} />
         <div className="dimensionNav">
