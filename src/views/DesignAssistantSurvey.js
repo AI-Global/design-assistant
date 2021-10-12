@@ -473,10 +473,13 @@ class DesignAssistantSurvey extends Component {
     var number = 1;
     return this.state.model ? (
       <div>
+        <div className="d-flex justify-content-center col">
+          <h1>RAI Certification</h1>
+        </div>
         <Box mt={8} />
         <div className="d-flex justify-content-end col">
           <div>CLEAR FILTERS</div>
-          <Box mr={8} />
+          <Box mr={10} />
           <Button className="filter-button mr-2">System Type 1</Button>
           <Button className="filter-button">Dimension 1</Button>
         </div>
