@@ -3,8 +3,7 @@ import Box from '@material-ui/core/Box';
 import assessmentsData from '../assets/data/assessmentData.json';
 import { useTheme } from '@material-ui/core/styles';
 
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
-import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
+import { KeyboardArrowLeft, KeyboardArrowRight } from '@material-ui/icons/';
 
 import { useStyles } from './AssessmentSliderStyle';
 

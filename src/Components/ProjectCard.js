@@ -1,8 +1,8 @@
 import React from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import Chip from '@material-ui/core/Chip';
 import CardActions from '@material-ui/core/CardActions';
+import Box from '@material-ui/core/Box';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
@@ -18,9 +18,7 @@ export default function ProjectCard(props) {
     statusTitle,
     projectName,
     updatedBy,
-    startedOn,
     updatedOn,
-    completedOn,
     handleDeleteClick,
     handleCloneClick,
     handleResumeClick,
@@ -44,9 +42,9 @@ export default function ProjectCard(props) {
               label={projectStatus ? 'Deployment' : 'Design'}
             />
           </div>
-
           <div className={classes.title}>{projectName}</div>
-          <div>Updated by: {updatedBy}</div>
+          <Box mt={2} />
+          <div className={classes.subTitle}>Updated by: {updatedBy}</div>
         </CardContent>
         <CardActions>
           <div className={classes.statusRow}>

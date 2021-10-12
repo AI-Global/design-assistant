@@ -2,8 +2,7 @@ import React from 'react';
 import Box from '@material-ui/core/Box';
 import AssessmentSlider from './AssessmentSlider';
 import { useTheme } from '@material-ui/core/styles';
-import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
-import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
+import { KeyboardArrowDown, KeyboardArrowUp } from '@material-ui/icons/';
 
 import { ExpandButton, useStyles } from './AssessmentStyle';
 

@@ -40,5 +40,6 @@ export const useStyles = makeStyles({
     alignItems: 'center',
     width: '5%',
     height: '5%',
+    cursor: 'pointer',
   },
 });

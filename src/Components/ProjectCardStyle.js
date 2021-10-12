@@ -3,11 +3,16 @@ import { makeStyles, withStyles } from '@material-ui/core/styles';
 export const useStyles = makeStyles({
   root: {
     width: '523px',
-    height: '278px',
+    height: '320px',
     borderRadius: '10px',
   },
   title: {
-    fontSize: 24,
+    fontSize: 36,
+    fontWeight: 400,
+  },
+  subTitle: {
+    fontSize: 16,
+    color: '#5A6C83',
   },
   cardContent: {
     backgroundColor: '#F3F5F7',
@@ -32,14 +37,20 @@ export const useStyles = makeStyles({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
+    padding: 10,
   },
   statusColor: {
     color: '#5A6C83',
-    fontSize: 18,
+    fontSize: 20,
+    fontWeight: 600,
+    textTransform: 'uppercase',
   },
   viewReports: {
     color: '#446A32',
-    fontSize: 18,
+    fontSize: 20,
+    fontWeight: 600,
+    textDecoration: 'underline',
+    textTransform: 'uppercase',
   },
   startOnStyle: {
     color: '#5A6C83',

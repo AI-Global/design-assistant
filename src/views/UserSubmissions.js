@@ -252,18 +252,18 @@ class UserSubmissions extends Component {
               >
                 <ProjectCard
                   projectStatus={true}
-                  statusTitle={'Pending Review - LOD 1'}
-                  projectName={'Project Name'}
-                  updatedBy={'John'}
-                  updatedOn={'May 26, 2019'}
+                  statusTitle="Pending Review - LOD 1"
+                  projectName="Project Name"
+                  updatedBy="John"
+                  updatedOn="May 26, 2019"
                   handleDeleteClick={this.deleteSurvey}
                 ></ProjectCard>
                 <ProjectCard
                   projectStatus={true}
-                  statusTitle={'Preparing Responses'}
-                  projectName={'Project Name'}
-                  updatedBy={'John'}
-                  updatedOn={'May 26, 2019'}
+                  statusTitle="Preparing Responses"
+                  projectName="Project Name"
+                  updatedBy="John"
+                  updatedOn="May 26, 2019"
                   handleDeleteClick={this.deleteSurvey}
                 ></ProjectCard>
                 <Box mt={4} />
@@ -291,18 +291,18 @@ class UserSubmissions extends Component {
               >
                 <ProjectCard
                   projectStatus={false}
-                  statusTitle={'View Reports'}
-                  projectName={'Project Name'}
-                  updatedBy={'John'}
-                  updatedOn={'May 26, 2019'}
+                  statusTitle="View Reports"
+                  projectName="Project Name"
+                  updatedBy="John"
+                  updatedOn="May 26, 2019"
                   handleDeleteClick={this.deleteSurvey}
                 ></ProjectCard>
                 <ProjectCard
                   projectStatus={false}
-                  statusTitle={'View Reports'}
-                  projectName={'Project Name'}
-                  updatedBy={'John'}
-                  updatedOn={'May 26, 2019'}
+                  statusTitle="View Reports"
+                  projectName="Project Name"
+                  updatedBy="John"
+                  updatedOn="May 26, 2019"
                   handleDeleteClick={this.deleteSurvey}
                 ></ProjectCard>
                 <Box mt={4} />
