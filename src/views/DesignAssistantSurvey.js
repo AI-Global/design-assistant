@@ -477,10 +477,11 @@ class DesignAssistantSurvey extends Component {
         <div className="d-flex justify-content-end col">
           <div className="mr-2">clear filters</div>
           <Button className="btn btn-save mr-2" id="saveButton">
-            SAVE
+            System Type 1
           </Button>
-          <Button className="bt btn-primary">FINISH</Button>
+          <Button className="bt btn-primary">Dimension 1</Button>
         </div>
+        <Box mt={8} />
         <div className="dimensionNav">
           <div className="stepper-box">
             <Stepper orientation="vertical" activeStep={this.state.activeStep}>
