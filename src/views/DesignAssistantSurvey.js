@@ -31,8 +31,7 @@ Survey.StylesManager.applyTheme('bootstrapmaterial');
 Survey.defaultBootstrapMaterialCss.progressBar =
   'progress-bar bg-custom progress-bar-striped';
 
-Survey.defaultBootstrapMaterialCss.checkBox =
-  'progress-bar bg-custom progress-bar-striped';
+Survey.defaultBootstrapMaterialCss.container = 'survey-container';
 
 Survey.Serializer.addProperty('page', {
   name: 'navigationTitle:string',
@@ -474,6 +473,14 @@ class DesignAssistantSurvey extends Component {
     var number = 1;
     return this.state.model ? (
       <div>
+        <Box mt={8} />
+        <div className="d-flex justify-content-end col">
+          <div className="mr-2">clear filters</div>
+          <Button className="btn btn-save mr-2" id="saveButton">
+            SAVE
+          </Button>
+          <Button className="bt btn-primary">FINISH</Button>
+        </div>
         <div className="dimensionNav">
           <div className="stepper-box">
             <Stepper orientation="vertical" activeStep={this.state.activeStep}>
@@ -489,37 +496,6 @@ class DesignAssistantSurvey extends Component {
                         value={25}
                       ></LinearProgress>
                     </StepContent>
-
-                    <Accordion.Collapse eventKey={index + 1}>
-                      <StepContent>
-                        {this?.state?.json?.pages?.map((page, index) => {
-                          return page.name
-                            .toLowerCase()
-                            .includes(
-                              stepperTitle.substring(0, 4).toLowerCase()
-                            )
-                            ? page.elements.map((question, i) => {
-                                return !question.name.includes('other') &&
-                                  (!question.visibleIf ||
-                                    this.shouldDisplayNav(question)) ? (
-                                  <Button
-                                    style={{ margin: '0.75em' }}
-                                    key={i}
-                                    id={
-                                      this.state.model.data[question.name]
-                                        ? 'answered'
-                                        : 'unanswered'
-                                    }
-                                    onClick={() => this.navPage(index)}
-                                  >
-                                    {question.visibleIf ? '' : number++}
-                                  </Button>
-                                ) : null;
-                              })
-                            : null;
-                        })}
-                      </StepContent>
-                    </Accordion.Collapse>
                   </Step>
                 );
               })}
@@ -564,6 +540,7 @@ class DesignAssistantSurvey extends Component {
             })}
           </Form>
         </div>
+
         <div className="container" style={{ paddingTop: '2em' }}>
           <div className="d-flex justify-content-center col">
             {this.percent()}%
@@ -576,6 +553,7 @@ class DesignAssistantSurvey extends Component {
           />
         ) : null}
         <div>
+          <Box mt={8} />
           <div>
             <div className="row no-gutters">
               <div className="d-flex justify-content-start col">

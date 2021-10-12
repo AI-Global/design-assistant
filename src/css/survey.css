@@ -84,16 +84,6 @@ body {
   background-color: #fff !important;
 }
 
-h4 {
-  border-bottom: 1px solid #1a92ce;
-  border-bottom-width: 1px;
-  border-bottom-style: solid;
-  border-bottom-color: #1a92ce;
-  margin-bottom: 1em;
-  margin-top: 1em;
-  padding-bottom: 0.2em;
-}
-
 .btn-default:visited {
   color: #1a92ce !important;
 }
