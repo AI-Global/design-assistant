@@ -22,6 +22,7 @@ import StepLabel from '@material-ui/core/StepLabel';
 import StepContent from '@material-ui/core/StepContent';
 import Box from '@material-ui/core/Box';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import SurveyTest from './../Components/Survey/Survey';
 
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -131,7 +132,7 @@ class DesignAssistantSurvey extends Component {
 
   async getQuestions(submissions) {
     api
-      .get('questions', {
+      .get('questions/all', {
         params: {
           roles: this.state.roleFilters,
           domains: this.state.domainFilters,
@@ -142,10 +143,15 @@ class DesignAssistantSurvey extends Component {
       .then((res) => {
         this.setState({ mount: false });
         var json = res.data;
-
-        if (json.pages.length < 1) {
-          this.handleOpenEmptyModal();
-        }
+        var allQuestions = json;
+        this.setState({ allQuestions: allQuestions });
+        console.log(allQuestions);
+        console.log('jsontest');
+        this.setState({
+          questions: res.data.questions.sort((a, b) =>
+            a.questionNumber > b.questionNumber ? 1 : -1
+          ),
+        });
 
         // replace double escaped characters so showdown correctly renders markdown frontslashes and newlines
         var stringified = JSON.stringify(json);
@@ -196,85 +202,87 @@ class DesignAssistantSurvey extends Component {
           model.data = this.state.localResponses;
         }
 
-        model.onTextMarkdown.add(function (model, options) {
-          var str = converter.makeHtml(options.text);
-          options.html = str;
-        });
+        // this removes no surveyjs questions
 
-        // add tooltip
-        model.onAfterRenderPage.add(function (model, options) {
-          const node = options.htmlElement.querySelector('h1');
-          if (node) {
-            node.classList.add('section-header');
-          }
-          // wait to load jquery to fix testing bug
-          // https://stackoverflow.com/a/63217419
-          setTimeout(function () {
-            $('[data-toggle="tooltip"]').tooltip({
-              boundary: 'viewport',
-            });
-          }, 2100);
-        });
-        //change labels to 'h5' to bold them
-        model.onAfterRenderQuestion.add(function (model, options) {
-          let title = options.htmlElement.querySelector('h5');
-          if (title) {
-            // add tooltip for question if alttext has default value
-            let altTextHTML = '';
-            let childIndent = '';
-            if (
-              options.question.alttext &&
-              options.question.alttext.hasOwnProperty('default')
-            ) {
-              let altText = converter.makeHtml(
-                options.question.alttext.default.replace(/"/g, '&quot;')
-              );
-              altText = `<div class="text-justify">${altText}</div>`.replace(
-                /"/g,
-                '&quot;'
-              );
-              altTextHTML = `<i class="fas fa-info-circle ml-2" data-toggle="tooltip" data-html="true" title="${altText}"></i>`;
-            }
-            if (options.question.visibleIf) {
-              childIndent = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-            }
-            title.outerHTML =
-              '<label for="' +
-              options.question.inputId +
-              '" class="' +
-              title.className +
-              '"><span class="field-name">' +
-              childIndent +
-              title.innerText +
-              '</span>' +
-              altTextHTML +
-              '</label>';
-            // add tooltip for answers if alttext has default value
-            options.htmlElement.querySelectorAll('input').forEach((element) => {
-              if (
-                options.question.alttext &&
-                options.question.alttext.hasOwnProperty(element.value)
-              ) {
-                const div = element.closest('div');
-                div.classList.add('d-flex');
-                const i = document.createElement('span');
-                let altText = converter.makeHtml(
-                  options.question.alttext[element.value].default.replace(
-                    /"/g,
-                    '&quot;'
-                  )
-                );
-                altText = `<div class="text-justify">${altText}</div>`.replace(
-                  /"/g,
-                  '&quot;'
-                );
-                i.innerHTML = `<i class="fas fa-info-circle ml-2" data-toggle="tooltip" data-html="true" title="${altText}"></i>`;
-                div.appendChild(i);
-              }
-            });
-          }
-        });
-        this.setState({ mount: true });
+        // model.onTextMarkdown.add(function (model, options) {
+        //   var str = converter.makeHtml(options.text);
+        //   options.html = str;
+        // });
+
+        // // add tooltip
+        // model.onAfterRenderPage.add(function (model, options) {
+        //   const node = options.htmlElement.querySelector('h1');
+        //   if (node) {
+        //     node.classList.add('section-header');
+        //   }
+        //   // wait to load jquery to fix testing bug
+        //   // https://stackoverflow.com/a/63217419
+        //   setTimeout(function () {
+        //     $('[data-toggle="tooltip"]').tooltip({
+        //       boundary: 'viewport',
+        //     });
+        //   }, 2100);
+        // });
+        // //change labels to 'h5' to bold them
+        // model.onAfterRenderQuestion.add(function (model, options) {
+        //   let title = options.htmlElement.querySelector('h5');
+        //   if (title) {
+        //     // add tooltip for question if alttext has default value
+        //     let altTextHTML = '';
+        //     let childIndent = '';
+        //     if (
+        //       options.question.alttext &&
+        //       options.question.alttext.hasOwnProperty('default')
+        //     ) {
+        //       let altText = converter.makeHtml(
+        //         options.question.alttext.default.replace(/"/g, '&quot;')
+        //       );
+        //       altText = `<div class="text-justify">${altText}</div>`.replace(
+        //         /"/g,
+        //         '&quot;'
+        //       );
+        //       altTextHTML = `<i class="fas fa-info-circle ml-2" data-toggle="tooltip" data-html="true" title="${altText}"></i>`;
+        //     }
+        //     if (options.question.visibleIf) {
+        //       childIndent = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+        //     }
+        //     title.outerHTML =
+        //       '<label for="' +
+        //       options.question.inputId +
+        //       '" class="' +
+        //       title.className +
+        //       '"><span class="field-name">' +
+        //       childIndent +
+        //       title.innerText +
+        //       '</span>' +
+        //       altTextHTML +
+        //       '</label>';
+        //     // add tooltip for answers if alttext has default value
+        //     options.htmlElement.querySelectorAll('input').forEach((element) => {
+        //       if (
+        //         options.question.alttext &&
+        //         options.question.alttext.hasOwnProperty(element.value)
+        //       ) {
+        //         const div = element.closest('div');
+        //         div.classList.add('d-flex');
+        //         const i = document.createElement('span');
+        //         let altText = converter.makeHtml(
+        //           options.question.alttext[element.value].default.replace(
+        //             /"/g,
+        //             '&quot;'
+        //           )
+        //         );
+        //         altText = `<div class="text-justify">${altText}</div>`.replace(
+        //           /"/g,
+        //           '&quot;'
+        //         );
+        //         i.innerHTML = `<i class="fas fa-info-circle ml-2" data-toggle="tooltip" data-html="true" title="${altText}"></i>`;
+        //         div.appendChild(i);
+        //       }
+        //     });
+        //   }
+        // });
+        // this.setState({ mount: true });
       });
   }
 
@@ -476,6 +484,13 @@ class DesignAssistantSurvey extends Component {
         <div className="d-flex justify-content-center col">
           <h1>RAI Certification</h1>
         </div>
+
+        {this.state.allQuestions.questions.map((questions) => (
+          <SurveyTest questionName={questions.question}></SurveyTest>
+        ))}
+
+        {/* <SurveyTest></SurveyTest> */}
+
         <Box mt={8} />
         <div className="d-flex justify-content-end col">
           <div>CLEAR FILTERS</div>
