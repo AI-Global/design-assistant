@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import TextField from '@material-ui/core/TextField';
 
-export default function Input(props) {
+export default function SurveyInput(props) {
   const { questionName } = props;
 
   const [deleteSubmissions, setDeleteSubmissions] = useState(false);

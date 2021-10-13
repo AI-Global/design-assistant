@@ -146,7 +146,7 @@ class DesignAssistantSurvey extends Component {
         var allQuestions = json;
         this.setState({ allQuestions: allQuestions });
         console.log(allQuestions);
-        console.log('jsontest');
+        console.log(allQuestions.question?.map((a) => a.responseType));
         this.setState({
           questions: res.data.questions.sort((a, b) =>
             a.questionNumber > b.questionNumber ? 1 : -1
@@ -485,11 +485,14 @@ class DesignAssistantSurvey extends Component {
           <h1>RAI Certification</h1>
         </div>
 
-        {this.state.allQuestions.questions.map((questions) => (
-          <SurveyTest questionName={questions.question}></SurveyTest>
+        {this.state.allQuestions.questions.map((questions, i) => (
+          <SurveyTest
+            key={i}
+            questionName={questions.question}
+            responseType={questions.responseType}
+            surveyResponses={questions.responses}
+          ></SurveyTest>
         ))}
-
-        {/* <SurveyTest></SurveyTest> */}
 
         <Box mt={8} />
         <div className="d-flex justify-content-end col">

@@ -1,9 +1,26 @@
 import React, { useState } from 'react';
 
-import Input from './Input.js';
+import SurveyInput from './SurveyInput';
+import SurveyRadioGroup from './SurveyRadioGroup';
+import SurveyDropDown from './SurveyDropDown';
 
 export default function Survey(props) {
-  const { questionName } = props;
+  const { questionName, responseType, surveyResponses } = props;
 
-  return <Input questionName={questionName}></Input>;
+  return (
+    <div>
+      {responseType === 'comment' && (
+        <SurveyInput questionName={questionName}></SurveyInput>
+      )}
+      {responseType === 'radiogroup' && (
+        <SurveyRadioGroup
+          questionName={questionName}
+          surveyResponses={surveyResponses}
+        />
+      )}
+      {responseType === 'dropdown' && (
+        <SurveyDropDown questionName={questionName} />
+      )}
+    </div>
+  );
 }
