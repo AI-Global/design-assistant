@@ -5,6 +5,8 @@ import Results from './views/Results.js';
 import PrivateRoute from './PrivateRoute';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import DesignAssistantSurvey from './views/DesignAssistantSurvey.js';
+import DesignAssistantSurvey2 from './views/DesignAssistantSurvey2.js';
+
 import ViewSubmissions from './views/ViewSubmissions';
 
 export default function Router() {
@@ -13,6 +15,11 @@ export default function Router() {
       <BrowserRouter>
         <Switch>
           <Route exact path="/" component={App} />
+          <Route
+            exact
+            path="/DesignAssistantSurvey2"
+            component={DesignAssistantSurvey2}
+          />
           <Route
             exact
             path="/DesignAssistantSurvey"

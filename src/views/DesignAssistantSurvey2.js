@@ -145,9 +145,6 @@ class DesignAssistantSurvey extends Component {
         var json = res.data;
         var allQuestions = json;
         this.setState({ allQuestions: allQuestions });
-        console.log(allQuestions);
-
-        console.log(this.state.q);
 
         this.setState({
           questions: res.data.questions.sort((a, b) =>
@@ -193,111 +190,6 @@ class DesignAssistantSurvey extends Component {
           );
           model.currentPageNo = lastPageAnswered?.visibleIndex ?? 0;
         }
-
-        if (this?.props?.location?.state?.filters && !submissions) {
-          this.setState({
-            roleFilters: this.props.location.state.filters.roles,
-          });
-          this.setState({
-            domainFilters: this.props.location.state.filters.domain,
-          });
-          this.setState({
-            regionFilters: this.props.location.state.filters.region,
-          });
-          this.setState({
-            lifecycleFilters: this.props.location.state.filters.lifecycle,
-          });
-        }
-
-        if (submissions) {
-          model.data = submissions;
-        }
-
-        if (this.state.localResponses) {
-          model.data = this.state.localResponses;
-        }
-
-        // this removes no surveyjs questions
-
-        // model.onTextMarkdown.add(function (model, options) {
-        //   var str = converter.makeHtml(options.text);
-        //   options.html = str;
-        // });
-
-        // // add tooltip
-        // model.onAfterRenderPage.add(function (model, options) {
-        //   const node = options.htmlElement.querySelector('h1');
-        //   if (node) {
-        //     node.classList.add('section-header');
-        //   }
-        //   // wait to load jquery to fix testing bug
-        //   // https://stackoverflow.com/a/63217419
-        //   setTimeout(function () {
-        //     $('[data-toggle="tooltip"]').tooltip({
-        //       boundary: 'viewport',
-        //     });
-        //   }, 2100);
-        // });
-        // //change labels to 'h5' to bold them
-        // model.onAfterRenderQuestion.add(function (model, options) {
-        //   let title = options.htmlElement.querySelector('h5');
-        //   if (title) {
-        //     // add tooltip for question if alttext has default value
-        //     let altTextHTML = '';
-        //     let childIndent = '';
-        //     if (
-        //       options.question.alttext &&
-        //       options.question.alttext.hasOwnProperty('default')
-        //     ) {
-        //       let altText = converter.makeHtml(
-        //         options.question.alttext.default.replace(/"/g, '&quot;')
-        //       );
-        //       altText = `<div class="text-justify">${altText}</div>`.replace(
-        //         /"/g,
-        //         '&quot;'
-        //       );
-        //       altTextHTML = `<i class="fas fa-info-circle ml-2" data-toggle="tooltip" data-html="true" title="${altText}"></i>`;
-        //     }
-        //     if (options.question.visibleIf) {
-        //       childIndent = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-        //     }
-        //     title.outerHTML =
-        //       '<label for="' +
-        //       options.question.inputId +
-        //       '" class="' +
-        //       title.className +
-        //       '"><span class="field-name">' +
-        //       childIndent +
-        //       title.innerText +
-        //       '</span>' +
-        //       altTextHTML +
-        //       '</label>';
-        //     // add tooltip for answers if alttext has default value
-        //     options.htmlElement.querySelectorAll('input').forEach((element) => {
-        //       if (
-        //         options.question.alttext &&
-        //         options.question.alttext.hasOwnProperty(element.value)
-        //       ) {
-        //         const div = element.closest('div');
-        //         div.classList.add('d-flex');
-        //         const i = document.createElement('span');
-        //         let altText = converter.makeHtml(
-        //           options.question.alttext[element.value].default.replace(
-        //             /"/g,
-        //             '&quot;'
-        //           )
-        //         );
-        //         altText = `<div class="text-justify">${altText}</div>`.replace(
-        //           /"/g,
-        //           '&quot;'
-        //         );
-        //         i.innerHTML = `<i class="fas fa-info-circle ml-2" data-toggle="tooltip" data-html="true" title="${altText}"></i>`;
-        //         div.appendChild(i);
-        //       }
-        //     });
-        //   }
-        // });
-        // this.setState({ mount: true });
       });
   }
 
@@ -348,153 +240,46 @@ class DesignAssistantSurvey extends Component {
   }
 
   nextSurveyPage() {
-    this.setState({ questions: this.state.systemInformation });
-  }
-
-  save(completed = false) {
-    // when we click save, we should already have a model saved to the database
-    // i.e. the index will always point to a valid submission
-    // so just make an update call
-
-    let title = this.state.json?.pages[0]?.elements?.find(
-      (q) => q?.title?.default === 'Title of project'
-    );
-    let dateTime = new Date();
-    let projectName = this.state.model.data[title?.name] ?? '';
-    let endpoint = 'submissions';
-    if (this.state.submission_id) {
-      endpoint = 'submissions/update/' + this.state.submission_id;
-    }
-
-    api
-      .post(endpoint, {
-        userId: this.state?.user_id,
-        submission: this.state.model.data,
-        date: dateTime,
-        projectName: projectName,
-        completed: completed,
-        domain: this.state.domainFilters,
-        region: this.state.regionFilters,
-        roles: this.state.roleFilters,
-        lifecycle: this.state.lifecycleFilters,
-      })
-      .then((res) => {
-        toast('Saving Responses', {
-          toastId: 'saving',
-        });
-        let submission = res.data;
-        this.setState({ submission_id: submission._id });
-      });
-  }
-
-  finish() {
-    this.save(true);
-    this.state.model.doComplete();
-    this.nextPath('/Results/');
-  }
-
-  onComplete(survey, options) {
-    console.log('Survey results: ' + JSON.stringify(survey.data));
-  }
-
-  addRole(e) {
-    const v = parseInt(e);
-    if (this.state.roleFilters.includes(v)) {
-      const i = this.state.roleFilters.indexOf(v);
-      this.state.roleFilters.splice(i, 1);
-    } else {
-      this.state.roleFilters.push(v);
-    }
-    this.setState({ roleFilters: this.state.roleFilters });
-  }
-
-  addDomain(e) {
-    const v = parseInt(e);
-    if (this.state.domainFilters.includes(v)) {
-      const i = this.state.domainFilters.indexOf(v);
-      this.state.domainFilters.splice(i, 1);
-    } else {
-      this.state.domainFilters.push(v);
-    }
-    this.setState({ domainFilters: this.state.domainFilters });
-  }
-
-  addRegion(e) {
-    const v = parseInt(e);
-    if (this.state.regionFilters.includes(v)) {
-      const i = this.state.regionFilters.indexOf(v);
-      this.state.regionFilters.splice(i, 1);
-    } else {
-      this.state.regionFilters.push(v);
-    }
-    this.setState({ regionFilters: this.state.regionFilters });
-  }
-
-  addLifecycle(e) {
-    const v = parseInt(e);
-    if (this.state.lifecycleFilters.includes(v)) {
-      const i = this.state.lifecycleFilters.indexOf(v);
-      this.state.lifecycleFilters.splice(i, 1);
-    } else {
-      this.state.lifecycleFilters.push(v);
-    }
-    this.setState({ lifecycleFilters: this.state.lifecycleFilters });
-  }
-
-  applyFilters() {
-    var submissions = this.state.model.data;
-    this.getQuestions(submissions);
-  }
-
-  navPage(pageNumber) {
-    const survey = this.state.model;
-    survey.currentPage = survey.pages[pageNumber];
-    this.setState(this.state);
-  }
-
-  /**
-   * Returns true if a child's trigger is included in the answers
-   */
-  shouldDisplayNav(child) {
-    let visibleIfArray = child.visibleIf.split('or ');
-    let show = false;
-    visibleIfArray.forEach((visibleIf) => {
-      var parId = visibleIf.split('{')[1].split('}')[0];
-      var resId = visibleIf.split("'")[1].split("'")[0];
-
-      if (this.state?.model?.data[parId]) {
-        if (Array.isArray(this.state.model.data[parId])) {
-          if (this.state.model.data[parId].includes(resId)) {
-            show = true;
-          }
-        } else {
-          if (this.state.model.data[parId] === resId) {
-            show = true;
-          }
-        }
-      }
+    this.setState({
+      projectInformationQuestions: this.state.systemInformation,
     });
-    return show;
   }
 
-  clearFilter(filter) {
-    switch (filter) {
-      case 'roles':
-        this.setState({ roleFilters: [] });
-        break;
-      case 'domain':
-        this.setState({ domainFilters: [] });
-        break;
-      case 'region':
-        this.setState({ regionFilters: [] });
-        break;
-      case 'lifecycle':
-        this.setState({ lifecycleFilters: [] });
-        break;
-      default:
-        console.log('not a valid filter');
-    }
-  }
+  //   save(completed = false) {
+  //     // when we click save, we should already have a model saved to the database
+  //     // i.e. the index will always point to a valid submission
+  //     // so just make an update call
+
+  //     let title = this.state.json?.pages[0]?.elements?.find(
+  //       (q) => q?.title?.default === 'Title of project'
+  //     );
+  //     let dateTime = new Date();
+  //     let projectName = this.state.model.data[title?.name] ?? '';
+  //     let endpoint = 'submissions';
+  //     if (this.state.submission_id) {
+  //       endpoint = 'submissions/update/' + this.state.submission_id;
+  //     }
+
+  //     api
+  //       .post(endpoint, {
+  //         userId: this.state?.user_id,
+  //         submission: this.state.model.data,
+  //         date: dateTime,
+  //         projectName: projectName,
+  //         completed: completed,
+  //         domain: this.state.domainFilters,
+  //         region: this.state.regionFilters,
+  //         roles: this.state.roleFilters,
+  //         lifecycle: this.state.lifecycleFilters,
+  //       })
+  //       .then((res) => {
+  //         toast('Saving Responses', {
+  //           toastId: 'saving',
+  //         });
+  //         let submission = res.data;
+  //         this.setState({ submission_id: submission._id });
+  //       });
+  //   }
 
   render() {
     var number = 1;
@@ -516,7 +301,7 @@ class DesignAssistantSurvey extends Component {
             <h1>Section title</h1>
 
             <Box mt={4} />
-            {this.state.questions.map((questions, i) => (
+            {this.state.projectInformationQuestions.map((questions, i) => (
               <SurveyTest
                 key={i}
                 questionName={questions.question}
