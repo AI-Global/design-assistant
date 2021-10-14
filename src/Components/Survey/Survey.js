@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 
+import Box from '@material-ui/core/Box';
 import SurveyInput from './SurveyInput';
 import SurveyRadioGroup from './SurveyRadioGroup';
 import SurveyDropDown from './SurveyDropDown';
@@ -14,24 +15,28 @@ export default function Survey(props) {
       {responseType === 'text' && (
         <SurveyInput questionName={questionName}></SurveyInput>
       )}
+
       {responseType === 'radiogroup' && (
         <SurveyRadioGroup
           questionName={questionName}
           surveyResponses={surveyResponses}
         />
       )}
+
       {responseType === 'dropdown' && (
         <SurveyDropDown
           questionName={questionName}
           surveyResponses={surveyResponses}
         />
       )}
+
       {responseType === 'checkbox' && (
         <SurveyCheckBox
           questionName={questionName}
           surveyResponses={surveyResponses}
         />
       )}
+      <Box mt={8} />
       {responseType === 'comment' && (
         <SurveyComment
           questionName={questionName}
