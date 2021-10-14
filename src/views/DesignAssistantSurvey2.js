@@ -240,9 +240,13 @@ class DesignAssistantSurvey extends Component {
   }
 
   nextSurveyPage() {
-    this.setState({
-      projectInformationQuestions: this.state.systemInformation,
-    });
+    let stepCount = this.state.activeStep + 1;
+    this.setState({ activeStep: stepCount });
+    // if (this.state.activeStep === 4) {
+    //   this.setState({
+    //     projectInformationQuestions: this.state.systemInformation,
+    //   });
+    // }
   }
 
   //   save(completed = false) {
