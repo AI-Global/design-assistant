@@ -12,10 +12,6 @@ export default function SurveyCheckBox(props) {
         display: 'flex',
         flexWrap: 'wrap',
       },
-      checkBoxColumn: {
-        display: 'flex',
-        flexDirection: 'column',
-      },
     })
   );
   const classes = useStyles();
@@ -24,7 +20,7 @@ export default function SurveyCheckBox(props) {
     <div>
       <div>{questionName}</div>
       {surveyResponses.map((questions, i) => (
-        <div className={classes.checkBoxColumn}>
+        <div>
           <FormControlLabel
             key={i}
             label={questions.indicator}

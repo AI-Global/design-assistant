@@ -146,7 +146,13 @@ class DesignAssistantSurvey extends Component {
         var allQuestions = json;
         this.setState({ allQuestions: allQuestions });
         console.log(allQuestions);
-        console.log(allQuestions.question?.map((a) => a.responseType));
+
+        this.setState({
+          q: res.data.questions.map((a) => a.length),
+        });
+
+        console.log(this.state.q);
+
         this.setState({
           questions: res.data.questions.sort((a, b) =>
             a.questionNumber > b.questionNumber ? 1 : -1
@@ -484,24 +490,25 @@ class DesignAssistantSurvey extends Component {
         <div className="d-flex justify-content-center col">
           <h1>RAI Certification</h1>
         </div>
-
-        {this.state.allQuestions.questions.map((questions, i) => (
-          <SurveyTest
-            key={i}
-            questionName={questions.question}
-            responseType={questions.responseType}
-            surveyResponses={questions.responses}
-          ></SurveyTest>
-        ))}
-
-        <Box mt={8} />
+        <Box mt={10} />
         <div className="d-flex justify-content-end col">
           <div>CLEAR FILTERS</div>
-          <Box mr={10} />
+
           <Button className="filter-button mr-2">System Type 1</Button>
           <Button className="filter-button">Dimension 1</Button>
         </div>
-        <Box mt={8} />
+        <Box mt={18} />
+        <div className="survey-container">
+          {this.state.allQuestions.questions.map((questions, i) => (
+            <SurveyTest
+              key={i}
+              questionName={questions.question}
+              responseType={questions.responseType}
+              surveyResponses={questions.responses}
+            ></SurveyTest>
+          ))}
+        </div>
+
         <div className="dimensionNav">
           <div className="stepper-box">
             <Stepper orientation="vertical" activeStep={this.state.activeStep}>
