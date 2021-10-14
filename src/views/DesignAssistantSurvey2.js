@@ -319,7 +319,7 @@ class DesignAssistantSurvey extends Component {
                 ))}
               </div>
             ) : (
-              <div>yo</div>
+              <div>No questions currently at this point</div>
             )}
           </div>
         </div>
