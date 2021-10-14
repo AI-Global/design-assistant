@@ -499,14 +499,17 @@ class DesignAssistantSurvey extends Component {
         </div>
         <Box mt={18} />
         <div className="survey-container">
-          {this.state.allQuestions.questions.map((questions, i) => (
-            <SurveyTest
-              key={i}
-              questionName={questions.question}
-              responseType={questions.responseType}
-              surveyResponses={questions.responses}
-            ></SurveyTest>
-          ))}
+          <div className="survey-padding">
+            {this.state.allQuestions.questions.map((questions, i) => (
+              <SurveyTest
+                key={i}
+                questionName={questions.question}
+                responseType={questions.responseType}
+                surveyResponses={questions.responses}
+                questionNumber={questions.questionNumber}
+              ></SurveyTest>
+            ))}
+          </div>
         </div>
 
         <div className="dimensionNav">

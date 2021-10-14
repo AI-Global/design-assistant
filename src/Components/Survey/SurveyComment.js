@@ -4,11 +4,11 @@ import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 
 export default function SurveyComment(props) {
-  const { questionName } = props;
+  const { questionName, questionNumber } = props;
 
   const SurveyCommentField = withStyles(() => ({
     root: {
-      width: '100%',
+      width: '80%',
       border: '1px solid #C9D7E9',
       boxSizing: 'border-box',
       borderRadius: '8px',

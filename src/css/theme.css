@@ -427,6 +427,9 @@ input[type='number'] {
   border-radius: 10px;
 }
 
+.survey-padding {
+  padding: 50px;
+}
 .accordian-style {
   width: 242px;
   height: 39px;

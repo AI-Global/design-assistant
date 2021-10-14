@@ -8,18 +8,22 @@ import SurveyCheckBox from './SurveyCheckBox';
 import SurveyComment from './SurveyComment';
 
 export default function Survey(props) {
-  const { questionName, responseType, surveyResponses } = props;
+  const { questionName, responseType, surveyResponses, questionNumber } = props;
 
   return (
     <div>
       {responseType === 'text' && (
-        <SurveyInput questionName={questionName}></SurveyInput>
+        <SurveyInput
+          questionName={questionName}
+          questionNumber={questionNumber}
+        ></SurveyInput>
       )}
 
       {responseType === 'radiogroup' && (
         <SurveyRadioGroup
           questionName={questionName}
           surveyResponses={surveyResponses}
+          questionNumber={questionNumber}
         />
       )}
 
@@ -27,6 +31,7 @@ export default function Survey(props) {
         <SurveyDropDown
           questionName={questionName}
           surveyResponses={surveyResponses}
+          questionNumber={questionNumber}
         />
       )}
 
@@ -34,6 +39,7 @@ export default function Survey(props) {
         <SurveyCheckBox
           questionName={questionName}
           surveyResponses={surveyResponses}
+          questionNumber={questionNumber}
         />
       )}
       <Box mt={8} />
@@ -41,8 +47,10 @@ export default function Survey(props) {
         <SurveyComment
           questionName={questionName}
           surveyResponses={surveyResponses}
+          questionNumber={questionNumber}
         />
       )}
+      <Box mt={8} />
     </div>
   );
 }
