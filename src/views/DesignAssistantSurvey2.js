@@ -305,15 +305,22 @@ class DesignAssistantSurvey extends Component {
             <h1>Section title</h1>
 
             <Box mt={4} />
-            {this.state.projectInformationQuestions.map((questions, i) => (
-              <SurveyTest
-                key={i}
-                questionName={questions.question}
-                responseType={questions.responseType}
-                surveyResponses={questions.responses}
-                questionNumber={questions.questionNumber}
-              ></SurveyTest>
-            ))}
+            {console.log(this.state.activeStep)}
+            {this.state.activeStep === 0 || this.state.activeStep === 3 ? (
+              <div>
+                {this.state.projectInformationQuestions.map((questions, i) => (
+                  <SurveyTest
+                    key={i}
+                    questionName={questions.question}
+                    responseType={questions.responseType}
+                    surveyResponses={questions.responses}
+                    questionNumber={questions.questionNumber}
+                  ></SurveyTest>
+                ))}
+              </div>
+            ) : (
+              <div>yo</div>
+            )}
           </div>
         </div>
 
