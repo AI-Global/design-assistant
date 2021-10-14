@@ -148,7 +148,7 @@ class DesignAssistantSurvey extends Component {
         console.log(allQuestions);
 
         this.setState({
-          q: res.data.questions.map((a) => a.length),
+          q: res.data.questions.slice(1),
         });
 
         console.log(this.state.q);
@@ -500,6 +500,9 @@ class DesignAssistantSurvey extends Component {
         <Box mt={18} />
         <div className="survey-container">
           <div className="survey-padding">
+            <h1>Section title</h1>
+
+            <Box mt={4} />
             {this.state.allQuestions.questions.map((questions, i) => (
               <SurveyTest
                 key={i}
