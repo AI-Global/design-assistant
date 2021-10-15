@@ -239,6 +239,20 @@ class DesignAssistantSurvey extends Component {
     this.setState(this.state); // force re-render to update buttons and % complete
   }
 
+  handleTitleText = (activeStep) => {
+    switch (activeStep) {
+      case 0:
+        return 'Project Information';
+      case 1:
+        return 'Organizational Maturity';
+      case 2:
+        return 'Team Maturity';
+      case 3:
+        return 'System Information';
+      default:
+    }
+  };
+
   nextSurveyPage() {
     let stepCount = this.state.activeStep + 1;
     this.setState({ activeStep: stepCount });
@@ -302,7 +316,7 @@ class DesignAssistantSurvey extends Component {
         <Box mt={18} />
         <div className="survey-container">
           <div className="survey-padding">
-            <h1>Section title</h1>
+            <h1>{this.handleTitleText(this.state.activeStep)}</h1>
 
             <Box mt={4} />
             {console.log(this.state.activeStep)}
