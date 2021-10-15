@@ -21,7 +21,9 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import StepContent from '@material-ui/core/StepContent';
 import Box from '@material-ui/core/Box';
+import Chip from '@material-ui/core/Chip';
 import LinearProgress from '@material-ui/core/LinearProgress';
+
 import SurveyTest from './../Components/Survey/Survey';
 
 import 'react-toastify/dist/ReactToastify.css';
@@ -230,13 +232,8 @@ class DesignAssistantSurvey extends Component {
   }
 
   prevPage() {
-    this.state.model.prevPage();
-    this.setState(this.state); // force re-render to update buttons and % complete
-  }
-
-  nextPage() {
-    // this.state.this.state.model.nextPage();
-    this.setState(this.state); // force re-render to update buttons and % complete
+    let stepCount = this.state.activeStep - 1;
+    this.setState({ activeStep: stepCount });
   }
 
   handleTitleText = (activeStep) => {
@@ -256,11 +253,11 @@ class DesignAssistantSurvey extends Component {
   nextSurveyPage() {
     let stepCount = this.state.activeStep + 1;
     this.setState({ activeStep: stepCount });
-    // if (this.state.activeStep === 4) {
-    //   this.setState({
-    //     projectInformationQuestions: this.state.systemInformation,
-    //   });
-    // }
+    if (this.state.activeStep === 2) {
+      this.setState({
+        projectInformationQuestions: this.state.systemInformation,
+      });
+    }
   }
 
   //   save(completed = false) {
@@ -316,10 +313,14 @@ class DesignAssistantSurvey extends Component {
         <Box mt={18} />
         <div className="survey-container">
           <div className="survey-padding">
-            <h1>{this.handleTitleText(this.state.activeStep)}</h1>
-
+            <div className="survey-title-row">
+              <h1>{this.handleTitleText(this.state.activeStep)}</h1>
+              <div>
+                <Chip className="chip-yellow" label="Sample Tag" />
+                <Chip className="chip-blue" label="Sample Tag" />
+              </div>
+            </div>
             <Box mt={4} />
-            {console.log(this.state.activeStep)}
             {this.state.activeStep === 0 || this.state.activeStep === 3 ? (
               <div>
                 {this.state.projectInformationQuestions.map((questions, i) => (
@@ -411,9 +412,7 @@ class DesignAssistantSurvey extends Component {
         </div>
 
         <div className="container" style={{ paddingTop: '2em' }}>
-          <div className="d-flex justify-content-center col">
-            {this.percent()}%
-          </div>
+          <div className="d-flex justify-content-center col"></div>
         </div>
         {this.state.mount ? (
           <Survey.Survey
@@ -430,7 +429,7 @@ class DesignAssistantSurvey extends Component {
                   id="surveyNav"
                   className="btn btn-primary mr-2"
                   onClick={() => this.prevPage()}
-                  disabled={this.state.model.isFirstPage}
+                  disabled={this.state.activeStep === 0}
                 >
                   PREVIOUS
                 </Button>
@@ -440,7 +439,6 @@ class DesignAssistantSurvey extends Component {
                   id="surveyNav"
                   className="btn btn-primary mr-2"
                   onClick={() => this.nextSurveyPage()}
-                  // disabled={this.state.model.isLastPage}
                 >
                   CONTINUE
                 </Button>

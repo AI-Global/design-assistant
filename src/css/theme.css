@@ -419,6 +419,7 @@ input[type='number'] {
 }
 
 .survey-container {
+  min-height: 650px;
   width: 100%;
   position: relative;
   bottom: 77px;
@@ -429,6 +430,22 @@ input[type='number'] {
 
 .survey-padding {
   padding: 40px;
+}
+
+.survey-title-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.chip-yellow {
+  background-color: #ecb22e !important;
+  margin-right: 10px;
+}
+
+.chip-blue {
+  background-color: #e5efff !important;
 }
 
 .accordian-style {
