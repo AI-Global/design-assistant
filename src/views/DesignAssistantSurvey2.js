@@ -224,35 +224,28 @@ class DesignAssistantSurvey extends Component {
     return this.state.model.getProgress();
   }
 
-  // addDimension(e) {
-  //   const v = parseInt(e);
-  //   if (this.state.dimArray.includes(v)) {
-  //     const i = this.state.dimArray.indexOf(v);
-  //     this.state.dimArray.splice(i);
-  //   } else {
-  //     this.state.dimArray.push(v);
-  //   }
-  //   this.setState({ dimArray: this.state.dimArray });
-  // }
+  // return to when we know how this will work
+  addDimension(e) {
+    const v = parseInt(e);
+    if (this.state.dimArray.includes(v)) {
+      const i = this.state.dimArray.indexOf(v);
+      this.state.dimArray.splice(i);
+    } else {
+      this.state.dimArray.push(v);
+    }
+    this.setState({ dimArray: this.state.dimArray });
+  }
 
-  // addSystemTypes(e) {
-  //   const v = parseInt(e);
-  //   if (this.state.roleFilters.includes(v)) {
-  //     const i = this.state.roleFilters.indexOf(v);
-  //     this.state.roleFilters.splice(i, 1);
-  //   } else {
-  //     this.state.roleFilters.push(v);
-  //   }
-  //   this.setState({ roleFilters: this.state.roleFilters });
-  // }
-
-  resetSurvey() {
-    // do we need to delete submission object here?
-    // because we would need to call the database here
-    this.state.model.clear();
-    this.handleCloseModal();
-    this.handleCloseEmptyModal();
-    window.location.pathname = '/';
+  // return to when we know how this will work
+  addSystemTypes(e) {
+    const v = parseInt(e);
+    if (this.state.roleFilters.includes(v)) {
+      const i = this.state.roleFilters.indexOf(v);
+      this.state.roleFilters.splice(i, 1);
+    } else {
+      this.state.roleFilters.push(v);
+    }
+    this.setState({ roleFilters: this.state.roleFilters });
   }
 
   handleTitleText = (activeStep) => {
@@ -408,7 +401,7 @@ class DesignAssistantSurvey extends Component {
                       id={index}
                       key={index}
                       value={index + 1}
-                      onChange={(e) => this.addRole(e.target.value)}
+                      onChange={(e) => this.addSystemTypes(e.target.value)}
                     />
                   ) : null;
                 })}
