@@ -242,4 +242,5 @@ input:disabled {
   color: #303e50 !important;
   background-color: #ffffff !important;
   border-color: #386eda !important;
+  border-radius: 20px !important;
 }

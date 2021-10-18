@@ -23,6 +23,7 @@ import StepContent from '@material-ui/core/StepContent';
 import Box from '@material-ui/core/Box';
 import Chip from '@material-ui/core/Chip';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import CloseIcon from '@material-ui/icons/Close';
 
 import SurveyTest from './../Components/Survey/Survey';
 
@@ -65,7 +66,6 @@ class DesignAssistantSurvey extends Component {
       stepperTitle: [],
       dimArray: [],
       showModal: false,
-      activeStep: 0,
       authToken: localStorage.getItem('authToken'),
       submission_id: this?.props?.location?.state?.submission_id,
       user_id: this?.props?.location?.state?.user_id,
@@ -95,6 +95,7 @@ class DesignAssistantSurvey extends Component {
     ];
     this.setState({ systemType: systemType });
     this.setState({ stepperTitle: stepperTitle });
+    this.setState({ activeStep: 0 });
 
     widgets.nouislider(Survey);
 
@@ -235,7 +236,8 @@ class DesignAssistantSurvey extends Component {
     let stepCount = this.state.activeStep - 1;
     this.setState({ activeStep: stepCount });
     console.log(this.state.activeStep);
-    if (this.state.activeStep === 1) {
+
+    if (this.state.activeStep === 0) {
       this.setState({
         projectInformationQuestions: this.state.projectInformationQuestions,
       });
@@ -314,8 +316,14 @@ class DesignAssistantSurvey extends Component {
         <div className="d-flex justify-content-end col">
           <div>CLEAR FILTERS</div>
           <Box mr={4} />
-          <Button className="filter-button mr-2">System Type 1</Button>
-          <Button className="filter-button">Dimension 1</Button>
+          <Button className="filter-button mr-2">
+            <CloseIcon />
+            System Type 1
+          </Button>
+          <Button className="filter-button">
+            <CloseIcon />
+            Dimension 1
+          </Button>
         </div>
         <Box mt={18} />
         <div className="survey-container">
@@ -349,6 +357,7 @@ class DesignAssistantSurvey extends Component {
         <div className="dimensionNav">
           <div className="stepper-box">
             <Stepper orientation="vertical" activeStep={this.state.activeStep}>
+              {console.log(this.state.activeStep)}
               {this.state.stepperTitle.map((stepperTitle, index) => {
                 return (
                   <Step key={index}>
