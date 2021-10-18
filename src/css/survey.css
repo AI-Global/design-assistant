@@ -231,7 +231,7 @@ input:disabled {
 
 .stepper-progress-bar {
   width: 167px;
-  height: 15px;
+  height: 15px !important;
   background: #f3f5f7;
   border: 1px solid #dee6f0;
   box-sizing: border-box;

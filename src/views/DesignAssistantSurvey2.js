@@ -234,6 +234,12 @@ class DesignAssistantSurvey extends Component {
   prevPage() {
     let stepCount = this.state.activeStep - 1;
     this.setState({ activeStep: stepCount });
+    console.log(this.state.activeStep);
+    if (this.state.activeStep === 1) {
+      this.setState({
+        projectInformationQuestions: this.state.projectInformationQuestions,
+      });
+    }
   }
 
   handleTitleText = (activeStep) => {
@@ -253,6 +259,7 @@ class DesignAssistantSurvey extends Component {
   nextSurveyPage() {
     let stepCount = this.state.activeStep + 1;
     this.setState({ activeStep: stepCount });
+    console.log(this.state.activeStep);
     if (this.state.activeStep === 2) {
       this.setState({
         projectInformationQuestions: this.state.systemInformation,
@@ -306,7 +313,7 @@ class DesignAssistantSurvey extends Component {
         <Box mt={10} />
         <div className="d-flex justify-content-end col">
           <div>CLEAR FILTERS</div>
-
+          <Box mr={4} />
           <Button className="filter-button mr-2">System Type 1</Button>
           <Button className="filter-button">Dimension 1</Button>
         </div>
@@ -359,6 +366,14 @@ class DesignAssistantSurvey extends Component {
               })}
             </Stepper>
           </div>
+          <Box mt={4} />
+          <LinearProgress
+            className="linear-progress-bar"
+            variant="determinate"
+            value={25}
+          ></LinearProgress>
+          <Box mt={2} />
+          <div> 25% Complete</div>
           <Box mt={4} />
           <Accordion>
             <Accordion.Toggle className="accordian-style" eventKey="9">

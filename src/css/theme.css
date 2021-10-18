@@ -454,3 +454,9 @@ input[type='number'] {
   background: #e5efff;
   border-radius: 5px;
 }
+
+.linear-progress-bar {
+  border-radius: 5px;
+  background-color: #1a90ff;
+  height: 10px !important;
+}
