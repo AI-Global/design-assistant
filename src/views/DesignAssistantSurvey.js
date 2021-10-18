@@ -4,6 +4,7 @@ import Login from './Login';
 import ReactGa from 'react-ga';
 import showdown from 'showdown';
 import * as Survey from 'survey-react';
+import Card from 'react-bootstrap/Card';
 import { Button, Form } from 'react-bootstrap';
 import React, { Component } from 'react';
 import Modal from 'react-bootstrap/Modal';
@@ -14,15 +15,9 @@ import ModalBody from 'react-bootstrap/ModalBody';
 import ModalTitle from 'react-bootstrap/ModalTitle';
 import ModalFooter from 'react-bootstrap/ModalFooter';
 import ModalHeader from 'react-bootstrap/ModalHeader';
+import DropdownButton from 'react-bootstrap/DropdownButton';
 import { ToastContainer, toast } from 'react-toastify';
 import { getLoggedInUser } from '../helper/AuthHelper';
-import Stepper from '@material-ui/core/Stepper';
-import Step from '@material-ui/core/Step';
-import StepLabel from '@material-ui/core/StepLabel';
-import StepContent from '@material-ui/core/StepContent';
-import Box from '@material-ui/core/Box';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import SurveyTest from './../Components/Survey/Survey';
 
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -31,8 +26,6 @@ Survey.StylesManager.applyTheme('bootstrapmaterial');
 
 Survey.defaultBootstrapMaterialCss.progressBar =
   'progress-bar bg-custom progress-bar-striped';
-
-Survey.defaultBootstrapMaterialCss.container = 'survey-container';
 
 Survey.Serializer.addProperty('page', {
   name: 'navigationTitle:string',
@@ -59,11 +52,8 @@ class DesignAssistantSurvey extends Component {
       domainFilters: [],
       regionFilters: [],
       lifecycleFilters: [],
-      systemType: [],
-      stepperTitle: [],
       dimArray: [],
       showModal: false,
-      activeStep: 0,
       authToken: localStorage.getItem('authToken'),
       submission_id: this?.props?.location?.state?.submission_id,
       user_id: this?.props?.location?.state?.user_id,
@@ -77,23 +67,6 @@ class DesignAssistantSurvey extends Component {
 
   // Request questions JSON from backend
   componentDidMount() {
-    let systemType = [
-      'System 1',
-      'System 2',
-      'System 3',
-      'System 4',
-      'System 5',
-      'System 6',
-    ];
-    let stepperTitle = [
-      'Project Information',
-      'Organization Maturity',
-      'Team Maturity',
-      'System Information',
-    ];
-    this.setState({ systemType: systemType });
-    this.setState({ stepperTitle: stepperTitle });
-
     widgets.nouislider(Survey);
 
     ReactGa.pageview(window.location.pathname + window.location.search);
@@ -132,7 +105,7 @@ class DesignAssistantSurvey extends Component {
 
   async getQuestions(submissions) {
     api
-      .get('questions/all', {
+      .get('questions', {
         params: {
           roles: this.state.roleFilters,
           domains: this.state.domainFilters,
@@ -143,30 +116,10 @@ class DesignAssistantSurvey extends Component {
       .then((res) => {
         this.setState({ mount: false });
         var json = res.data;
-        var allQuestions = json;
-        this.setState({ allQuestions: allQuestions });
-        console.log(allQuestions);
 
-        console.log(this.state.q);
-
-        this.setState({
-          questions: res.data.questions.sort((a, b) =>
-            a.questionNumber > b.questionNumber ? 1 : -1
-          ),
-        });
-        this.setState({
-          projectInformationQuestions: this.state.questions.filter(
-            (filterQuestions) => filterQuestions.trustIndexDimension == 1
-          ),
-        });
-
-        this.setState({
-          systemInformation: this.state.questions.filter(
-            (filterQuestions) => filterQuestions.trustIndexDimension != 1
-          ),
-        });
-
-        console.log(this.state.slicedQuestions);
+        if (json.pages.length < 1) {
+          this.handleOpenEmptyModal();
+        }
 
         // replace double escaped characters so showdown correctly renders markdown frontslashes and newlines
         var stringified = JSON.stringify(json);
@@ -217,87 +170,85 @@ class DesignAssistantSurvey extends Component {
           model.data = this.state.localResponses;
         }
 
-        // this removes no surveyjs questions
+        model.onTextMarkdown.add(function (model, options) {
+          var str = converter.makeHtml(options.text);
+          options.html = str;
+        });
 
-        // model.onTextMarkdown.add(function (model, options) {
-        //   var str = converter.makeHtml(options.text);
-        //   options.html = str;
-        // });
-
-        // // add tooltip
-        // model.onAfterRenderPage.add(function (model, options) {
-        //   const node = options.htmlElement.querySelector('h1');
-        //   if (node) {
-        //     node.classList.add('section-header');
-        //   }
-        //   // wait to load jquery to fix testing bug
-        //   // https://stackoverflow.com/a/63217419
-        //   setTimeout(function () {
-        //     $('[data-toggle="tooltip"]').tooltip({
-        //       boundary: 'viewport',
-        //     });
-        //   }, 2100);
-        // });
-        // //change labels to 'h5' to bold them
-        // model.onAfterRenderQuestion.add(function (model, options) {
-        //   let title = options.htmlElement.querySelector('h5');
-        //   if (title) {
-        //     // add tooltip for question if alttext has default value
-        //     let altTextHTML = '';
-        //     let childIndent = '';
-        //     if (
-        //       options.question.alttext &&
-        //       options.question.alttext.hasOwnProperty('default')
-        //     ) {
-        //       let altText = converter.makeHtml(
-        //         options.question.alttext.default.replace(/"/g, '&quot;')
-        //       );
-        //       altText = `<div class="text-justify">${altText}</div>`.replace(
-        //         /"/g,
-        //         '&quot;'
-        //       );
-        //       altTextHTML = `<i class="fas fa-info-circle ml-2" data-toggle="tooltip" data-html="true" title="${altText}"></i>`;
-        //     }
-        //     if (options.question.visibleIf) {
-        //       childIndent = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-        //     }
-        //     title.outerHTML =
-        //       '<label for="' +
-        //       options.question.inputId +
-        //       '" class="' +
-        //       title.className +
-        //       '"><span class="field-name">' +
-        //       childIndent +
-        //       title.innerText +
-        //       '</span>' +
-        //       altTextHTML +
-        //       '</label>';
-        //     // add tooltip for answers if alttext has default value
-        //     options.htmlElement.querySelectorAll('input').forEach((element) => {
-        //       if (
-        //         options.question.alttext &&
-        //         options.question.alttext.hasOwnProperty(element.value)
-        //       ) {
-        //         const div = element.closest('div');
-        //         div.classList.add('d-flex');
-        //         const i = document.createElement('span');
-        //         let altText = converter.makeHtml(
-        //           options.question.alttext[element.value].default.replace(
-        //             /"/g,
-        //             '&quot;'
-        //           )
-        //         );
-        //         altText = `<div class="text-justify">${altText}</div>`.replace(
-        //           /"/g,
-        //           '&quot;'
-        //         );
-        //         i.innerHTML = `<i class="fas fa-info-circle ml-2" data-toggle="tooltip" data-html="true" title="${altText}"></i>`;
-        //         div.appendChild(i);
-        //       }
-        //     });
-        //   }
-        // });
-        // this.setState({ mount: true });
+        // add tooltip
+        model.onAfterRenderPage.add(function (model, options) {
+          const node = options.htmlElement.querySelector('h4');
+          if (node) {
+            node.classList.add('section-header');
+          }
+          // wait to load jquery to fix testing bug
+          // https://stackoverflow.com/a/63217419
+          setTimeout(function () {
+            $('[data-toggle="tooltip"]').tooltip({
+              boundary: 'viewport',
+            });
+          }, 2100);
+        });
+        //change labels to 'h5' to bold them
+        model.onAfterRenderQuestion.add(function (model, options) {
+          let title = options.htmlElement.querySelector('h5');
+          if (title) {
+            // add tooltip for question if alttext has default value
+            let altTextHTML = '';
+            let childIndent = '';
+            if (
+              options.question.alttext &&
+              options.question.alttext.hasOwnProperty('default')
+            ) {
+              let altText = converter.makeHtml(
+                options.question.alttext.default.replace(/"/g, '&quot;')
+              );
+              altText = `<div class="text-justify">${altText}</div>`.replace(
+                /"/g,
+                '&quot;'
+              );
+              altTextHTML = `<i class="fas fa-info-circle ml-2" data-toggle="tooltip" data-html="true" title="${altText}"></i>`;
+            }
+            if (options.question.visibleIf) {
+              childIndent = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+            }
+            title.outerHTML =
+              '<label for="' +
+              options.question.inputId +
+              '" class="' +
+              title.className +
+              '"><span class="field-name">' +
+              childIndent +
+              title.innerText +
+              '</span>' +
+              altTextHTML +
+              '</label>';
+            // add tooltip for answers if alttext has default value
+            options.htmlElement.querySelectorAll('input').forEach((element) => {
+              if (
+                options.question.alttext &&
+                options.question.alttext.hasOwnProperty(element.value)
+              ) {
+                const div = element.closest('div');
+                div.classList.add('d-flex');
+                const i = document.createElement('span');
+                let altText = converter.makeHtml(
+                  options.question.alttext[element.value].default.replace(
+                    /"/g,
+                    '&quot;'
+                  )
+                );
+                altText = `<div class="text-justify">${altText}</div>`.replace(
+                  /"/g,
+                  '&quot;'
+                );
+                i.innerHTML = `<i class="fas fa-info-circle ml-2" data-toggle="tooltip" data-html="true" title="${altText}"></i>`;
+                div.appendChild(i);
+              }
+            });
+          }
+        });
+        this.setState({ mount: true });
       });
   }
 
@@ -343,12 +294,8 @@ class DesignAssistantSurvey extends Component {
   }
 
   nextPage() {
-    // this.state.this.state.model.nextPage();
+    this.state.model.nextPage();
     this.setState(this.state); // force re-render to update buttons and % complete
-  }
-
-  nextSurveyPage() {
-    this.setState({ questions: this.state.systemInformation });
   }
 
   save(completed = false) {
@@ -500,106 +447,173 @@ class DesignAssistantSurvey extends Component {
     var number = 1;
     return this.state.model ? (
       <div>
-        <div className="d-flex justify-content-center col">
-          <h1>RAI Certification</h1>
-        </div>
-        <Box mt={10} />
-        <div className="d-flex justify-content-end col">
-          <div>CLEAR FILTERS</div>
-
-          <Button className="filter-button mr-2">System Type 1</Button>
-          <Button className="filter-button">Dimension 1</Button>
-        </div>
-        <Box mt={18} />
-        <div className="survey-container">
-          <div className="survey-padding">
-            <h1>Section title</h1>
-
-            <Box mt={4} />
-            {this.state.questions.map((questions, i) => (
-              <SurveyTest
-                key={i}
-                questionName={questions.question}
-                responseType={questions.responseType}
-                surveyResponses={questions.responses}
-                questionNumber={questions.questionNumber}
-              ></SurveyTest>
-            ))}
-          </div>
-        </div>
-
         <div className="dimensionNav">
-          <div className="stepper-box">
-            <Stepper orientation="vertical" activeStep={this.state.activeStep}>
-              {this.state.stepperTitle.map((stepperTitle, index) => {
-                return (
-                  <Step key={index}>
-                    <StepLabel>{stepperTitle}</StepLabel>
-                    <StepContent> 25% Complete </StepContent>
-                    <StepContent>
-                      <LinearProgress
-                        className="stepper-progress-bar"
-                        variant="determinate"
-                        value={25}
-                      ></LinearProgress>
-                    </StepContent>
-                  </Step>
-                );
-              })}
-            </Stepper>
-          </div>
-          <Box mt={4} />
           <Accordion>
-            <Accordion.Toggle className="accordian-style" eventKey="9">
-              Dimensions
-            </Accordion.Toggle>
-            <Box mt={4} />
-            <Accordion.Collapse eventKey="9">
-              <Form>
-                {this.state.dimArray.map((dimension, index) => {
-                  return index + 1 !== this.state.dimArray.length ? (
-                    <Form.Check
-                      className="checkbox-text"
-                      type="checkbox"
-                      checked={this.state.dimArray.includes(index + 1)}
-                      label={dimension}
-                      id={index}
-                      key={index}
-                      value={index + 1}
-                      onChange={(e) => this.addRole(e.target.value)}
-                    />
-                  ) : null;
-                })}
-              </Form>
-            </Accordion.Collapse>
+            {this.state.dimArray.map((dimension, index) => {
+              return (
+                <Card key={index}>
+                  <Accordion.Toggle as={Card.Header} eventKey={index + 1}>
+                    {dimension}
+                  </Accordion.Toggle>
+                  <Accordion.Collapse eventKey={index + 1}>
+                    <Card.Body>
+                      {this?.state?.json?.pages?.map((page, index) => {
+                        return page.name
+                          .toLowerCase()
+                          .includes(dimension.substring(0, 4).toLowerCase())
+                          ? page.elements.map((question, i) => {
+                              return !question.name.includes('other') &&
+                                (!question.visibleIf ||
+                                  this.shouldDisplayNav(question)) ? (
+                                <Button
+                                  style={{ margin: '0.75em' }}
+                                  key={i}
+                                  id={
+                                    this.state.model.data[question.name]
+                                      ? 'answered'
+                                      : 'unanswered'
+                                  }
+                                  onClick={() => this.navPage(index)}
+                                >
+                                  {question.visibleIf ? '' : number++}
+                                </Button>
+                              ) : null;
+                            })
+                          : null;
+                      })}
+                    </Card.Body>
+                  </Accordion.Collapse>
+                </Card>
+              );
+            })}
           </Accordion>
-          <Box mt={4} />
-          <Accordion>
-            <Accordion.Toggle className="accordian-style" eventKey="9">
-              System Types
-            </Accordion.Toggle>
-            <Box mt={4} />
-            <Accordion.Collapse eventKey="9">
-              <Form>
-                {this.state.systemType.map((systemType, index) => {
-                  return index + 1 !== this.state.systemType.length ? (
-                    <Form.Check
-                      className="checkbox-text"
-                      type="checkbox"
-                      checked={this.state.systemType.includes(index + 1)}
-                      label={systemType}
-                      id={index}
-                      key={index}
-                      value={index + 1}
-                      onChange={(e) => this.addRole(e.target.value)}
-                    />
-                  ) : null;
-                })}
-              </Form>
-            </Accordion.Collapse>
+          <Accordion className="questionFilter">
+            <Card>
+              <Accordion.Toggle as={Card.Header} eventKey="9">
+                Filters
+              </Accordion.Toggle>
+              <Accordion.Collapse eventKey="9">
+                <Card.Body className="cardBody">
+                  <DropdownButton title="Roles" className="filterDrop">
+                    <Form>
+                      {this.state.metadata.roles.map((role, index) => {
+                        return index + 1 !==
+                          this.state.metadata.roles.length ? (
+                          <Form.Check
+                            type="checkbox"
+                            checked={this.state.roleFilters.includes(index + 1)}
+                            label={role.name}
+                            id={index}
+                            key={index}
+                            value={index + 1}
+                            onChange={(e) => this.addRole(e.target.value)}
+                          />
+                        ) : null;
+                      })}
+                    </Form>
+                    <Button
+                      id="clearFilter"
+                      onClick={() => this.clearFilter('roles')}
+                    >
+                      <div>
+                        Reset <i className="fa fa-undo fa-fw"></i>
+                      </div>
+                    </Button>
+                  </DropdownButton>
+                  <DropdownButton title="Industry" className="filterDrop">
+                    <Form>
+                      {this.state.metadata.domain.map((domain, index) => {
+                        return (
+                          <Form.Check
+                            type="checkbox"
+                            checked={this.state.domainFilters.includes(
+                              index + 1
+                            )}
+                            label={domain.name}
+                            id={index}
+                            key={index}
+                            value={index + 1}
+                            onChange={(e) => this.addDomain(e.target.value)}
+                          />
+                        );
+                      })}
+                    </Form>
+                    <Button
+                      id="clearFilter"
+                      onClick={() => this.clearFilter('domain')}
+                    >
+                      <div>
+                        Reset <i className="fa fa-undo fa-fw"></i>
+                      </div>
+                    </Button>
+                  </DropdownButton>
+                  <DropdownButton title="Regions" className="filterDrop">
+                    <Form>
+                      {this.state.metadata.region.map((region, index) => {
+                        return (
+                          <Form.Check
+                            type="checkbox"
+                            checked={this.state.regionFilters.includes(
+                              index + 1
+                            )}
+                            label={region.name}
+                            id={index}
+                            key={index}
+                            value={index + 1}
+                            onChange={(e) => this.addRegion(e.target.value)}
+                          />
+                        );
+                      })}
+                    </Form>
+                    <Button
+                      id="clearFilter"
+                      onClick={() => this.clearFilter('region')}
+                    >
+                      <div>
+                        Reset <i className="fa fa-undo fa-fw"></i>
+                      </div>
+                    </Button>
+                  </DropdownButton>
+                  <DropdownButton title="Life Cycles" className="filterDrop">
+                    <Form>
+                      {this.state.metadata.lifecycle.map((lifecycle, index) => {
+                        return index + 1 !==
+                          this.state.metadata.lifecycle.length ? (
+                          <Form.Check
+                            type="checkbox"
+                            checked={this.state.lifecycleFilters.includes(
+                              index + 1
+                            )}
+                            label={lifecycle.name}
+                            id={index}
+                            key={index}
+                            value={index + 1}
+                            onChange={(e) => this.addLifecycle(e.target.value)}
+                          />
+                        ) : null;
+                      })}
+                    </Form>
+                    <Button
+                      id="clearFilter"
+                      onClick={() => this.clearFilter('lifecycle')}
+                    >
+                      <div>
+                        Reset <i className="fa fa-undo fa-fw"></i>
+                      </div>
+                    </Button>
+                  </DropdownButton>
+                  <Button
+                    id="saveButton"
+                    className="filterApply"
+                    onClick={() => this.applyFilters()}
+                  >
+                    Apply Filters
+                  </Button>
+                </Card.Body>
+              </Accordion.Collapse>
+            </Card>
           </Accordion>
         </div>
-
         <div className="container" style={{ paddingTop: '2em' }}>
           <div className="d-flex justify-content-center col">
             {this.percent()}%
@@ -611,28 +625,34 @@ class DesignAssistantSurvey extends Component {
             onComplete={this.onComplete}
           />
         ) : null}
-        <div>
-          <Box mt={8} />
-          <div>
+        <div id="navCon" className="container">
+          <div id="navCard" className="card">
             <div className="row no-gutters">
               <div className="d-flex justify-content-start col">
                 <Button
-                  id="surveyNav"
+                  id="resetButton"
                   className="btn btn-primary mr-2"
-                  onClick={() => this.prevPage()}
-                  disabled={this.state.model.isFirstPage}
+                  onClick={this.handleOpenModal}
                 >
-                  PREVIOUS
+                  Reset
                 </Button>
               </div>
               <div className="d-flex justify-content-center col">
                 <Button
                   id="surveyNav"
                   className="btn btn-primary mr-2"
-                  onClick={() => this.nextSurveyPage()}
-                  // disabled={this.state.model.isLastPage}
+                  onClick={() => this.prevPage()}
+                  disabled={this.state.model.isFirstPage}
                 >
-                  CONTINUE
+                  Prev
+                </Button>
+                <Button
+                  id="surveyNav"
+                  className="btn btn-primary mr-2"
+                  onClick={() => this.nextPage()}
+                  disabled={this.state.model.isLastPage}
+                >
+                  Next
                 </Button>
               </div>
               <div className="d-flex justify-content-end col">
@@ -641,13 +661,13 @@ class DesignAssistantSurvey extends Component {
                   id="saveButton"
                   onClick={() => this.save()}
                 >
-                  SAVE
+                  Save
                 </Button>
                 <Button
                   className="bt btn-primary"
                   onClick={() => this.finish()}
                 >
-                  FINISH
+                  Finish
                 </Button>
               </div>
             </div>

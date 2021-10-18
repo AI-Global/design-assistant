@@ -148,10 +148,14 @@ class DesignAssistantSurvey extends Component {
         var json = res.data;
         var allQuestions = json;
         this.setState({ allQuestions: allQuestions });
-
         this.setState({
           questions: res.data.questions.sort((a, b) =>
             a.questionNumber > b.questionNumber ? 1 : -1
+          ),
+        });
+        this.setState({
+          initalQuestions: this.state.questions.filter(
+            (filterQuestions) => filterQuestions.trustIndexDimension == 1
           ),
         });
         this.setState({
@@ -159,14 +163,11 @@ class DesignAssistantSurvey extends Component {
             (filterQuestions) => filterQuestions.trustIndexDimension == 1
           ),
         });
-
         this.setState({
           systemInformation: this.state.questions.filter(
             (filterQuestions) => filterQuestions.trustIndexDimension != 1
           ),
         });
-
-        console.log(this.state.slicedQuestions);
 
         // replace double escaped characters so showdown correctly renders markdown frontslashes and newlines
         var stringified = JSON.stringify(json);
@@ -223,6 +224,28 @@ class DesignAssistantSurvey extends Component {
     return this.state.model.getProgress();
   }
 
+  // addDimension(e) {
+  //   const v = parseInt(e);
+  //   if (this.state.dimArray.includes(v)) {
+  //     const i = this.state.dimArray.indexOf(v);
+  //     this.state.dimArray.splice(i);
+  //   } else {
+  //     this.state.dimArray.push(v);
+  //   }
+  //   this.setState({ dimArray: this.state.dimArray });
+  // }
+
+  // addSystemTypes(e) {
+  //   const v = parseInt(e);
+  //   if (this.state.roleFilters.includes(v)) {
+  //     const i = this.state.roleFilters.indexOf(v);
+  //     this.state.roleFilters.splice(i, 1);
+  //   } else {
+  //     this.state.roleFilters.push(v);
+  //   }
+  //   this.setState({ roleFilters: this.state.roleFilters });
+  // }
+
   resetSurvey() {
     // do we need to delete submission object here?
     // because we would need to call the database here
@@ -230,18 +253,6 @@ class DesignAssistantSurvey extends Component {
     this.handleCloseModal();
     this.handleCloseEmptyModal();
     window.location.pathname = '/';
-  }
-
-  prevPage() {
-    let stepCount = this.state.activeStep - 1;
-    this.setState({ activeStep: stepCount });
-    console.log(this.state.activeStep);
-
-    if (this.state.activeStep === 0) {
-      this.setState({
-        projectInformationQuestions: this.state.projectInformationQuestions,
-      });
-    }
   }
 
   handleTitleText = (activeStep) => {
@@ -258,52 +269,23 @@ class DesignAssistantSurvey extends Component {
     }
   };
 
-  nextSurveyPage() {
-    let stepCount = this.state.activeStep + 1;
-    this.setState({ activeStep: stepCount });
-    console.log(this.state.activeStep);
-    if (this.state.activeStep === 2) {
+  async prevPage() {
+    await this.setState({ activeStep: this.state.activeStep - 1 });
+    if (this.state.activeStep === 0) {
       this.setState({
-        projectInformationQuestions: this.state.systemInformation,
+        initalQuestions: this.state.projectInformationQuestions,
       });
     }
   }
 
-  //   save(completed = false) {
-  //     // when we click save, we should already have a model saved to the database
-  //     // i.e. the index will always point to a valid submission
-  //     // so just make an update call
-
-  //     let title = this.state.json?.pages[0]?.elements?.find(
-  //       (q) => q?.title?.default === 'Title of project'
-  //     );
-  //     let dateTime = new Date();
-  //     let projectName = this.state.model.data[title?.name] ?? '';
-  //     let endpoint = 'submissions';
-  //     if (this.state.submission_id) {
-  //       endpoint = 'submissions/update/' + this.state.submission_id;
-  //     }
-
-  //     api
-  //       .post(endpoint, {
-  //         userId: this.state?.user_id,
-  //         submission: this.state.model.data,
-  //         date: dateTime,
-  //         projectName: projectName,
-  //         completed: completed,
-  //         domain: this.state.domainFilters,
-  //         region: this.state.regionFilters,
-  //         roles: this.state.roleFilters,
-  //         lifecycle: this.state.lifecycleFilters,
-  //       })
-  //       .then((res) => {
-  //         toast('Saving Responses', {
-  //           toastId: 'saving',
-  //         });
-  //         let submission = res.data;
-  //         this.setState({ submission_id: submission._id });
-  //       });
-  //   }
+  async nextSurveyPage() {
+    await this.setState({ activeStep: this.state.activeStep + 1 });
+    if (this.state.activeStep === 3) {
+      this.setState({
+        initalQuestions: this.state.systemInformation,
+      });
+    }
+  }
 
   render() {
     var number = 1;
@@ -338,7 +320,7 @@ class DesignAssistantSurvey extends Component {
             <Box mt={4} />
             {this.state.activeStep === 0 || this.state.activeStep === 3 ? (
               <div>
-                {this.state.projectInformationQuestions.map((questions, i) => (
+                {this.state.initalQuestions?.map((questions, i) => (
                   <SurveyTest
                     key={i}
                     questionName={questions.question}
@@ -401,7 +383,7 @@ class DesignAssistantSurvey extends Component {
                       id={index}
                       key={index}
                       value={index + 1}
-                      onChange={(e) => this.addRole(e.target.value)}
+                      onChange={(e) => this.addDimension(e.target.value)}
                     />
                   ) : null;
                 })}
