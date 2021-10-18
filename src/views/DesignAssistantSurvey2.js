@@ -65,6 +65,7 @@ class DesignAssistantSurvey extends Component {
       systemType: [],
       stepperTitle: [],
       dimArray: [],
+      surveyProgressBar: 0,
       showModal: false,
       authToken: localStorage.getItem('authToken'),
       submission_id: this?.props?.location?.state?.submission_id,
@@ -262,6 +263,40 @@ class DesignAssistantSurvey extends Component {
     }
   };
 
+  surveyProgressBarText = (activeStep) => {
+    switch (activeStep) {
+      case 0:
+        return '0%';
+      case 1:
+        return '25%';
+      case 2:
+        return '50%';
+      case 3:
+        return '75%';
+      default:
+    }
+  };
+
+  surveyProgressBar() {
+    if (this.state.activeStep === 0) {
+      this.setState({
+        surveyProgressBar: 0,
+      });
+    } else if (this.state.activeStep === 1) {
+      this.setState({
+        surveyProgressBar: 25,
+      });
+    } else if (this.state.activeStep === 2) {
+      this.setState({
+        surveyProgressBar: 50,
+      });
+    } else if (this.state.activeStep === 3) {
+      this.setState({
+        surveyProgressBar: 75,
+      });
+    }
+  }
+
   async prevPage() {
     await this.setState({ activeStep: this.state.activeStep - 1 });
     if (this.state.activeStep === 0) {
@@ -269,6 +304,7 @@ class DesignAssistantSurvey extends Component {
         initalQuestions: this.state.projectInformationQuestions,
       });
     }
+    this.surveyProgressBar();
   }
 
   async nextSurveyPage() {
@@ -278,6 +314,7 @@ class DesignAssistantSurvey extends Component {
         initalQuestions: this.state.systemInformation,
       });
     }
+    this.surveyProgressBar();
   }
 
   render() {
@@ -354,10 +391,10 @@ class DesignAssistantSurvey extends Component {
           <LinearProgress
             className="linear-progress-bar"
             variant="determinate"
-            value={25}
+            value={this.state.surveyProgressBar}
           ></LinearProgress>
           <Box mt={2} />
-          <div> 25% Complete</div>
+          <div> {this.surveyProgressBarText(this.state.activeStep)}</div>
           <Box mt={4} />
           <Accordion>
             <Accordion.Toggle className="accordian-style" eventKey="9">
