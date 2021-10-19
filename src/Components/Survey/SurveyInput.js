@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-
+import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 
 export default function SurveyInput(props) {
-  const { questionName, questionNumber } = props;
+  const { questionName } = props;
 
   const SurveyInputField = withStyles(() => ({
     root: {
@@ -18,10 +18,10 @@ export default function SurveyInput(props) {
   const [deleteSubmissions, setDeleteSubmissions] = useState(false);
 
   return (
-    <SurveyInputField
-      variant="outlined"
-      label={questionName}
-      defaultValue=""
-    ></SurveyInputField>
+    <div>
+      <div>{questionName}</div>
+      <Box mt={2} />
+      <SurveyInputField variant="outlined" defaultValue=""></SurveyInputField>
+    </div>
   );
 }

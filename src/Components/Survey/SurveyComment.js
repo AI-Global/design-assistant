@@ -4,7 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 
 export default function SurveyComment(props) {
-  const { questionName, questionNumber } = props;
+  const { questionName } = props;
 
   const SurveyCommentField = withStyles(() => ({
     root: {

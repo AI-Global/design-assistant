@@ -98,10 +98,12 @@ class DesignAssistantSurvey extends Component {
       'Team Maturity',
       'System Information',
     ];
+
+    let teamMaturity = ['No questions at this time'];
     this.setState({ systemType: systemType });
     this.setState({ stepperTitle: stepperTitle });
     this.setState({ activeStep: 0 });
-
+    this.setState({ subDimensionStep: 0 });
     widgets.nouislider(Survey);
 
     ReactGa.pageview(window.location.pathname + window.location.search);
@@ -165,10 +167,52 @@ class DesignAssistantSurvey extends Component {
         ),
       });
       this.setState({
-        systemInformation: this.state.questions.filter(
-          (filterQuestions) => filterQuestions.trustIndexDimension != 1
+        organizationalMaturity: this.state.questions.filter(
+          (filterQuestions) => filterQuestions.trustIndexDimension == 2
         ),
       });
+      this.setState({ teamMaturity: this.teamMaturity });
+
+      this.setState({
+        systemInformation: this.state.questions.filter(
+          (filterQuestions) =>
+            filterQuestions.trustIndexDimension != 1 &&
+            filterQuestions.trustIndexDimension != 2
+        ),
+      });
+      this.setState({ filteredSystem: this.state.systemInformation });
+
+      this.setState({
+        accountability: this.state.filteredSystem.filter(
+          (filterQuestions) => filterQuestions.trustIndexDimension == 3
+        ),
+      });
+
+      this.setState({
+        data: this.state.filteredSystem.filter(
+          (filterQuestions) => filterQuestions.trustIndexDimension == 4
+        ),
+      });
+
+      this.setState({
+        fairNess: this.state.filteredSystem.filter(
+          (filterQuestions) => filterQuestions.trustIndexDimension == 5
+        ),
+      });
+
+      this.setState({
+        Interpretability: this.state.filteredSystem.filter(
+          (filterQuestions) => filterQuestions.trustIndexDimension == 6
+        ),
+      });
+
+      this.setState({
+        robustness: this.state.filteredSystem.filter(
+          (filterQuestions) => filterQuestions.trustIndexDimension == 7
+        ),
+      });
+
+      console.log(this.state.accountability);
 
       // replace double escaped characters so showdown correctly renders markdown frontslashes and newlines
       var stringified = JSON.stringify(json);
@@ -305,6 +349,28 @@ class DesignAssistantSurvey extends Component {
     }
   }
 
+  async subDimensionStepper() {
+    await this.setState({ subDimensionStep: this.state.subDimensionStep + 1 });
+
+    if (this.state.subDimensionStep === 0) {
+      this.setState({
+        initalQuestions: this.state.data,
+      });
+    } else if (this.state.subDimensionStep === 1) {
+      this.setState({
+        initalQuestions: this.state.fairNess,
+      });
+    } else if (this.state.subDimensionStep === 2) {
+      this.setState({
+        initalQuestions: this.state.Interpretability,
+      });
+    } else if (this.state.subDimensionStep === 3) {
+      this.setState({
+        initalQuestions: this.state.robustness,
+      });
+    }
+  }
+
   async prevPage() {
     await this.setState({ activeStep: this.state.activeStep - 1 });
     if (this.state.activeStep === 0) {
@@ -317,10 +383,20 @@ class DesignAssistantSurvey extends Component {
 
   async nextSurveyPage() {
     await this.setState({ activeStep: this.state.activeStep + 1 });
-    if (this.state.activeStep === 3) {
+    if (this.state.activeStep === 1) {
       this.setState({
-        initalQuestions: this.state.systemInformation,
+        initalQuestions: this.state.organizationalMaturity,
       });
+    } else if (this.state.activeStep === 2) {
+      this.setState({
+        initalQuestions: this.state.teamMaturity,
+      });
+    } else if (this.state.activeStep === 3) {
+      this.setState({
+        initalQuestions: this.state.accountability,
+      });
+    } else if (this.state.activeStep >= 4) {
+      this.subDimensionStepper();
     }
     this.surveyProgressBar();
   }
@@ -366,7 +442,8 @@ class DesignAssistantSurvey extends Component {
               </div>
             </div>
             <Box mt={4} />
-            {this.state.activeStep === 0 || this.state.activeStep === 3 ? (
+            {/* start first stepper questions */}
+            {this.state.activeStep !== 4 ? (
               <div>
                 {this.state.initalQuestions?.map((questions, i) => (
                   <SurveyTest
@@ -374,12 +451,23 @@ class DesignAssistantSurvey extends Component {
                     questionName={questions.question}
                     responseType={questions.responseType}
                     surveyResponses={questions.responses}
-                    questionNumber={questions.questionNumber}
+                    // questionNumber={questions.questionNumber}
                   ></SurveyTest>
                 ))}
               </div>
             ) : (
-              <div>No questions currently at this point</div>
+              // start subdimension questions
+              <div>
+                {this.state.initalQuestions?.map((questions, i) => (
+                  <SurveyTest
+                    key={i}
+                    questionName={questions.question}
+                    responseType={questions.responseType}
+                    surveyResponses={questions.responses}
+                    // questionNumber={questions.questionNumber}
+                  ></SurveyTest>
+                ))}
+              </div>
             )}
           </div>
         </div>
@@ -388,6 +476,7 @@ class DesignAssistantSurvey extends Component {
           <div className="stepper-box">
             <Stepper orientation="vertical" activeStep={this.state.activeStep}>
               {console.log(this.state.activeStep)}
+              {console.log(this.state.subDimensionStep)}
               {this.state.stepperTitle.map((stepperTitle, index) => {
                 return (
                   <Step key={index}>

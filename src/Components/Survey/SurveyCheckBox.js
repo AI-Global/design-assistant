@@ -5,7 +5,7 @@ import { makeStyles, createStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 
 export default function SurveyCheckBox(props) {
-  const { questionName, surveyResponses, questionNumber } = props;
+  const { questionName, surveyResponses } = props;
 
   const useStyles = makeStyles(() =>
     createStyles({
@@ -26,10 +26,7 @@ export default function SurveyCheckBox(props) {
 
   return (
     <div>
-      <div>
-        {questionNumber}.{'  '}
-        {questionName}
-      </div>
+      <div>{questionName}</div>
       <Box mt={2} />
       {surveyResponses.map((questions, i) => (
         <div>

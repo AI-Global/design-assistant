@@ -5,7 +5,7 @@ import Box from '@material-ui/core/Box';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 
 export default function SurveyRadioGroup(props) {
-  const { questionName, surveyResponses, questionNumber } = props;
+  const { questionName, surveyResponses } = props;
 
   const useStyles = makeStyles(() =>
     createStyles({
@@ -30,10 +30,7 @@ export default function SurveyRadioGroup(props) {
 
   return (
     <div>
-      <div>
-        {questionNumber}.{'  '}
-        {questionName}
-      </div>
+      <div>{questionName}</div>
       <Box mt={2} />
       {surveyResponses.map((questions, i) => (
         <div className={classes.radioColumn}>
