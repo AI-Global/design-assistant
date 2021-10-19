@@ -24,6 +24,8 @@ import Box from '@material-ui/core/Box';
 import Chip from '@material-ui/core/Chip';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import CloseIcon from '@material-ui/icons/Close';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import SurveyTest from './../Components/Survey/Survey';
 
@@ -67,6 +69,8 @@ class DesignAssistantSurvey extends Component {
       dimArray: [],
       surveyProgressBar: 0,
       showModal: false,
+      dimensionFilter: true,
+      systemTypeFilter: true,
       authToken: localStorage.getItem('authToken'),
       submission_id: this?.props?.location?.state?.submission_id,
       user_id: this?.props?.location?.state?.user_id,
@@ -134,68 +138,64 @@ class DesignAssistantSurvey extends Component {
     localStorage.removeItem('localResponses');
   }
 
-  async getQuestions(submissions) {
-    api
-      .get('questions/all', {
-        params: {
-          roles: this.state.roleFilters,
-          domains: this.state.domainFilters,
-          regions: this.state.regionFilters,
-          lifecycles: this.state.lifecycleFilters,
-        },
-      })
-      .then((res) => {
-        this.setState({ mount: false });
-        var json = res.data;
-        var allQuestions = json;
-        this.setState({ allQuestions: allQuestions });
-        this.setState({
-          questions: res.data.questions.sort((a, b) =>
-            a.questionNumber > b.questionNumber ? 1 : -1
-          ),
-        });
-        this.setState({
-          initalQuestions: this.state.questions.filter(
-            (filterQuestions) => filterQuestions.trustIndexDimension == 1
-          ),
-        });
-        this.setState({
-          projectInformationQuestions: this.state.questions.filter(
-            (filterQuestions) => filterQuestions.trustIndexDimension == 1
-          ),
-        });
-        this.setState({
-          systemInformation: this.state.questions.filter(
-            (filterQuestions) => filterQuestions.trustIndexDimension != 1
-          ),
-        });
+  async getQuestions() {
+    api.get('questions/all').then((res) => {
+      this.setState({ mount: false });
+      var json = res.data;
+      var allQuestions = json;
 
-        // replace double escaped characters so showdown correctly renders markdown frontslashes and newlines
-        var stringified = JSON.stringify(json);
-        stringified = stringified.replace(/\\\\n/g, '\\n');
-        stringified = stringified.replace(/\\\//g, '/');
-        json = JSON.parse(stringified);
-
-        const model = new Survey.Model(json);
-        const converter = new showdown.Converter();
-        // Set json and model
-        this.setState({ json: json });
-        this.setState({ model });
-
-        // Set survey responses to survey model
-        if (this?.props?.location?.state?.prevResponses) {
-          model.data = this.props.location.state.prevResponses;
-          let questionsAnswered = Object.keys(model.data);
-          let lastQuestionAnswered =
-            questionsAnswered[questionsAnswered.length - 1];
-          let lastPageAnswered = model.pages.find((page) =>
-            page.elements.find(
-              (question) => question.name === lastQuestionAnswered
-            )
-          );
-          model.currentPageNo = lastPageAnswered?.visibleIndex ?? 0;
-        }
+      console.log(res.data);
+      this.setState({ allQuestions: allQuestions });
+      this.setState({ dimensions: res.data.Dimensions });
+      this.setState({ subdimensions: res.data.subDimensions });
+      this.setState({
+        questions: res.data.questions.sort((a, b) =>
+          a.questionNumber > b.questionNumber ? 1 : -1
+        ),
       });
+
+      this.setState({
+        initalQuestions: this.state.questions.filter(
+          (filterQuestions) => filterQuestions.trustIndexDimension == 1
+        ),
+      });
+      this.setState({
+        projectInformationQuestions: this.state.questions.filter(
+          (filterQuestions) => filterQuestions.trustIndexDimension == 1
+        ),
+      });
+      this.setState({
+        systemInformation: this.state.questions.filter(
+          (filterQuestions) => filterQuestions.trustIndexDimension != 1
+        ),
+      });
+
+      // replace double escaped characters so showdown correctly renders markdown frontslashes and newlines
+      var stringified = JSON.stringify(json);
+      stringified = stringified.replace(/\\\\n/g, '\\n');
+      stringified = stringified.replace(/\\\//g, '/');
+      json = JSON.parse(stringified);
+
+      const model = new Survey.Model(json);
+      const converter = new showdown.Converter();
+      // Set json and model
+      this.setState({ json: json });
+      this.setState({ model });
+
+      // Set survey responses to survey model
+      if (this?.props?.location?.state?.prevResponses) {
+        model.data = this.props.location.state.prevResponses;
+        let questionsAnswered = Object.keys(model.data);
+        let lastQuestionAnswered =
+          questionsAnswered[questionsAnswered.length - 1];
+        let lastPageAnswered = model.pages.find((page) =>
+          page.elements.find(
+            (question) => question.name === lastQuestionAnswered
+          )
+        );
+        model.currentPageNo = lastPageAnswered?.visibleIndex ?? 0;
+      }
+    });
   }
 
   nextPath(path) {
@@ -219,6 +219,14 @@ class DesignAssistantSurvey extends Component {
 
   handleCloseEmptyModal() {
     this.setState({ showEmptyModal: false });
+  }
+
+  handleDimensionFilter() {
+    this.setState({ dimensionFilter: false });
+  }
+
+  handleSystemTypeFilter() {
+    this.setState({ systemTypeFilter: false });
   }
 
   percent() {
@@ -328,14 +336,24 @@ class DesignAssistantSurvey extends Component {
         <div className="d-flex justify-content-end col">
           <div>CLEAR FILTERS</div>
           <Box mr={4} />
-          <Button className="filter-button mr-2">
-            <CloseIcon />
-            System Type 1
-          </Button>
-          <Button className="filter-button">
-            <CloseIcon />
-            Dimension 1
-          </Button>
+          {this.state.systemTypeFilter && (
+            <Button
+              onClick={() => this.handleSystemTypeFilter()}
+              className="filter-button mr-2"
+            >
+              <CloseIcon />
+              System Type 1
+            </Button>
+          )}
+          {this.state.dimensionFilter && (
+            <Button
+              onClick={() => this.handleDimensionFilter()}
+              className="filter-button"
+            >
+              <CloseIcon />
+              Dimension 1
+            </Button>
+          )}
         </div>
         <Box mt={18} />
         <div className="survey-container">
@@ -374,12 +392,12 @@ class DesignAssistantSurvey extends Component {
                 return (
                   <Step key={index}>
                     <StepLabel>{stepperTitle}</StepLabel>
-                    <StepContent> 25% Complete </StepContent>
+                    <StepContent> 0% percent</StepContent>
                     <StepContent>
                       <LinearProgress
                         className="stepper-progress-bar"
                         variant="determinate"
-                        value={25}
+                        value={0}
                       ></LinearProgress>
                     </StepContent>
                   </Step>
@@ -404,17 +422,14 @@ class DesignAssistantSurvey extends Component {
             <Accordion.Collapse eventKey="9">
               <Form>
                 {this.state.dimArray.map((dimension, index) => {
-                  return index + 1 !== this.state.dimArray.length ? (
-                    <Form.Check
-                      className="checkbox-text"
-                      type="checkbox"
-                      checked={this.state.dimArray.includes(index + 1)}
-                      label={dimension}
-                      id={index}
-                      key={index}
-                      value={index + 1}
-                      onChange={(e) => this.addDimension(e.target.value)}
-                    />
+                  return this.state.dimArray.length ? (
+                    <div className="check-box-height">
+                      <FormControlLabel
+                        key={index}
+                        label={dimension}
+                        control={<Checkbox className="survey-check-box" />}
+                      />
+                    </div>
                   ) : null;
                 })}
               </Form>
@@ -430,16 +445,13 @@ class DesignAssistantSurvey extends Component {
               <Form>
                 {this.state.systemType.map((systemType, index) => {
                   return index + 1 !== this.state.systemType.length ? (
-                    <Form.Check
-                      className="checkbox-text"
-                      type="checkbox"
-                      checked={this.state.systemType.includes(index + 1)}
-                      label={systemType}
-                      id={index}
-                      key={index}
-                      value={index + 1}
-                      onChange={(e) => this.addSystemTypes(e.target.value)}
-                    />
+                    <div className="check-box-height">
+                      <FormControlLabel
+                        key={index}
+                        label={systemType}
+                        control={<Checkbox className="survey-check-box" />}
+                      />
+                    </div>
                   ) : null;
                 })}
               </Form>

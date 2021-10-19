@@ -244,3 +244,11 @@ input:disabled {
   border-color: #386eda !important;
   border-radius: 20px !important;
 }
+
+.survey-check-box {
+  color: #386eda !important;
+}
+
+.check-box-height {
+  height: 100%;
+}
