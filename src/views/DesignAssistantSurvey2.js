@@ -99,7 +99,7 @@ class DesignAssistantSurvey extends Component {
       'System Information',
     ];
 
-    let questionTitle = [
+    let questionDimension = [
       'projectDetails',
       'organizationalMaturity',
       'accountability',
@@ -114,8 +114,8 @@ class DesignAssistantSurvey extends Component {
     this.setState({ stepperTitle: stepperTitle });
     this.setState({ activeStep: 0 });
     this.setState({ subDimensionStep: 0 });
-    this.setState({ questionTitle: questionTitle });
-    this.setState({ activeStepValue: questionTitle[0] });
+    this.setState({ questionDimension: questionDimension });
+    this.setState({ activeStepValue: questionDimension[0] });
     widgets.nouislider(Survey);
 
     ReactGa.pageview(window.location.pathname + window.location.search);
@@ -302,70 +302,73 @@ class DesignAssistantSurvey extends Component {
     }
   };
 
-  surveyProgressBarText = (activeStep) => {
-    switch (activeStep) {
-      case 0:
+  surveyProgressBarText = (activeStepValue) => {
+    switch (activeStepValue) {
+      case 'projectDetails':
         return '0%';
-      case 1:
+      case 'organizationalMaturity':
         return '25%';
-      case 2:
+      case 'accountability':
         return '50%';
-      case 3:
+      case 'data':
         return '75%';
+      case 'fairness':
+        return '85%';
+      case 'interpretability':
+        return '95%';
+      case 'robustness':
+        return '100%';
       default:
     }
   };
 
   surveyProgressBar() {
-    if (this.state.activeStep === 0) {
+    if (this.state.activeStepValue === 'projectDetails') {
       this.setState({
         surveyProgressBar: 0,
       });
-    } else if (this.state.activeStep === 1) {
+    } else if (this.state.activeStepValue === 'organizationalMaturity') {
       this.setState({
         surveyProgressBar: 25,
       });
-    } else if (this.state.activeStep === 2) {
+    } else if (this.state.activeStepValue === 'accountability') {
       this.setState({
         surveyProgressBar: 50,
       });
-    } else if (this.state.activeStep === 3) {
+    } else if (this.state.activeStepValue === 'data') {
       this.setState({
         surveyProgressBar: 75,
+      });
+    } else if (this.state.activeStepValue === 'fairness') {
+      this.setState({
+        surveyProgressBar: 85,
+      });
+    } else if (this.state.activeStepValue === 'interpretability') {
+      this.setState({
+        surveyProgressBar: 95,
+      });
+    } else if (this.state.activeStepValue === 'robustness') {
+      this.setState({
+        surveyProgressBar: 100,
       });
     }
   }
 
   async prevPage() {
     await this.setState({ activeStep: this.state.activeStep - 1 });
-    if (this.state.activeStep === 0) {
-      this.setState({
-        initalQuestions: this.state.projectInformationQuestions,
-      });
-    }
+    this.setState({
+      activeStepValue: this.state.questionDimension[this.state.activeStep],
+    });
+    window.scroll(0, 0);
     this.surveyProgressBar();
   }
 
   async nextSurveyPage() {
     await this.setState({ activeStep: this.state.activeStep + 1 });
     this.setState({
-      activeStepValue: this.state.questionTitle[this.state.activeStep],
+      activeStepValue: this.state.questionDimension[this.state.activeStep],
     });
-    // if (this.state.activeStep === 1) {
-    //   this.setState({
-    //     initalQuestions: this.state.organizationalMaturity,
-    //   });
-    // } else if (this.state.activeStep === 2) {
-    //   this.setState({
-    //     initalQuestions: this.state.teamMaturity,
-    //   });
-    // } else if (this.state.activeStep === 3) {
-    //   this.setState({
-    //     initalQuestions: this.state.accountability,
-    //   });
-    // } else if (this.state.activeStep >= 4) {
-    //   this.subDimensionStepper();
-    // }
+    window.scroll(0, 0);
     this.surveyProgressBar();
   }
 
@@ -454,7 +457,7 @@ class DesignAssistantSurvey extends Component {
             value={this.state.surveyProgressBar}
           ></LinearProgress>
           <Box mt={2} />
-          <div> {this.surveyProgressBarText(this.state.activeStep)}</div>
+          <div> {this.surveyProgressBarText(this.state.activeStepValue)}</div>
           <Box mt={4} />
           <Accordion>
             <Accordion.Toggle className="accordian-style" eventKey="9">
