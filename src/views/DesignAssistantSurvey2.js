@@ -96,7 +96,11 @@ class DesignAssistantSurvey extends Component {
       'Project Information',
       'Organization Maturity',
       'Team Maturity',
-      'System Information',
+      'Accountability',
+      'Data',
+      'Fairness',
+      'Interpretability',
+      'Robustness',
     ];
 
     let questionDimension = [
@@ -471,7 +475,10 @@ class DesignAssistantSurvey extends Component {
                     <div className="check-box-height">
                       <FormControlLabel
                         key={index}
+                        checked={this.state.roleFilters.includes(index + 1)}
+                        value={index + 1}
                         label={dimension}
+                        onChange={(e) => this.addDimension(e.target.value)}
                         control={<Checkbox className="survey-check-box" />}
                       />
                     </div>
