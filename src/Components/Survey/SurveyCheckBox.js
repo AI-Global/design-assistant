@@ -5,7 +5,13 @@ import { makeStyles, createStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 
 export default function SurveyCheckBox(props) {
-  const { questionName, surveyResponses } = props;
+  const {
+    questionName,
+    surveyResponses,
+    questionId,
+    value,
+    updateAnswer,
+  } = props;
 
   const useStyles = makeStyles(() =>
     createStyles({
@@ -23,7 +29,7 @@ export default function SurveyCheckBox(props) {
     })
   );
   const classes = useStyles();
-
+  console.log(value);
   return (
     <div>
       <div>{questionName}</div>
@@ -33,7 +39,15 @@ export default function SurveyCheckBox(props) {
           <FormControlLabel
             key={i}
             label={questions.indicator}
-            control={<Checkbox className={classes.checkBoxColor} />}
+            control={
+              <Checkbox
+                value={value}
+                onChange={(event) =>
+                  updateAnswer(questionId, event.target.value)
+                }
+                className={classes.checkBoxColor}
+              />
+            }
           />
         </div>
       ))}

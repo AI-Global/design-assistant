@@ -154,12 +154,13 @@ class DesignAssistantSurvey extends Component {
   }
 
   updateAnswer = (questionId, value) => {
+    this.setState({ inputValue: value });
     this.setState({ answers: this.state.answers.set(questionId, value) });
   };
 
   finish = () => {
-    console.log(this.state.answers)
-  }
+    console.log(this.state.answers);
+  };
 
   async getQuestions() {
     api.get('questions/all').then((res) => {
@@ -432,7 +433,7 @@ class DesignAssistantSurvey extends Component {
                     surveyResponses={questions.responses}
                     questionId={questions._id}
                     updateAnswer={this.updateAnswer}
-                    value={this.state.answers.get(questions._id)}
+                    value={this.state.inputValue}
                   ></SurveyTest>
                 )
               )}

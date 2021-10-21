@@ -6,6 +6,7 @@ import SurveyRadioGroup from './SurveyRadioGroup';
 import SurveyDropDown from './SurveyDropDown';
 import SurveyCheckBox from './SurveyCheckBox';
 import SurveyComment from './SurveyComment';
+import TextField from '@material-ui/core/TextField';
 
 export default function SurveyTest(props) {
   const {
