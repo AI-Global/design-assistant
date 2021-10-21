@@ -433,7 +433,7 @@ class DesignAssistantSurvey extends Component {
                     surveyResponses={questions.responses}
                     questionId={questions._id}
                     updateAnswer={this.updateAnswer}
-                    value={this.state.inputValue}
+                    value={this.state.answers.get(questions._id)}
                   ></SurveyTest>
                 )
               )}

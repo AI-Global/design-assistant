@@ -23,6 +23,7 @@ export default function SurveyTest(props) {
     <div>
       {responseType === 'text' && (
         <SurveyInput
+          key={questionId}
           questionName={questionName}
           questionNumber={questionNumber}
           questionId={questionId}
@@ -33,6 +34,7 @@ export default function SurveyTest(props) {
 
       {responseType === 'radiogroup' && (
         <SurveyRadioGroup
+          key={questionId}
           questionName={questionName}
           surveyResponses={surveyResponses}
           questionNumber={questionNumber}
@@ -44,6 +46,7 @@ export default function SurveyTest(props) {
 
       {responseType === 'dropdown' && (
         <SurveyDropDown
+          key={questionId}
           questionName={questionName}
           surveyResponses={surveyResponses}
           questionNumber={questionNumber}
@@ -55,6 +58,7 @@ export default function SurveyTest(props) {
 
       {responseType === 'checkbox' && (
         <SurveyCheckBox
+          key={questionId}
           questionName={questionName}
           surveyResponses={surveyResponses}
           questionNumber={questionNumber}
@@ -66,6 +70,7 @@ export default function SurveyTest(props) {
       <Box mt={8} />
       {responseType === 'comment' && (
         <SurveyComment
+          key={questionId}
           questionName={questionName}
           surveyResponses={surveyResponses}
           questionNumber={questionNumber}
