@@ -5,7 +5,7 @@ import Box from '@material-ui/core/Box';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 
 export default function SurveyRadioGroup(props) {
-  const { questionName, surveyResponses } = props;
+  const { questionName, surveyResponses, questionId, value, updateAnswer } = props;
 
   const useStyles = makeStyles(() =>
     createStyles({
@@ -38,6 +38,7 @@ export default function SurveyRadioGroup(props) {
             key={i}
             label={questions.indicator}
             control={<Radio className={classes.radioColor} />}
+            onChange={(event) => updateAnswer(questionId, event.target)}
           />
         </div>
       ))}

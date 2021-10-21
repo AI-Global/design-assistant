@@ -4,7 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 
 export default function SurveyComment(props) {
-  const { questionName } = props;
+  const { questionName, questionId, value, updateAnswer } = props;
 
   const SurveyCommentField = withStyles(() => ({
     root: {
@@ -23,6 +23,8 @@ export default function SurveyComment(props) {
       multiline
       label={questionName}
       defaultValue=""
+      value={value}
+      onChange={(event) => updateAnswer(questionId, event.target.value)}
     ></SurveyCommentField>
   );
 }

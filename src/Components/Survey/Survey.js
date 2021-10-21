@@ -7,8 +7,16 @@ import SurveyDropDown from './SurveyDropDown';
 import SurveyCheckBox from './SurveyCheckBox';
 import SurveyComment from './SurveyComment';
 
-export default function Survey(props) {
-  const { questionName, responseType, surveyResponses, questionNumber } = props;
+export default function SurveyTest(props) {
+  const {
+    questionName,
+    responseType,
+    surveyResponses,
+    questionNumber,
+    questionId,
+    updateAnswer,
+    value,
+  } = props;
 
   return (
     <div>
@@ -16,6 +24,9 @@ export default function Survey(props) {
         <SurveyInput
           questionName={questionName}
           questionNumber={questionNumber}
+          questionId={questionId}
+          updateAnswer={updateAnswer}
+          value={value}
         ></SurveyInput>
       )}
 
@@ -24,6 +35,9 @@ export default function Survey(props) {
           questionName={questionName}
           surveyResponses={surveyResponses}
           questionNumber={questionNumber}
+          questionId={questionId}
+          updateAnswer={updateAnswer}
+          value={value}
         />
       )}
 
@@ -32,6 +46,9 @@ export default function Survey(props) {
           questionName={questionName}
           surveyResponses={surveyResponses}
           questionNumber={questionNumber}
+          questionId={questionId}
+          updateAnswer={updateAnswer}
+          value={value}
         />
       )}
 
@@ -40,6 +57,9 @@ export default function Survey(props) {
           questionName={questionName}
           surveyResponses={surveyResponses}
           questionNumber={questionNumber}
+          questionId={questionId}
+          updateAnswer={updateAnswer}
+          value={value}
         />
       )}
       <Box mt={8} />
@@ -48,6 +68,9 @@ export default function Survey(props) {
           questionName={questionName}
           surveyResponses={surveyResponses}
           questionNumber={questionNumber}
+          questionId={questionId}
+          updateAnswer={updateAnswer}
+          value={value}
         />
       )}
       <Box mt={8} />

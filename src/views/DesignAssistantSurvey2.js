@@ -75,6 +75,7 @@ class DesignAssistantSurvey extends Component {
       submission_id: this?.props?.location?.state?.submission_id,
       user_id: this?.props?.location?.state?.user_id,
       localResponses: JSON.parse(localStorage.getItem('localResponses')),
+      answers: new Map(),
     };
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
@@ -150,6 +151,14 @@ class DesignAssistantSurvey extends Component {
   // clear local storage before navigating away
   componentWillUnmount() {
     localStorage.removeItem('localResponses');
+  }
+
+  updateAnswer = (questionId, value) => {
+    this.setState({ answers: this.state.answers.set(questionId, value) });
+  };
+
+  finish = () => {
+    console.log(this.state.answers)
   }
 
   async getQuestions() {
@@ -376,240 +385,245 @@ class DesignAssistantSurvey extends Component {
     var number = 1;
     return this.state.model ? (
       <div>
-        <div className="d-flex justify-content-center col">
-          <h1>RAI Certification</h1>
-        </div>
-        <Box mt={10} />
-        <div className="d-flex justify-content-end col">
-          <div>CLEAR FILTERS</div>
-          <Box mr={4} />
-          {this.state.systemTypeFilter && (
-            <Button
-              onClick={() => this.handleSystemTypeFilter()}
-              className="filter-button mr-2"
-            >
-              <CloseIcon />
-              System Type 1
-            </Button>
-          )}
-          {this.state.dimensionFilter && (
-            <Button
-              onClick={() => this.handleDimensionFilter()}
-              className="filter-button"
-            >
-              <CloseIcon />
-              Dimension 1
-            </Button>
-          )}
-        </div>
-        <Box mt={18} />
-        <div className="survey-container">
-          <div className="survey-padding">
-            <div className="survey-title-row">
-              <h1>{this.handleTitleText(this.state.activeStep)}</h1>
+        <form>
+          <div className="d-flex justify-content-center col">
+            <h1>RAI Certification</h1>
+          </div>
+          <Box mt={10} />
+          <div className="d-flex justify-content-end col">
+            <div>CLEAR FILTERS</div>
+            <Box mr={4} />
+            {this.state.systemTypeFilter && (
+              <Button
+                onClick={() => this.handleSystemTypeFilter()}
+                className="filter-button mr-2"
+              >
+                <CloseIcon />
+                System Type 1
+              </Button>
+            )}
+            {this.state.dimensionFilter && (
+              <Button
+                onClick={() => this.handleDimensionFilter()}
+                className="filter-button"
+              >
+                <CloseIcon />
+                Dimension 1
+              </Button>
+            )}
+          </div>
+          <Box mt={18} />
+          <div className="survey-container">
+            <div className="survey-padding">
+              <div className="survey-title-row">
+                <h1>{this.handleTitleText(this.state.activeStep)}</h1>
+                <div>
+                  <Chip className="chip-yellow" label="Sample Tag" />
+                  <Chip className="chip-blue" label="Sample Tag" />
+                </div>
+              </div>
+              <Box mt={4} />
               <div>
-                <Chip className="chip-yellow" label="Sample Tag" />
-                <Chip className="chip-blue" label="Sample Tag" />
+                {this.state.surveyQuestions[this.state.activeStepValue].map(
+                  (questions) => (
+                    <SurveyTest
+                      key={questions._id}
+                      questionName={questions.question}
+                      responseType={questions.responseType}
+                      surveyResponses={questions.responses}
+                      questionId={questions._id}
+                      updateAnswer={this.updateAnswer}
+                      value={this.state.answers.get(questions._id)}
+                    ></SurveyTest>
+                  )
+                )}
               </div>
             </div>
-            <Box mt={4} />
-            <div>
-              {this.state.surveyQuestions[this.state.activeStepValue].map(
-                (questions, i) => (
-                  <SurveyTest
-                    key={i}
-                    questionName={questions.question}
-                    responseType={questions.responseType}
-                    surveyResponses={questions.responses}
-                  ></SurveyTest>
-                )
-              )}
+          </div>
+
+          <div className="dimensionNav">
+            <div className="stepper-box">
+              <Stepper orientation="vertical" activeStep={this.state.activeStep}>
+                {console.log(this.state.activeStep)}
+                {console.log(this.state.subDimensionStep)}
+                {this.state.stepperTitle.map((stepperTitle, index) => {
+                  return (
+                    <Step key={index}>
+                      <StepLabel>{stepperTitle}</StepLabel>
+                      <StepContent> 0% percent</StepContent>
+                      <StepContent>
+                        <LinearProgress
+                          className="stepper-progress-bar"
+                          variant="determinate"
+                          value={0}
+                        ></LinearProgress>
+                      </StepContent>
+                    </Step>
+                  );
+                })}
+              </Stepper>
             </div>
-          </div>
-        </div>
-
-        <div className="dimensionNav">
-          <div className="stepper-box">
-            <Stepper orientation="vertical" activeStep={this.state.activeStep}>
-              {console.log(this.state.activeStep)}
-              {console.log(this.state.subDimensionStep)}
-              {this.state.stepperTitle.map((stepperTitle, index) => {
-                return (
-                  <Step key={index}>
-                    <StepLabel>{stepperTitle}</StepLabel>
-                    <StepContent> 0% percent</StepContent>
-                    <StepContent>
-                      <LinearProgress
-                        className="stepper-progress-bar"
-                        variant="determinate"
-                        value={0}
-                      ></LinearProgress>
-                    </StepContent>
-                  </Step>
-                );
-              })}
-            </Stepper>
-          </div>
-          <Box mt={4} />
-          <LinearProgress
-            className="linear-progress-bar"
-            variant="determinate"
-            value={this.state.surveyProgressBar}
-          ></LinearProgress>
-          <Box mt={2} />
-          <div> {this.surveyProgressBarText(this.state.activeStepValue)}</div>
-          <Box mt={4} />
-          <Accordion>
-            <Accordion.Toggle className="accordian-style" eventKey="9">
-              Dimensions
-            </Accordion.Toggle>
             <Box mt={4} />
-            <Accordion.Collapse eventKey="9">
-              <Form>
-                {this.state.dimArray.map((dimension, index) => {
-                  return this.state.dimArray.length ? (
-                    <div className="check-box-height">
-                      <FormControlLabel
-                        key={index}
-                        label={dimension}
-                        control={<Checkbox className="survey-check-box" />}
-                      />
-                    </div>
-                  ) : null;
-                })}
-              </Form>
-            </Accordion.Collapse>
-          </Accordion>
-          <Box mt={4} />
-          <Accordion>
-            <Accordion.Toggle className="accordian-style" eventKey="9">
-              System Types
-            </Accordion.Toggle>
+            <LinearProgress
+              className="linear-progress-bar"
+              variant="determinate"
+              value={this.state.surveyProgressBar}
+            ></LinearProgress>
+            <Box mt={2} />
+            <div> {this.surveyProgressBarText(this.state.activeStepValue)}</div>
             <Box mt={4} />
-            <Accordion.Collapse eventKey="9">
-              <Form>
-                {this.state.systemType.map((systemType, index) => {
-                  return index + 1 !== this.state.systemType.length ? (
-                    <div className="check-box-height">
-                      <FormControlLabel
-                        key={index}
-                        label={systemType}
-                        control={<Checkbox className="survey-check-box" />}
-                      />
-                    </div>
-                  ) : null;
-                })}
-              </Form>
-            </Accordion.Collapse>
-          </Accordion>
-        </div>
+            <Accordion>
+              <Accordion.Toggle className="accordian-style" eventKey="9">
+                Dimensions
+              </Accordion.Toggle>
+              <Box mt={4} />
+              <Accordion.Collapse eventKey="9">
+                <Form>
+                  {this.state.dimArray.map((dimension, index) => {
+                    return this.state.dimArray.length ? (
+                      <div className="check-box-height">
+                        <FormControlLabel
+                          key={index}
+                          label={dimension}
+                          control={<Checkbox className="survey-check-box" />}
+                        />
+                      </div>
+                    ) : null;
+                  })}
+                </Form>
+              </Accordion.Collapse>
+            </Accordion>
+            <Box mt={4} />
+            <Accordion>
+              <Accordion.Toggle className="accordian-style" eventKey="9">
+                System Types
+              </Accordion.Toggle>
+              <Box mt={4} />
+              <Accordion.Collapse eventKey="9">
+                <Form>
+                  {this.state.systemType.map((systemType, index) => {
+                    return index + 1 !== this.state.systemType.length ? (
+                      <div className="check-box-height">
+                        <FormControlLabel
+                          key={index}
+                          label={systemType}
+                          control={<Checkbox className="survey-check-box" />}
+                        />
+                      </div>
+                    ) : null;
+                  })}
+                </Form>
+              </Accordion.Collapse>
+            </Accordion>
+          </div>
 
-        <div className="container" style={{ paddingTop: '2em' }}>
-          <div className="d-flex justify-content-center col"></div>
-        </div>
-        {this.state.mount ? (
-          <Survey.Survey
-            model={this.state.model}
-            onComplete={this.onComplete}
-          />
-        ) : null}
-        <div>
-          <Box mt={8} />
+          <div className="container" style={{ paddingTop: '2em' }}>
+            <div className="d-flex justify-content-center col"></div>
+          </div>
+          {this.state.mount ? (
+            <Survey.Survey
+              model={this.state.model}
+              onComplete={this.onComplete}
+            />
+          ) : null}
           <div>
-            <div className="row no-gutters">
-              <div className="d-flex justify-content-start col">
-                <Button
-                  id="surveyNav"
-                  className="btn btn-primary mr-2"
-                  onClick={() => this.prevPage()}
-                  disabled={this.state.activeStep === 0}
-                >
-                  PREVIOUS
-                </Button>
-              </div>
-              <div className="d-flex justify-content-center col">
-                <Button
-                  id="surveyNav"
-                  className="btn btn-primary mr-2"
-                  onClick={() => this.nextSurveyPage()}
-                >
-                  CONTINUE
-                </Button>
-              </div>
-              <div className="d-flex justify-content-end col">
-                <Button
-                  className="btn btn-save mr-2"
-                  id="saveButton"
-                  onClick={() => this.save()}
-                >
-                  SAVE
-                </Button>
-                <Button
-                  className="bt btn-primary"
-                  onClick={() => this.finish()}
-                >
-                  FINISH
-                </Button>
+            <Box mt={8} />
+            <div>
+              <div className="row no-gutters">
+                <div className="d-flex justify-content-start col">
+                  <Button
+                    id="surveyNav"
+                    className="btn btn-primary mr-2"
+                    onClick={() => this.prevPage()}
+                    disabled={this.state.activeStep === 0}
+                  >
+                    PREVIOUS
+                  </Button>
+                </div>
+                <div className="d-flex justify-content-center col">
+                  <Button
+                    id="surveyNav"
+                    className="btn btn-primary mr-2"
+                    onClick={() => this.nextSurveyPage()}
+                  >
+                    CONTINUE
+                  </Button>
+                </div>
+                <div className="d-flex justify-content-end col">
+                  <Button
+                    className="btn btn-save mr-2"
+                    id="saveButton"
+                    onClick={() => this.save()}
+                  >
+                    SAVE
+                  </Button>
+                  <Button
+                    className="bt btn-primary"
+                    onClick={() => this.finish()}
+                  >
+                    FINISH
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <Modal
-          size="md"
-          aria-labelledby="contained-modal-title-vcenter"
-          centered
-          show={this.state.showModal}
-        >
-          <ModalHeader>
-            <ModalTitle id="contained-modal-title-vcenter">
-              Please Confirm
-            </ModalTitle>
-          </ModalHeader>
-          <ModalBody>
-            <p>
-              Please confirm that you want to reset everything and start over.
-            </p>
-          </ModalBody>
-          <ModalFooter>
-            <Button onClick={this.handleCloseModal}>No</Button>
-            <Button id="resetButton" onClick={() => this.resetSurvey()}>
-              Yes
-            </Button>
-          </ModalFooter>
-        </Modal>
-        <Modal
-          size="md"
-          aria-labelledby="contained-modal-title-vcenter"
-          centered
-          show={this.state.showEmptyModal}
-        >
-          <ModalHeader closeButton>
-            <ModalTitle id="contained-modal-title-vcenter">
-              No Questions
-            </ModalTitle>
-          </ModalHeader>
-          <ModalBody>
-            <p>There are no questions in the database.</p>
-          </ModalBody>
-          <ModalFooter>
-            <Button id="resetButton" onClick={() => this.resetSurvey()}>
-              Go Back
-            </Button>
-          </ModalFooter>
-        </Modal>
-        <Login />
-        <ToastContainer
-          position="bottom-right"
-          autoClose={2500}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick={false}
-          rtl={false}
-          pauseOnFocusLoss={false}
-          draggable={false}
-          pauseOnHover={false}
-          closeButton={false}
-        />
+          <Modal
+            size="md"
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+            show={this.state.showModal}
+          >
+            <ModalHeader>
+              <ModalTitle id="contained-modal-title-vcenter">
+                Please Confirm
+              </ModalTitle>
+            </ModalHeader>
+            <ModalBody>
+              <p>
+                Please confirm that you want to reset everything and start over.
+              </p>
+            </ModalBody>
+            <ModalFooter>
+              <Button onClick={this.handleCloseModal}>No</Button>
+              <Button id="resetButton" onClick={() => this.resetSurvey()}>
+                Yes
+              </Button>
+            </ModalFooter>
+          </Modal>
+          <Modal
+            size="md"
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+            show={this.state.showEmptyModal}
+          >
+            <ModalHeader closeButton>
+              <ModalTitle id="contained-modal-title-vcenter">
+                No Questions
+              </ModalTitle>
+            </ModalHeader>
+            <ModalBody>
+              <p>There are no questions in the database.</p>
+            </ModalBody>
+            <ModalFooter>
+              <Button id="resetButton" onClick={() => this.resetSurvey()}>
+                Go Back
+              </Button>
+            </ModalFooter>
+          </Modal>
+          <Login />
+          <ToastContainer
+            position="bottom-right"
+            autoClose={2500}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick={false}
+            rtl={false}
+            pauseOnFocusLoss={false}
+            draggable={false}
+            pauseOnHover={false}
+            closeButton={false}
+          />
+        </form>
       </div>
     ) : null;
   }

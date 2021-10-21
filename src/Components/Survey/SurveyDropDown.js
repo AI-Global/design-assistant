@@ -6,7 +6,7 @@ import OutlinedInput from '@material-ui/core/OutlinedInput';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 
 export default function SurveyDropDown(props) {
-  const { questionName, surveyResponses } = props;
+  const { questionName, surveyResponses, questionId, value, updateAnswer } = props;
 
   const useStyles = makeStyles(() =>
     createStyles({
@@ -35,7 +35,7 @@ export default function SurveyDropDown(props) {
         multiple
         label={{ questionName }}
         value={surveyResponses}
-        // onChange={handleChange}
+        onChange={(event) => updateAnswer(questionId, event.target)}
         input={<OutlinedInput label="Name" />}
       >
         <MenuItem />
@@ -44,7 +44,6 @@ export default function SurveyDropDown(props) {
             {questions.indicator}
           </MenuItem>
         ))}
-        }
       </Select>
     </div>
   );

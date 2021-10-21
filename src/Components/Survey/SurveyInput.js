@@ -4,7 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 
 export default function SurveyInput(props) {
-  const { questionName } = props;
+  const { questionName, questionId, value, updateAnswer } = props;
 
   const SurveyInputField = withStyles(() => ({
     root: {
@@ -21,7 +21,12 @@ export default function SurveyInput(props) {
     <div>
       <div>{questionName}</div>
       <Box mt={2} />
-      <SurveyInputField variant="outlined" defaultValue=""></SurveyInputField>
+      <SurveyInputField
+        variant="outlined"
+        defaultValue=""
+        value={value}
+        onChange={(event) => updateAnswer(questionId, event.target.value)}
+      ></SurveyInputField>
     </div>
   );
 }
