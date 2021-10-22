@@ -10,7 +10,6 @@ export default function SurveyInput(props) {
     createStyles({
       inputStyle: {
         width: '80%',
-        height: '100px',
         border: '1px solid #C9D7E9',
         boxSizing: 'border-box',
         borderRadius: '8px',
@@ -27,6 +26,7 @@ export default function SurveyInput(props) {
       <div>{questionName}</div>
       <Box mt={2} />
       <TextField
+        variant="outlined"
         className={classes.inputStyle}
         id="tyler"
         name="tyler"

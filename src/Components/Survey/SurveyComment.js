@@ -22,6 +22,7 @@ export default function SurveyComment(props) {
 
   return (
     <TextField
+      className={classes.inputStyle}
       variant="outlined"
       multiline
       label={questionName}

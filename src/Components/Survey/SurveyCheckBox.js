@@ -37,11 +37,11 @@ export default function SurveyCheckBox(props) {
       {surveyResponses.map((questions, i) => (
         <div>
           <FormControlLabel
-            key={i}
+            key={questionId}
             label={questions.indicator}
             control={
               <Checkbox
-                value={value}
+                value={questions._id}
                 onChange={(event) =>
                   updateAnswer(questionId, event.target.value)
                 }
