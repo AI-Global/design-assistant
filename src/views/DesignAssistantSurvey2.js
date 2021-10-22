@@ -153,9 +153,18 @@ class DesignAssistantSurvey extends Component {
     localStorage.removeItem('localResponses');
   }
 
-  updateAnswer = (questionId, value) => {
-    this.setState({ inputValue: value });
-    this.setState({ answers: this.state.answers.set(questionId, value) });
+  updateAnswer = (questionId, value, isArray) => {
+    if (isArray) {
+      let questionIdArray = this.state.answers.get(questionId) || [];
+      console.log(value);
+      console.log(questionIdArray);
+      let newArray = questionIdArray.includes(value)
+        ? questionIdArray.filter((arrayValue) => value !== arrayValue)
+        : [...questionIdArray, value];
+      this.setState({ answers: this.state.answers.set(questionId, newArray) });
+    } else {
+      this.setState({ answers: this.state.answers.set(questionId, value) });
+    }
   };
 
   finish = () => {

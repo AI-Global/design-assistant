@@ -28,8 +28,8 @@ export default function SurveyCheckBox(props) {
       },
     })
   );
+
   const classes = useStyles();
-  console.log(value);
   return (
     <div>
       <div>{questionName}</div>
@@ -43,7 +43,7 @@ export default function SurveyCheckBox(props) {
               <Checkbox
                 value={questions._id}
                 onChange={(event) =>
-                  updateAnswer(questionId, event.target.value)
+                  updateAnswer(questionId, event.target.value, true)
                 }
                 className={classes.checkBoxColor}
               />
