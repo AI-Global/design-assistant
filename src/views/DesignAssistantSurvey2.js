@@ -156,8 +156,6 @@ class DesignAssistantSurvey extends Component {
   updateAnswer = (questionId, value, isArray) => {
     if (isArray) {
       let questionIdArray = this.state.answers.get(questionId) || [];
-      console.log(value);
-      console.log(questionIdArray);
       let newArray = questionIdArray.includes(value)
         ? questionIdArray.filter((arrayValue) => value !== arrayValue)
         : [...questionIdArray, value];
