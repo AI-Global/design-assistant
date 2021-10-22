@@ -100,9 +100,9 @@ class DesignAssistantSurvey extends Component {
       'System Information',
     ];
 
-    let questionDimension = [
-      'projectDetails',
-      'organizationalMaturity',
+    let questionDimension = ['projectDetails', 'organizationalMaturity'];
+
+    let subQuestionDimension = [
       'accountability',
       'data',
       'fairness',
@@ -117,6 +117,9 @@ class DesignAssistantSurvey extends Component {
     this.setState({ subDimensionStep: 0 });
     this.setState({ questionDimension: questionDimension });
     this.setState({ activeStepValue: questionDimension[0] });
+
+    this.setState({ subQuestionDimension: subQuestionDimension });
+    this.setState({ activeSubQuestionValue: subQuestionDimension[0] });
     widgets.nouislider(Survey);
 
     ReactGa.pageview(window.location.pathname + window.location.search);
@@ -185,12 +188,6 @@ class DesignAssistantSurvey extends Component {
         ),
       });
 
-      this.setState({
-        projectDetails: this.state.questions.filter(
-          (filterQuestions) => filterQuestions.trustIndexDimension == 1
-        ),
-      });
-
       const surveyQuestions = {
         projectDetails: this.state.questions.filter(
           (filterQuestions) => filterQuestions.trustIndexDimension == 1
@@ -198,6 +195,9 @@ class DesignAssistantSurvey extends Component {
         organizationalMaturity: this.state.questions.filter(
           (filterQuestions) => filterQuestions.trustIndexDimension == 2
         ),
+      };
+
+      const subDimensionsQuestions = {
         accountability: this.state.questions.filter(
           (filterQuestions) => filterQuestions.trustIndexDimension == 3
         ),
@@ -214,6 +214,7 @@ class DesignAssistantSurvey extends Component {
           (filterQuestions) => filterQuestions.trustIndexDimension == 7
         ),
       };
+      this.setState({ subDimensionsQuestions: subDimensionsQuestions });
 
       this.setState({ surveyQuestions: surveyQuestions });
       console.log(this.state.surveyQuestions);
@@ -381,10 +382,23 @@ class DesignAssistantSurvey extends Component {
   }
 
   async nextSurveyPage() {
-    await this.setState({ activeStep: this.state.activeStep + 1 });
-    this.setState({
-      activeStepValue: this.state.questionDimension[this.state.activeStep],
-    });
+    if (this.state.activeStep < 2) {
+      await this.setState({ activeStep: this.state.activeStep + 1 });
+      this.setState({
+        activeStepValue: this.state.questionDimension[this.state.activeStep],
+      });
+    }
+    if (this.state.activeStep >= 2) {
+      await this.setState({
+        subDimensionStep: this.state.subDimensionStep + 1,
+      });
+      this.setState({
+        activeSubQuestionValue: this.state.subQuestionDimension[
+          this.state.subDimensionStep
+        ],
+      });
+    }
+
     window.scroll(0, 0);
     this.surveyProgressBar();
   }
@@ -430,29 +444,47 @@ class DesignAssistantSurvey extends Component {
               </div>
             </div>
             <Box mt={4} />
-            <div>
-              {this.state.surveyQuestions[this.state.activeStepValue].map(
-                (questions) => (
-                  <SurveyTest
-                    key={questions._id}
-                    questionName={questions.question}
-                    responseType={questions.responseType}
-                    surveyResponses={questions.responses}
-                    questionId={questions._id}
-                    updateAnswer={this.updateAnswer}
-                    value={this.state.answers.get(questions._id)}
-                  ></SurveyTest>
-                )
-              )}
-            </div>
+            {this.state.activeStep < 2 && (
+              <div>
+                {this.state.surveyQuestions[this.state.activeStepValue].map(
+                  (questions) => (
+                    <SurveyTest
+                      key={questions._id}
+                      questionName={questions.question}
+                      responseType={questions.responseType}
+                      surveyResponses={questions.responses}
+                      questionId={questions._id}
+                      updateAnswer={this.updateAnswer}
+                      value={this.state.answers.get(questions._id)}
+                    ></SurveyTest>
+                  )
+                )}
+              </div>
+            )}
           </div>
+
+          {this.state.activeStep >= 2 && (
+            <div>
+              {this.state.subDimensionsQuestions[
+                this.state.activeSubQuestionValue
+              ].map((questions) => (
+                <SurveyTest
+                  key={questions._id}
+                  questionName={questions.question}
+                  responseType={questions.responseType}
+                  surveyResponses={questions.responses}
+                  questionId={questions._id}
+                  updateAnswer={this.updateAnswer}
+                  value={this.state.answers.get(questions._id)}
+                ></SurveyTest>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="dimensionNav">
           <div className="stepper-box">
             <Stepper orientation="vertical" activeStep={this.state.activeStep}>
-              {console.log(this.state.activeStep)}
-              {console.log(this.state.subDimensionStep)}
               {this.state.stepperTitle.map((stepperTitle, index) => {
                 return (
                   <Step key={index}>
