@@ -97,12 +97,16 @@ class DesignAssistantSurvey extends Component {
       'Project Information',
       'Organization Maturity',
       'Team Maturity',
-      'System Information',
+      'accountability',
+      'data',
+      'fairness',
+      'interpretability',
+      'robustness',
     ];
 
-    let questionDimension = ['projectDetails', 'organizationalMaturity'];
-
-    let subQuestionDimension = [
+    let questionDimension = [
+      'projectDetails',
+      'organizationalMaturity',
       'accountability',
       'data',
       'fairness',
@@ -118,8 +122,6 @@ class DesignAssistantSurvey extends Component {
     this.setState({ questionDimension: questionDimension });
     this.setState({ activeStepValue: questionDimension[0] });
 
-    this.setState({ subQuestionDimension: subQuestionDimension });
-    this.setState({ activeSubQuestionValue: subQuestionDimension[0] });
     widgets.nouislider(Survey);
 
     ReactGa.pageview(window.location.pathname + window.location.search);
@@ -195,9 +197,6 @@ class DesignAssistantSurvey extends Component {
         organizationalMaturity: this.state.questions.filter(
           (filterQuestions) => filterQuestions.trustIndexDimension == 2
         ),
-      };
-
-      const subDimensionsQuestions = {
         accountability: this.state.questions.filter(
           (filterQuestions) => filterQuestions.trustIndexDimension == 3
         ),
@@ -214,10 +213,8 @@ class DesignAssistantSurvey extends Component {
           (filterQuestions) => filterQuestions.trustIndexDimension == 7
         ),
       };
-      this.setState({ subDimensionsQuestions: subDimensionsQuestions });
 
       this.setState({ surveyQuestions: surveyQuestions });
-      console.log(this.state.surveyQuestions);
 
       // replace double escaped characters so showdown correctly renders markdown frontslashes and newlines
       var stringified = JSON.stringify(json);
@@ -382,22 +379,10 @@ class DesignAssistantSurvey extends Component {
   }
 
   async nextSurveyPage() {
-    if (this.state.activeStep < 2) {
-      await this.setState({ activeStep: this.state.activeStep + 1 });
-      this.setState({
-        activeStepValue: this.state.questionDimension[this.state.activeStep],
-      });
-    }
-    if (this.state.activeStep >= 2) {
-      await this.setState({
-        subDimensionStep: this.state.subDimensionStep + 1,
-      });
-      this.setState({
-        activeSubQuestionValue: this.state.subQuestionDimension[
-          this.state.subDimensionStep
-        ],
-      });
-    }
+    await this.setState({ activeStep: this.state.activeStep + 1 });
+    this.setState({
+      activeStepValue: this.state.questionDimension[this.state.activeStep],
+    });
 
     window.scroll(0, 0);
     this.surveyProgressBar();
@@ -444,42 +429,22 @@ class DesignAssistantSurvey extends Component {
               </div>
             </div>
             <Box mt={4} />
-            {this.state.activeStep < 2 && (
-              <div>
-                {this.state.surveyQuestions[this.state.activeStepValue].map(
-                  (questions) => (
-                    <SurveyTest
-                      key={questions._id}
-                      questionName={questions.question}
-                      responseType={questions.responseType}
-                      surveyResponses={questions.responses}
-                      questionId={questions._id}
-                      updateAnswer={this.updateAnswer}
-                      value={this.state.answers.get(questions._id)}
-                    ></SurveyTest>
-                  )
-                )}
-              </div>
-            )}
-          </div>
-
-          {this.state.activeStep >= 2 && (
             <div>
-              {this.state.subDimensionsQuestions[
-                this.state.activeSubQuestionValue
-              ].map((questions) => (
-                <SurveyTest
-                  key={questions._id}
-                  questionName={questions.question}
-                  responseType={questions.responseType}
-                  surveyResponses={questions.responses}
-                  questionId={questions._id}
-                  updateAnswer={this.updateAnswer}
-                  value={this.state.answers.get(questions._id)}
-                ></SurveyTest>
-              ))}
+              {this.state.surveyQuestions[this.state.activeStepValue].map(
+                (questions) => (
+                  <SurveyTest
+                    key={questions._id}
+                    questionName={questions.question}
+                    responseType={questions.responseType}
+                    surveyResponses={questions.responses}
+                    questionId={questions._id}
+                    updateAnswer={this.updateAnswer}
+                    value={this.state.answers.get(questions._id)}
+                  ></SurveyTest>
+                )
+              )}
             </div>
-          )}
+          </div>
         </div>
 
         <div className="dimensionNav">
@@ -518,13 +483,20 @@ class DesignAssistantSurvey extends Component {
             <Box mt={4} />
             <Accordion.Collapse eventKey="9">
               <Form>
-                {this.state.dimArray.map((dimension, index) => {
-                  return this.state.dimArray.length ? (
+                {this.state.stepperTitle.map((dimension, index) => {
+                  return this.state.stepperTitle.length ? (
                     <div className="check-box-height">
                       <FormControlLabel
                         key={index}
                         label={dimension}
-                        control={<Checkbox className="survey-check-box" />}
+                        control={
+                          <Checkbox
+                            // checked={this.state.activeStep}
+                            onChange={(e) => this.addDimension(e.target.value)}
+                            value={this.state.activeStep}
+                            className="survey-check-box"
+                          />
+                        }
                       />
                     </div>
                   ) : null;
