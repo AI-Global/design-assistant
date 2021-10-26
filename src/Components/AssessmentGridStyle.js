@@ -11,8 +11,12 @@ export const StyledTableCell = withStyles(() => ({
 
 export const StyledTableRow = withStyles(() => ({
   root: {
-    backgroundColor: '#FFFFFF',
-    color: '#5A6C83',
+    '&:nth-of-type(odd)': {
+      backgroundColor: 'white',
+    },
+    '&:nth-of-type(even)': {
+      backgroundColor: 'grey',
+    },
   },
 }))(TableRow);
 
@@ -85,6 +89,18 @@ export const useStyles = makeStyles(() =>
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'end',
+    },
+    lowRisk: {
+      color: '#0A5C1F',
+      backgroundColor: '#D9F7BE',
+    },
+    mediumRisk: {
+      color: '#DC9F00',
+      backgroundColor: '#FFE7A8',
+    },
+    highRisk: {
+      color: '#A8071A',
+      backgroundColor: '#FFD5D1',
     },
   })
 );

@@ -4,16 +4,20 @@ import Box from '@material-ui/core/Box';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableContainer from '@material-ui/core/TableContainer';
-
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import Chip from '@material-ui/core/Chip';
 
 import { useTheme } from '@material-ui/core/styles';
 
 import assessmentGridData from '../assets/data/assessmentGridData.json';
 
-import { StyledTableCell, useStyles } from './AssessmentGridStyle';
+import {
+  StyledTableCell,
+  StyledTableRow,
+  useStyles,
+} from './AssessmentGridStyle';
 
 export default function AssessmentGrid(props) {
   const { expandButton } = props;
@@ -52,6 +56,18 @@ export default function AssessmentGrid(props) {
     ),
   ];
 
+  const handleChipColor = (riskLevel) => {
+    switch (riskLevel) {
+      case 'Low Risk':
+        return classes.lowRisk;
+      case 'Medium Risk':
+        return classes.mediumRisk;
+      case 'High Risk':
+        return classes.highRisk;
+      default:
+    }
+  };
+
   return (
     <TableContainer
       className={classes.tableContainer}
@@ -60,7 +76,7 @@ export default function AssessmentGrid(props) {
     >
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
-          <TableRow>
+          <TableRow stripedRows>
             <StyledTableCell>Project Name</StyledTableCell>
             <StyledTableCell>Status </StyledTableCell>
             <StyledTableCell>Assessment Type</StyledTableCell>
@@ -71,14 +87,22 @@ export default function AssessmentGrid(props) {
         </TableHead>
         <TableBody>
           {assessmentGridData.map((data, i) => (
-            <TableRow key={i}>
+            <StyledTableRow stripedRows key={i}>
               <StyledTableCell>{data.name}</StyledTableCell>
-              <StyledTableCell>{data.status}</StyledTableCell>
+              <StyledTableCell>
+                {data.status ? 'Completed' : 'In Progress'}
+              </StyledTableCell>
               <StyledTableCell>{data.assessmentType}</StyledTableCell>
-              <StyledTableCell>{data.risk}</StyledTableCell>
+              <StyledTableCell>
+                <Chip
+                  color="success"
+                  label={data.risk}
+                  className={handleChipColor(data.risk)}
+                ></Chip>
+              </StyledTableCell>
               <StyledTableCell>{data.actionDate}</StyledTableCell>
               {/* <StyledTableCell>{data.name}</StyledTableCell> */}
-            </TableRow>
+            </StyledTableRow>
           ))}
         </TableBody>
       </Table>
