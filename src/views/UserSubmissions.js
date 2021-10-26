@@ -4,6 +4,8 @@ import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import { withStyles } from '@material-ui/core/styles';
 import ProjectCard from '../Components/ProjectCard';
+import AssessmentGrid from '../Components/AssessmentGrid';
+
 import api from '../api';
 import ReactGa from 'react-ga';
 import { withRouter } from 'react-router-dom';
@@ -233,101 +235,12 @@ class UserSubmissions extends Component {
               justifyContent: 'space-around',
             }}
           >
-            <Box
-              height={900}
-              width={650}
-              border={1}
-              borderColor="#DEE6F0"
-              borderRadius={10}
-            >
-              <div className="surveyTitle">In Progress</div>
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'space-evenly',
-                  height: '85%',
-                }}
-              >
-                <ProjectCard
-                  projectStatus={true}
-                  statusTitle="Pending Review - LOD 1"
-                  projectName="Project Name"
-                  updatedBy="John"
-                  updatedOn="May 26, 2019"
-                  handleDeleteClick={this.deleteSurvey}
-                ></ProjectCard>
-                <ProjectCard
-                  projectStatus={true}
-                  statusTitle="Preparing Responses"
-                  projectName="Project Name"
-                  updatedBy="John"
-                  updatedOn="May 26, 2019"
-                  handleDeleteClick={this.deleteSurvey}
-                ></ProjectCard>
-                <Box mt={4} />
-                <ViewAllButton>View All</ViewAllButton>
-              </div>
-            </Box>
+            <AssessmentGrid></AssessmentGrid>
 
-            <Box
-              height={900}
-              width={650}
-              border={1}
-              borderColor="#DEE6F0"
-              borderRadius={10}
-            >
-              <div className="surveyTitle">Completed</div>
-
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'space-evenly',
-                  height: '85%',
-                }}
-              >
-                <ProjectCard
-                  projectStatus={false}
-                  statusTitle="View Reports"
-                  projectName="Project Name"
-                  updatedBy="John"
-                  updatedOn="May 26, 2019"
-                  handleDeleteClick={this.deleteSurvey}
-                ></ProjectCard>
-                <ProjectCard
-                  projectStatus={false}
-                  statusTitle="View Reports"
-                  projectName="Project Name"
-                  updatedBy="John"
-                  updatedOn="May 26, 2019"
-                  handleDeleteClick={this.deleteSurvey}
-                ></ProjectCard>
-                <Box mt={4} />
-                <ViewAllButton>View All</ViewAllButton>
-              </div>
-            </Box>
+            <Box mt={4} />
           </div>
-          {this.state.submissions.map((submission, index) => {
-            <ProjectCard
-              key={index}
-              projectName={
-                submission?.projectName
-                  ? submission?.projectName
-                  : 'No Project Name'
-              }
-              assessmentType={'test'}
-              updatedBy={this.state.user}
-              updatedOn={new Date(submission.date).toLocaleString('en-US', {
-                timeZone:
-                  Intl?.DateTimeFormat()?.resolvedOptions()?.timeZone ?? 'UTC',
-              })}
-              handleDeleteClick={this.deleteSurvey()}
-            ></ProjectCard>;
-          })}
         </div>
+
         <Box mt={4} />
       </div>
     );

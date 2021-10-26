@@ -1,0 +1,51 @@
+[
+  {
+    "name": "Service Experience - Self Service",
+    "status": true,
+    "assessmentType": "System",
+    "risk": "Low Risk",
+    "actionDate": "12 Jun 2021"
+  },
+  {
+    "name": "Service Experience - Agent Assist",
+    "status": false,
+    "assessmentType": "Team Assessment",
+    "risk": "High Risk",
+    "actionDate": "12 Jun 2021"
+  },
+  {
+    "name": "Service Experience - Intelligent Call Routing",
+    "status": true,
+    "assessmentType": "System",
+    "risk": "Medium Risk",
+    "actionDate": "12 Jun 2021"
+  },
+  {
+    "name": "Sales Acceleration - Medicare",
+    "status": true,
+    "assessmentType": "System",
+    "risk": "Low Risk",
+    "actionDate": "12 Jun 2021"
+  },
+  {
+    "name": "Claims Transformation - Digital Claims Examiner",
+    "status": true,
+    "assessmentType": "System",
+    "risk": "High Risk",
+    "actionDate": "12 Jun 2021"
+  },
+  {
+    "name": "Claims Transformation - Payment Integrity",
+    "status": true,
+    "assessmentType": "System",
+    "risk": "Low Risk",
+    "actionDate": "12 Jun 2021"
+  },
+  {
+    "name": "Care Optimization",
+    "status": true,
+    "assessmentType": "System",
+    "risk": "High Risk",
+    "actionDate": "12 Jun 2021"
+  }
+]
