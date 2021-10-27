@@ -207,9 +207,9 @@ class UserSubmissions extends Component {
             <LandingButton
               variant="outlined"
               type="button"
-              onClick={this.startSurvey}
+              onClick={() => this.startSurvey()}
             >
-              START NEW SURVEY
+              Start New Survey
             </LandingButton>
             <LandingButton variant="outlined" type="button" href={faqPath}>
               FREQUENTLY ASKED QUESTIONS
