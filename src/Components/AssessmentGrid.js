@@ -8,7 +8,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Chip from '@material-ui/core/Chip';
-
+import FileCopyRounded from '@material-ui/icons/FileCopyRounded';
+import DeleteRounded from '@material-ui/icons/DeleteRounded';
 import { useTheme } from '@material-ui/core/styles';
 
 import assessmentGridData from '../assets/data/assessmentGridData.json';
@@ -83,6 +84,7 @@ export default function AssessmentGrid(props) {
             <StyledTableCell>Risk Flag</StyledTableCell>
             <StyledTableCell>Action Date</StyledTableCell>
             <StyledTableCell>Action </StyledTableCell>
+            <StyledTableCell> </StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -101,6 +103,12 @@ export default function AssessmentGrid(props) {
                 ></Chip>
               </StyledTableCell>
               <StyledTableCell>{data.actionDate}</StyledTableCell>
+              <StyledTableCell>
+                <FileCopyRounded /> Clone
+              </StyledTableCell>
+              <StyledTableCell>
+                <DeleteRounded />
+              </StyledTableCell>
               {/* <StyledTableCell>{data.name}</StyledTableCell> */}
             </StyledTableRow>
           ))}
