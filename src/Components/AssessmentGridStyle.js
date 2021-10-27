@@ -1,10 +1,11 @@
-import { TableCell, TableRow, Typography } from '@material-ui/core';
+import { TableCell, TableRow, Typography, TextField } from '@material-ui/core';
 import { withStyles, createStyles, makeStyles } from '@material-ui/styles';
 
 export const StyledTableCell = withStyles(() => ({
   root: {
-    backgroundColor: '#FFFFFF',
     color: '#5A6C83',
+    // remove this to make the cells change colors. return to later
+    backgroundColor: 'white',
     height: '100px',
   },
 }))(TableCell);
@@ -15,7 +16,7 @@ export const StyledTableRow = withStyles(() => ({
       backgroundColor: 'white',
     },
     '&:nth-of-type(even)': {
-      backgroundColor: 'grey',
+      backgroundColor: '#F3F5F7',
     },
   },
 }))(TableRow);
@@ -26,6 +27,13 @@ export const CaptionTypography = withStyles(() => ({
   },
 }))(Typography);
 
+export const SearchBar = withStyles(() => ({
+  root: {
+    backgroundColor: '#FFFFFF',
+    color: '#5A6C83',
+  },
+}))(TextField);
+
 export const useStyles = makeStyles(() =>
   createStyles({
     root: {
@@ -35,54 +43,8 @@ export const useStyles = makeStyles(() =>
     table: {
       minWidth: 650,
     },
-    tableContainer: {
-      height: '930px',
-      borderRadius: 8,
-      width: '75%',
-      padding: 10,
-    },
-    innerTableContainer: {
-      height: '760px',
-      borderRadius: 8,
-      marginLeft: 20,
-      width: '96%',
-      padding: 10,
-    },
-    gridButtons: {
-      color: '#4653EF',
-      width: '30px',
-      height: '30px',
-    },
-    buttonRow: {
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-around',
-    },
-    tableButton: {
-      width: '30px',
-      height: '30px',
-    },
-    downloadButton: {
-      color: '#4653EF',
-      marginLeft: '29px',
-      width: '30px',
-      height: '30px',
-    },
-    documentRow: {
-      padding: 30,
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      width: '90%',
-    },
-    linkRow: {
-      display: 'flex',
-      flexDirection: 'row',
-    },
-    buttonColumn: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
+    anthemBlue: {
+      color: '#386EDA',
     },
     pagination: {
       marginTop: 20,
@@ -101,6 +63,12 @@ export const useStyles = makeStyles(() =>
     highRisk: {
       color: '#A8071A',
       backgroundColor: '#FFD5D1',
+    },
+    tableHead: {
+      backgroundColor: '#FFFFFF',
+    },
+    searchPadding: {
+      padding: 30,
     },
   })
 );

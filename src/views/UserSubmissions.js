@@ -220,6 +220,7 @@ class UserSubmissions extends Component {
           </div>
         </div>
         <Box mb={5} />
+        <Box mt={10} />
         <div
           style={{
             display: 'flex',
@@ -229,18 +230,15 @@ class UserSubmissions extends Component {
         >
           <div
             style={{
-              width: '75%',
+              width: '90%',
+              height: '75%',
               display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'space-around',
             }}
           >
             <AssessmentGrid></AssessmentGrid>
-
             <Box mt={4} />
           </div>
         </div>
-
         <Box mt={4} />
       </div>
     );

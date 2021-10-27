@@ -5,9 +5,12 @@ import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Chip from '@material-ui/core/Chip';
+
+// import TablePagination from '@material-ui/core/TablePagination';
+
+import Search from '@material-ui/icons/Search';
 import FileCopyRounded from '@material-ui/icons/FileCopyRounded';
 import DeleteRounded from '@material-ui/icons/DeleteRounded';
 import { useTheme } from '@material-ui/core/styles';
@@ -17,6 +20,8 @@ import assessmentGridData from '../assets/data/assessmentGridData.json';
 import {
   StyledTableCell,
   StyledTableRow,
+  CaptionTypography,
+  SearchBar,
   useStyles,
 } from './AssessmentGridStyle';
 
@@ -29,32 +34,14 @@ export default function AssessmentGrid(props) {
     return { name, status, assessmentType, risk, date, action };
   }
 
-  const rows = [
-    createData('Service Experience - Self Service', 159, 6.0, 24, 4.0),
-    createData('Service Experience - Agent Assist', 159, 6.0, 24, 4.0),
-    createData(
-      'Service Experience - Intelligent Call Routing',
-      159,
-      6.0,
-      24,
-      4.0
-    ),
-    createData('Sales Acceleration - Medicare', 159, 6.0, 24, 4.0),
-    createData(
-      'Claims transformation - Digital Claimes Examiner',
-      159,
-      6.0,
-      24,
-      4.0
-    ),
-    createData('Claims transformation - Payment Integrity', 159, 6.0, 24, 4.0),
-    createData(
-      'Care Optimization - Increase Preventative Care',
-      159,
-      6.0,
-      24,
-      4.0
-    ),
+  const rowTitle = [
+    'Project Name',
+    'Status',
+    'Assessment Type',
+    'Risk Flag',
+    'Action Date',
+    'Action',
+    '',
   ];
 
   const handleChipColor = (riskLevel) => {
@@ -75,26 +62,36 @@ export default function AssessmentGrid(props) {
       component={Paper}
       elevation={4}
     >
+      <div className={classes.searchPadding}>
+        <SearchBar
+          variant="outlined"
+          placeholder="Search resources"
+          InputProps={{
+            startAdornment: <Search />,
+          }}
+        />
+      </div>
+
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
-          <TableRow stripedRows>
-            <StyledTableCell>Project Name</StyledTableCell>
-            <StyledTableCell>Status </StyledTableCell>
-            <StyledTableCell>Assessment Type</StyledTableCell>
-            <StyledTableCell>Risk Flag</StyledTableCell>
-            <StyledTableCell>Action Date</StyledTableCell>
-            <StyledTableCell>Action </StyledTableCell>
-            <StyledTableCell> </StyledTableCell>
-          </TableRow>
+          {rowTitle.map((title, i) => (
+            <StyledTableCell>{title}</StyledTableCell>
+          ))}
         </TableHead>
         <TableBody>
           {assessmentGridData.map((data, i) => (
             <StyledTableRow stripedRows key={i}>
-              <StyledTableCell>{data.name}</StyledTableCell>
+              <StyledTableCell className={classes.anthemBlue}>
+                {data.name}
+              </StyledTableCell>
               <StyledTableCell>
                 {data.status ? 'Completed' : 'In Progress'}
+                <CaptionTypography>{data.completedDate}</CaptionTypography>
               </StyledTableCell>
-              <StyledTableCell>{data.assessmentType}</StyledTableCell>
+              <StyledTableCell>
+                {data.assessmentType}
+                <CaptionTypography>{data.assessmentSubType}</CaptionTypography>
+              </StyledTableCell>
               <StyledTableCell>
                 <Chip
                   color="success"
@@ -103,17 +100,17 @@ export default function AssessmentGrid(props) {
                 ></Chip>
               </StyledTableCell>
               <StyledTableCell>{data.actionDate}</StyledTableCell>
-              <StyledTableCell>
-                <FileCopyRounded /> Clone
+              <StyledTableCell className={classes.anthemBlue}>
+                <FileCopyRounded className={classes.anthemBlue} /> Clone
               </StyledTableCell>
               <StyledTableCell>
                 <DeleteRounded />
               </StyledTableCell>
-              {/* <StyledTableCell>{data.name}</StyledTableCell> */}
             </StyledTableRow>
           ))}
         </TableBody>
       </Table>
+      {/* <TablePagination count={10} /> */}
     </TableContainer>
   );
 }

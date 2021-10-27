@@ -3,13 +3,16 @@
     "name": "Service Experience - Self Service",
     "status": true,
     "assessmentType": "System",
+    "assessmentSubType": "Conception",
     "risk": "Low Risk",
-    "actionDate": "12 Jun 2021"
+    "actionDate": "12 Jun 2021",
+    "completedDate": "Submitted on 23 jun 2020"
   },
   {
     "name": "Service Experience - Agent Assist",
     "status": false,
     "assessmentType": "Team Assessment",
+    "assessmentSubType": "Design",
     "risk": "High Risk",
     "actionDate": "12 Jun 2021"
   },
@@ -17,35 +20,45 @@
     "name": "Service Experience - Intelligent Call Routing",
     "status": true,
     "assessmentType": "System",
+    "assessmentSubType": "Deployment",
     "risk": "Medium Risk",
-    "actionDate": "12 Jun 2021"
+    "actionDate": "12 Jun 2021",
+    "completedDate": "Submitted on 23 jun 2020"
   },
   {
     "name": "Sales Acceleration - Medicare",
     "status": true,
     "assessmentType": "System",
+    "assessmentSubType": "Conception",
     "risk": "Low Risk",
-    "actionDate": "12 Jun 2021"
+    "actionDate": "12 Jun 2021",
+    "completedDate": "Submitted on 23 jun 2020"
   },
   {
     "name": "Claims Transformation - Digital Claims Examiner",
     "status": true,
     "assessmentType": "System",
+    "assessmentSubType": "Conception",
     "risk": "High Risk",
-    "actionDate": "12 Jun 2021"
+    "actionDate": "12 Jun 2021",
+    "completedDate": "Submitted on 23 jun 2020"
   },
   {
     "name": "Claims Transformation - Payment Integrity",
     "status": true,
     "assessmentType": "System",
+    "assessmentSubType": "Conception",
     "risk": "Low Risk",
-    "actionDate": "12 Jun 2021"
+    "actionDate": "12 Jun 2021",
+    "completedDate": "Submitted on 23 jun 2020"
   },
   {
     "name": "Care Optimization",
     "status": true,
     "assessmentType": "System",
+    "assessmentSubType": "Conception",
     "risk": "High Risk",
-    "actionDate": "12 Jun 2021"
+    "actionDate": "12 Jun 2021",
+    "completedDate": "Submitted on 23 jun 2020"
   }
 ]
