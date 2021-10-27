@@ -8,16 +8,11 @@ export const useStyles = makeStyles({
   },
   assessmentContainer: {
     display: 'flex',
-    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
   },
-  assessmentCardContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    width: '40%',
-  },
+
   stepperColumn: {
     display: 'flex',
     flexDirection: 'column',
