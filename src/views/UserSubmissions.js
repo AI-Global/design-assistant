@@ -225,14 +225,11 @@ class UserSubmissions extends Component {
           style={{
             display: 'flex',
             justifyContent: 'center',
-            width: '100%',
           }}
         >
           <div
             style={{
               width: '90%',
-              height: '75%',
-              display: 'flex',
             }}
           >
             <AssessmentGrid></AssessmentGrid>
