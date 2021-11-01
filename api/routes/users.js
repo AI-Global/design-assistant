@@ -20,27 +20,24 @@ let createUser = async ({ username, email, organization, role }) => {
 
 // authenticate user - for login
 router.post('/auth', async (req, res) => {
-  const { accessToken } = req.body;
-  let portal = require('./portal.util')(accessToken);
-  let { user: portalUser } = await portal.get('/api/context');
-  if (!portalUser) {
-    return res.status(400).json({ msg: 'Unknown user' });
+  const { username, password } = req.body;
+  if (!username || !password) {
+    return res
+      .status(400)
+      .json({ msg: 'Please fill in all the required fields' });
   }
-  User.findOne({ username: portalUser.username }).then(async (user) => {
-    if (!user) {
-      // TASK-TODO: Decide what's the best way to map portal roles to DA roles
-      let newRole = portalUser.role;
-      if (newRole == 'admin') {
-        newRole = 'superadmin';
-      }
-      // TASK-TODO: Use portal API to determine organization
-      user = await createUser({
-        username: portalUser.username,
-        email: portalUser.email,
-        organization: 'AI Global Beta User',
-        role: newRole,
+  User.findOne({ username }).then((user) => {
+    if (!user)
+      return res.status(400).json({
+        username: {
+          isInvalid: true,
+          message: 'User does not exist. Please create an account.',
+        },
       });
-    }
+    if (!user.authenticate(password))
+      return res.status(400).json({
+        password: { isInvalid: true, message: 'Incorrect password entered' },
+      });
     jwt.sign(
       { id: user.id },
       jwtSecret,
