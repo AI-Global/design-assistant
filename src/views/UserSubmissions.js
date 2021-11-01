@@ -3,7 +3,6 @@ import { getLoggedInUser } from '../helper/AuthHelper';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import { withStyles } from '@material-ui/core/styles';
-import ProjectCard from '../Components/ProjectCard';
 import AssessmentGrid from '../Components/AssessmentGrid';
 
 import api from '../api';
@@ -194,6 +193,8 @@ class UserSubmissions extends Component {
           style={{
             display: 'flex',
             justifyContent: 'center',
+            position: 'relative',
+            bottom: '100px',
           }}
         >
           <div

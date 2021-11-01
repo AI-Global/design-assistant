@@ -13,6 +13,8 @@ export const useStyles = makeStyles({
     justifyContent: 'flex-end',
     alignItems: 'center',
     width: '90%',
+    position: 'relative',
+    bottom: '100px',
   },
   expandButtonEnd: {
     display: 'flex',

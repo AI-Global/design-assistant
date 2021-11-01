@@ -3,7 +3,6 @@ import './css/theme.css';
 import './css/survey.css';
 import ReactGa from 'react-ga';
 import Login from './views/Login';
-import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import UserSubmissions from './views/UserSubmissions';
 import React, { useEffect } from 'react';
@@ -27,7 +26,7 @@ function WelcomeText() {
       style={{
         backgroundImage: `url(${backgroundImage})`,
         width: '99.6vw',
-        height: '35vh',
+        height: '50vh',
         position: 'relative',
         left: '50%',
         right: '50%',
@@ -126,17 +125,8 @@ function HomePage(props) {
       <WelcomeText />
       <Assessment />
       <Login />
-      <div
-        style={{
-          width: '100%',
-          display: 'flex',
-          justifyContent: 'center',
-          flexDirection: 'column',
-        }}
-      >
-        <UserSubmissions />
-        <Box mt={5} />
-      </div>
+      <UserSubmissions />
+      <Box mt={5} />
     </div>
   );
 }
