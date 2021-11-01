@@ -1,7 +1,18 @@
 const mongoose = require('mongoose');
 const crypto = require('crypto');
 
-const USER_ROLES = ['superadmin', 'admin', 'mod', 'member'];
+const USER_ROLES = [
+  'superadmin',
+  'admin',
+  'mod',
+  'member',
+  'securityAdmin',
+  'productOwner',
+  'dataScientist',
+  'BusinessExecutive',
+  'legalCompliance',
+  'auditor',
+];
 
 const UserSchema = new mongoose.Schema({
   email: {

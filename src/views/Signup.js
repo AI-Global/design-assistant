@@ -24,6 +24,33 @@ const AccCreatedHandler = () => {
 const RegistrationDescription = `You can create an account for the Responsible AI Design Assistant! 
 After creating your account, an email verfication will be sent to you.`;
 
+const roleOptions = [
+  {
+    label: 'Security Admin',
+    value: 'securityAdmin',
+  },
+  {
+    label: 'Product Owner',
+    value: 'productOwner',
+  },
+  {
+    label: 'Data Scientist',
+    value: 'dataScientist',
+  },
+  {
+    label: 'Business Executive',
+    value: 'businessExecutive',
+  },
+  {
+    label: 'Legal and Compliance',
+    value: 'legalCompliance',
+  },
+  {
+    label: 'Auditor',
+    value: 'auditor',
+  },
+];
+
 export default class Signup extends Component {
   constructor(props) {
     super(props);
@@ -33,6 +60,7 @@ export default class Signup extends Component {
       username: { isInvalid: false, message: '' },
       password: { isInvalid: false, message: '' },
       passwordConfirmation: { isInvalid: false, message: '' },
+      role: { isInvalid: false, message: '' },
       emailInput: '',
       usernameInput: '',
       emailAsUsername: true,
@@ -50,6 +78,7 @@ export default class Signup extends Component {
       username: { isInvalid: false, message: '' },
       password: { isInvalid: false, message: '' },
       passwordConfirmation: { isInvalid: false, message: '' },
+      role: { isInvalid: false, message: '' },
       organization: { isInvalid: false, message: '' },
     });
     event.preventDefault();
@@ -59,6 +88,7 @@ export default class Signup extends Component {
     let password = form.signupPassword.value;
     let passwordConfirmation = form.signupPasswordConfirmation.value;
     let organization = form.signupOrganization.value;
+    let role = form.signupRole.value;
     if (password !== passwordConfirmation) {
       this.setState({
         passwordConfirmation: {
@@ -74,6 +104,7 @@ export default class Signup extends Component {
           password: password,
           passwordConfirmation: passwordConfirmation,
           organization: organization,
+          role: role,
         })
         .then((response) => {
           const result = response.data;
@@ -132,7 +163,7 @@ export default class Signup extends Component {
             Create your account
           </a>
         )}
-        {!this.props.onLanding &&
+        {!this.props.onLanding && (
           <IconButton
             aria-label="add new user"
             size="small"
@@ -143,7 +174,7 @@ export default class Signup extends Component {
           >
             <Add />
           </IconButton>
-        }
+        )}
 
         <Modal
           show={showSignup}
@@ -236,6 +267,30 @@ export default class Signup extends Component {
                   {this.state.passwordConfirmation.message}
                 </Form.Control.Feedback>
               </Form.Group>
+              {/* 
+              <Form.Group controlId="signupRole">
+                <Form.Control
+                  as="select"
+                  placeholder="Role"
+                  required="required"
+                  autoComplete="new-password"
+                  aria-label="confirm password"
+                />
+                <option>Open this select menu</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+                </Form.Control>
+              </Form.Group> */}
+
+              <Form.Group controlId="signupRole">
+                <Form.Control as="select">
+                  {roleOptions.map((option) => (
+                    <option value={option.value}>{option.label}</option>
+                  ))}
+                </Form.Control>
+              </Form.Group>
+
               <Form.Group controlId="signupOrganization">
                 <Form.Control
                   type="text"
@@ -255,4 +310,3 @@ export default class Signup extends Component {
     );
   }
 }
-

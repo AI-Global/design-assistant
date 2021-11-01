@@ -5,18 +5,96 @@ const jwt = require('jsonwebtoken');
 const { json } = require('express');
 const auth = require('../middleware/auth');
 const mailService = require('../middleware/mailService');
+const owasp = require('owasp-password-strength-test');
 
 const jwtSecret = process.env.SECRET || 'devsecret';
 const sessionTimeout = process.env.SESSION_TIMEOUT;
 
-let createUser = async ({ username, email, organization, role }) => {
-  let user = new User({ email, username, organization, role });
-  await user.save();
-  let emailSubject = 'Responsible AI Design Assistant Account Creation';
-  let emailTemplate = 'api/emailTemplates/accountCreation.html';
-  mailService.sendEmail(email, emailSubject, emailTemplate);
-  return user;
-};
+owasp.config({
+  minLength: 8,
+  minOptionalTestsToPass: 4,
+});
+
+// create user - for signup
+router.post('/create', async (req, res) => {
+  const {
+    username,
+    email,
+    password,
+    passwordConfirmation,
+    organization,
+    role,
+  } = req.body;
+
+  let result = owasp.test(password);
+  if (result.strong == false) {
+    return res.status(400).json({
+      password: { isInvalid: true, message: result.errors.join('\n') },
+    });
+  }
+
+  // validation for password verification
+  if (password != passwordConfirmation)
+    return res.status(400).json({
+      passwordConfirmation: {
+        isInvalid: true,
+        message: "Those passwords didn't match. Try again.",
+      },
+    });
+
+  // create new user, send to db
+  let user = new User({ email, username, password, organization, role });
+  await user
+    .save()
+    .then((user) => {
+      let emailSubject = 'Responsible AI Design Assistant Account Creation';
+      let emailTemplate = 'api/emailTemplates/accountCreation.html';
+      mailService.sendEmail(email, emailSubject, emailTemplate);
+      jwt.sign(
+        { id: user.id },
+        jwtSecret,
+        { expiresIn: sessionTimeout },
+        (err, token) => {
+          if (err)
+            return res
+              .status(400)
+              .json({ message: 'Authorization token could not be created' });
+          if (err) throw err;
+          res.json({
+            token,
+            user: {
+              id: user.id,
+              username: user.username,
+              email: user.email,
+            },
+          });
+        }
+      );
+    })
+    .catch((err) => {
+      // user already exists
+      if (err.name === 'MongoError' && err.code === 11000) {
+        if (Object.keys(err.keyPattern).includes('username')) {
+          return res.status(422).json({
+            username: {
+              isInvalid: true,
+              message: 'Username already exists!',
+            },
+          });
+        }
+        if (Object.keys(err.keyPattern).includes('email')) {
+          return res.status(422).json({
+            email: {
+              isInvalid: true,
+              message: 'User with Email Address already exists!',
+            },
+          });
+        }
+      }
+      // unknown mongodb error
+      return res.status(400).json(err);
+    });
+});
 
 // authenticate user - for login
 router.post('/auth', async (req, res) => {

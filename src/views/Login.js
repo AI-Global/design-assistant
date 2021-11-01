@@ -90,7 +90,9 @@ export default class Login extends Component {
     if (user) {
       return (
         <div className="user-status">
-          <p className="msg">Logged in as: <strong>{user.username}</strong> &nbsp;</p>
+          <p className="msg">
+            Logged in as: <strong>{user.username}</strong> &nbsp;
+          </p>
           <UserSettings />
         </div>
       );
@@ -167,10 +169,10 @@ export default class Login extends Component {
               />
             </Form>
             {/* TODO: remove this once ready for more users */}
-            {/* <div className="create-account">
+            <div className="create-account">
               <p className="disabled">Not a member yet?&nbsp;</p>
               <Signup onLanding={true} />
-            </div> */}
+            </div>
           </Modal.Body>
           <Modal.Footer>
             <a
