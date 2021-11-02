@@ -25,12 +25,14 @@ export default function Assessment(props) {
   return (
     <div>
       <div className={classes.assessmentContainer}>
-        {activeStep === 1 && (
+        {activeStep === 1 ? (
           <KeyboardArrowLeft
             className={classes.arrowStyle}
             onClick={handleBack}
             disabled={activeStep === 0}
           />
+        ) : (
+          <div style={{ width: '5%' }}></div>
         )}
         <Box
           height={600}
@@ -50,14 +52,15 @@ export default function Assessment(props) {
             ></img>
           </div>
         </Box>
-
-        {activeStep === 0 && (
+        {activeStep === 0 ? (
           <KeyboardArrowRight
             className={classes.arrowStyle}
             onClick={handleNext}
             disabled={activeStep === 1}
             className={classes.arrowStyle}
           />
+        ) : (
+          <div style={{ width: '5%' }}></div>
         )}
       </div>
       <Box mt={6} />
