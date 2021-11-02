@@ -744,9 +744,6 @@ export default class AdminPanel extends Component {
             <Tab eventKey="trustedAIResources" title="Trusted AI Resources">
               <AdminResources />
             </Tab>
-            {/* <Tab eventKey="analytics" title="Analytics">
-              <AnalyticsDashboard />
-            </Tab> */}
           </Tabs>
           <Login />
         </main>

@@ -27,7 +27,7 @@ router.post('/create', async (req, res) => {
   } = req.body;
 
   let result = owasp.test(password);
-  if (result.strong == false) {
+  if (!result.strong) {
     return res.status(400).json({
       password: { isInvalid: true, message: result.errors.join('\n') },
     });
@@ -75,7 +75,7 @@ router.post('/create', async (req, res) => {
       // user already exists
       if (err.name === 'MongoError' && err.code === 11000) {
         if (Object.keys(err.keyPattern).includes('username')) {
-          return res.status(422).json({
+          return res.status(409).json({
             username: {
               isInvalid: true,
               message: 'Username already exists!',
@@ -83,10 +83,10 @@ router.post('/create', async (req, res) => {
           });
         }
         if (Object.keys(err.keyPattern).includes('email')) {
-          return res.status(422).json({
+          return res.status(409).json({
             email: {
               isInvalid: true,
-              message: 'User with Email Address already exists!',
+              message: 'There was an issue with your request',
             },
           });
         }
