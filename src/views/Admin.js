@@ -23,13 +23,16 @@ import Accordion from 'react-bootstrap/Accordion';
 import Card from 'react-bootstrap/Card';
 import DeleteUserModal from '../Components/DeleteUserModal';
 import DeleteSubmissionModal from '../Components/DeleteSubmissionModal';
-import Table from '@material-ui/core/Table';
-import TableRow from '@material-ui/core/TableRow';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableFooter from '@material-ui/core/TableFooter';
-import TablePagination from '@material-ui/core/TablePagination';
+import {
+  Table,
+  TableRow,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableFooter,
+  TablePagination,
+} from '@material-ui/core';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit as faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 import Signup from './Signup';
@@ -521,7 +524,7 @@ export default class AdminPanel extends Component {
           />
           {!this.state.showUsersFilter ? null : (
             <Accordion>
-              <Card>
+              <Card className="filter-width">
                 <Accordion.Toggle as={Card.Header} eventKey="1">
                   Filters
                 </Accordion.Toggle>
