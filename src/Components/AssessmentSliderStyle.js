@@ -11,6 +11,8 @@ export const useStyles = makeStyles({
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
+    position: 'relative',
+    bottom: '120px',
   },
 
   stepperColumn: {

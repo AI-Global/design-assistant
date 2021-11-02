@@ -4,8 +4,6 @@ import { withStyles, createStyles, makeStyles } from '@material-ui/styles';
 export const StyledTableCell = withStyles(() => ({
   root: {
     color: '#5A6C83',
-    // remove this to make the cells change colors. return to later
-    backgroundColor: 'white',
     height: '100px',
   },
 }))(TableCell);

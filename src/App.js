@@ -26,7 +26,7 @@ function WelcomeText() {
       style={{
         backgroundImage: `url(${backgroundImage})`,
         width: '99.6vw',
-        height: '50vh',
+        height: '40vh',
         position: 'relative',
         left: '50%',
         right: '50%',

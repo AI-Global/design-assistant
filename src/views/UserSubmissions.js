@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { getLoggedInUser } from '../helper/AuthHelper';
-import Button from '@material-ui/core/Button';
-import Box from '@material-ui/core/Box';
+import { Button, Box } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import AssessmentGrid from '../Components/AssessmentGrid';
 
@@ -15,22 +14,6 @@ const LandingButton = withStyles(() => ({
     border: '1px solid',
     backgroundColor: '#FFFFFF',
     borderColor: '#386EDA',
-    color: '#386EDA',
-    '&:hover': {
-      backgroundColor: '#386EDA',
-      borderColor: '#386EDA',
-      color: '#FFFFFF',
-    },
-  },
-}))(Button);
-
-const ViewAllButton = withStyles(() => ({
-  root: {
-    width: '290px',
-    borderRadius: '8px',
-    border: '1px solid',
-    backgroundColor: '#FFFFFF',
-    borderColor: '#C9D7E9',
     color: '#386EDA',
     '&:hover': {
       backgroundColor: '#386EDA',
