@@ -30,13 +30,16 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableFooter from '@material-ui/core/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit as faPencilAlt } from '@fortawesome/free-solid-svg-icons';
+import Signup from './Signup';
 ReactGa.initialize(process.env.REACT_APP_GAID, {
   testMode: process.env.NODE_ENV !== 'production',
 });
 
 const User = (props) => (
   <TableRow>
+    <TableCell>{null}</TableCell>
     <TableCell style={{ textAlign: 'left' }}>{props.user.email}</TableCell>
     <TableCell style={{ textAlign: 'left' }}>{props.user.username}</TableCell>
     <TableCell style={{ textAlign: 'left' }}>
@@ -100,13 +103,14 @@ export default class AdminPanel extends Component {
     this.deleteSubmission = this.deleteSubmission.bind(this);
     this.changeRole = this.changeRole.bind(this);
     this.nextPath = this.nextPath.bind(this);
+    this.enterSurvey = this.enterSurvey.bind(this);
     this.showDeleteUserModal = this.showDeleteUserModal.bind(this);
     this.showDeleteSubmisionModal = this.showDeleteSubmisionModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
     this.confirmDeleteUser = this.confirmDeleteUser.bind(this);
     this.confirmDeleteSubmission = this.confirmDeleteSubmission.bind(this);
     this.role = undefined;
-
+    this.userID = undefined;
     this.state = {
       users: [],
       submissions: [],
@@ -133,6 +137,7 @@ export default class AdminPanel extends Component {
   componentDidMount() {
     getLoggedInUser().then((user) => {
       this.role = user.role;
+      this.userID = user._id;
     });
 
     ReactGa.pageview(window.location.pathname + window.location.search);
@@ -177,7 +182,22 @@ export default class AdminPanel extends Component {
       state: { questions: this.state.json, responses: submission },
     });
   }
-
+  enterSurvey(submission) {
+    this.props.history.push({
+      pathname: '/DesignAssistantSurvey',
+      state: {
+        prevResponses: submission.submission,
+        submission_id: submission._id,
+        user_id: this.userID,
+        filters: {
+          roles: submission.roles,
+          domain: submission.domain,
+          region: submission.region,
+          lifecycle: submission.lifecycle,
+        },
+      },
+    });
+  }
   deleteUser(id) {
     api.delete('users/' + id).then((response) => {
       console.log(response.data);
@@ -227,23 +247,23 @@ export default class AdminPanel extends Component {
     return !Array.isArray(this.state.users)
       ? null
       : this.getFilteredUsers()
-        .slice(
-          this.state.usersPage * this.state.usersRowsPerPage,
-          this.state.usersPage * this.state.usersRowsPerPage +
-          this.state.usersRowsPerPage
-        )
-        .map((currentuser) => {
-          return (
-            <User
-              user={currentuser}
-              nextPath={this.nextPath}
-              changeRole={this.changeRole}
-              showModal={this.showDeleteUserModal}
-              role={this.role}
-              key={currentuser._id}
-            />
-          );
-        });
+          .slice(
+            this.state.usersPage * this.state.usersRowsPerPage,
+            this.state.usersPage * this.state.usersRowsPerPage +
+              this.state.usersRowsPerPage
+          )
+          .map((currentuser) => {
+            return (
+              <User
+                user={currentuser}
+                nextPath={this.nextPath}
+                changeRole={this.changeRole}
+                showModal={this.showDeleteUserModal}
+                role={this.role}
+                key={currentuser._id}
+              />
+            );
+          });
   }
 
   // returns the current page's rows for the submission table
@@ -252,7 +272,7 @@ export default class AdminPanel extends Component {
       .slice(
         this.state.submissionsPage * this.state.submissionsRowsPerPage,
         this.state.submissionsPage * this.state.submissionsRowsPerPage +
-        this.state.submissionsRowsPerPage
+          this.state.submissionsRowsPerPage
       )
       .map((currentsubmission, idx) => {
         let convertedDate = new Date(currentsubmission.date).toLocaleString(
@@ -287,6 +307,18 @@ export default class AdminPanel extends Component {
             </TableCell>
             <TableCell align="center">
               {' '}
+              <FontAwesomeIcon
+                onClick={() => {
+                  this.enterSurvey(currentsubmission ?? {});
+                }}
+                icon={faPencilAlt}
+                size="md"
+                className="mt-2"
+                cursor="pointer"
+                title="Edit survey submission"
+              />
+            </TableCell>
+            <TableCell>
               <IconButton
                 size="small"
                 style={{ paddingTop: '0.10em' }}
@@ -585,6 +617,9 @@ export default class AdminPanel extends Component {
                 <Table id="users" className="user-table">
                   <TableHead>
                     <TableRow>
+                      <TableCell>
+                        <Signup onLanding={false} />
+                      </TableCell>
                       <TableCell
                         className="score-card-headers"
                         style={{ textAlign: 'left' }}
@@ -676,7 +711,13 @@ export default class AdminPanel extends Component {
                         className="score-card-headers"
                         style={{ textAlign: 'center' }}
                       >
-                        Action
+                        Edit
+                      </TableCell>
+                      <TableCell
+                        className="score-card-headers"
+                        style={{ textAlign: 'center' }}
+                      >
+                        Delete
                       </TableCell>
                     </TableRow>
                   </TableHead>
@@ -703,9 +744,9 @@ export default class AdminPanel extends Component {
             <Tab eventKey="trustedAIResources" title="Trusted AI Resources">
               <AdminResources />
             </Tab>
-            <Tab eventKey="analytics" title="Analytics">
+            {/* <Tab eventKey="analytics" title="Analytics">
               <AnalyticsDashboard />
-            </Tab>
+            </Tab> */}
           </Tabs>
           <Login />
         </main>
