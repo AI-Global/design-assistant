@@ -27,22 +27,6 @@ router.post('/create', async (req, res) => {
     collabRoles,
   } = req.body;
 
-  let result = owasp.test(password);
-  if (!result.strong) {
-    return res.status(400).json({
-      password: { isInvalid: true, message: result.errors.join('\n') },
-    });
-  }
-
-  // validation for password verification
-  if (password != passwordConfirmation)
-    return res.status(400).json({
-      passwordConfirmation: {
-        isInvalid: true,
-        message: "Those passwords didn't match. Try again.",
-      },
-    });
-
   // create new user, send to db
   let user = new User({
     email,

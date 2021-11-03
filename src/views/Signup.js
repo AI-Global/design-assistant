@@ -7,6 +7,13 @@ import ReactGa from 'react-ga';
 import IconButton from '@material-ui/core/IconButton';
 import Add from '@material-ui/icons/Add';
 
+const owasp = require('owasp-password-strength-test');
+
+owasp.config({
+  minLength: 8,
+  minOptionalTestsToPass: 4,
+});
+
 const CreateAccHandler = () => {
   ReactGa.event({
     category: 'Button',
@@ -90,6 +97,14 @@ export default class Signup extends Component {
     let passwordConfirmation = form.signupPasswordConfirmation.value;
     let organization = form.signupOrganization.value;
     let collabRoles = form.signupCollabRolese.value;
+
+    let result = owasp.test(password);
+    if (!result.strong) {
+      return res.status(400).json({
+        password: { isInvalid: true, message: result.errors.join('\n') },
+      });
+    }
+
     if (password !== passwordConfirmation) {
       this.setState({
         passwordConfirmation: {
