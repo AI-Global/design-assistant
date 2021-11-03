@@ -24,6 +24,7 @@ router.post('/create', async (req, res) => {
     passwordConfirmation,
     organization,
     role,
+    collabRoles,
   } = req.body;
 
   let result = owasp.test(password);
@@ -43,7 +44,14 @@ router.post('/create', async (req, res) => {
     });
 
   // create new user, send to db
-  let user = new User({ email, username, password, organization, role });
+  let user = new User({
+    email,
+    username,
+    password,
+    organization,
+    role,
+    collabRoles,
+  });
   await user
     .save()
     .then((user) => {
