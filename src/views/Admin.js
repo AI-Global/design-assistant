@@ -42,7 +42,7 @@ ReactGa.initialize(process.env.REACT_APP_GAID, {
 
 const User = (props) => (
   <TableRow>
-    <TableCell>{null}</TableCell>
+    <TableCell></TableCell>
     <TableCell style={{ textAlign: 'left' }}>{props.user.email}</TableCell>
     <TableCell style={{ textAlign: 'left' }}>{props.user.username}</TableCell>
     <TableCell style={{ textAlign: 'left' }}>

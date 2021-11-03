@@ -286,6 +286,10 @@ export default class Signup extends Component {
 
               <Form.Group controlId="signupCollabRolese">
                 <Form.Control as="select">
+                  <option value="" disabled selected hidden>
+                    Role
+                  </option>
+
                   {roleOptions.map((option) => (
                     <option value={option.value}>{option.label}</option>
                   ))}
