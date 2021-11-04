@@ -8,7 +8,7 @@
     "watch:react": "react-scripts start",
     "watch:api": "nodemon server.js",
     "start": "node server.js",
-    "build": "react-scripts --max_old_space_size=4096 build"
+    "build": "react-scripts build"
   },
   "license": "MIT",
   "dependencies": {
