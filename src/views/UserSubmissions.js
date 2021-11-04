@@ -1,13 +1,27 @@
 import React, { Component } from 'react';
-import { Button, Table, Modal } from 'react-bootstrap';
 import { getLoggedInUser } from '../helper/AuthHelper';
+import { Button, Box } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+import AssessmentGrid from '../Components/AssessmentGrid';
+
 import api from '../api';
 import ReactGa from 'react-ga';
 import { withRouter } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
-import IconButton from '@material-ui/core/IconButton';
+
+const LandingButton = withStyles(() => ({
+  root: {
+    borderRadius: '8px',
+    border: '1px solid',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#386EDA',
+    color: '#386EDA',
+    '&:hover': {
+      backgroundColor: '#386EDA',
+      borderColor: '#386EDA',
+      color: '#FFFFFF',
+    },
+  },
+}))(Button);
 
 const StartSurveyHandler = () => {
   ReactGa.event({
@@ -16,6 +30,11 @@ const StartSurveyHandler = () => {
   });
 };
 
+const faqPath =
+  '/https://ai-global.org/2020/04/28/creating-a-responsible-ai-trust-index-a-unified-assessment-to-assure-the-responsible-design-development-and-deployment-of-ai/';
+
+const guidancePath =
+  '/https://docs.google.com/presentation/d/1EDPhyRhIsiOrujLcHQv_fezXfgOz4Rl7a8lyOM_guoA/edit#slide=id.p1';
 class UserSubmissions extends Component {
   constructor(props) {
     super(props);
@@ -153,127 +172,55 @@ class UserSubmissions extends Component {
     const handleClose = () => this.setState({ showDeleteWarning: false });
     return (
       <div>
-        <Modal
-          aria-labelledby="contained-modal-title-vcenter"
-          centered
-          show={this.state.showDeleteWarning}
-          backdrop="static"
-          keyboard={false}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            position: 'relative',
+            bottom: '100px',
+          }}
         >
-          <Modal.Header>
-            <Modal.Title id="contained-modal-title-vcenter">
-              Warning!
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            Are you sure you would like to delete this submission?
-          </Modal.Body>
-          <Modal.Footer>
-            <Button id="DeleteSurveyButton" onClick={() => this.deleteSurvey()}>
-              Yes
-            </Button>
-            <Button onClick={() => handleClose()}>Cancel</Button>
-          </Modal.Footer>
-        </Modal>
-        <div>
-          <div className="card">
-            <div className="card-header">Existing Surveys</div>
-            <div className="card-body">
-              <Table bordered responsive className="survey-results-table">
-                <thead>
-                  <tr>
-                    <th>Project Name</th>
-                    <th>Last Updated</th>
-                    <th width="120px"></th>
-                    <th width="100px"></th>
-                    <th width="75px"></th>
-                    <th width="75px"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {this.state.submissions.map((submission, index) => {
-                    return (
-                      <tr key={index}>
-                        <td>
-                          {submission?.projectName
-                            ? submission?.projectName
-                            : 'No Project Name'}
-                        </td>
-                        <td>
-                          {new Date(submission.date).toLocaleString('en-US', {
-                            timeZone:
-                              Intl?.DateTimeFormat()?.resolvedOptions()
-                                ?.timeZone ?? 'UTC',
-                          })}
-                        </td>
-                        <td width="120px" className="text-center">
-                          {!submission.completed && (
-                            <Button
-                              block
-                              onClick={() => {
-                                this.resumeSurvey(index);
-                                StartSurveyHandler();
-                              }}
-                            >
-                              Resume
-                            </Button>
-                          )}
-                          {submission.completed && (
-                            <Button
-                              block
-                              onClick={() => {
-                                this.resumeSurvey(index);
-                                StartSurveyHandler();
-                              }}
-                              className="results-button"
-                            >
-                              Results
-                            </Button>
-                          )}
-                        </td>
-                        <td width="100px">
-                          <Button
-                            block
-                            onClick={() => {
-                              this.cloneSurvey(index);
-                            }}
-                          >
-                            Clone
-                          </Button>
-                        </td>
-                        <td width="75px" className="text-center">
-                          {submission.completed && (
-                            <IconButton
-                              aria-label="edit survey"
-                              onClick={() => {
-                                this.editSurvey(index);
-                              }}
-                            >
-                              <EditIcon />
-                            </IconButton>
-                          )}
-                        </td>
-                        <td width="75px" className="text-center">
-                          <IconButton
-                            aria-label="delete survey"
-                            onClick={() => {
-                              this.showDeleteWarning(index);
-                            }}
-                          >
-                            <DeleteOutlineIcon />
-                          </IconButton>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </Table>
-            </div>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-around',
+              width: '50%',
+            }}
+          >
+            <LandingButton
+              variant="outlined"
+              type="button"
+              onClick={() => this.startSurvey()}
+            >
+              Start New Survey
+            </LandingButton>
+            <LandingButton variant="outlined" type="button" href={faqPath}>
+              FREQUENTLY ASKED QUESTIONS
+            </LandingButton>
+            <LandingButton variant="outlined" type="button" href={guidancePath}>
+              GUIDE LINK
+            </LandingButton>
           </div>
         </div>
-        <div className="float-right mr-3 mt-2">
-          <Button onClick={() => this.startSurvey()}>Start New Survey</Button>
+        <Box mb={5} />
+        <Box mt={10} />
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
+          <div
+            style={{
+              width: '90%',
+            }}
+          >
+            <AssessmentGrid></AssessmentGrid>
+            <Box mt={4} />
+          </div>
         </div>
+        <Box mt={4} />
       </div>
     );
   }
