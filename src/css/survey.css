@@ -92,18 +92,6 @@ h4 {
 .btn-default:visited {
   color: #1a92ce !important;
 }
-a:not([href='#']):visited {
-  color: #7834bc !important;
-}
-.nav a,
-a.btn {
-  text-decoration: none !important;
-  color: #1a92ce;
-}
-
-td a {
-  color: #1a92ce;
-}
 
 .btn-default {
   color: #182c37 !important;
