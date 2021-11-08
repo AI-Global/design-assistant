@@ -7,7 +7,7 @@ const COLLAB_ROLES = [
   'securityAdmin',
   'productOwner',
   'dataScientist',
-  'BusinessExecutive',
+  'businessExecutive',
   'legalCompliance',
   'auditor',
 ];

@@ -96,13 +96,13 @@ export default class Signup extends Component {
     let password = form.signupPassword.value;
     let passwordConfirmation = form.signupPasswordConfirmation.value;
     let organization = form.signupOrganization.value;
-    let collabRoles = form.signupCollabRolese.value;
+    let collabRoles = form.signupCollabRoles.value;
 
     let result = owasp.test(password);
     if (!result.strong) {
-      return res.status(400).json({
+      return {
         password: { isInvalid: true, message: result.errors.join('\n') },
-      });
+      };
     }
 
     if (password !== passwordConfirmation) {
@@ -284,7 +284,7 @@ export default class Signup extends Component {
                 </Form.Control.Feedback>
               </Form.Group>
 
-              <Form.Group controlId="signupCollabRolese">
+              <Form.Group controlId="signupCollabRoles">
                 <Form.Control as="select">
                   <option value="" disabled selected hidden>
                     Role
