@@ -3,6 +3,15 @@ const crypto = require('crypto');
 
 const USER_ROLES = ['superadmin', 'admin', 'mod', 'member'];
 
+const COLLAB_ROLES = [
+  'securityAdmin',
+  'productOwner',
+  'dataScientist',
+  'businessExecutive',
+  'legalCompliance',
+  'auditor',
+];
+
 const UserSchema = new mongoose.Schema({
   email: {
     type: String,
@@ -20,6 +29,10 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default: 'member',
     enum: USER_ROLES,
+  },
+  collabRoles: {
+    type: String,
+    enum: COLLAB_ROLES,
   },
   hashedPassword: {
     type: String,

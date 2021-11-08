@@ -417,6 +417,9 @@ input[type='number'] {
   background-color: #1a92ce !important;
 }
 
+.filter-width {
+  width: 85%;
+}
 .mainContainer {
   width: 100%;
 }

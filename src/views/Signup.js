@@ -7,6 +7,13 @@ import ReactGa from 'react-ga';
 import IconButton from '@material-ui/core/IconButton';
 import Add from '@material-ui/icons/Add';
 
+const owasp = require('owasp-password-strength-test');
+
+owasp.config({
+  minLength: 8,
+  minOptionalTestsToPass: 4,
+});
+
 const CreateAccHandler = () => {
   ReactGa.event({
     category: 'Button',
@@ -24,6 +31,33 @@ const AccCreatedHandler = () => {
 const RegistrationDescription = `You can create an account for the Responsible AI Design Assistant! 
 After creating your account, an email verfication will be sent to you.`;
 
+const roleOptions = [
+  {
+    label: 'Security Admin',
+    value: 'securityAdmin',
+  },
+  {
+    label: 'Product Owner',
+    value: 'productOwner',
+  },
+  {
+    label: 'Data Scientist',
+    value: 'dataScientist',
+  },
+  {
+    label: 'Business Executive',
+    value: 'businessExecutive',
+  },
+  {
+    label: 'Legal and Compliance',
+    value: 'legalCompliance',
+  },
+  {
+    label: 'Auditor',
+    value: 'auditor',
+  },
+];
+
 export default class Signup extends Component {
   constructor(props) {
     super(props);
@@ -33,6 +67,7 @@ export default class Signup extends Component {
       username: { isInvalid: false, message: '' },
       password: { isInvalid: false, message: '' },
       passwordConfirmation: { isInvalid: false, message: '' },
+      collabRoles: { isInvalid: false, message: '' },
       emailInput: '',
       usernameInput: '',
       emailAsUsername: true,
@@ -50,7 +85,9 @@ export default class Signup extends Component {
       username: { isInvalid: false, message: '' },
       password: { isInvalid: false, message: '' },
       passwordConfirmation: { isInvalid: false, message: '' },
+      role: { isInvalid: false, message: '' },
       organization: { isInvalid: false, message: '' },
+      collabRoles: { isInvalid: false, message: '' },
     });
     event.preventDefault();
     let form = event.target.elements;
@@ -59,6 +96,15 @@ export default class Signup extends Component {
     let password = form.signupPassword.value;
     let passwordConfirmation = form.signupPasswordConfirmation.value;
     let organization = form.signupOrganization.value;
+    let collabRoles = form.signupCollabRoles.value;
+
+    let result = owasp.test(password);
+    if (!result.strong) {
+      return {
+        password: { isInvalid: true, message: result.errors.join('\n') },
+      };
+    }
+
     if (password !== passwordConfirmation) {
       this.setState({
         passwordConfirmation: {
@@ -74,6 +120,7 @@ export default class Signup extends Component {
           password: password,
           passwordConfirmation: passwordConfirmation,
           organization: organization,
+          collabRoles: collabRoles,
         })
         .then((response) => {
           const result = response.data;
@@ -120,10 +167,11 @@ export default class Signup extends Component {
     const handleSignupClose = () => this.setState({ showSignupModal: false });
     const handleSignupShow = () => this.setState({ showSignupModal: true });
     return (
-      <div style={{ display: 'inline-block' }}>
+      <div
+        style={{ display: 'inline-block', color: 'blue', cursor: 'pointer' }}
+      >
         {this.props.onLanding && (
           <a
-            href="#/"
             onClick={() => {
               handleSignupShow();
               CreateAccHandler();
@@ -132,7 +180,7 @@ export default class Signup extends Component {
             Create your account
           </a>
         )}
-        {!this.props.onLanding &&
+        {!this.props.onLanding && (
           <IconButton
             aria-label="add new user"
             size="small"
@@ -143,7 +191,7 @@ export default class Signup extends Component {
           >
             <Add />
           </IconButton>
-        }
+        )}
 
         <Modal
           show={showSignup}
@@ -236,6 +284,19 @@ export default class Signup extends Component {
                   {this.state.passwordConfirmation.message}
                 </Form.Control.Feedback>
               </Form.Group>
+
+              <Form.Group controlId="signupCollabRoles">
+                <Form.Control as="select">
+                  <option value="" disabled selected hidden>
+                    Role
+                  </option>
+
+                  {roleOptions.map((option) => (
+                    <option value={option.value}>{option.label}</option>
+                  ))}
+                </Form.Control>
+              </Form.Group>
+
               <Form.Group controlId="signupOrganization">
                 <Form.Control
                   type="text"
@@ -255,4 +316,3 @@ export default class Signup extends Component {
     );
   }
 }
-
