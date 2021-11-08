@@ -216,7 +216,9 @@ class UserSubmissions extends Component {
               width: '90%',
             }}
           >
-            <AssessmentGrid></AssessmentGrid>
+            <AssessmentGrid
+              collabRoles={this.state?.user?.collabRoles}
+            ></AssessmentGrid>
             <Box mt={4} />
           </div>
         </div>

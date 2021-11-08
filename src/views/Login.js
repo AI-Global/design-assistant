@@ -88,12 +88,18 @@ export default class Login extends Component {
     const handleShow = () => this.setState({ showLoginModal: true });
     let user = this.state.user;
     if (user) {
+      {
+        console.log(user);
+      }
       return (
         <div className="user-status">
-          <p className="msg">
-            Logged in as: <strong>{user.username}</strong> &nbsp;
-          </p>
           <UserSettings />
+          <p className="msg">
+            <strong>
+              {user.username} {user.collabRoles}
+            </strong>
+            &nbsp;
+          </p>
         </div>
       );
     } else {

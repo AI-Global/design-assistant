@@ -24,7 +24,7 @@ import {
 } from './AssessmentGridStyle';
 
 export default function AssessmentGrid(props) {
-  const { expandButton } = props;
+  const { expandButton, collabRoles } = props;
   const classes = useStyles();
   const theme = useTheme();
 
@@ -102,7 +102,9 @@ export default function AssessmentGrid(props) {
                 </StyledTableCell>
                 <StyledTableCell>{data.actionDate}</StyledTableCell>
                 <StyledTableCell className={classes.anthemBlue}>
-                  <FileCopyRounded className={classes.anthemBlue} /> Clone
+                  {collabRoles !== '"securityAdmin"' && (
+                    <FileCopyRounded className={classes.anthemBlue} />
+                  )}
                 </StyledTableCell>
                 <StyledTableCell>
                   <DeleteRounded />
