@@ -167,10 +167,9 @@ export default class Signup extends Component {
     const handleSignupClose = () => this.setState({ showSignupModal: false });
     const handleSignupShow = () => this.setState({ showSignupModal: true });
     return (
-      <div style={{ display: 'inline-block' }}>
+      <div style={{ display: 'inline-block', color: 'blue' }}>
         {this.props.onLanding && (
           <a
-            href="#/"
             onClick={() => {
               handleSignupShow();
               CreateAccHandler();
