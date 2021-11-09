@@ -8,6 +8,7 @@ import {
   TableHead,
   Paper,
   Chip,
+  Typography,
 } from '@material-ui/core';
 
 import Pagination from '@material-ui/lab/Pagination';
@@ -24,7 +25,7 @@ import {
 } from './AssessmentGridStyle';
 
 export default function AssessmentGrid(props) {
-  const { expandButton, collabRoles } = props;
+  const { userName, collabRoles } = props;
   const classes = useStyles();
   const theme = useTheme();
 
@@ -56,6 +57,7 @@ export default function AssessmentGrid(props) {
 
   return (
     <div>
+      {console.log(collabRoles)}
       <TableContainer
         className={classes.tableContainer}
         component={Paper}
@@ -82,6 +84,11 @@ export default function AssessmentGrid(props) {
               <StyledTableRow stripedRows key={i}>
                 <StyledTableCell className={classes.anthemBlue}>
                   {data.name}
+                  <div>
+                    <CaptionTypography variant="body2">
+                      Submitted by: {userName}
+                    </CaptionTypography>
+                  </div>
                 </StyledTableCell>
                 <StyledTableCell>
                   {data.status ? 'Completed' : 'In Progress'}
@@ -102,12 +109,16 @@ export default function AssessmentGrid(props) {
                 </StyledTableCell>
                 <StyledTableCell>{data.actionDate}</StyledTableCell>
                 <StyledTableCell className={classes.anthemBlue}>
-                  {collabRoles !== '"securityAdmin"' && (
-                    <FileCopyRounded className={classes.anthemBlue} />
-                  )}
+                  {collabRoles !== 'legalCompliance' ||
+                    (collabRoles !== 'auditor' && (
+                      <div>
+                        <FileCopyRounded className={classes.anthemBlue} />
+                        clone
+                      </div>
+                    ))}
                 </StyledTableCell>
                 <StyledTableCell>
-                  <DeleteRounded />
+                  {collabRoles === 'legalCompliance' && <DeleteRounded />}
                 </StyledTableCell>
               </StyledTableRow>
             ))}
