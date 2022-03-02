@@ -1,4 +1,5 @@
 node_modules/
+scripts/
 /backend/questions.tsv
 /backend/questionsJSON.json
 *.env.bat
