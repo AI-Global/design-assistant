@@ -353,6 +353,14 @@ export default class Results extends Component {
                 <TrustedAIResources />
               </Tab.Container>
             </Tab>
+            <Tab eventKey="certification" title="Certification">
+              <Tab.Container
+                id="left-tabs-example"
+                defaultActiveKey={this.state.Dimensions[0].label}
+              >
+                <TrustedAIResources />
+              </Tab.Container>
+            </Tab>
           </Tabs>
           <div className="dimension-chart" style={{ marginBottom: '80px', marginTop: '40px' }}>
             <h4>Risk Level: {riskLevel[riskWeight ?? 1]}</h4>

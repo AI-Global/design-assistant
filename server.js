@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const path = require('path');
 
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5050;
 
 // Force HTTPS
 app.use((req, res, next) => {
@@ -77,7 +77,7 @@ let runServer = () => {
       console.log(`Serving http://:${port}`);
       app.listen(port);
     });
-  return mongoose.connect(process.env.MONGODB_URL, {
+  return mongoose.connect('mongodb://127.0.0.1:27017/rai-local-dev', {
     keepAlive: 1,
     useNewUrlParser: true,
     useCreateIndex: true,
