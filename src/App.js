@@ -140,7 +140,7 @@ function HomePage(props) {
               }
             })
             .catch((err) => {
-              console.warn(err.response.data);
+              console.warn(err);
             });
         });
     }
