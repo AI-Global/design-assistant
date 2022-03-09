@@ -374,6 +374,49 @@ export default class Results extends Component {
                     </Nav>
                   </Tab.Container>
                 </Tab>
+                <Tab eventKey="certification" title="Certification">
+                  <Tab.Container
+                    id="left-tabs-example"
+                    defaultActiveKey={this.state?.Dimensions[2]?.label}
+                  >
+                    <Tab.Content>
+                      {this.state.Dimensions.map((dimension, idx) => {
+                        if (dimension.label !== 'T') {
+                          return (
+                            <Tab.Pane key={idx} eventKey={dimension.label}>
+                              <Certification
+                                dimension={dimension}
+                                results={surveyResults}
+                                questions={questions.filter(
+                                  (x) => x.score?.dimension === dimension.label
+                                )}
+                              />
+                            </Tab.Pane>
+                          );
+                        }
+                        return null;
+                      })}
+                    </Tab.Content>
+                    <Nav
+                      variant="tabs"
+                      className="report-card-nav"
+                      defaultActiveKey="accountability"
+                    >
+                      {this.state.Dimensions.map((dimension, idx) => {
+                        if (dimension.label !== 'T') {
+                          return (
+                            <Nav.Item key={idx}>
+                              <Nav.Link eventKey={dimension.label}>
+                                {dimension.name}
+                              </Nav.Link>
+                            </Nav.Item>
+                          );
+                        }
+                        return null;
+                      })}
+                    </Nav>
+                  </Tab.Container>
+                </Tab>
                 {/* <Tab eventKey="ai-providers" title="Trusted AI Providers">
               <Tab.Container
                 id="left-tabs-example"
