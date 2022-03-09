@@ -66,12 +66,11 @@ async function getChildren() {
 
     // Append child to parent list
     if (q.trigger.parent in children) {
-      children[q.trigger.parent].push(child)
+      children[q.trigger.parent].push(child);
     } else {
-      children[q.trigger.parent] = []
-      children[q.trigger.parent].push(child)
+      children[q.trigger.parent] = [];
+      children[q.trigger.parent].push(child);
     }
-
   }
 
   return children;
@@ -216,9 +215,7 @@ function chainChildren(q, Children) {
 
     // Recursivly get children of children
     if (c.question.id in Children) {
-      childChain = childChain.concat(
-        chainChildren(c.question, Children)
-      );
+      childChain = childChain.concat(chainChildren(c.question, Children));
     }
   }
 
@@ -258,8 +255,11 @@ function createPage(questions, pageName, pageTitle, Dimensions, Children) {
   // Map MongoDB questions to surveyJS format
   page.elements = questionHeiarchy.map(function (q) {
     if (q.child) {
-
-      return formatQuestion(q, Dimensions, Children[q.trigger.parent].find(c => c.question.id === q.id).trigger);
+      return formatQuestion(
+        q,
+        Dimensions,
+        Children[q.trigger.parent].find((c) => c.question.id === q.id).trigger
+      );
     } else {
       return formatQuestion(q, Dimensions);
     }
@@ -348,6 +348,27 @@ async function applyFilters(questions, filters) {
     }
   }
 
+  if (filters.userType) {
+    switch (filters.userType) {
+      case 'noUser':
+        for (let dim of Object.keys(questions).filter(
+          (k) => String(k) !== '1'
+        )) {
+          questions[dim] = questions[dim].filter((q) => !q.removeIfNoUser);
+        }
+        break;
+      case 'userIsData':
+        for (let dim of Object.keys(questions).filter(
+          (k) => String(k) !== '1'
+        )) {
+          questions[dim] = questions[dim].filter((q) => !q.removeIfUserSubject);
+        }
+        break;
+      default:
+        break;
+    }
+  }
+
   return questions;
 }
 
@@ -361,7 +382,7 @@ async function createPages(q, filters) {
   var page = {};
   page.pages = [];
   page.showQuestionNumbers = 'on';
-  page.showProgressBar = 'top';
+  page.showProgressBar = 'false';
   page.firstPageIsStarted = 'false';
   page.showNavigationButtons = 'false';
   page.clearInvisibleValues = 'onHidden';
@@ -381,6 +402,7 @@ async function createPages(q, filters) {
 
   // Apply domain, region, role, lifecycle filter to questions
   dimQuestions = await applyFilters(dimQuestions, filters);
+
 
   // Add Other question to tombstone and create page
   dimQuestions[1].push({
@@ -463,7 +485,10 @@ router.get('/', async (req, res) => {
       pages = await createPages(questions, filters);
       res.status(200).send(pages);
     })
-    .catch((err) => res.status(400).send(err));
+    .catch((err) => {
+      console.log(err);
+      res.status(400).send(err);
+    });
 });
 
 // Get all questions as JSON from DB. No Assembly for SurveyJS
@@ -472,7 +497,9 @@ router.get('/all', async (req, res) => {
   let Dimensions = await getDimensions();
   let subDimensions = await getSubDimensions();
   Question.find()
-    .then((questions) => res.status(200).send({ questions, Dimensions, subDimensions }))
+    .then((questions) =>
+      res.status(200).send({ questions, Dimensions, subDimensions })
+    )
     .catch((err) => res.status(400).send(err));
 });
 
@@ -498,7 +525,6 @@ router.get('/all/export', async (req, res) => {
 // Add new question
 // TASK-TODO: Secure endpoint.
 router.post('/', async (req, res) => {
-
   try {
     // Create new questions and insert into DB
     req.body.questionType = req.body.questionType.toLowerCase();

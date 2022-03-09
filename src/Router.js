@@ -6,23 +6,32 @@ import PrivateRoute from './PrivateRoute';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import DesignAssistantSurvey from './views/DesignAssistantSurvey.js';
 import ViewSubmissions from './views/ViewSubmissions';
+import { ThemeProvider, createTheme } from '@material-ui/core/styles';
+
+const theme = createTheme({
+  typography: {
+    fontFamily: "'Exo 2', sans-serif",
+  },
+});
 
 export default function Router() {
   return (
     <div className="App">
-      <BrowserRouter>
-        <Switch>
-          <Route exact path="/" component={App} />
-          <Route
-            exact
-            path="/DesignAssistantSurvey"
-            component={DesignAssistantSurvey}
-          />
-          <Route path="/Results" component={Results} />
-          <PrivateRoute path="/Admin" component={Admin} />
-          <PrivateRoute path="/ViewSubmissions" component={ViewSubmissions} />
-        </Switch>
-      </BrowserRouter>
+      <ThemeProvider theme={theme}>
+        <BrowserRouter>
+          <Switch>
+            <Route exact path="/" component={App} />
+            <Route
+              exact
+              path="/DesignAssistantSurvey"
+              component={DesignAssistantSurvey}
+            />
+            <Route path="/Results" component={Results} />
+            <PrivateRoute path="/Admin" component={Admin} />
+            <PrivateRoute path="/ViewSubmissions" component={ViewSubmissions} />
+          </Switch>
+        </BrowserRouter>
+      </ThemeProvider>
     </div>
   );
 }

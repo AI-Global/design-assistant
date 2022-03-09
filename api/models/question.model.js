@@ -28,6 +28,14 @@ const QuestionSchema = mongoose.Schema({
     required: true,
   },
 
+  removeIfNoUser: {
+    type: Boolean
+  },
+
+  removeIfUserSubject: {
+    type: Boolean
+  },
+
   alt_text: {
     type: String,
   },
