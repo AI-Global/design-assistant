@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:dc="http://purl.org/dc/elements/1.1/" version="1.1" xmlns:xl="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" viewBox="483 422 389 80" width="389" height="80">
+  <defs/>
+  <g id="BarGraph" fill-opacity="1" stroke-opacity="1" stroke-dasharray="none" fill="none" stroke="none">
+    <title>BarGraph</title>
+    <g id="BarGraph_bargraph">
+      <title>bargraph</title>
+      <g id="Graphic_3">
+        <rect x="515.5" y="451.9169" width="350" height="20" fill="#e5e5e5"/>
+      </g>
+      <g id="Graphic_2">
+        <rect x="515.5" y="451.9169" width="175" height="20" fill="#e5eb99"/>
+      </g>
+      <g id="Graphic_5">
+        <text transform="translate(488 452.776)" fill="#e5eb99">
+          <tspan font-family="Helvetica Neue" font-size="16" fill="#e5eb99" x="6394885e-19" y="15">50</tspan>
+        </text>
+      </g>
+    </g>
+  </g>
+</svg>

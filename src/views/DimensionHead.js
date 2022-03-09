@@ -1,6 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Table } from 'react-bootstrap';
+import { ScoreBar } from '../Components/ScoreBar';
+import riskScoreLegend from '../assets/svg/risk-legend.svg'
+import mitigationScoreLegend from '../assets/svg/mitigation-legend.svg';
 
 const displayDimension = (result, question) => {
   var choices;
@@ -100,13 +103,13 @@ export const DimensionHead = ({ dimension }) => {
           <tbody>
             <tr>
               <td>{dimension?.description}</td>
-              <td>Risk Score Bar Legend</td>
-              <td>Mtigation Score Legend</td>
+              <td><img src={riskScoreLegend} alt="risk score legend" /></td>
+              <td><img src={mitigationScoreLegend} alt="mitigation score legend" /></td>
             </tr>
             <tr>
               <td><strong>Total score:</strong></td>
-              <td>Risk Score Bar</td>
-              <td>Mtigation Score Bar</td>
+              <td><ScoreBar score={20} palette="risk" /></td>
+              <td><ScoreBar score={13} palette="mitigation" /></td>
             </tr>
             {/* {questions.map((question) => {
               return displayQuestion(results[question?.name], question);
