@@ -10,6 +10,7 @@ import { ResponsiveRadar } from '@nivo/radar';
 import exportReport from '../helper/ExportReport';
 import ReportCard from './ReportCard';
 import DimensionScore from './DimensionScore';
+import Certification from './Certification'
 import TrustedAIProviders from './TrustedAIProviders';
 import TrustedAIResources from './TrustedAIResources';
 import ReactGa from 'react-ga';
@@ -337,6 +338,49 @@ export default class Results extends Component {
                 </Nav>
               </Tab.Container>
             </Tab>
+            <Tab eventKey="certification" title="Certification">
+              <Tab.Container
+                id="left-tabs-example"
+                defaultActiveKey={this.state?.Dimensions[2]?.label}
+              >
+                <Tab.Content>
+                  {this.state.Dimensions.map((dimension, idx) => {
+                    if (dimension.label !== 'T') {
+                      return (
+                        <Tab.Pane key={idx} eventKey={dimension.label}>
+                          <Certification
+                            dimension={dimension.label}
+                            results={surveyResults}
+                            questions={questions.filter(
+                              (x) => x.score?.dimension === dimension.label
+                            )}
+                          />
+                        </Tab.Pane>
+                      );
+                    }
+                    return null;
+                  })}
+                </Tab.Content>
+                <Nav
+                  variant="tabs"
+                  className="report-card-nav"
+                  defaultActiveKey="accountability"
+                >
+                  {this.state.Dimensions.map((dimension, idx) => {
+                    if (dimension.label !== 'T') {
+                      return (
+                        <Nav.Item key={idx}>
+                          <Nav.Link eventKey={dimension.label}>
+                            {dimension.name}
+                          </Nav.Link>
+                        </Nav.Item>
+                      );
+                    }
+                    return null;
+                  })}
+                </Nav>
+              </Tab.Container>
+            </Tab>
             {/* <Tab eventKey="ai-providers" title="Trusted AI Providers">
               <Tab.Container
                 id="left-tabs-example"
@@ -353,14 +397,7 @@ export default class Results extends Component {
                 <TrustedAIResources />
               </Tab.Container>
             </Tab>
-            <Tab eventKey="certification" title="Certification">
-              <Tab.Container
-                id="left-tabs-example"
-                defaultActiveKey={this.state.Dimensions[0].label}
-              >
-                <TrustedAIResources />
-              </Tab.Container>
-            </Tab>
+
           </Tabs>
           <div className="dimension-chart" style={{ marginBottom: '80px', marginTop: '40px' }}>
             <h4>Risk Level: {riskLevel[riskWeight ?? 1]}</h4>
