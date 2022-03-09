@@ -6,6 +6,10 @@ html {
   padding-top: 0.5rem;
 }
 
+.logo-index {
+  z-index: 1;
+}
+
 .banner img {
   width: 50px;
   height: auto;
@@ -42,10 +46,7 @@ html {
 }
 
 .copyright-footer {
-  position: relative;
-  bottom: 0px;
   width: 100%;
-  background-color: #252525;
 }
 
 .copyright {
@@ -193,4 +194,47 @@ form .btn:not(.btn-call-to-action) {
   background-color: #f5f5f5;
   border: none;
   border-top: 1px solid #ddd;
+}
+
+.landing-button {
+  width: 202px;
+  height: 40px;
+  padding: 6px 12px;
+  border: 1px solid;
+  border-color: #386eda;
+  line-height: 1.5;
+  background-color: #ffffff;
+}
+
+.landing-button :hover {
+  background-color: #386eda;
+  border-color: #ffffff;
+}
+
+.footer-color {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.anthem-blue {
+  color: #386eda;
+}
+
+.anthem-footer-theme {
+  background-color: #386eda;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 40px 0;
+}
+
+.anthem-footer-theme .footerButton {
+  border: 1px solid #ffffff;
+  border-radius: 8px;
+  color: #ffffff;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  font-weight: 700;
 }

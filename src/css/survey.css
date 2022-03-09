@@ -43,6 +43,10 @@ p {
   margin: 0 0 25px !important;
 }
 
+.sv_q_radiogroup_control_label p {
+  margin-left: 3px !important;
+}
+
 .MuiToolbar-root p {
   margin: 0 !important;
 }
@@ -91,18 +95,6 @@ h4 {
 
 .btn-default:visited {
   color: #1a92ce !important;
-}
-a:not([href='#']):visited {
-  color: #7834bc !important;
-}
-.nav a,
-a.btn {
-  text-decoration: none !important;
-  color: #1a92ce;
-}
-
-td a {
-  color: #1a92ce;
 }
 
 .btn-default {
@@ -212,4 +204,8 @@ input:disabled {
 
 .small {
   padding-left: 2.3em !important;
+}
+
+.surveyContainer {
+  padding-top: 5vh;
 }

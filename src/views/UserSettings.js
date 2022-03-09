@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Modal, DropdownButton, Form, Dropdown } from 'react-bootstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserCog } from '@fortawesome/free-solid-svg-icons';
+import { Modal, Form } from 'react-bootstrap';
+import Button from '@material-ui/core/Button';
+
 import {
   getLoggedInUser,
   expireAuthToken,
@@ -270,43 +270,37 @@ class UserSettings extends Component {
       });
     return (
       <span>
-        <DropdownButton
-          className="usersettings-dropdown"
-          title={
-            <span>
-              <FontAwesomeIcon
-                icon={faUserCog}
-                size="lg"
-                className="mr-2"
-                cursor="pointer"
-                aria-label="Settings Dropdown"
-              />
-            </span>
-          }
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            width: '100%',
+            justifyContent: 'space-between',
+          }}
         >
-          <Dropdown.Item onClick={() => this.navHome()}>
-            <i className="fa fa-home fa-fw" style={{ color: '#1a92ce' }}></i> Home
-          </Dropdown.Item>
+          <Button variant="text" onClick={() => this.navHome()}>
+            Home
+          </Button>
           {this.state.user ? (
             this.state.user.role === 'admin' ||
-              this.state.user.role === 'superadmin' ? (
-              <Dropdown.Item onClick={() => this.navAdmin()}>
-                <i className="fa fa-database fa-fw" style={{ color: '#1a92ce' }}></i> Admin Panel
-              </Dropdown.Item>
+            this.state.user.role === 'superadmin' ? (
+              <Button variant="text" onClick={() => this.navAdmin()}>
+                Admin Panel
+              </Button>
             ) : null
           ) : null}
-          <Dropdown.Item
+          <Button
+            variant="text"
             onClick={() =>
               (window.location = 'https://portal.ai-global.org/settings')
             }
           >
-            <i className="fa fa-users fa-fw" style={{ color: '#1a92ce' }}></i> Edit Account in AI Portal
-          </Dropdown.Item>
-          <Dropdown.Item onClick={() => this.handleLogout()}>
-            <i className="fa fa-sign-out fa-fw" style={{ color: '#1a92ce' }}></i > Log Out
-          </Dropdown.Item>
-        </DropdownButton>
-
+            Edit Account in AI Portal
+          </Button>
+          <Button variant="text" onClick={() => this.handleLogout()}>
+            Log Out
+          </Button>
+        </div>
         <Modal
           show={this.state.showEmailSettings}
           onHide={handleClose}

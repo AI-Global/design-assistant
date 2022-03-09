@@ -1,13 +1,29 @@
 import React, { Component } from 'react';
-import { Button, Table, Modal } from 'react-bootstrap';
 import { getLoggedInUser } from '../helper/AuthHelper';
+import { Button, Box, CircularProgress } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+import AssessmentGrid from '../Components/AssessmentGrid';
+import Assessment from '../Components/Assessment';
+import Signup from './../views/Signup';
+
 import api from '../api';
 import ReactGa from 'react-ga';
 import { withRouter } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
-import IconButton from '@material-ui/core/IconButton';
+
+const LandingButton = withStyles(() => ({
+  root: {
+    borderRadius: '8px',
+    border: '1px solid',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#386EDA',
+    color: '#386EDA',
+    '&:hover': {
+      backgroundColor: '#386EDA',
+      borderColor: '#386EDA',
+      color: '#FFFFFF',
+    },
+  },
+}))(Button);
 
 const StartSurveyHandler = () => {
   ReactGa.event({
@@ -16,6 +32,8 @@ const StartSurveyHandler = () => {
   });
 };
 
+const guidancePath =
+  'https://docs.google.com/presentation/d/1EDPhyRhIsiOrujLcHQv_fezXfgOz4Rl7a8lyOM_guoA/edit#slide=id.p1';
 class UserSubmissions extends Component {
   constructor(props) {
     super(props);
@@ -24,18 +42,25 @@ class UserSubmissions extends Component {
       authToken: localStorage.getItem('authToken'),
       submissions: [],
       showDeleteWarning: false,
+      isLoggedIn: false,
+      showSignupModal: false,
     };
   }
 
   componentDidMount() {
+    this.state.isLoggedIn = true;
     // get the logged in user and their submissions from backend
     getLoggedInUser().then((user) => {
       if (user) {
         this.setState({ user: user });
-        api.get('submissions/user/' + user._id).then((res) => {
-          var submissions = res.data;
-          this.setState(submissions);
-        });
+        this.setState({ collabRole: user.collabRole });
+        api
+          .get('submissions/' + this.state.collabRole)
+
+          .then((res) => {
+            var submissions = res.data;
+            this.setState(submissions);
+          });
       }
     });
   }
@@ -86,6 +111,7 @@ class UserSubmissions extends Component {
             region: submission.region,
             lifecycle: submission.lifecycle,
           },
+          userType: submission.userType,
         },
       });
     }
@@ -95,6 +121,8 @@ class UserSubmissions extends Component {
     this.setState({ currentSubmissionIdx: index });
     this.setState({ showDeleteWarning: true });
   }
+
+  handleSignupShow = () => this.setState({ showSignupModal: true });
 
   deleteSurvey() {
     let currentSubmissionIdx = this.state.currentSubmissionIdx;
@@ -151,131 +179,143 @@ class UserSubmissions extends Component {
 
   render() {
     const handleClose = () => this.setState({ showDeleteWarning: false });
-    return (
-      <div>
-        <Modal
-          aria-labelledby="contained-modal-title-vcenter"
-          centered
-          show={this.state.showDeleteWarning}
-          backdrop="static"
-          keyboard={false}
-        >
-          <Modal.Header>
-            <Modal.Title id="contained-modal-title-vcenter">
-              Warning!
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            Are you sure you would like to delete this submission?
-          </Modal.Body>
-          <Modal.Footer>
-            <Button id="DeleteSurveyButton" onClick={() => this.deleteSurvey()}>
-              Yes
-            </Button>
-            <Button onClick={() => handleClose()}>Cancel</Button>
-          </Modal.Footer>
-        </Modal>
+
+    if (!this.state.isLoggedIn) {
+      return (
         <div>
-          <div className="card">
-            <div className="card-header">Existing Surveys</div>
-            <div className="card-body">
-              <Table bordered responsive className="survey-results-table">
-                <thead>
-                  <tr>
-                    <th>Project Name</th>
-                    <th>Last Updated</th>
-                    <th width="120px"></th>
-                    <th width="100px"></th>
-                    <th width="75px"></th>
-                    <th width="75px"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {this.state.submissions.map((submission, index) => {
-                    return (
-                      <tr key={index}>
-                        <td>
-                          {submission?.projectName
-                            ? submission?.projectName
-                            : 'No Project Name'}
-                        </td>
-                        <td>
-                          {new Date(submission.date).toLocaleString('en-US', {
-                            timeZone:
-                              Intl?.DateTimeFormat()?.resolvedOptions()
-                                ?.timeZone ?? 'UTC',
-                          })}
-                        </td>
-                        <td width="120px" className="text-center">
-                          {!submission.completed && (
-                            <Button
-                              block
-                              onClick={() => {
-                                this.resumeSurvey(index);
-                                StartSurveyHandler();
-                              }}
-                            >
-                              Resume
-                            </Button>
-                          )}
-                          {submission.completed && (
-                            <Button
-                              block
-                              onClick={() => {
-                                this.resumeSurvey(index);
-                                StartSurveyHandler();
-                              }}
-                              className="results-button"
-                            >
-                              Results
-                            </Button>
-                          )}
-                        </td>
-                        <td width="100px">
-                          <Button
-                            block
-                            onClick={() => {
-                              this.cloneSurvey(index);
-                            }}
-                          >
-                            Clone
-                          </Button>
-                        </td>
-                        <td width="75px" className="text-center">
-                          {submission.completed && (
-                            <IconButton
-                              aria-label="edit survey"
-                              onClick={() => {
-                                this.editSurvey(index);
-                              }}
-                            >
-                              <EditIcon />
-                            </IconButton>
-                          )}
-                        </td>
-                        <td width="75px" className="text-center">
-                          <IconButton
-                            aria-label="delete survey"
-                            onClick={() => {
-                              this.showDeleteWarning(index);
-                            }}
-                          >
-                            <DeleteOutlineIcon />
-                          </IconButton>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </Table>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              width: '100%',
+              marginTop: '2rem',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-around',
+                width: '50%',
+              }}
+            >
+              <Signup signedOut={true} admin={true} />
+              <LandingButton
+                variant="outlined"
+                type="button"
+                href={guidancePath}
+              >
+                GUIDE LINK
+              </LandingButton>
+            </div>
+            <Box mt={1} />
+          </div>
+          <Box mt={10} />
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              width: '100%',
+              height: '400px',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                width: '50%',
+              }}
+            >
+              With‌ ‌our‌ ‌esteemed‌ ‌community‌ ‌of‌ ‌subject‌ ‌matter‌
+              ‌experts‌ ‌ranging‌ ‌from‌ ‌engineers,‌ ‌to‌ ethicists,‌ ‌to‌
+              ‌policy‌ ‌makers,‌ ‌we‌ ‌have‌ ‌taken‌ ‌the‌ ‌most‌ ‌cited‌
+              ‌principles,‌ ‌whitepapers,‌ ‌and‌ policy‌ ‌documents‌ ‌published‌
+              ‌by‌ ‌academics,‌ ‌standards‌ ‌organizations,‌ ‌and‌ ‌companies‌
+              and‌ ‌translated‌ ‌them‌ ‌into‌ ‌comprehensive‌ ‌questions.‌
+              <Box mt={5} />
+              <div>
+                Our‌ ‌hope‌ ‌is‌ ‌that‌ ‌you‌ ‌will‌ ‌work‌ ‌with‌ ‌your‌
+                ‌colleagues‌ ‌who‌ ‌are‌ ‌responsible‌ ‌for‌ ‌different‌
+                aspects‌ ‌of‌ ‌your‌ ‌business‌ ‌to‌ ‌fill‌ ‌out‌ ‌the‌ ‌Design‌
+                ‌Assistant.‌ ‌Whether‌ ‌you‌ ‌are‌ ‌just‌ ‌thinking‌ about‌
+                ‌how‌ ‌to‌ ‌integrate‌ ‌AI‌ ‌tools‌ ‌into‌ ‌your‌ ‌business,‌
+                ‌or‌ ‌you‌ ‌have‌ ‌already‌ ‌deployed‌ several‌ ‌models,‌ ‌this‌
+                ‌tool‌ ‌is‌ ‌for‌ ‌you.‌ ‌We‌ ‌do‌ ‌think‌ ‌that‌ ‌these‌
+                ‌questions‌ ‌are‌ ‌best‌ ‌to‌ ‌think‌ about‌ ‌at‌ ‌the‌ ‌start‌
+                ‌of‌ ‌your‌ ‌project,‌ ‌however,‌ ‌we‌ ‌do‌ ‌think‌ ‌that‌ ‌the‌
+                ‌Design‌ ‌Assistant‌ ‌can‌ ‌be‌ used‌ ‌throughout‌ ‌the‌
+                ‌lifecycle‌ ‌of‌ ‌your‌ ‌project!‌
+              </div>
             </div>
           </div>
         </div>
-        <div className="float-right mr-3 mt-2">
-          <Button onClick={() => this.startSurvey()}>Start New Survey</Button>
+      );
+    } else {
+      return (
+        <div>
+          <div>
+            <Box mt={10} />
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+              }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'space-around',
+                  width: '50%',
+                }}
+              >
+                {this.state?.user?.collabRole !== 'legalCompliance' && (
+                  <LandingButton
+                    variant="outlined"
+                    type="button"
+                    onClick={() => this.startSurvey()}
+                  >
+                    Start Assessment
+                  </LandingButton>
+                )}
+                <LandingButton
+                  variant="outlined"
+                  type="button"
+                  href={guidancePath}
+                >
+                  GUIDE LINK
+                </LandingButton>
+              </div>
+            </div>
+            <Assessment></Assessment>
+            <Box mb={5} />
+            <Box mt={10} />
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+              }}
+            >
+              <div
+                style={{
+                  width: '90%',
+                }}
+              >
+                <AssessmentGrid
+                  submissions={this.state.submissions}
+                  userName={this.state?.user?.username}
+                  collabRole={this.state?.user?.collabRole}
+                  handleDelete={() => this.deleteSurvey()}
+                  handleResume={(index) => this.resumeSurvey(index)}
+                ></AssessmentGrid>
+                <Box mt={4} />
+              </div>
+            </div>
+            <Box mt={4} />
+          </div>
         </div>
-      </div>
-    );
+      );
+    }
   }
 }
 
