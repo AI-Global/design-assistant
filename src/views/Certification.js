@@ -69,7 +69,7 @@ const displayQuestion = (result, question) => {
 export default function Certification({ dimension, results, questions }) {
   return (
     <>
-      <DimensionHead dimension={dimension} />
+      <DimensionHead dimension={dimension} questions={questions} results={results} />
       <div className="certification mt-3">
         <Table
           id={'certification-' + dimension}
@@ -103,9 +103,9 @@ export default function Certification({ dimension, results, questions }) {
             </tr>
           </thead>
           <tbody>
-            {questions.map((question) => {
+            {/* {questions.map((question) => {
               return displayQuestion(results[question?.name], question);
-            })}
+            })} */}
           </tbody>
         </Table>
       </div>

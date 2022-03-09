@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Table } from 'react-bootstrap';
 import { ScoreBar } from '../Components/ScoreBar';
+import calculateQuestionScore from '../helper/QuestionScore';
 import riskScoreLegend from '../assets/svg/risk-legend.svg'
 import mitigationScoreLegend from '../assets/svg/mitigation-legend.svg';
 
@@ -63,7 +64,24 @@ const displayDimension = (result, question) => {
   );
 }
 
-export const DimensionHead = ({ dimension }) => {
+export const DimensionHead = ({ dimension, questions, results, riskWeight = 1 }) => {
+  var dimensionScore = 0;
+  var maxDimensionScore = 0;
+  questions.map((question) => {
+    let selectedChoices = results[question.name];
+    let questionScore = calculateQuestionScore(
+      question,
+      selectedChoices,
+      riskWeight
+    );
+    dimensionScore += questionScore.score;
+    maxDimensionScore += questionScore.maxScore;
+    return dimensionScore;
+  });
+  if (dimensionScore < 0) {
+    dimensionScore = 0;
+  }
+  var percentageScore = (dimensionScore / maxDimensionScore) * 100;
   return (
     <>
       <div className="certification mt-3">
@@ -108,7 +126,7 @@ export const DimensionHead = ({ dimension }) => {
             </tr>
             <tr>
               <td><strong>Total score:</strong></td>
-              <td><ScoreBar score={20} palette="risk" /></td>
+              <td><ScoreBar score={percentageScore} palette="risk" /></td>
               <td><ScoreBar score={13} palette="mitigation" /></td>
             </tr>
             {/* {questions.map((question) => {
@@ -123,6 +141,8 @@ export const DimensionHead = ({ dimension }) => {
 
 DimensionHead.propTypes = {
   dimension: PropTypes.object.isRequired,
+  questions: PropTypes.array.isRequired,
+  results: PropTypes.object.isRequired,
 }
 
 
