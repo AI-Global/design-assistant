@@ -1,10 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Table } from 'react-bootstrap';
-import { DimensionHead } from './DimensionHead'
 
-
-const displayQuestion = (result, question) => {
+const displayDimension = (result, question) => {
   var choices;
   if (Array.isArray(result)) {
     choices = question?.choices?.filter((choice) =>
@@ -62,14 +60,9 @@ const displayQuestion = (result, question) => {
   );
 }
 
-/**
- * Generate the RAI Certification document from the submission data.
- * @returns {React.Component}
- */
-export default function Certification({ dimension, results, questions }) {
+export const DimensionHead = ({ dimension }) => {
   return (
     <>
-      <DimensionHead dimension={dimension} />
       <div className="certification mt-3">
         <Table
           id={'certification-' + dimension}
@@ -103,18 +96,18 @@ export default function Certification({ dimension, results, questions }) {
             </tr>
           </thead>
           <tbody>
-            {questions.map((question) => {
+            {/* {questions.map((question) => {
               return displayQuestion(results[question?.name], question);
-            })}
+            })} */}
           </tbody>
         </Table>
       </div>
     </>
-  );
+  )
 }
 
-Certification.propTypes = {
-  dimension: PropTypes.object,
-  results: PropTypes.object,
-  questions: PropTypes.array,
+DimensionHead.propTypes = {
+  dimension: PropTypes.object.isRequired,
 }
+
+

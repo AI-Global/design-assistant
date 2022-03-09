@@ -349,7 +349,7 @@ export default class Results extends Component {
                       return (
                         <Tab.Pane key={idx} eventKey={dimension.label}>
                           <Certification
-                            dimension={dimension.label}
+                            dimension={dimension}
                             results={surveyResults}
                             questions={questions.filter(
                               (x) => x.score?.dimension === dimension.label
