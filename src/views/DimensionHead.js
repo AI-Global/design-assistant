@@ -75,6 +75,7 @@ export const DimensionHead = ({ dimension }) => {
               <th
                 role="columnheader"
                 scope="col"
+                style={{ width: '20%' }}
                 className="certification-headers"
               >
                 {dimension?.name}
@@ -82,6 +83,7 @@ export const DimensionHead = ({ dimension }) => {
               <th
                 role="columnheader"
                 scope="col"
+                style={{ width: '40%' }}
                 className="certification-headers"
               >
                 Risk Scores
@@ -96,6 +98,16 @@ export const DimensionHead = ({ dimension }) => {
             </tr>
           </thead>
           <tbody>
+            <tr>
+              <td>{dimension?.description}</td>
+              <td>Risk Score Bar Legend</td>
+              <td>Mtigation Score Legend</td>
+            </tr>
+            <tr>
+              <td><strong>Total score:</strong></td>
+              <td>Risk Score Bar</td>
+              <td>Mtigation Score Bar</td>
+            </tr>
             {/* {questions.map((question) => {
               return displayQuestion(results[question?.name], question);
             })} */}
