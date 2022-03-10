@@ -1,25 +1,30 @@
+import React, { Component } from 'react';
 import $ from 'jquery';
 import api from '../api';
 import Login from './Login';
 import ReactGa from 'react-ga';
 import showdown from 'showdown';
 import * as Survey from 'survey-react';
-import Card from 'react-bootstrap/Card';
-import { Button, Form } from 'react-bootstrap';
-import React, { Component } from 'react';
-import Modal from 'react-bootstrap/Modal';
+import {
+  Card,
+  Form,
+  Accordion,
+  ModalBody,
+  ModalTitle,
+  ModalFooter,
+  DropdownButton,
+  Modal,
+} from 'react-bootstrap';
+import { Button } from '@material-ui/core';
+
 import * as widgets from 'surveyjs-widgets';
 import { withRouter } from 'react-router-dom';
-import Accordion from 'react-bootstrap/Accordion';
-import ModalBody from 'react-bootstrap/ModalBody';
-import ModalTitle from 'react-bootstrap/ModalTitle';
-import ModalFooter from 'react-bootstrap/ModalFooter';
 import ModalHeader from 'react-bootstrap/ModalHeader';
-import DropdownButton from 'react-bootstrap/DropdownButton';
 import { ToastContainer, toast } from 'react-toastify';
 import { getLoggedInUser } from '../helper/AuthHelper';
 
 import 'react-toastify/dist/ReactToastify.css';
+import { AssessmentStepper } from '../Components/AssessmentStepper';
 
 // set up survey styles and properties for rendering html
 Survey.StylesManager.applyTheme('bootstrapmaterial');
@@ -58,11 +63,17 @@ class DesignAssistantSurvey extends Component {
       submission_id: this?.props?.location?.state?.submission_id,
       user_id: this?.props?.location?.state?.user_id,
       localResponses: JSON.parse(localStorage.getItem('localResponses')),
+      currentPageIndex: null,
+      userQuestionAnswered: !!this?.props?.location?.state?.userType,
+      userAnswer: this?.props?.location?.state?.userType,
     };
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
     this.handleOpenEmptyModal = this.handleOpenEmptyModal.bind(this);
     this.handleCloseEmptyModal = this.handleCloseEmptyModal.bind(this);
+    this.submitUserQuestion = this.submitUserQuestion.bind(this);
+    this.updateUserAnswer = this.updateUserAnswer.bind(this);
+    this.showAlternateReport = this.showAlternateReport.bind(this);
   }
 
   // Request questions JSON from backend
@@ -78,7 +89,9 @@ class DesignAssistantSurvey extends Component {
     api.get('metadata').then((res) => {
       this.setState({ metadata: res.data });
     });
-    this.getQuestions();
+    if (this?.props?.location?.state?.userType) {
+      this.getQuestions();
+    }
   }
 
   componentDidUpdate() {
@@ -89,18 +102,44 @@ class DesignAssistantSurvey extends Component {
         JSON.stringify(this.state.model?.data)
       );
     }
-
-    // associate submissions with the user if they sign-in mid-survey
-    if (!this.state?.user_id) {
-      getLoggedInUser().then((user) => {
-        if (user) this.setState({ user_id: user._id });
-      });
-    }
   }
 
   // clear local storage before navigating away
   componentWillUnmount() {
     localStorage.removeItem('localResponses');
+  }
+
+  updateUserAnswer(value) {
+    this.setState({ userAnswer: value });
+  }
+
+  submitUserQuestion() {
+    if (this.state.userAnswer) {
+      this.getQuestions();
+      this.createSubmission();
+      this.setState({ userQuestionAnswered: true });
+    }
+  }
+
+  async createSubmission() {
+    if (!this.state.submission_id) {
+      api
+        .post('submissions', {
+          userId: this.state?.user_id,
+          submission: {},
+          date: new Date(),
+          projectName: '',
+          completed: false,
+          domain: this.state.domainFilters,
+          region: this.state.regionFilters,
+          roles: this.state.roleFilters,
+          lifecycle: this.state.lifecycleFilters,
+        })
+        .then((res) => {
+          const { _id } = res.data;
+          this.setState({ submission_id: _id });
+        });
+    }
   }
 
   async getQuestions(submissions) {
@@ -111,6 +150,7 @@ class DesignAssistantSurvey extends Component {
           domains: this.state.domainFilters,
           regions: this.state.regionFilters,
           lifecycles: this.state.lifecycleFilters,
+          userType: this.state.userAnswer,
         },
       })
       .then((res) => {
@@ -252,10 +292,15 @@ class DesignAssistantSurvey extends Component {
       });
   }
 
-  nextPath(path) {
+  nextPath(path, state) {
     this.props.history.push({
       pathname: path,
-      state: { questions: this.state.json, responses: this.state.model.data },
+      state: {
+        questions: this.state.json,
+        responses: this.state.model.data,
+        submissionId: this.state.submission_id,
+        ...state,
+      },
     });
   }
 
@@ -282,10 +327,10 @@ class DesignAssistantSurvey extends Component {
   resetSurvey() {
     // do we need to delete submission object here?
     // because we would need to call the database here
-    this.state.model.clear();
+    // this.state.model.clear();
     this.handleCloseModal();
     this.handleCloseEmptyModal();
-    window.location.pathname = '/';
+    this.props.history.push({ pathname: '/' });
   }
 
   prevPage() {
@@ -304,7 +349,7 @@ class DesignAssistantSurvey extends Component {
     // so just make an update call
 
     let title = this.state.json?.pages[0]?.elements?.find(
-      (q) => q?.title?.default === 'Title of project'
+      (q) => q?.title?.default === 'Project Name'
     );
     let dateTime = new Date();
     let projectName = this.state.model.data[title?.name] ?? '';
@@ -324,20 +369,42 @@ class DesignAssistantSurvey extends Component {
         region: this.state.regionFilters,
         roles: this.state.roleFilters,
         lifecycle: this.state.lifecycleFilters,
+        userType: this.state?.userAnswer,
       })
       .then((res) => {
         toast('Saving Responses', {
           toastId: 'saving',
         });
         let submission = res.data;
-        this.setState({ submission_id: submission._id });
+        if (!this.state.submission_id) {
+          this.setState({ submission_id: submission._id });
+        }
       });
+  }
+
+  /* determine if user should go to be shown the normal results
+  page or be shown the pilot repot based on lifecycle
+  */
+  showAlternateReport() {
+    const question = this.state.json?.pages[0]?.elements?.find(
+      (q) => q?.title?.default === 'Life Cycle Phase'
+    );
+    const answer = this.state.model.data[question?.name] ?? '';
+    const lifeCycle = question?.choices.find(
+      (choice) => choice.value === answer
+    )?.text?.default;
+
+    if (['Develop and Deploy', 'Operate', 'Decommission'].includes(lifeCycle)) {
+      return true;
+    }
+    return false;
   }
 
   finish() {
     this.save(true);
     this.state.model.doComplete();
-    this.nextPath('/Results/');
+    const alternateReport = this.showAlternateReport();
+    this.nextPath('/Results/', { alternateReport });
   }
 
   onComplete(survey, options) {
@@ -394,7 +461,7 @@ class DesignAssistantSurvey extends Component {
   }
 
   navPage(pageNumber) {
-    const survey = this.state.model;
+    const survey = this.state?.model;
     survey.currentPage = survey.pages[pageNumber];
     this.setState(this.state);
   }
@@ -445,234 +512,282 @@ class DesignAssistantSurvey extends Component {
 
   render() {
     var number = 1;
-    return this.state.model ? (
-      <div>
-        <div className="dimensionNav">
-          <Accordion>
-            {this.state.dimArray.map((dimension, index) => {
-              return (
-                <Card key={index}>
-                  <Accordion.Toggle as={Card.Header} eventKey={index + 1}>
-                    {dimension}
+    return this.state.model || !this.state.userQuestionAnswered ? (
+      <div className="surveyContainer">
+        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <Login />
+        </div>
+        {!this.state.userQuestionAnswered ? (
+          <div style={{ padding: '40px' }}>
+            <p style={{ paddingTop: '20px' }}>
+              Describe the user (person who operates the AI system) and the data
+              subject (person whose data is processed by the system). Example:
+              health care worker (user) operates system that helps diagnose
+              patient (data subject).
+            </p>
+            <fieldset id="userQuestion">
+              <div>
+                <input
+                  type="radio"
+                  value="userNotData"
+                  name="userQuestion"
+                  onChange={(event) =>
+                    this.updateUserAnswer(event.target.value)
+                  }
+                />
+                <label for="userNotData" style={{ paddingLeft: '10px' }}>
+                  User and data subject are two separate individuals (e.g.
+                  diagnostic system operated by health care worker)
+                </label>
+              </div>
+              <div>
+                <input
+                  type="radio"
+                  value="userIsData"
+                  name="userQuestion"
+                  onChange={(event) =>
+                    this.updateUserAnswer(event.target.value)
+                  }
+                />
+                <label for="userIsData" style={{ paddingLeft: '10px' }}>
+                  User and data subject are the same individual (e.g.
+                  interactive symptom checker operated by patient)
+                </label>
+              </div>
+              <div>
+                <input
+                  type="radio"
+                  value="noUser"
+                  name="userQuestion"
+                  onChange={(event) =>
+                    this.updateUserAnswer(event.target.value)
+                  }
+                />
+                <label for="noUser" style={{ paddingLeft: '10px' }}>
+                  There is no user (e.g. AI system used to automate some
+                  administrative process){' '}
+                </label>
+              </div>
+            </fieldset>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => this.submitUserQuestion()}
+              style={{ marginTop: '20px' }}
+            >
+              Start Survey
+            </Button>
+          </div>
+        ) : (
+          <div>
+            <div className="dimensionNav">
+              <AssessmentStepper
+                dimArray={this.state.dimArray}
+                pages={this.state.json.pages}
+                model={this.state.model}
+                onStepClick={this.navPage.bind(this)}
+              />
+              <Accordion className="questionFilter">
+                <Card>
+                  <Accordion.Toggle as={Card.Header} eventKey="9">
+                    Filters
                   </Accordion.Toggle>
-                  <Accordion.Collapse eventKey={index + 1}>
-                    <Card.Body>
-                      {this?.state?.json?.pages?.map((page, index) => {
-                        return page.name
-                          .toLowerCase()
-                          .includes(dimension.substring(0, 4).toLowerCase())
-                          ? page.elements.map((question, i) => {
-                            return !question.name.includes('other') &&
-                              (!question.visibleIf ||
-                                this.shouldDisplayNav(question)) ? (
-                              <Button
-                                style={{ margin: '0.75em' }}
-                                key={i}
-                                id={
-                                  this.state.model.data[question.name]
-                                    ? 'answered'
-                                    : 'unanswered'
-                                }
-                                onClick={() => this.navPage(index)}
-                              >
-                                {question.visibleIf ? '' : number++}
-                              </Button>
+                  <Accordion.Collapse eventKey="9">
+                    <Card.Body className="cardBody">
+                      <DropdownButton title="Roles" className="filterDrop">
+                        <Form>
+                          {this.state.metadata.roles.map((role, index) => {
+                            return index + 1 !==
+                              this.state.metadata.roles.length ? (
+                              <Form.Check
+                                type="checkbox"
+                                checked={this.state.roleFilters.includes(
+                                  index + 1
+                                )}
+                                label={role.name}
+                                id={index}
+                                key={index}
+                                value={index + 1}
+                                onChange={(e) => this.addRole(e.target.value)}
+                              />
                             ) : null;
-                          })
-                          : null;
-                      })}
+                          })}
+                        </Form>
+                        <Button
+                          id="clearFilter"
+                          onClick={() => this.clearFilter('roles')}
+                        >
+                          <div>
+                            Reset <i className="fa fa-undo fa-fw"></i>
+                          </div>
+                        </Button>
+                      </DropdownButton>
+                      <DropdownButton title="Industry" className="filterDrop">
+                        <Form>
+                          {this.state.metadata.domain.map((domain, index) => {
+                            return (
+                              <Form.Check
+                                type="checkbox"
+                                checked={this.state.domainFilters.includes(
+                                  index + 1
+                                )}
+                                label={domain.name}
+                                id={index}
+                                key={index}
+                                value={index + 1}
+                                onChange={(e) => this.addDomain(e.target.value)}
+                              />
+                            );
+                          })}
+                        </Form>
+                        <Button
+                          id="clearFilter"
+                          onClick={() => this.clearFilter('domain')}
+                        >
+                          <div>
+                            Reset <i className="fa fa-undo fa-fw"></i>
+                          </div>
+                        </Button>
+                      </DropdownButton>
+                      <DropdownButton title="Regions" className="filterDrop">
+                        <Form>
+                          {this.state.metadata.region.map((region, index) => {
+                            return (
+                              <Form.Check
+                                type="checkbox"
+                                checked={this.state.regionFilters.includes(
+                                  index + 1
+                                )}
+                                label={region.name}
+                                id={index}
+                                key={index}
+                                value={index + 1}
+                                onChange={(e) => this.addRegion(e.target.value)}
+                              />
+                            );
+                          })}
+                        </Form>
+                        <Button
+                          id="clearFilter"
+                          onClick={() => this.clearFilter('region')}
+                        >
+                          <div>
+                            Reset <i className="fa fa-undo fa-fw"></i>
+                          </div>
+                        </Button>
+                      </DropdownButton>
+                      <DropdownButton
+                        title="Life Cycles"
+                        className="filterDrop"
+                      >
+                        <Form>
+                          {this.state.metadata.lifecycle.map(
+                            (lifecycle, index) => {
+                              return index + 1 !==
+                                this.state.metadata.lifecycle.length ? (
+                                <Form.Check
+                                  type="checkbox"
+                                  checked={this.state.lifecycleFilters.includes(
+                                    index + 1
+                                  )}
+                                  label={lifecycle.name}
+                                  id={index}
+                                  key={index}
+                                  value={index + 1}
+                                  onChange={(e) =>
+                                    this.addLifecycle(e.target.value)
+                                  }
+                                />
+                              ) : null;
+                            }
+                          )}
+                        </Form>
+                        <Button
+                          id="clearFilter"
+                          onClick={() => this.clearFilter('lifecycle')}
+                        >
+                          <div>
+                            Reset <i className="fa fa-undo fa-fw"></i>
+                          </div>
+                        </Button>
+                      </DropdownButton>
+                      <Button
+                        id="saveButton"
+                        className="filterApply"
+                        onClick={() => this.applyFilters()}
+                      >
+                        Apply Filters
+                      </Button>
                     </Card.Body>
                   </Accordion.Collapse>
                 </Card>
-              );
-            })}
-          </Accordion>
-          <Accordion className="questionFilter">
-            <Card>
-              <Accordion.Toggle as={Card.Header} eventKey="9">
-                Filters
-              </Accordion.Toggle>
-              <Accordion.Collapse eventKey="9">
-                <Card.Body className="cardBody">
-                  <DropdownButton title="Roles" className="filterDrop">
-                    <Form>
-                      {this.state.metadata.roles.map((role, index) => {
-                        return index + 1 !==
-                          this.state.metadata.roles.length ? (
-                          <Form.Check
-                            type="checkbox"
-                            checked={this.state.roleFilters.includes(index + 1)}
-                            label={role.name}
-                            id={index}
-                            key={index}
-                            value={index + 1}
-                            onChange={(e) => this.addRole(e.target.value)}
-                          />
-                        ) : null;
-                      })}
-                    </Form>
-                    <Button
-                      id="clearFilter"
-                      onClick={() => this.clearFilter('roles')}
-                    >
-                      <div>
-                        Reset <i className="fa fa-undo fa-fw"></i>
-                      </div>
-                    </Button>
-                  </DropdownButton>
-                  <DropdownButton title="Industry" className="filterDrop">
-                    <Form>
-                      {this.state.metadata.domain.map((domain, index) => {
-                        return (
-                          <Form.Check
-                            type="checkbox"
-                            checked={this.state.domainFilters.includes(
-                              index + 1
-                            )}
-                            label={domain.name}
-                            id={index}
-                            key={index}
-                            value={index + 1}
-                            onChange={(e) => this.addDomain(e.target.value)}
-                          />
-                        );
-                      })}
-                    </Form>
-                    <Button
-                      id="clearFilter"
-                      onClick={() => this.clearFilter('domain')}
-                    >
-                      <div>
-                        Reset <i className="fa fa-undo fa-fw"></i>
-                      </div>
-                    </Button>
-                  </DropdownButton>
-                  <DropdownButton title="Regions" className="filterDrop">
-                    <Form>
-                      {this.state.metadata.region.map((region, index) => {
-                        return (
-                          <Form.Check
-                            type="checkbox"
-                            checked={this.state.regionFilters.includes(
-                              index + 1
-                            )}
-                            label={region.name}
-                            id={index}
-                            key={index}
-                            value={index + 1}
-                            onChange={(e) => this.addRegion(e.target.value)}
-                          />
-                        );
-                      })}
-                    </Form>
-                    <Button
-                      id="clearFilter"
-                      onClick={() => this.clearFilter('region')}
-                    >
-                      <div>
-                        Reset <i className="fa fa-undo fa-fw"></i>
-                      </div>
-                    </Button>
-                  </DropdownButton>
-                  <DropdownButton title="Life Cycles" className="filterDrop">
-                    <Form>
-                      {this.state.metadata.lifecycle.map((lifecycle, index) => {
-                        return index + 1 !==
-                          this.state.metadata.lifecycle.length ? (
-                          <Form.Check
-                            type="checkbox"
-                            checked={this.state.lifecycleFilters.includes(
-                              index + 1
-                            )}
-                            label={lifecycle.name}
-                            id={index}
-                            key={index}
-                            value={index + 1}
-                            onChange={(e) => this.addLifecycle(e.target.value)}
-                          />
-                        ) : null;
-                      })}
-                    </Form>
-                    <Button
-                      id="clearFilter"
-                      onClick={() => this.clearFilter('lifecycle')}
-                    >
-                      <div>
-                        Reset <i className="fa fa-undo fa-fw"></i>
-                      </div>
-                    </Button>
-                  </DropdownButton>
-                  <Button
-                    id="saveButton"
-                    className="filterApply"
-                    onClick={() => this.applyFilters()}
-                  >
-                    Apply Filters
-                  </Button>
-                </Card.Body>
-              </Accordion.Collapse>
-            </Card>
-          </Accordion>
-        </div>
-        <div className="container" style={{ paddingTop: '2em' }}>
-          <div className="d-flex justify-content-center col">
-            {this.percent()}%
+              </Accordion>
+            </div>
+            {this.state.mount ? (
+              <div className="surveyQuestionContainer">
+                <Survey.Survey
+                  model={this.state.model}
+                  onComplete={this.onComplete}
+                />
+              </div>
+            ) : null}
           </div>
-        </div>
-        {this.state.mount ? (
-          <Survey.Survey
-            model={this.state.model}
-            onComplete={this.onComplete}
-          />
-        ) : null}
-        <div id="navCon" className="container">
-          <div id="navCard" className="card">
-            <div className="row no-gutters">
-              <div className="d-flex justify-content-start col">
-                <Button
-                  id="resetButton"
-                  className="btn btn-primary mr-2"
-                  onClick={this.handleOpenModal}
-                >
-                  Reset
-                </Button>
-              </div>
-              <div className="d-flex justify-content-center col">
-                <Button
-                  id="surveyNav"
-                  className="btn btn-primary mr-2"
-                  onClick={() => this.prevPage()}
-                  disabled={this.state.model.isFirstPage}
-                >
-                  Prev
-                </Button>
-                <Button
-                  id="surveyNav"
-                  className="btn btn-primary mr-2"
-                  onClick={() => this.nextPage()}
-                  disabled={this.state.model.isLastPage}
-                >
-                  Next
-                </Button>
-              </div>
-              <div className="d-flex justify-content-end col">
-                <Button
-                  className="btn btn-save mr-2"
-                  id="saveButton"
-                  onClick={() => this.save()}
-                >
-                  Save
-                </Button>
-                <Button
-                  className="bt btn-primary"
-                  onClick={() => this.finish()}
-                >
-                  Finish
-                </Button>
+        )}
+        {this.state.userQuestionAnswered && this.state.model && (
+          <div id="navCon" className="container">
+            <div id="navCard" className="card">
+              <div className="row no-gutters">
+                <div className="d-flex justify-content-start col">
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={this.handleOpenModal}
+                  >
+                    Reset
+                  </Button>
+                </div>
+                <div className="d-flex justify-content-center col">
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className="mr-2"
+                    onClick={() => this.prevPage()}
+                    disabled={this.state.model.isFirstPage}
+                  >
+                    Prev
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className="mr-2"
+                    onClick={() => this.nextPage()}
+                    disabled={this.state.model.isLastPage}
+                  >
+                    Next
+                  </Button>
+                </div>
+                <div className="d-flex justify-content-end col">
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className="mr-2"
+                    onClick={() => this.save()}
+                  >
+                    Save
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className="mr-2"
+                    onClick={() => this.finish()}
+                  >
+                    Finish
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
         <Modal
           size="md"
           aria-labelledby="contained-modal-title-vcenter"
@@ -690,8 +805,19 @@ class DesignAssistantSurvey extends Component {
             </p>
           </ModalBody>
           <ModalFooter>
-            <Button onClick={this.handleCloseModal}>No</Button>
-            <Button id="resetButton" onClick={() => this.resetSurvey()}>
+            <Button
+              variant="outlined"
+              color="primary"
+              className="mr-2"
+              onClick={this.handleCloseModal}
+            >
+              No
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => this.resetSurvey()}
+            >
               Yes
             </Button>
           </ModalFooter>
@@ -716,7 +842,7 @@ class DesignAssistantSurvey extends Component {
             </Button>
           </ModalFooter>
         </Modal>
-        <Login />
+
         <ToastContainer
           position="bottom-right"
           autoClose={2500}

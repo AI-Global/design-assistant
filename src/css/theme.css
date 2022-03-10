@@ -4,6 +4,10 @@
 * Autoprefixer: v9.7.6
 * Browsers: last 4 version
 */
+html,
+body {
+  height: 100%;
+}
 
 html {
   background-color: #262626;
@@ -16,7 +20,16 @@ html {
 }
 .banner {
   padding-top: 0.5rem;
+  display: flex;
+  justify-content: space-between;
 }
+
+.banner .logo {
+  max-width: 260px;
+  padding: 20px;
+  margin-left: 20px;
+}
+
 .banner .company-logo {
   max-width: 80px;
   padding: 10px;
@@ -67,10 +80,7 @@ html {
 }
 
 .copyright-footer {
-  position: relative;
-  bottom: 0px;
   width: 100%;
-  background-color: #262626;
 }
 
 .copyright {
@@ -256,14 +266,14 @@ form .btn:not(.btn-call-to-action) {
   border-top: 1px solid #ddd;
 }
 
-@media screen and (min-width: 1775px) {
+@media screen and (min-width: 1200px) {
   .dimensionNav {
     position: absolute;
-    left: 3em;
-    top: 14.5em;
+    left: 1em;
+    top: 8em;
     z-index: 5;
-    max-width: 18em;
-    min-width: 18em;
+    max-width: 20em;
+    min-width: 19em;
   }
 
   .questionFilter {
@@ -408,4 +418,19 @@ input[type='number'] {
 
 .progress-bar {
   background-color: #1a92ce !important;
+}
+
+.filter-width {
+  width: 85%;
+}
+.mainContainer {
+  width: 100%;
+  background-color: #ffffff;
+  flex-grow: 2;
+}
+
+.surveyQuestionContainer {
+  margin-left: 22em;
+  margin-right: 10em;
+  padding-top: 2em;
 }

@@ -24,6 +24,10 @@ const DimensionSchema = mongoose.Schema({
     enum: ['T', 'O', 'A', 'D', 'F', 'I', 'R'],
     required: true,
   },
+  description: {
+    type: String,
+    required: false,
+  }
 
 });
 
