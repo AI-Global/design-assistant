@@ -3,6 +3,9 @@ node_modules/
 /backend/questionsJSON.json
 *.env.bat
 *.env
+*.env.local
+*.env.dev
 build/
 .eslintcache
 scripts/archive
+src/assets/svg/Untitled.graffle
