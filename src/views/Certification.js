@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Table } from 'react-bootstrap';
 import { DimensionHead } from './DimensionHead'
+import { ScoreBar } from '../Components/ScoreBar';
 
 
 const displayQuestion = (result, question) => {
@@ -66,7 +67,8 @@ const displayQuestion = (result, question) => {
  * Generate the RAI Certification document from the submission data.
  * @returns {React.Component}
  */
-export default function Certification({ dimension, results, questions }) {
+export default function Certification({ dimension, results, questions, subDimensions }) {
+  const subDimensionsToDisplay = subDimensions.filter(d => d.dimensionID === dimension.dimensionID);
   return (
     <>
       <DimensionHead dimension={dimension} questions={questions} results={results} />
@@ -84,14 +86,14 @@ export default function Certification({ dimension, results, questions }) {
                 scope="col"
                 className="certification-headers"
               >
-                {dimension?.name}
+                {dimension?.name} sub-dimension scores:
               </th>
               <th
                 role="columnheader"
                 scope="col"
                 className="certification-headers"
               >
-                Risk Scores
+                Risk Scoressss
               </th>
               <th
                 role="columnheader"
@@ -106,6 +108,16 @@ export default function Certification({ dimension, results, questions }) {
             {/* {questions.map((question) => {
               return displayQuestion(results[question?.name], question);
             })} */}
+            {subDimensionsToDisplay.length > 0 && subDimensionsToDisplay.map((sd) => (
+              <tr>
+                <td>
+                  <strong>{sd.name}</strong>
+                  <p>{sd.description}</p>
+                </td>
+                <td><ScoreBar score={Math.floor(Math.random() * 101)} palette="risk" /></td>
+                <td><ScoreBar score={Math.floor(Math.random() * 101)} palette="mitigation" /></td>
+              </tr>
+            ))}
           </tbody>
         </Table>
       </div>
