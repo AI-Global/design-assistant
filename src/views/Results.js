@@ -194,7 +194,7 @@ export default class Results extends Component {
     // // edit a survey that has already been completed
     // const editSurvey = () => {
     //   this.props.history.push({
-    //     pathname: '/DesignAssistantSurvey',
+    //     pathname: '/AccessToCareAssessment',
     //     state: {
     //       prevResponses: submission.submission,
     //       submission_id: submission._id,
