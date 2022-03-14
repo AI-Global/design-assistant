@@ -16,11 +16,9 @@ const colorRanges = [
 
 const BarGraph = ({ score = 0, palette = "risk" }) => {
   const barWidth = score / 100 * 350;
-  console.log('score', score)
+  console.log('score', score, score === NaN)
   const barRange = colorRanges.filter(range => (range.palette == palette)).find(range => (score <= range.max))
   const barColor = barRange?.color ?? 'black'
-  console.log('barRange', barRange);
-  console.log('barColor', barColor);
   return <svg version="1.1" viewBox="483 422 389 80" width="389" height="80">
     <defs />
     <g id="BarGraph" fill-opacity="1" stroke-opacity="1" stroke-dasharray="none" fill="none" stroke="none">
@@ -35,7 +33,7 @@ const BarGraph = ({ score = 0, palette = "risk" }) => {
         </g>
         <g id="Graphic_5">
           <text transform="translate(488 452.776)" fill={barColor}>
-            <tspan font-family="Helvetica Neue" font-size="16" fill={barColor} x="6394885e-19" y="15">{score}</tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" fill={isNaN(score) ? "#e5e5e5" : barColor} x="6394885e-19" y="15">{isNaN(score) ? 'N/A' : score}</tspan>
           </text>
         </g>
       </g>
