@@ -6,6 +6,7 @@ import {
   TableBody,
   TableContainer,
   TableHead,
+  TableRow,
   Paper,
   Chip,
   TablePagination,
@@ -68,18 +69,20 @@ export default function AssessmentGrid(props) {
       >
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead>
-            {rowTitle.map((title, i) => (
-              <StyledTableCell>{title}</StyledTableCell>
-            ))}
+            <TableRow>
+              {rowTitle.map((title, i) => (
+                <StyledTableCell key={title}>{title}</StyledTableCell>
+              ))}
+            </TableRow>
           </TableHead>
           <TableBody>
             {submissions
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((submission, i) => (
-                <StyledTableRow stripedRows key={i}>
+                <StyledTableRow key={i}>
                   <StyledTableCell className={classes.anthemBlue}>
                     {submission.projectName === ''
-                      ? submission._id
+                      ? `Unnamed Project (${submission._id})`
                       : submission.projectName}
                   </StyledTableCell>
                   <StyledTableCell>{submission.users.username}</StyledTableCell>
@@ -137,6 +140,7 @@ export default function AssessmentGrid(props) {
       <Box mt={10} />
       <div style={{ display: 'flex', justifyContent: 'end' }}>
         <TablePagination
+          component="div"
           count={submissions.length}
           rowsPerPageOptions={[5, 10, 25]}
           rowsPerPage={rowsPerPage}
