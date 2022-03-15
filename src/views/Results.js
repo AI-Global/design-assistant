@@ -52,6 +52,7 @@ export default class Results extends Component {
       Dimensions: [],
       submissionId: null,
       alternateReport: false,
+      SubDimensions: [],
     };
     this.addRiskToSubmission = this.addRiskToSubmission.bind(this);
   }
@@ -60,6 +61,9 @@ export default class Results extends Component {
     ReactGa.pageview(window.location.pathname + window.location.search);
     api.get('dimensions').then((res) => {
       this.setState({ Dimensions: res.data });
+    });
+    api.get('subdimensions').then((res) => {
+      this.setState({ SubDimensions: res.data });
     });
     this.setState({ submissionId: this?.props?.location?.state?.submissionId });
     this.setState({
@@ -190,7 +194,7 @@ export default class Results extends Component {
     // // edit a survey that has already been completed
     // const editSurvey = () => {
     //   this.props.history.push({
-    //     pathname: '/DesignAssistantSurvey',
+    //     pathname: '/AccessToCareAssessment',
     //     state: {
     //       prevResponses: submission.submission,
     //       submission_id: submission._id,
@@ -390,6 +394,7 @@ export default class Results extends Component {
                                 questions={questions.filter(
                                   (x) => x.score?.dimension === dimension.label
                                 )}
+                                subDimensions={this.state.SubDimensions}
                               />
                             </Tab.Pane>
                           );

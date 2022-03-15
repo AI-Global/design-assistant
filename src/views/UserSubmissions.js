@@ -67,7 +67,7 @@ class UserSubmissions extends Component {
 
   startSurvey() {
     this.props.history.push({
-      pathname: '/DesignAssistantSurvey',
+      pathname: '/AccessToCareAssessment',
       state: { user_id: this.state?.user?._id },
     });
   }
@@ -101,7 +101,7 @@ class UserSubmissions extends Component {
       // If survey is not completed, pass previous submissions so SruveyJS can load them into the model
       // so user can continue
       this.props.history.push({
-        pathname: '/DesignAssistantSurvey',
+        pathname: '/AccessToCareAssessment',
         state: {
           prevResponses: submission.submission,
           submission_id: submission._id,
@@ -169,7 +169,7 @@ class UserSubmissions extends Component {
     this.setState({ currentSubmissionIdx: index });
     let submission = this.state.submissions[index];
     this.props.history.push({
-      pathname: '/DesignAssistantSurvey',
+      pathname: '/AccessToCareAssessment',
       state: {
         prevResponses: submission.submission,
         submission_id: submission._id,

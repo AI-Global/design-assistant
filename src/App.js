@@ -32,22 +32,22 @@ function Hero() {
         }}
       >
         <div>
-          <div class="banner">
+          <div className="banner">
             <div style={{ display: 'flex' }}>
-              <div class="logo-index">
+              <div className="logo-index">
                 <a href="/">
                   <img
                     src="/img/responsible-rai-logo.png"
                     alt="Responsible rai Logo"
-                    class="logo"
+                    className="logo"
                   />
                 </a>
               </div>
-              <div class="logo-index">
+              <div className="logo-index">
                 {/* <img
                   src="/img/anthem-logo.png"
                   alt="Anthem logo"
-                  class="logo"
+                  className="logo"
                 /> */}
               </div>
             </div>

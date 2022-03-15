@@ -1,7 +1,7 @@
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import axios from 'axios';
-import DesignAssistantSurvey from '../../views/DesignAssistantSurvey.js';
+import AccessToCareAssessment from '../../views/AccessToCareAssessment.js';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 jest.mock('axios');
@@ -61,7 +61,7 @@ test('Survey Renders', async () => {
   axios.post.mockResolvedValue(mockSubmission);
   await render(
     <Router>
-      <DesignAssistantSurvey />
+      <AccessToCareAssessment />
     </Router>
   );
   expect(screen.getByText('Page 1')).toBeTruthy();
@@ -72,7 +72,7 @@ test('Survey Page reset button pops modal to return to Home page', async () => {
   axios.post.mockResolvedValue(mockSubmission);
   await render(
     <Router>
-      <DesignAssistantSurvey />
+      <AccessToCareAssessment />
     </Router>
   );
   expect(screen.getByText('Page 1')).toBeTruthy();
@@ -87,7 +87,7 @@ test('Survey Page Next button renders page 2', async () => {
   axios.post.mockResolvedValue(mockSubmission);
   await render(
     <Router>
-      <DesignAssistantSurvey />
+      <AccessToCareAssessment />
     </Router>
   );
   expect(screen.getByText('Page 1')).toBeTruthy();
@@ -102,7 +102,7 @@ test('Survey Page finish button submits the survey', async () => {
   axios.post.mockResolvedValue(mockSubmission);
   await render(
     <Router>
-      <DesignAssistantSurvey />
+      <AccessToCareAssessment />
     </Router>
   );
   expect(screen.getByText('Page 1')).toBeTruthy();
@@ -116,7 +116,7 @@ test('Survey Page can open accoridon to navigate dimenstions', async () => {
   axios.post.mockResolvedValue(mockSubmission);
   await render(
     <Router>
-      <DesignAssistantSurvey />
+      <AccessToCareAssessment />
     </Router>
   );
 
@@ -128,7 +128,7 @@ test('Survey Page can open accoridon to filter select roles', async () => {
   axios.post.mockResolvedValue(mockSubmission);
   await render(
     <Router>
-      <DesignAssistantSurvey />
+      <AccessToCareAssessment />
     </Router>
   );
 

@@ -4,9 +4,10 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
 import { red } from '@material-ui/core/colors';
 import QuestionTable from '../Components/QuestionTable';
-import AnalyticsDashboard from '../Components/AnalyticsDashboard';
+// import AnalyticsDashboard from '../Components/AnalyticsDashboard';
 import AdminProviders from '../Components/AdminProviders';
 import AdminResources from '../Components/AdminResources';
+import Dimensions from '../Components/Dimensions';
 import {
   Tabs,
   Tab,
@@ -187,7 +188,7 @@ export default class AdminPanel extends Component {
   }
   enterSurvey(submission) {
     this.props.history.push({
-      pathname: '/DesignAssistantSurvey',
+      pathname: '/AccessToCareAssessment',
       state: {
         prevResponses: submission.submission,
         submission_id: submission._id,
@@ -250,23 +251,23 @@ export default class AdminPanel extends Component {
     return !Array.isArray(this.state.users)
       ? null
       : this.getFilteredUsers()
-          .slice(
-            this.state.usersPage * this.state.usersRowsPerPage,
-            this.state.usersPage * this.state.usersRowsPerPage +
-              this.state.usersRowsPerPage
-          )
-          .map((currentuser) => {
-            return (
-              <User
-                user={currentuser}
-                nextPath={this.nextPath}
-                changeRole={this.changeRole}
-                showModal={this.showDeleteUserModal}
-                role={this.role}
-                key={currentuser._id}
-              />
-            );
-          });
+        .slice(
+          this.state.usersPage * this.state.usersRowsPerPage,
+          this.state.usersPage * this.state.usersRowsPerPage +
+          this.state.usersRowsPerPage
+        )
+        .map((currentuser) => {
+          return (
+            <User
+              user={currentuser}
+              nextPath={this.nextPath}
+              changeRole={this.changeRole}
+              showModal={this.showDeleteUserModal}
+              role={this.role}
+              key={currentuser._id}
+            />
+          );
+        });
   }
 
   // returns the current page's rows for the submission table
@@ -275,7 +276,7 @@ export default class AdminPanel extends Component {
       .slice(
         this.state.submissionsPage * this.state.submissionsRowsPerPage,
         this.state.submissionsPage * this.state.submissionsRowsPerPage +
-          this.state.submissionsRowsPerPage
+        this.state.submissionsRowsPerPage
       )
       .map((currentsubmission, idx) => {
         let convertedDate = new Date(currentsubmission.date).toLocaleString(
@@ -746,6 +747,9 @@ export default class AdminPanel extends Component {
             </Tab>
             <Tab eventKey="trustedAIResources" title="Trusted AI Resources">
               <AdminResources />
+            </Tab>
+            <Tab eventKey="dimensions" title="Dimensions">
+              <Dimensions />
             </Tab>
           </Tabs>
           <Login />
