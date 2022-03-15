@@ -4,9 +4,10 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
 import { red } from '@material-ui/core/colors';
 import QuestionTable from '../Components/QuestionTable';
-import AnalyticsDashboard from '../Components/AnalyticsDashboard';
+// import AnalyticsDashboard from '../Components/AnalyticsDashboard';
 import AdminProviders from '../Components/AdminProviders';
 import AdminResources from '../Components/AdminResources';
+import Dimensions from '../Components/Dimensions';
 import {
   Tabs,
   Tab,
@@ -746,6 +747,9 @@ export default class AdminPanel extends Component {
             </Tab>
             <Tab eventKey="trustedAIResources" title="Trusted AI Resources">
               <AdminResources />
+            </Tab>
+            <Tab eventKey="dimensions" title="Dimensions">
+              <Dimensions />
             </Tab>
           </Tabs>
           <Login />

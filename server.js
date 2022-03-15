@@ -2,11 +2,11 @@ const { SystemUpdate } = require('@material-ui/icons');
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
-require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 5050;
-const MONGODB_URL = process.env.MONGODB_URL || 'mongodb://localhost:27017/test';
+const MONGODB_URL = process.env.NODE_ENV == 'production' && process.env.MONGODB_URL || 'mongodb://localhost:27017/rai-local-dev';
+
 
 // Force HTTPS
 app.use((req, res, next) => {

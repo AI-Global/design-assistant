@@ -1,0 +1,30 @@
+{"_id":{"$oid":"5fbe13fd4b93713a34bf747d"},"subDimensionID":1,"dimensionID":2,"__v":0,"name":"Strategy (AI/Technology Experience)","maxRisk":190,"maxMitigation":0}
+{"_id":{"$oid":"60545b136eb2823cd98155cf"},"subDimensionID":2,"dimensionID":2,"__v":0,"name":"Governance","maxRisk":250,"maxMitigation":0}
+{"_id":{"$oid":"60545b1c6eb2823cd98155d0"},"subDimensionID":3,"dimensionID":2,"__v":0,"name":"People & Training","maxRisk":380,"maxMitigation":0}
+{"_id":{"$oid":"6054632c6eb2823cd98155d1"},"subDimensionID":4,"dimensionID":3,"__v":0,"name":"human-in-the-loop/Agency/Autonomy","maxRisk":70,"maxMitigation":0}
+{"_id":{"$oid":"60547fa26eb2823cd98155d6"},"subDimensionID":5,"dimensionID":3,"__v":0,"name":"Disclosure of Automation","maxRisk":0,"maxMitigation":10}
+{"_id":{"$oid":"6054800d6eb2823cd98155d7"},"subDimensionID":6,"dimensionID":3,"__v":0,"name":"Dynamic nature of data (& data drift)","maxRisk":999,"maxMitigation":999}
+{"_id":{"$oid":"605480f16eb2823cd98155d8"},"subDimensionID":7,"dimensionID":3,"__v":0,"name":"Redress (all mitigation)","maxRisk":999,"maxMitigation":999}
+{"_id":{"$oid":"605480ff6eb2823cd98155d9"},"subDimensionID":8,"dimensionID":3,"__v":0,"name":"Internal logs for ethical decisions","maxRisk":999,"maxMitigation":999}
+{"_id":{"$oid":"605481256eb2823cd98155da"},"subDimensionID":9,"dimensionID":4,"__v":0,"name":"Sensitive Data","maxRisk":999,"maxMitigation":999}
+{"_id":{"$oid":"605481556eb2823cd98155db"},"subDimensionID":10,"dimensionID":4,"__v":0,"name":"Data Type (bias part 2)","maxRisk":999,"maxMitigation":999}
+{"_id":{"$oid":"605481666eb2823cd98155dc"},"subDimensionID":11,"dimensionID":4,"__v":0,"name":"Structure of data","maxRisk":999,"maxMitigation":999}
+{"_id":{"$oid":"605481766eb2823cd98155dd"},"subDimensionID":12,"dimensionID":4,"__v":0,"name":"Data Providence","maxRisk":999,"maxMitigation":999}
+{"_id":{"$oid":"605481926eb2823cd98155de"},"subDimensionID":13,"dimensionID":4,"__v":0,"name":"Representativeness","maxRisk":999,"maxMitigation":999}
+{"_id":{"$oid":"605481a36eb2823cd98155df"},"subDimensionID":14,"dimensionID":4,"__v":0,"name":"Data Qualification","maxRisk":9990,"maxMitigation":999}
+{"_id":{"$oid":"6054821c6eb2823cd98155e0"},"subDimensionID":15,"dimensionID":5,"__v":0,"name":"Breadth of deployment","maxRisk":999,"maxMitigation":999}
+{"_id":{"$oid":"605482c86eb2823cd98155e1"},"subDimensionID":16,"dimensionID":5,"__v":0,"name":"Domain (bias part 1)","maxRisk":999,"maxMitigation":999}
+{"_id":{"$oid":"60559ac66eb2823cd98155e3"},"subDimensionID":17,"dimensionID":5,"__v":0,"name":"System Task","maxRisk":999,"maxMitigation":999}
+{"_id":{"$oid":"60559ad56eb2823cd98155e4"},"subDimensionID":18,"dimensionID":5,"__v":0,"name":"Manipulation","maxRisk":999,"maxMitigation":999}
+{"_id":{"$oid":"60559ae56eb2823cd98155e5"},"subDimensionID":19,"dimensionID":5,"__v":0,"name":"Human Rights & Accessibility Scenario Planning","maxRisk":999,"maxMitigation":999}
+{"_id":{"$oid":"60559af16eb2823cd98155e6"},"subDimensionID":21,"dimensionID":5,"__v":0,"name":"Representation","maxRisk":999,"maxMitigation":999}
+{"_id":{"$oid":"60559afe6eb2823cd98155e7"},"subDimensionID":22,"dimensionID":5,"__v":0,"name":"Labor Displacement","maxRisk":999,"maxMitigation":999}
+{"_id":{"$oid":"60559b1f6eb2823cd98155e8"},"subDimensionID":23,"dimensionID":6,"__v":0,"name":"Model Details","maxRisk":999,"maxMitigation":999,"description":"Here are some model details."}
+{"_id":{"$oid":"60559b2e6eb2823cd98155e9"},"subDimensionID":24,"dimensionID":6,"__v":0,"name":"Risks of Gaming/ Explainable to whom","maxRisk":999,"maxMitigation":999}
+{"_id":{"$oid":"60559b3a6eb2823cd98155ea"},"subDimensionID":25,"dimensionID":6,"__v":0,"name":"Communication to Users when the user is not the client","maxRisk":999,"maxMitigation":999}
+{"_id":{"$oid":"60559b486eb2823cd98155eb"},"subDimensionID":26,"dimensionID":6,"__v":0,"name":"Communication to the User when the user is the client","maxRisk":999,"maxMitigation":999}
+{"_id":{"$oid":"60559b566eb2823cd98155ec"},"subDimensionID":27,"dimensionID":6,"__v":0,"name":"Additional Systems Reporting","maxRisk":999,"maxMitigation":999}
+{"_id":{"$oid":"60559b6d6eb2823cd98155ed"},"subDimensionID":28,"dimensionID":7,"__v":0,"name":"Adversarial Attack Considerations","maxRisk":999,"maxMitigation":999}
+{"_id":{"$oid":"60559b796eb2823cd98155ee"},"subDimensionID":29,"dimensionID":7,"__v":0,"name":"Quality of Service Indicators","maxRisk":999,"maxMitigation":999}
+{"_id":{"$oid":"60559b8a6eb2823cd98155ef"},"subDimensionID":30,"dimensionID":7,"__v":0,"name":"Edge case testing","maxRisk":999,"maxMitigation":999}
+{"_id":{"$oid":"60559b9b6eb2823cd98155f0"},"subDimensionID":31,"dimensionID":7,"__v":0,"name":"Component Interaction","maxRisk":999,"maxMitigation":999}
