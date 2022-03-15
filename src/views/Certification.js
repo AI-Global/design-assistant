@@ -93,7 +93,7 @@ export default function Certification({ dimension, results, questions, subDimens
                 scope="col"
                 className="certification-headers"
               >
-                Risk Scoressss
+                Risk Scores
               </th>
               <th
                 role="columnheader"
@@ -109,7 +109,7 @@ export default function Certification({ dimension, results, questions, subDimens
               return displayQuestion(results[question?.name], question);
             })} */}
             {subDimensionsToDisplay.length > 0 && subDimensionsToDisplay.map((sd) => (
-              <tr>
+              <tr key={sd.id}>
                 <td>
                   <strong>{sd.name}</strong>
                   <p>{sd.description}</p>
@@ -118,6 +118,23 @@ export default function Certification({ dimension, results, questions, subDimens
                 <td><ScoreBar score={Math.floor(Math.random() * 101)} palette="mitigation" /></td>
               </tr>
             ))}
+          </tbody>
+        </Table>
+        <Table id={'recommendation-' + dimension}
+          borderless
+          responsive
+          className="recommendation-table">
+          <thead>
+            <tr role="row">
+              <th>Areas of strength:</th>
+              <th>Opportunities for improvement:</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Quarterly model monitoring to be tweaked when needed (by adding or removing variables)</td>
+              <td>Inability to track ethical design choices and considerations post-model launch.</td>
+            </tr>
           </tbody>
         </Table>
       </div>
