@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Modal, Form } from 'react-bootstrap';
 import { Button } from '@material-ui/core';
+import { Box } from '@material-ui/core';
 
 import '../css/login.css';
 import Signup from './Signup';
@@ -91,13 +92,13 @@ export default class Login extends Component {
     let user = this.state.user;
     if (user) {
       return (
-        <div className="user-status">
+        <Box className="user-status">
           <UserSettings />
-          <p className="msg ">
+          <Box className="msg ">
             Logged in as:{' '}
             <strong className="anthem-blue">{user.username}</strong> &nbsp;
-          </p>
-        </div>
+          </Box>
+        </Box>
       );
     } else {
       return (
@@ -118,7 +119,7 @@ export default class Login extends Component {
     const handleClose = () => this.setState({ showLoginModal: false });
 
     return (
-      <div>
+      <Box>
         {this.renderUser()}
         <Modal
           show={showLogin}
@@ -170,10 +171,10 @@ export default class Login extends Component {
                 value="Login"
               />
             </Form>
-            <div className="create-account">
+            <Box className="create-account">
               <p className="disabled">Not a member yet?&nbsp;</p>
               <Signup onLanding={true} signedOut={false} admin={true} />
-            </div>
+            </Box>
           </Modal.Body>
           <Modal.Footer>
             <a
@@ -187,7 +188,7 @@ export default class Login extends Component {
             </a>
           </Modal.Footer>
         </Modal>
-      </div>
+      </Box>
     );
   }
 }
