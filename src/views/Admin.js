@@ -667,8 +667,8 @@ export default class AdminPanel extends Component {
                         count={this.getFilteredUsers().length}
                         rowsPerPage={this.state.usersRowsPerPage}
                         page={this.state.usersPage}
-                        onChangePage={this.handleUsersChangePage}
-                        onChangeRowsPerPage={this.handleUsersChangeRowsPerPage}
+                        onPageChange={this.handleUsersChangePage}
+                        onRowsPerPageChange={this.handleUsersChangeRowsPerPage}
                       />
                     </TableRow>
                   </TableFooter>
@@ -732,8 +732,8 @@ export default class AdminPanel extends Component {
                         count={this.getFilteredSubmissions().length}
                         rowsPerPage={this.state.submissionsRowsPerPage}
                         page={this.state.submissionsPage}
-                        onChangePage={this.handleSubmissionsChangePage}
-                        onChangeRowsPerPage={
+                        onPageChange={this.handleSubmissionsChangePage}
+                        onRowsPerPageChange={
                           this.handleSubmissionsChangeRowsPerPage
                         }
                       />
@@ -750,6 +750,7 @@ export default class AdminPanel extends Component {
             </Tab>
             <Tab eventKey="dimensions" title="Dimensions">
               <Dimensions />
+
             </Tab>
           </Tabs>
           <Login />
