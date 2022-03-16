@@ -9,3 +9,4 @@ build/
 .eslintcache
 scripts/archive
 src/assets/svg/Untitled.graffle
+.env.prod

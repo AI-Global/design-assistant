@@ -105,7 +105,7 @@ export default class Dimensions extends Component {
             </Modal.Name>
           </Modal.Header>
           <Modal.Body>
-            Are you sure you would like to delete this Trusted AI Provider?
+            Are you sure you would like to delete this Dimension?
           </Modal.Body>
           <Modal.Footer>
             <Button
@@ -195,11 +195,10 @@ export default class Dimensions extends Component {
           </Form>
         </Modal>
         <br />
-        <p style={{ marginTop: '40px' }}><strong>Note:</strong> Trusted AI Providers is NOT currently displayed on the report card.</p>
         <Table className="mt-3">
           <TableHead>
             <TableRow className="edit-trusted-headers">
-              <TableCell width="33%" style={{ textAlign: 'center' }}>Trusted AI Provider</TableCell>
+              <TableCell width="33%" style={{ textAlign: 'center' }}>Dimension</TableCell>
               <TableCell style={{ textAlign: 'center' }}>Description</TableCell>
               <TableCell className="text-center">
                 <IconButton
