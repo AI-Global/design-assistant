@@ -51,4 +51,16 @@ router.put('/:id', async (req, res) => {
   }
 });
 
+// delete a dimension
+// TASK-TODO: Secure endpoint.
+router.delete('/:id', async (req, res) => {
+  try {
+    // Delete existing dimension in DB
+    let doc = await Dimension.findByIdAndDelete(req.params.id);
+    res.json(doc);
+  } catch (err) {
+    res.json({ message: err });
+  }
+});
+
 module.exports = router;
