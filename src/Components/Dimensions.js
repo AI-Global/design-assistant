@@ -21,7 +21,7 @@ export default class Dimensions extends Component {
     };
   }
 
-  // retrieves the list of trusted ai providers that can be edited
+  // retrieves the list of trusted ai dimensions that can be edited
   componentDidMount() {
     api
       .get('dimensions')
@@ -33,8 +33,8 @@ export default class Dimensions extends Component {
       });
   }
 
-  // upon confirmation of delete, sends the id of the trusted ai provider to backend to be deleted
-  deleteProvider() {
+  // upon confirmation of delete, sends the id of the trusted ai dimensions to backend to be deleted
+  deleteDimension() {
     let dimensions = this.state.dimensions;
     let currentIndex = this.state.currentIndex;
     if (currentIndex !== -1) {
@@ -50,8 +50,8 @@ export default class Dimensions extends Component {
   }
 
   /**
-   *  upon submission of the form, sends updated/new trusted ai provider to backend to
-   *  be validated and saved in DB then updates the list of trusted ai providers for admin view
+   *  upon submission of the form, sends updated/new trusted ai dimension to backend to
+   *  be validated and saved in DB then updates the list of trusted ai dimensions for admin view
    */
   saveDimension(event) {
     event.preventDefault();
@@ -69,11 +69,11 @@ export default class Dimensions extends Component {
         body
       )
       .then((response) => {
-        let newProvider = response.data;
+        let newDimensions = response.data;
         if (dimensions[currentIndex]?._id) {
-          dimensions[currentIndex] = newProvider;
+          dimensions[currentIndex] = newDimensions;
         } else {
-          dimensions.unshift(newProvider);
+          dimensions.unshift(newDimensions);
         }
         this.setState({ dimensions: dimensions });
         this.setState({ showEditModal: false });
@@ -110,7 +110,7 @@ export default class Dimensions extends Component {
           <Modal.Footer>
             <Button
               id="DeleteSurveyButton"
-              onClick={() => this.deleteProvider()}
+              onClick={() => this.deleteDimension()}
             >
               Yes
             </Button>
@@ -202,7 +202,7 @@ export default class Dimensions extends Component {
               <TableCell style={{ textAlign: 'center' }}>Description</TableCell>
               <TableCell className="text-center">
                 <IconButton
-                  aria-label="add provider"
+                  aria-label="add dimensions"
                   size="small"
                   onClick={() => {
                     handleEditShow(-1);
