@@ -17,6 +17,11 @@ const SubDimensionSchema = mongoose.Schema({
     required: true,
   },
 
+  description: {
+    type: String,
+    required: false,
+  },
+
   maxRisk: {
     type: Number,
     required: true,

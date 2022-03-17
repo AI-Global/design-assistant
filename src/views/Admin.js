@@ -8,6 +8,7 @@ import QuestionTable from '../Components/QuestionTable';
 import AdminProviders from '../Components/AdminProviders';
 import AdminResources from '../Components/AdminResources';
 import Dimensions from '../Components/Dimensions';
+import SubDimensions from '../Components/SubDimensions';
 import {
   Tabs,
   Tab,
@@ -749,7 +750,9 @@ export default class AdminPanel extends Component {
             </Tab>
             <Tab eventKey="dimensions" title="Dimensions">
               <Dimensions />
-
+            </Tab>
+            <Tab eventKey="subdimensions" title="Sub-Dimensions">
+              <SubDimensions />
             </Tab>
           </Tabs>
           <Login />
