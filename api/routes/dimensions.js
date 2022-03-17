@@ -28,4 +28,27 @@ router.get('/names', async (req, res) => {
   }
 });
 
+// update a dimension
+// TASK-TODO: Secure endpoint.
+router.put('/:id', async (req, res) => {
+  try {
+    const ret = await Dimension.findOneAndUpdate(
+      { _id: req.params.id },
+      req.body,
+      { upsert: true, runValidators: true, new: true }
+    );
+    res.json(ret);
+  } catch (err) {
+    if (err.code === 11000) {
+      res.status(400).json({
+        source: {
+          isInvalid: true,
+          message: 'Dimension with source already exists.',
+        },
+      });
+    }
+    res.status(400).json({ message: err });
+  }
+});
+
 module.exports = router;

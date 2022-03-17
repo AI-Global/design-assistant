@@ -316,8 +316,7 @@ export default class AdminPanel extends Component {
                   this.enterSurvey(currentsubmission ?? {});
                 }}
                 icon={faPencilAlt}
-                size="md"
-                className="mt-2"
+                size="lg"
                 cursor="pointer"
                 title="Edit survey submission"
               />

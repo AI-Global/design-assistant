@@ -53,15 +53,15 @@ export default class Dimensions extends Component {
    *  upon submission of the form, sends updated/new trusted ai provider to backend to
    *  be validated and saved in DB then updates the list of trusted ai providers for admin view
    */
-  saveProvider(event) {
+  saveDimension(event) {
     event.preventDefault();
     let form = event.target.elements;
     let dimensions = this.state.dimensions;
     let currentIndex = this.state.currentIndex;
     let body = {
-      resource: form.name.value,
+      name: form.name.value,
       description: form.description.value,
-      source: form.source.value,
+      dimensionID: form.dimensionID.value,
     };
     api
       .put(
@@ -100,9 +100,9 @@ export default class Dimensions extends Component {
           keyboard={false}
         >
           <Modal.Header>
-            <Modal.Name id="contained-modal-name-vcenter">
+            <Modal.Title id="contained-modal-name-vcenter">
               Warning!
-            </Modal.Name>
+            </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             Are you sure you would like to delete this Dimension?
@@ -127,9 +127,9 @@ export default class Dimensions extends Component {
           keyboard={false}
         >
           <Modal.Header closeButton>
-            <Modal.Name>Dimensions</Modal.Name>
+            <Modal.Title>Dimension</Modal.Title>
           </Modal.Header>
-          <Form onSubmit={(e) => this.saveProvider(e)}>
+          <Form onSubmit={(e) => this.saveDimension(e)}>
             <Modal.Body className="p-4">
               <Form.Group controlId="name">
                 <Form.Label className="edit-trusted-form-label">
@@ -141,7 +141,7 @@ export default class Dimensions extends Component {
                   required="required"
                   autoComplete="text"
                   aria-label="Name"
-                  defaultValue={dimensions[currentIndex]?.resource}
+                  defaultValue={dimensions[currentIndex]?.name}
                 />
               </Form.Group>
               <Form.Group controlId="description">
@@ -156,18 +156,18 @@ export default class Dimensions extends Component {
                   defaultValue={dimensions[currentIndex]?.description}
                 />
               </Form.Group>
-              <Form.Group controlId="source">
+              <Form.Group controlId="dimensionID">
                 <Form.Label className="edit-trusted-form-label">
-                  Source
+                  Dimension ID
                 </Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="Source"
+                  placeholder="Dimension ID"
                   required="required"
                   autoComplete="text"
                   isInvalid={this.state.source?.isInvalid}
-                  aria-label="Source"
-                  defaultValue={dimensions[currentIndex]?.source}
+                  aria-label="DimensionID"
+                  defaultValue={dimensions[currentIndex]?.dimensionID}
                 />
                 <Form.Control.Feedback type="invalid">
                   {this.state.source?.message}
@@ -215,13 +215,13 @@ export default class Dimensions extends Component {
           </TableHead>
           <TableBody>
             {Array.isArray(dimensions) &&
-              dimensions.map((provider, index) => {
+              dimensions.map((dimension, index) => {
                 return (
                   <TableRow hover={true} key={index}>
                     <TableCell>
-                      <a href={provider?.source}>{provider?.resource}</a>
+                      <a href={dimension?.name}>{dimension?.name}</a>
                     </TableCell>
-                    <TableCell>{provider?.description}</TableCell>
+                    <TableCell>{dimension?.description}</TableCell>
                     <TableCell>
                       <Button
                         onClick={() => {
