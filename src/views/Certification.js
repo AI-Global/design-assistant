@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import api from '../api';
 import PropTypes from 'prop-types'
 import { Table } from 'react-bootstrap';
 import { DimensionHead } from './DimensionHead'
 import { ScoreBar } from '../Components/ScoreBar';
-
+import TextField from '@material-ui/core/TextField';
 
 const displayQuestion = (result, question) => {
   var choices;
@@ -67,7 +68,49 @@ const displayQuestion = (result, question) => {
  * Generate the RAI Certification document from the submission data.
  * @returns {React.Component}
  */
-export default function Certification({ dimension, results, questions, subDimensions }) {
+export default function Certification({ dimension, results, questions, subDimensions, submission }) {
+  const [strengthsEditMode, setStrengthsEditMode] = useState(false);
+  const [recommendationsEditMode, setRecommendationsEditMode] = useState(false);
+  const [strengths, setStrengths] = useState('');
+  const [improvements, setImprovements] = useState('');
+
+  useEffect(() => {
+    api
+      .get(`submissions/submission/${submission._id}`)
+      .then((res) => {
+        const submissionFromAPI = res.data.submission;
+        const [currentRecommendations] = submissionFromAPI?.recommendations?.filter(r => r.dimensionId === dimension.dimensionID);
+        setStrengths(currentRecommendations?.strengths ?? 'No recommendations yet.');
+        setImprovements(currentRecommendations?.improvements ?? 'No recommendations yet.');
+      });
+  }, []);
+
+  const saveRecommendations = () => {
+    const submissionRecommendations = submission?.recommendations ?? []
+    function upsert(item) {
+      const i = submissionRecommendations.findIndex(_item => _item.dimensionId === item.dimensionId);
+      if (i > -1) submissionRecommendations[i] = item;
+      else submissionRecommendations.push(item);
+    }
+    const updatedRecommendation = {
+      dimensionId: dimension.dimensionID,
+      strengths,
+      improvements,
+    };
+    upsert(updatedRecommendation);
+    if (submission) {
+      api.post(`submissions/update/recommendations/${submission._id}`, {
+        recommendations: submissionRecommendations,
+      }).then(res => {
+        console.log('saved')
+      }).catch(e => {
+        console.log('error updating submission:', e)
+      });
+    }
+    setStrengthsEditMode(false);
+    setRecommendationsEditMode(false);
+    console.log('saving this...', strengths, improvements)
+  };
   const subDimensionsToDisplay = subDimensions.filter(d => d.dimensionID === dimension.dimensionID);
   return (
     <>
@@ -108,8 +151,8 @@ export default function Certification({ dimension, results, questions, subDimens
             {/* {questions.map((question) => {
               return displayQuestion(results[question?.name], question);
             })} */}
-            {subDimensionsToDisplay.length > 0 && subDimensionsToDisplay.map((sd) => (
-              <tr key={sd.id}>
+            {subDimensionsToDisplay.length > 0 && subDimensionsToDisplay.map((sd, index) => (
+              <tr key={index}>
                 <td>
                   <strong>{sd.name}</strong>
                   <p>{sd.description}</p>
@@ -132,8 +175,41 @@ export default function Certification({ dimension, results, questions, subDimens
           </thead>
           <tbody>
             <tr>
-              <td>Quarterly model monitoring to be tweaked when needed (by adding or removing variables)</td>
-              <td>Inability to track ethical design choices and considerations post-model launch.</td>
+              <td>
+                {strengthsEditMode ? (
+                  <TextField
+                    id="strengths"
+                    label="Areas of strength"
+                    variant="outlined"
+                    minRows={3}
+                    multiline
+                    value={strengths}
+                    onChange={(e) => setStrengths(e.target.value)}
+                    fullWidth
+                    onBlur={() => saveRecommendations()}
+                    autoFocus
+                    style={{ minWidth: "25vw" }}
+                  />
+                ) : (<p onClick={() => setStrengthsEditMode(true)}>{strengths}</p>)}
+              </td>
+              <td>
+                {recommendationsEditMode ? (
+                  <TextField
+                    id="improvements"
+                    label="Opportunities for improvement"
+                    variant="outlined"
+                    minRows={3}
+                    multiline
+                    value={improvements}
+                    onChange={(e) => setImprovements(e.target.value)}
+                    fullWidth
+                    onBlur={() => saveRecommendations()}
+                    autoFocus
+                    style={{ minWidth: "25vw" }}
+
+                  />
+                ) : (<p onClick={() => setRecommendationsEditMode(true)}>{improvements}</p>)}
+              </td>
             </tr>
           </tbody>
         </Table>

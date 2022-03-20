@@ -16,7 +16,6 @@ router.get('/', async (req, res) => {
 // update a subdimension
 // TASK-TODO: Secure endpoint.
 router.put('/:id', async (req, res) => {
-  console.log('call', req.params.id, req.body)
   try {
     const ret = await SubDimension.findOneAndUpdate(
       { _id: req.params.id },

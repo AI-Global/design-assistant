@@ -93,6 +93,22 @@ router.post('/update/:submissionId', async (req, res) => {
   }
 });
 
+router.post('/update/recommendations/:submissionId', async (req, res) => {
+  try {
+    const submissions = await Submission.findOneAndUpdate(
+      { _id: req.params.submissionId },
+      {
+        recommendations: req.body.recommendations,
+      },
+      { upsert: true, runValidators: true }
+    );
+
+    res.json(submissions);
+  } catch (err) {
+    res.json({ message: err });
+  }
+});
+
 // TASK-TODO: Secure endpoint.
 router.delete('/delete/:id', async (req, res) => {
   await Submission.findByIdAndDelete(req.params.id)

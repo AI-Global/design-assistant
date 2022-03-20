@@ -52,6 +52,10 @@ const SubmissionSchema = mongoose.Schema({
     type: String,
   },
 
+  recommendations: {
+    type: [Object],
+  },
+
   // TODO: Add test of schema to model
 });
 

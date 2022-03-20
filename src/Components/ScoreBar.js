@@ -15,8 +15,7 @@ const colorRanges = [
 ];
 
 const BarGraph = ({ score = 0, palette = "risk" }) => {
-  const barWidth = score / 100 * 350;
-  console.log('score', score, score === NaN)
+  const barWidth = score ? score / 100 * 350 : 0;
   const barRange = colorRanges.filter(range => (range.palette == palette)).find(range => (score <= range.max))
   const barColor = barRange?.color ?? 'black'
   return <svg version="1.1" viewBox="483 422 389 80" width="389" height="80">

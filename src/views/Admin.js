@@ -181,10 +181,10 @@ export default class AdminPanel extends Component {
       });
   }
 
-  nextPath(path, submission) {
+  nextPath(path, submission, data) {
     this.props.history.push({
       pathname: path,
-      state: { questions: this.state.json, responses: submission },
+      state: { questions: this.state.json, responses: submission, data },
     });
   }
   enterSurvey(submission) {
@@ -303,7 +303,7 @@ export default class AdminPanel extends Component {
               <Button
                 size="sm"
                 onClick={() =>
-                  this.nextPath('/Results/', currentsubmission.submission ?? {})
+                  this.nextPath('/Results/', currentsubmission.submission ?? {}, currentsubmission)
                 }
               >
                 {' '}

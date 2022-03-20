@@ -51,6 +51,7 @@ export default class Results extends Component {
     this.state = {
       Dimensions: [],
       submissionId: null,
+      submission: null,
       alternateReport: false,
       SubDimensions: [],
     };
@@ -66,6 +67,7 @@ export default class Results extends Component {
       this.setState({ SubDimensions: res.data });
     });
     this.setState({ submissionId: this?.props?.location?.state?.submissionId });
+    this.setState({ submission: this?.props?.location?.state?.data });
     this.setState({
       alternateReport: this?.props?.location?.state?.alternateReport,
     });
@@ -395,6 +397,7 @@ export default class Results extends Component {
                                   (x) => x.score?.dimension === dimension.label
                                 )}
                                 subDimensions={this.state.SubDimensions}
+                                submission={this.state.submission}
                               />
                             </Tab.Pane>
                           );
