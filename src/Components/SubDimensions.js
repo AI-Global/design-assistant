@@ -101,6 +101,7 @@ export default class SubDimensions extends Component {
     const handleEditClose = () => this.setState({ showEditModal: false });
     const handleEditShow = (index) =>
       this.setState({ showEditModal: true, currentIndex: index, source: {} });
+    subDimensions.sort((a, b) => (a.dimensionID > b.dimensionID) ? 1 : -1)
     return (
       <div>
         <Modal
@@ -209,6 +210,7 @@ export default class SubDimensions extends Component {
             <TableRow className="edit-trusted-headers">
               <TableCell width="33%" style={{ textAlign: 'center' }}>Sub-Dimension</TableCell>
               <TableCell style={{ textAlign: 'center' }}>Description</TableCell>
+              <TableCell style={{ textAlign: 'center' }}>Dimension</TableCell>
               <TableCell className="text-center">
                 <IconButton
                   aria-label="add provider"
@@ -225,12 +227,14 @@ export default class SubDimensions extends Component {
           <TableBody>
             {Array.isArray(subDimensions) &&
               subDimensions.map((subDimension, index) => {
+                const [currentDimension] = dimensions.filter(d => d.dimensionID === subDimension.dimensionID);
                 return (
                   <TableRow hover={true} key={index}>
                     <TableCell>
                       <a href={subDimension?.name}>{subDimension?.name}</a>
                     </TableCell>
                     <TableCell>{subDimension?.description}</TableCell>
+                    <TableCell>{currentDimension?.name ?? 'No Dimension'}</TableCell>
                     <TableCell>
                       <Button
                         onClick={() => {
