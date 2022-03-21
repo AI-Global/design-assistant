@@ -27,7 +27,9 @@ export default class SubDimensions extends Component {
     api
       .get('subdimensions')
       .then((res) => {
-        this.setState({ subDimensions: res.data });
+        const subDimensions = res.data;
+        subDimensions.sort((a, b) => (a.dimensionID > b.dimensionID) ? 1 : -1)
+        this.setState({ subDimensions: subDimensions });
       })
       .catch((err) => {
         console.log(err);
@@ -101,7 +103,6 @@ export default class SubDimensions extends Component {
     const handleEditClose = () => this.setState({ showEditModal: false });
     const handleEditShow = (index) =>
       this.setState({ showEditModal: true, currentIndex: index, source: {} });
-    subDimensions.sort((a, b) => (a.dimensionID > b.dimensionID) ? 1 : -1)
     return (
       <div>
         <Modal
