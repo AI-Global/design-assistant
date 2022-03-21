@@ -8,15 +8,16 @@ const DimensionSchema = mongoose.Schema({
   },
   name: {
     type: String,
-    enum: [
-      'Project Details',
-      'Organization Maturity',
-      'Accountability',
-      'Data',
-      'Fairness',
-      'Interpretability',
-      'Robustness',
-    ],
+    // Removed this to allow any dimension name
+    // enum: [
+    //   'Project Details',
+    //   'Organization Maturity',
+    //   'Accountability',
+    //   'Data',
+    //   'Fairness',
+    //   'Interpretability',
+    //   'Robustness',
+    // ],
     required: true,
   },
   label: {
