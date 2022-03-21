@@ -349,7 +349,7 @@ class AccessToCareAssessment extends Component {
     // so just make an update call
 
     let title = this.state.json?.pages[0]?.elements?.find(
-      (q) => q?.title?.default === 'Project Name'
+      (q) => q?.title?.default === 'Title of project'
     );
     let dateTime = new Date();
     let projectName = this.state.model.data[title?.name] ?? '';
