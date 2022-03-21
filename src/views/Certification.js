@@ -71,17 +71,19 @@ const displayQuestion = (result, question) => {
 export default function Certification({ dimension, results, questions, subDimensions, submission }) {
   const [strengthsEditMode, setStrengthsEditMode] = useState(false);
   const [recommendationsEditMode, setRecommendationsEditMode] = useState(false);
-  const [strengths, setStrengths] = useState('');
-  const [improvements, setImprovements] = useState('');
+  const [strengths, setStrengths] = useState('No recommendations yet.');
+  const [improvements, setImprovements] = useState('No recommendations yet.');
 
   useEffect(() => {
     api
-      .get(`submissions/submission/${submission._id}`)
+      .get(`submissions/submission/${submission?._id}`)
       .then((res) => {
         const submissionFromAPI = res.data.submission;
-        const [currentRecommendations] = submissionFromAPI?.recommendations?.filter(r => r.dimensionId === dimension.dimensionID);
-        setStrengths(currentRecommendations?.strengths ?? 'No recommendations yet.');
-        setImprovements(currentRecommendations?.improvements ?? 'No recommendations yet.');
+        if (submissionFromAPI?.recommendations) {
+          const [currentRecommendations] = submissionFromAPI?.recommendations?.filter(r => r.dimensionId === dimension.dimensionID);
+          setStrengths(currentRecommendations?.strengths ?? 'No recommendations yet.');
+          setImprovements(currentRecommendations?.improvements ?? 'No recommendations yet.');
+        }
       });
   }, []);
 
@@ -99,7 +101,7 @@ export default function Certification({ dimension, results, questions, subDimens
     };
     upsert(updatedRecommendation);
     if (submission) {
-      api.post(`submissions/update/recommendations/${submission._id}`, {
+      api.post(`submissions/update/recommendations/${submission?._id}`, {
         recommendations: submissionRecommendations,
       }).then(res => {
         console.log('saved')
