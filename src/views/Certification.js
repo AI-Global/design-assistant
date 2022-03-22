@@ -192,7 +192,7 @@ export default function Certification({ dimension, results, questions, subDimens
                     autoFocus
                     style={{ minWidth: "25vw" }}
                   />
-                ) : (<p onClick={() => setStrengthsEditMode(true)}>{strengths}</p>)}
+                ) : (<p style={strengths === 'No recommendations yet.' ? { color: "#8C8C8C" } : {}} onClick={() => setStrengthsEditMode(true)}>{strengths}</p>)}
               </td>
               <td>
                 {recommendationsEditMode ? (
@@ -210,7 +210,7 @@ export default function Certification({ dimension, results, questions, subDimens
                     style={{ minWidth: "25vw" }}
 
                   />
-                ) : (<p onClick={() => setRecommendationsEditMode(true)}>{improvements}</p>)}
+                ) : (<p style={improvements === 'No recommendations yet.' ? { color: "#8C8C8C" } : {}} onClick={() => setRecommendationsEditMode(true)}>{improvements}</p>)}
               </td>
             </tr>
           </tbody>
