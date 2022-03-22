@@ -451,7 +451,7 @@ export default function QuestionModal(props) {
               </Row>
             )}
             <Row>
-              <Col xs={4} md={3}>
+              <Col xs={4}>
                 <Form.Group controlId="questionDimension">
                   <Form.Label>Dimension</Form.Label>
                   <Form.Control
@@ -475,7 +475,7 @@ export default function QuestionModal(props) {
               </Col>
 
               {(dimension === 1) ? null :
-                (<Col xs={4} md={3}>
+                (<Col xs={4}>
                   <Form.Group controlId="questionSubDimension">
                     <Form.Label>Sub-Dimension</Form.Label>
                     <Form.Control
@@ -500,7 +500,7 @@ export default function QuestionModal(props) {
                   </Form.Group>
                 </Col>)}
 
-              <Col xs={4} md={2}>
+              <Col xs={4}>
                 <Form.Group controlId="responseType">
                   <Form.Label>Response Type</Form.Label>
                   <Form.Control
@@ -654,7 +654,7 @@ export default function QuestionModal(props) {
               responseType === 'text' ||
               responseType === 'slider' ? null : (
               <Row>
-                <Col xs={11} md={11} style={{ display: 'inline-block' }}>
+                <Col xs={10} style={{ display: 'inline-block' }}>
                   <Form.Group>
                     <Form.Label>
                       Responses
@@ -710,7 +710,7 @@ export default function QuestionModal(props) {
                     ))}
                   </Form.Group>
                 </Col>
-                <Col xs={1} md={1}>
+                <Col xs={2}>
                   <Form.Group>
                     <Form.Label style={{ paddingBottom: '4px' }}>
                       {' '}
