@@ -9,6 +9,7 @@ import '../css/results.css';
 import { ResponsiveRadar } from '@nivo/radar';
 import exportReport from '../helper/ExportReport';
 import ReportCard from './ReportCard';
+import ExportDocx from '../helper/ExportDocx';
 import DimensionScore from './DimensionScore';
 import Certification from './Certification'
 import TrustedAIProviders from './TrustedAIProviders';
