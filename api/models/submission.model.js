@@ -10,6 +10,10 @@ const SubmissionSchema = mongoose.Schema({
     type: String,
   },
 
+  system: {
+    type: String,
+  },
+
   date: {
     type: Date,
     required: true,
@@ -22,11 +26,11 @@ const SubmissionSchema = mongoose.Schema({
   },
 
   domain: {
-    type: [Number],
+    type: [String],
   },
 
   region: {
-    type: [Number],
+    type: [String],
   },
 
   roles: {

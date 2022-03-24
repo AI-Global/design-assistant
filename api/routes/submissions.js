@@ -82,6 +82,7 @@ router.post('/update/:submissionId', async (req, res) => {
         domain: req.body.domain,
         region: req.body.region,
         roles: req.body.roles,
+        system: req.body.system,
         riskLevel: req.body.riskLevel,
       },
       { upsert: true, runValidators: true }
@@ -127,6 +128,7 @@ router.post('/', async (req, res) => {
     domain: req.body.domain,
     region: req.body.region,
     roles: req.body.roles,
+    system: req.body.system,
     submission: req.body.submission,
     completed: req.body.completed ? req.body.completed : false,
     userType: req.body.userType,
