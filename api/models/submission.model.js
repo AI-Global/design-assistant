@@ -26,10 +26,18 @@ const SubmissionSchema = mongoose.Schema({
   },
 
   domain: {
-    type: [String],
+    type: [Number],
   },
 
   region: {
+    type: [Number],
+  },
+
+  domainData: {
+    type: [String],
+  },
+
+  regionData: {
     type: [String],
   },
 

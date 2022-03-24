@@ -95,8 +95,12 @@ class AccessToCareAssessment extends Component {
     api.get('metadata').then((res) => {
       this.setState({ metadata: res.data });
     });
-    this.setState({ regionAnswer: this?.props?.location?.state?.filters?.region });
-    this.setState({ domainAnswer: this?.props?.location?.state?.filters?.domain });
+
+    if (this?.props?.location?.state?.region) {
+      this.setState({ regionAnswer: this?.props?.location?.state?.region });
+      this.setState({ domainAnswer: this?.props?.location?.state?.domain });
+    }
+
     this.setState({ systemAnswer: this?.props?.location?.state?.system });
     if (this?.props?.location?.state?.userType) {
       this.getQuestions();
@@ -173,8 +177,10 @@ class AccessToCareAssessment extends Component {
           date: new Date(),
           projectName: '',
           completed: false,
-          domain: this.state.domainAnswer,
-          region: this.state.regionAnswer,
+          domain: this.state.domainFilters,
+          region: this.state.regionFilters,
+          domainData: this.state.domainAnswer,
+          regionData: this.state.regionAnswer,
           roles: this.state.roleFilters,
           lifecycle: this.state.lifecycleFilters,
         })
@@ -408,12 +414,14 @@ class AccessToCareAssessment extends Component {
         date: dateTime,
         projectName: projectName,
         completed: completed,
+        domain: this.state.domainFilters,
+        region: this.state.regionFilters,
         roles: this.state.roleFilters,
         lifecycle: this.state.lifecycleFilters,
         userType: this.state?.userAnswer,
         system: this.state?.systemAnswer,
-        region: this.state?.regionAnswer,
-        domain: this.state?.domainAnswer,
+        regionData: this.state?.regionAnswer,
+        domainData: this.state?.domainAnswer,
       })
       .then((res) => {
         toast('Saving Responses', {
@@ -579,6 +587,104 @@ class AccessToCareAssessment extends Component {
                 />
                 <label for="Recognition" style={{ paddingLeft: '10px' }}>
                   Recognition
+                </label>
+              </div>
+              <div>
+                <input
+                  type="radio"
+                  value="Follow up, emotion recognition"
+                  name="systemQuestion"
+                  checked={this.state?.systemAnswer === "Follow up, emotion recognition"}
+                  onChange={(event) =>
+                    this.updateSystemAnswer(event.target.value)
+                  }
+                />
+                <label for="Follow up, emotion recognition" style={{ paddingLeft: '10px' }}>
+                  Follow up, emotion recognition
+                </label>
+              </div>
+              <div>
+                <input
+                  type="radio"
+                  value="Event detection"
+                  name="systemQuestion"
+                  checked={this.state?.systemAnswer === "Event detection"}
+                  onChange={(event) =>
+                    this.updateSystemAnswer(event.target.value)
+                  }
+                />
+                <label for="Event detection" style={{ paddingLeft: '10px' }}>
+                  Event detection
+                </label>
+              </div>
+              <div>
+                <input
+                  type="radio"
+                  value="Forecasting"
+                  name="systemQuestion"
+                  checked={this.state?.systemAnswer === "Forecasting"}
+                  onChange={(event) =>
+                    this.updateSystemAnswer(event.target.value)
+                  }
+                />
+                <label for="Forecasting" style={{ paddingLeft: '10px' }}>
+                  Forecasting
+                </label>
+              </div>
+              <div>
+                <input
+                  type="radio"
+                  value="Personalization"
+                  name="systemQuestion"
+                  checked={this.state?.systemAnswer === "Personalization"}
+                  onChange={(event) =>
+                    this.updateSystemAnswer(event.target.value)
+                  }
+                />
+                <label for="Personalization" style={{ paddingLeft: '10px' }}>
+                  Personalization
+                </label>
+              </div>
+              <div>
+                <input
+                  type="radio"
+                  value="Interaction support"
+                  name="systemQuestion"
+                  checked={this.state?.systemAnswer === "Interaction support"}
+                  onChange={(event) =>
+                    this.updateSystemAnswer(event.target.value)
+                  }
+                />
+                <label for="Interaction support" style={{ paddingLeft: '10px' }}>
+                  Interaction support
+                </label>
+              </div>
+              <div>
+                <input
+                  type="radio"
+                  value="Goal-driven optimization"
+                  name="systemQuestion"
+                  checked={this.state?.systemAnswer === "Goal-driven optimization"}
+                  onChange={(event) =>
+                    this.updateSystemAnswer(event.target.value)
+                  }
+                />
+                <label for="Goal-driven optimization" style={{ paddingLeft: '10px' }}>
+                  Goal-driven optimization
+                </label>
+              </div>
+              <div>
+                <input
+                  type="radio"
+                  value="Reasoning with knowledge structures"
+                  name="systemQuestion"
+                  checked={this.state?.systemAnswer === "Reasoning with knowledge structures"}
+                  onChange={(event) =>
+                    this.updateSystemAnswer(event.target.value)
+                  }
+                />
+                <label for="Reasoning with knowledge structures" style={{ paddingLeft: '10px' }}>
+                  Reasoning with knowledge structures
                 </label>
               </div>
             </fieldset>
