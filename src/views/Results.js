@@ -17,6 +17,7 @@ import TrustedAIResources from './TrustedAIResources';
 import ReactGa from 'react-ga';
 import Login from './Login';
 import calculateQuestionScore from '../helper/QuestionScore';
+import { Const } from 'survey-react';
 
 ReactGa.initialize(process.env.REACT_APP_GAID, {
   testMode: process.env.NODE_ENV !== 'production',
@@ -290,12 +291,14 @@ export default class Results extends Component {
                 type="button"
                 className="btn btn-save mr-2 btn btn-primary export-button-docx"
                 onClick={() => {
-                  createCertificationDocx({
-                    name: "Project Title",
-                    description: "Project Description",
-                    provider: "Industry",
-                    date: new Date().toLocaleDateString(),
-                  })
+                  const p = createCertificationDocx().then((blob) => {
+                    console.log('Blob is: ', blob);
+                    saveAs(blob, "Certification.docx");
+                  }).catch((err) => { console.error(err) });
+
+                  // const filename = 'Outfile.docx';
+                  // console.log(blob)
+                  // //saveAs(blob, filename);
                 }}
               >
                 Export as MS Word
