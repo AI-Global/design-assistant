@@ -194,6 +194,9 @@ export default class AdminPanel extends Component {
         prevResponses: submission.submission,
         submission_id: submission._id,
         user_id: this.userID,
+        system: submission.system,
+        domain: submission.domainData,
+        region: submission.regionData,
         filters: {
           roles: submission.roles,
           domain: submission.domain,

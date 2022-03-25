@@ -74,6 +74,23 @@ export default class SubDimensions extends Component {
       description: form.description.value,
       dimensionID: form.dimensionID.value,
     };
+    if (currentIndex == -1) {
+      api
+        .post('subdimensions/', body)
+        .then((response) => {
+          let newSubDimensions = response.data;
+          if (subDimensions[currentIndex]?._id) {
+            subDimensions[currentIndex] = newSubDimensions;
+          } else {
+            subDimensions.unshift(newSubDimensions);
+          }
+          this.setState({ subDimensions: subDimensions });
+          this.setState({ showEditModal: false });
+        })
+        .catch((err) => {
+          this.setState(err.response.data);
+        });
+    }
     api
       .put(
         'subdimensions/' + (subDimensions[currentIndex]?._id ?? ''),

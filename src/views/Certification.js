@@ -81,8 +81,8 @@ export default function Certification({ dimension, results, questions, subDimens
         const submissionFromAPI = res.data.submission;
         if (submissionFromAPI?.recommendations) {
           const [currentRecommendations] = submissionFromAPI?.recommendations?.filter(r => r.dimensionId === dimension.dimensionID);
-          setStrengths(currentRecommendations?.strengths ?? 'No recommendations yet.');
-          setImprovements(currentRecommendations?.improvements ?? 'No recommendations yet.');
+          setStrengths(currentRecommendations?.strengths?.length > 0 ? currentRecommendations?.strengths : 'No recommendations yet.');
+          setImprovements(currentRecommendations?.improvements?.length > 0 ? currentRecommendations?.improvements : 'No recommendations yet.');
         }
       });
   }, []);
@@ -186,13 +186,13 @@ export default function Certification({ dimension, results, questions, subDimens
                     minRows={3}
                     multiline
                     value={strengths}
-                    onChange={(e) => setStrengths(e.target.value)}
+                    onChange={(e) => setStrengths(e.target.value === '' ? 'No recommendations yet.' : e.target.value)}
                     fullWidth
                     onBlur={() => saveRecommendations()}
                     autoFocus
                     style={{ minWidth: "25vw" }}
                   />
-                ) : (<p onClick={() => setStrengthsEditMode(true)}>{strengths}</p>)}
+                ) : (<p style={strengths === 'No recommendations yet.' ? { color: "#8C8C8C" } : {}} onClick={() => setStrengthsEditMode(true)}>{strengths}</p>)}
               </td>
               <td>
                 {recommendationsEditMode ? (
@@ -203,14 +203,14 @@ export default function Certification({ dimension, results, questions, subDimens
                     minRows={3}
                     multiline
                     value={improvements}
-                    onChange={(e) => setImprovements(e.target.value)}
+                    onChange={(e) => setImprovements(e.target.value === '' ? 'No recommendations yet.' : e.target.value)}
                     fullWidth
                     onBlur={() => saveRecommendations()}
                     autoFocus
                     style={{ minWidth: "25vw" }}
 
                   />
-                ) : (<p onClick={() => setRecommendationsEditMode(true)}>{improvements}</p>)}
+                ) : (<p style={improvements === 'No recommendations yet.' ? { color: "#8C8C8C" } : {}} onClick={() => setRecommendationsEditMode(true)}>{improvements}</p>)}
               </td>
             </tr>
           </tbody>

@@ -29,7 +29,7 @@ export default function AssessmentGrid(props) {
   const classes = useStyles();
   const theme = useTheme();
 
-  const [page, setPage] = React.useState(0);
+  const [page, setPage] = React.useState(Number(localStorage.getItem('page')) || 0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   function createData(name, status, assessmentType, risk, date, action) {
@@ -57,7 +57,11 @@ export default function AssessmentGrid(props) {
   };
 
   const handleChangePage = (event, newPage) => {
+    localStorage.setItem('page', newPage);
     setPage(newPage);
+  };
+  const handleChangeRows = (event) => {
+    setRowsPerPage(event.target.value);
   };
 
   return (
@@ -143,9 +147,10 @@ export default function AssessmentGrid(props) {
           component="div"
           count={submissions.length}
           rowsPerPageOptions={[5, 10, 25]}
+          onRowsPerPageChange={handleChangeRows}
           rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}
-          page={page}
+          page={(page > 0 && submissions.length < rowsPerPage) ? 0 : page}
         />
       </div>
     </div>
