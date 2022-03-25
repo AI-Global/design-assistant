@@ -48,4 +48,25 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
+// Add new sub-dimension
+// TASK-TODO: Secure endpoint.
+router.post('/', async (req, res) => {
+  const number = await SubDimension.countDocuments();
+  const subdimension = new SubDimension({
+    name: req.body.name,
+    description: req.body.description,
+    dimensionID: req.body.dimensionID,
+    maxRisk: 999,
+    maxMitigation: 999,
+    subDimensionID: number + 2
+  });
+
+  try {
+    const savedSubdimension = await subdimension.save();
+    res.json(savedSubdimension);
+  } catch (err) {
+    res.status(400).json({ message: err });
+  }
+});
+
 module.exports = router;

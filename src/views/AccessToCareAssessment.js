@@ -159,8 +159,6 @@ class AccessToCareAssessment extends Component {
   }
 
   submitUserQuestion() {
-    console.log(this.state)
-
     if (this.state.systemAnswer) {
       this.getQuestions();
       this.createSubmission();
