@@ -9,7 +9,7 @@ import '../css/results.css';
 import { ResponsiveRadar } from '@nivo/radar';
 import exportReport from '../helper/ExportReport';
 import ReportCard from './ReportCard';
-import ExportDocx from '../helper/ExportDocx';
+import { createCertificationDocx } from '../helper/ExportDocx';
 import DimensionScore from './DimensionScore';
 import Certification from './Certification'
 import TrustedAIProviders from './TrustedAIProviders';
@@ -286,6 +286,21 @@ export default class Results extends Component {
                 Export as PDF
               </button>
               <button
+                id="exportDocx"
+                type="button"
+                className="btn btn-save mr-2 btn btn-primary export-button-docx"
+                onClick={() => {
+                  createCertificationDocx({
+                    name: "Project Title",
+                    description: "Project Description",
+                    provider: "Industry",
+                    date: new Date().toLocaleDateString(),
+                  })
+                }}
+              >
+                Export as MS Word
+              </button>
+              {/* <button
                 id="exportButtonCSV"
                 type="button"
                 className="btn btn-save mr-2 btn btn-primary export-button-csv"
@@ -294,7 +309,7 @@ export default class Results extends Component {
                 }}
               >
                 Export as CSV
-              </button>
+              </button> */}
               <Tabs defaultActiveKey="score">
                 <Tab eventKey="score" title="Score">
                   <div className="table-responsive mt-3">
