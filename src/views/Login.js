@@ -94,7 +94,7 @@ export default class Login extends Component {
       return (
         <Box className="user-status">
           <UserSettings />
-          <Box className="msg ">
+          <Box>
             Logged in as:{' '}
             <strong className="anthem-blue">{user.username}</strong> &nbsp;
           </Box>

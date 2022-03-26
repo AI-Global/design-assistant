@@ -139,7 +139,7 @@ export default class SubDimensions extends Component {
           <Modal.Footer>
             <Button
               id="DeleteSurveyButton"
-              onClick={() => this.deleteProvider()}
+              onClick={() => this.deleteSubDimension()}
             >
               Yes
             </Button>
