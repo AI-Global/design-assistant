@@ -5,6 +5,8 @@ import {
   Packer,
   Paragraph,
 } from "docx";
+import { saveAs } from 'file-saver';
+
 
 export const createCertificationDocx = async () => {
   const document = new Document({
@@ -27,12 +29,11 @@ export const createCertificationDocx = async () => {
       ],
     }],
   });
-  const b64string = await Packer.toBase64String(document);
-  console.log('Base64String:', b64string);
-  return b64string
-  // const packer = new Packer();
-  // const buffer = packer.toBuffer(document);
-  // return buffer;
+  const file = Packer.toBlob(document).then((blob) => {
+    // saveAs from FileSaver will download the file
+    saveAs(blob, "Certification.docx");
+  });
+  return file;
 }
 
 

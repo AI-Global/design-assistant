@@ -291,14 +291,7 @@ export default class Results extends Component {
                 type="button"
                 className="btn btn-save mr-2 btn btn-primary export-button-docx"
                 onClick={() => {
-                  const p = createCertificationDocx().then((blob) => {
-                    console.log('Blob is: ', blob);
-                    saveAs(blob, "Certification.docx");
-                  }).catch((err) => { console.error(err) });
-
-                  // const filename = 'Outfile.docx';
-                  // console.log(blob)
-                  // //saveAs(blob, filename);
+                  createCertificationDocx()
                 }}
               >
                 Export as MS Word
