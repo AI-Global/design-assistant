@@ -291,7 +291,13 @@ export default class Results extends Component {
                 type="button"
                 className="btn btn-save mr-2 btn btn-primary export-button-docx"
                 onClick={() => {
-                  createCertificationDocx()
+                  createCertificationDocx(
+                    projectTitle,
+                    projectDescription,
+                    projectIndustry,
+                    projectRegion,
+                    riskLevel[riskWeight ?? 1],
+                    this.state.Dimensions)
                 }}
               >
                 Export as MS Word
