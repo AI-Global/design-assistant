@@ -12,12 +12,10 @@ import ReportCard from './ReportCard';
 import { createCertificationDocx } from '../helper/ExportDocx';
 import DimensionScore from './DimensionScore';
 import Certification from './Certification'
-import TrustedAIProviders from './TrustedAIProviders';
 import TrustedAIResources from './TrustedAIResources';
 import ReactGa from 'react-ga';
 import Login from './Login';
 import calculateQuestionScore from '../helper/QuestionScore';
-import { Const } from 'survey-react';
 
 ReactGa.initialize(process.env.REACT_APP_GAID, {
   testMode: process.env.NODE_ENV !== 'production',
@@ -220,7 +218,7 @@ export default class Results extends Component {
     this.addRiskToSubmission(riskWeight);
 
     var titleQuestion = allQuestions.find(
-      (question) => question.title.default === 'Project Name'
+      (question) => question.title.default === 'Title of project'
     );
     var descriptionQuestion = allQuestions.find(
       (question) => question.title.default === 'Project Description'

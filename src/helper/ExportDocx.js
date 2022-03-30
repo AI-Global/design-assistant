@@ -16,7 +16,7 @@ const makeDimensions = (dimensions) => {
   return dmap.flat();
 }
 
-export const createCertificationDocx = async (projectTitle,
+export const createCertificationDocx = (projectTitle,
   projectDescription,
   projectIndustry,
   projectRegion,
