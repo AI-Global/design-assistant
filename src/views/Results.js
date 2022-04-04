@@ -295,7 +295,8 @@ export default class Results extends Component {
                     projectIndustry,
                     projectRegion,
                     riskLevel[riskWeight ?? 1],
-                    this.state.Dimensions)
+                    this.state.Dimensions,
+                    this.state.SubDimensions)
                 }}
               >
                 Export as MS Word
