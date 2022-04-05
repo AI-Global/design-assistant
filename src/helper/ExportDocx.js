@@ -50,7 +50,9 @@ const makeDimensions = (dimensions, subdimensions) => {
               type: WidthType.DXA,
             },
             borders: { ...noBordersCell },
-            children: [new Paragraph({ text: sb?.name, heading: HeadingLevel.HEADING_3 })],
+            children: [new Paragraph({
+              children: [new TextRun({ text: sb?.name, font: "Calibri", bold: true, size: 28 })]
+            })],
           }),
           new TableCell({
             width: {
@@ -78,7 +80,69 @@ const makeDimensions = (dimensions, subdimensions) => {
               type: WidthType.DXA,
             },
             borders: { ...noBordersCell },
-            children: [new Paragraph({ text: sb?.description })],
+            children: [new Paragraph({
+              children: []
+            })],
+          }),
+          new TableCell({
+            width: {
+              size: 3260,
+              type: WidthType.DXA,
+            },
+            borders: { ...noBordersCell },
+            children: [],
+          }),
+          new TableCell({
+            width: {
+              size: 3260,
+              type: WidthType.DXA,
+            },
+            borders: { ...noBordersCell },
+            children: [],
+          }),
+        ],
+      }),
+      new TableRow({
+        children: [
+          new TableCell({
+            width: {
+              size: 2500,
+              type: WidthType.DXA,
+            },
+            borders: { ...noBordersCell },
+            children: [new Paragraph({
+              children: [new TextRun({ text: sb?.description, font: "Calibri", size: 24 })]
+            })],
+          }),
+          new TableCell({
+            width: {
+              size: 3260,
+              type: WidthType.DXA,
+            },
+            borders: { ...noBordersCell },
+            children: [],
+          }),
+          new TableCell({
+            width: {
+              size: 3260,
+              type: WidthType.DXA,
+            },
+            borders: { ...noBordersCell },
+            children: [],
+          }),
+        ],
+      }),
+      new TableRow({
+        children: [
+          new TableCell({
+            width: {
+              size: 2500,
+              type: WidthType.DXA,
+            },
+            borders: { ...noBordersCell },
+            children: [new Paragraph({
+              children: []
+            })],
           }),
           new TableCell({
             width: {
@@ -112,7 +176,10 @@ const makeDimensions = (dimensions, subdimensions) => {
                   type: WidthType.DXA,
                 },
                 borders: { ...noBordersCell },
-                children: [new Paragraph({ text: dimension.name, heading: HeadingLevel.HEADING_3, pageBreakBefore: true })],
+                children: [new Paragraph({
+                  children: [new TextRun({ text: dimension.name, font: "Calibri", bold: true, size: 28 })],
+                  pageBreakBefore: true,
+                })],
               }),
               new TableCell({
                 width: {
@@ -120,7 +187,9 @@ const makeDimensions = (dimensions, subdimensions) => {
                   type: WidthType.DXA,
                 },
                 borders: { ...noBordersCell },
-                children: [new Paragraph({ text: 'Risk Scores', heading: HeadingLevel.HEADING_3 })],
+                children: [new Paragraph({
+                  children: [new TextRun({ text: 'Risk Scores', font: "Calibri", bold: true, size: 28 })]
+                })],
               }),
               new TableCell({
                 width: {
@@ -128,7 +197,9 @@ const makeDimensions = (dimensions, subdimensions) => {
                   type: WidthType.DXA,
                 },
                 borders: { ...noBordersCell },
-                children: [new Paragraph({ text: 'Mitigation Scores', heading: HeadingLevel.HEADING_3 })],
+                children: [new Paragraph({
+                  children: [new TextRun({ text: 'Mitigation Scores', font: "Calibri", bold: true, size: 28 })]
+                })],
               }),
             ],
           }),
@@ -140,35 +211,9 @@ const makeDimensions = (dimensions, subdimensions) => {
                   type: WidthType.DXA,
                 },
                 borders: { ...noBordersCell },
-                children: [new Paragraph({ text: dimension.description })],
-              }),
-              new TableCell({
-                width: {
-                  size: 3260,
-                  type: WidthType.DXA,
-                },
-                borders: { ...noBordersCell },
-                children: [],
-              }),
-              new TableCell({
-                width: {
-                  size: 3260,
-                  type: WidthType.DXA,
-                },
-                borders: { ...noBordersCell },
-                children: [],
-              }),
-            ],
-          }),
-          new TableRow({
-            children: [
-              new TableCell({
-                width: {
-                  size: 2500,
-                  type: WidthType.DXA,
-                },
-                borders: { ...noBordersCell },
-                children: [new Paragraph({ text: 'Total Score', heading: HeadingLevel.HEADING_3 })],
+                children: [new Paragraph({
+                  children: []
+                })],
               }),
               new TableCell({
                 width: {
@@ -196,6 +241,128 @@ const makeDimensions = (dimensions, subdimensions) => {
                   type: WidthType.DXA,
                 },
                 borders: { ...noBordersCell },
+                children: [new Paragraph({
+                  children: [new TextRun({ text: dimension.description, font: "Calibri", size: 24 })]
+                })],
+              }),
+              new TableCell({
+                width: {
+                  size: 3260,
+                  type: WidthType.DXA,
+                },
+                borders: { ...noBordersCell },
+                children: [],
+              }),
+              new TableCell({
+                width: {
+                  size: 3260,
+                  type: WidthType.DXA,
+                },
+                borders: { ...noBordersCell },
+                children: [],
+              }),
+            ],
+          }),
+          new TableRow({
+            children: [
+              new TableCell({
+                width: {
+                  size: 2500,
+                  type: WidthType.DXA,
+                },
+                borders: { ...noBordersCell },
+                children: [new Paragraph({
+                  children: []
+                })],
+              }),
+              new TableCell({
+                width: {
+                  size: 3260,
+                  type: WidthType.DXA,
+                },
+                borders: { ...noBordersCell },
+                children: [],
+              }),
+              new TableCell({
+                width: {
+                  size: 3260,
+                  type: WidthType.DXA,
+                },
+                borders: { ...noBordersCell },
+                children: [],
+              }),
+            ],
+          }),
+          new TableRow({
+            children: [
+              new TableCell({
+                width: {
+                  size: 2500,
+                  type: WidthType.DXA,
+                },
+                borders: { ...noBordersCell },
+                children: [new Paragraph({
+                  children: [new TextRun({
+                    text: 'Total Score', font: "Calibri", bold: true, size: 28
+                  })]
+                })],
+              }),
+              new TableCell({
+                width: {
+                  size: 3260,
+                  type: WidthType.DXA,
+                },
+                borders: { ...noBordersCell },
+                children: [],
+              }),
+              new TableCell({
+                width: {
+                  size: 3260,
+                  type: WidthType.DXA,
+                },
+                borders: { ...noBordersCell },
+                children: [],
+              }),
+            ],
+          }),
+          new TableRow({
+            children: [
+              new TableCell({
+                width: {
+                  size: 2500,
+                  type: WidthType.DXA,
+                },
+                borders: { ...noBordersCell },
+                children: [new Paragraph({
+                  children: []
+                })],
+              }),
+              new TableCell({
+                width: {
+                  size: 3260,
+                  type: WidthType.DXA,
+                },
+                borders: { ...noBordersCell },
+                children: [],
+              }),
+              new TableCell({
+                width: {
+                  size: 3260,
+                  type: WidthType.DXA,
+                },
+                borders: { ...noBordersCell },
+                children: [],
+              }),
+            ],
+          }),
+          new TableRow({
+            children: [
+              new TableCell({
+                width: {
+                  size: 2500,
+                  type: WidthType.DXA,
+                },
+                borders: { ...noBordersCell },
                 children: [],
               }),
               new TableCell({
@@ -224,7 +391,9 @@ const makeDimensions = (dimensions, subdimensions) => {
                   type: WidthType.DXA,
                 },
                 borders: { ...noBordersCell },
-                children: [new Paragraph({ text: `${dimension.name} sub-dimensions score:`, heading: HeadingLevel.HEADING_3 })],
+                children: [new Paragraph({
+                  children: []
+                })],
               }),
               new TableCell({
                 width: {
@@ -232,7 +401,7 @@ const makeDimensions = (dimensions, subdimensions) => {
                   type: WidthType.DXA,
                 },
                 borders: { ...noBordersCell },
-                children: [new Paragraph({ text: 'Risk Scores', heading: HeadingLevel.HEADING_3 })],
+                children: [],
               }),
               new TableCell({
                 width: {
@@ -240,7 +409,71 @@ const makeDimensions = (dimensions, subdimensions) => {
                   type: WidthType.DXA,
                 },
                 borders: { ...noBordersCell },
-                children: [new Paragraph({ text: 'Mitigation Scores', heading: HeadingLevel.HEADING_3 })],
+                children: [],
+              }),
+            ],
+          }),
+          new TableRow({
+            children: [
+              new TableCell({
+                width: {
+                  size: 2500,
+                  type: WidthType.DXA,
+                },
+                borders: { ...noBordersCell },
+                children: [new Paragraph({
+                  children: [new TextRun({ text: `${dimension.name} sub-dimensions score:`, font: "Calibri", bold: true, size: 28 })]
+                })],
+              }),
+              new TableCell({
+                width: {
+                  size: 3260,
+                  type: WidthType.DXA,
+                },
+                borders: { ...noBordersCell },
+                children: [new Paragraph({
+                  children: [new TextRun({ text: 'Risk Scores', font: "Calibri", bold: true, size: 28 })]
+                })],
+              }),
+              new TableCell({
+                width: {
+                  size: 3260,
+                  type: WidthType.DXA,
+                },
+                borders: { ...noBordersCell },
+                children: [new Paragraph({
+                  children: [new TextRun({ text: 'Mitigation Scores', font: "Calibri", bold: true, size: 28 })]
+                })],
+              }),
+            ],
+          }),
+          new TableRow({
+            children: [
+              new TableCell({
+                width: {
+                  size: 2500,
+                  type: WidthType.DXA,
+                },
+                borders: { ...noBordersCell },
+                children: [new Paragraph({
+                  children: []
+                })],
+              }),
+              new TableCell({
+                width: {
+                  size: 3260,
+                  type: WidthType.DXA,
+                },
+                borders: { ...noBordersCell },
+                children: [],
+              }),
+              new TableCell({
+                width: {
+                  size: 3260,
+                  type: WidthType.DXA,
+                },
+                borders: { ...noBordersCell },
+                children: [],
               }),
             ],
           }),
