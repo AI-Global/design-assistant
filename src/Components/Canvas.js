@@ -72,30 +72,20 @@ const Canvas = props => {
   const canvasRef = useRef(null);
   const imgRef = useRef(null);
   let image = testImage;
-  let svg = encodeURIComponent(testSVG);
 
-  console.log('Encoded SVG: ', svg);
-  console.log('In Canvas')
   useEffect(() => {
-    console.log('In useEffect 1')
     const canvas = canvasRef.current
     const context = canvas.getContext('2d')
-    //Our first draw
-    // context.fillStyle = '#00FF00'
-    // context.fillRect(0, 0, context.canvas.width, context.canvas.height)
     let v = Canvg.fromString(context, testSVG)
     v.start();
   }, [])
 
   useEffect(() => {
-    console.log('In useEffect 2')
     const canvas = canvasRef.current
     image = canvas.toDataURL('image/png');
-    console.log(image);
     imgRef.current.src = image;
   }, [])
 
-  console.log('Returning div')
   return (
     <div>
       <p>Here is the canvas:</p>
