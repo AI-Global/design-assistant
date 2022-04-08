@@ -9,7 +9,10 @@ import {
   TableRow,
   WidthType,
   BorderStyle,
-  ImageRun
+  ImageRun,
+  HeightRule,
+  convertInchesToTwip,
+  VerticalAlign,
 } from "docx";
 import { saveAs } from 'file-saver';
 
@@ -56,66 +59,11 @@ const makeDimensions = (dimensions, subdimensions) => {
             },
             borders: { ...noBordersCell },
             children: [new Paragraph({
-              children: [new TextRun({ text: sb?.name, font: "Calibri", bold: true, size: 28 })]
-            })],
-          }),
-          new TableCell({
-            width: {
-              size: 3260,
-              type: WidthType.DXA,
-            },
-            borders: { ...noBordersCell },
-            children: [new Paragraph({ children: [new TextRun({ text: "50", font: "Calibri", bold: false, size: 28 })], alignment: "center" })]
-          }),
-          new TableCell({
-            width: {
-              size: 3260,
-              type: WidthType.DXA,
-            },
-            borders: { ...noBordersCell },
-            children: [new Paragraph({ children: [new TextRun({ text: "33", font: "Calibri", bold: false, size: 28 })], alignment: "center" })]
-          }),
-        ],
-      }),
-      new TableRow({
-        children: [
-          new TableCell({
-            width: {
-              size: 2500,
-              type: WidthType.DXA,
-            },
-            borders: { ...noBordersCell },
-            children: [new Paragraph({
-              children: []
-            })],
-          }),
-          new TableCell({
-            width: {
-              size: 3260,
-              type: WidthType.DXA,
-            },
-            borders: { ...noBordersCell },
-            children: [],
-          }),
-          new TableCell({
-            width: {
-              size: 3260,
-              type: WidthType.DXA,
-            },
-            borders: { ...noBordersCell },
-            children: [],
-          }),
-        ],
-      }),
-      new TableRow({
-        children: [
-          new TableCell({
-            width: {
-              size: 2500,
-              type: WidthType.DXA,
-            },
-            borders: { ...noBordersCell },
-            children: [new Paragraph({
+              children: [
+                new TextRun({ text: sb?.name, font: "Calibri", bold: true, size: 28 }),
+              ],
+            }),
+            new Paragraph({
               children: [new TextRun({ text: sb?.description, font: "Calibri", size: 24 })]
             })],
           }),
@@ -125,45 +73,19 @@ const makeDimensions = (dimensions, subdimensions) => {
               type: WidthType.DXA,
             },
             borders: { ...noBordersCell },
-            children: [],
+            children: [new Paragraph({
+              children: [new TextRun({ text: '33', font: "Calibri" })]
+            })]
           }),
           new TableCell({
             width: {
               size: 3260,
-              type: WidthType.DXA,
-            },
-            borders: { ...noBordersCell },
-            children: [],
-          }),
-        ],
-      }),
-      new TableRow({
-        children: [
-          new TableCell({
-            width: {
-              size: 2500,
               type: WidthType.DXA,
             },
             borders: { ...noBordersCell },
             children: [new Paragraph({
-              children: []
-            })],
-          }),
-          new TableCell({
-            width: {
-              size: 3260,
-              type: WidthType.DXA,
-            },
-            borders: { ...noBordersCell },
-            children: [],
-          }),
-          new TableCell({
-            width: {
-              size: 3260,
-              type: WidthType.DXA,
-            },
-            borders: { ...noBordersCell },
-            children: [],
+              children: [new TextRun({ text: '66', font: "Calibri" })]
+            })]
           }),
         ],
       }),
@@ -217,36 +139,6 @@ const makeDimensions = (dimensions, subdimensions) => {
                 },
                 borders: { ...noBordersCell },
                 children: [new Paragraph({
-                  children: []
-                })],
-              }),
-              new TableCell({
-                width: {
-                  size: 3260,
-                  type: WidthType.DXA,
-                },
-                borders: { ...noBordersCell },
-                children: [],
-              }),
-              new TableCell({
-                width: {
-                  size: 3260,
-                  type: WidthType.DXA,
-                },
-                borders: { ...noBordersCell },
-                children: [],
-              }),
-            ],
-          }),
-          new TableRow({
-            children: [
-              new TableCell({
-                width: {
-                  size: 2500,
-                  type: WidthType.DXA,
-                },
-                borders: { ...noBordersCell },
-                children: [new Paragraph({
                   children: [new TextRun({ text: dimension.description, font: "Calibri", size: 24 })]
                 })],
               }),
@@ -256,7 +148,7 @@ const makeDimensions = (dimensions, subdimensions) => {
                   type: WidthType.DXA,
                 },
                 borders: { ...noBordersCell },
-                children: [],
+                children: [new Paragraph({ children: [new ImageRun({ data: image, transformation: { width: 200, height: 41 } })] })],
               }),
               new TableCell({
                 width: {
@@ -264,37 +156,7 @@ const makeDimensions = (dimensions, subdimensions) => {
                   type: WidthType.DXA,
                 },
                 borders: { ...noBordersCell },
-                children: [],
-              }),
-            ],
-          }),
-          new TableRow({
-            children: [
-              new TableCell({
-                width: {
-                  size: 2500,
-                  type: WidthType.DXA,
-                },
-                borders: { ...noBordersCell },
-                children: [new Paragraph({
-                  children: []
-                })],
-              }),
-              new TableCell({
-                width: {
-                  size: 3260,
-                  type: WidthType.DXA,
-                },
-                borders: { ...noBordersCell },
-                children: [],
-              }),
-              new TableCell({
-                width: {
-                  size: 3260,
-                  type: WidthType.DXA,
-                },
-                borders: { ...noBordersCell },
-                children: [],
+                children: [new Paragraph({ children: [new ImageRun({ data: image, transformation: { width: 200, height: 41 } })] })],
               }),
             ],
           }),
@@ -331,154 +193,22 @@ const makeDimensions = (dimensions, subdimensions) => {
             ],
           }),
           new TableRow({
+            height: { value: convertInchesToTwip(1), rule: HeightRule.AT_LEAST },
             children: [
               new TableCell({
                 width: {
-                  size: 2500,
+                  size: 9000,
                   type: WidthType.DXA,
                 },
-                borders: { ...noBordersCell },
-                children: [new Paragraph({
-                  children: []
-                })],
-              }),
-              new TableCell({
-                width: {
-                  size: 3260,
-                  type: WidthType.DXA,
+                margins: {
+                  bottom: convertInchesToTwip(0.69),
                 },
-                borders: { ...noBordersCell },
-                children: [],
-              }),
-              new TableCell({
-                width: {
-                  size: 3260,
-                  type: WidthType.DXA,
-                },
-                borders: { ...noBordersCell },
-                children: [],
-              }),
-            ],
-          }),
-          new TableRow({
-            children: [
-              new TableCell({
-                width: {
-                  size: 2500,
-                  type: WidthType.DXA,
-                },
-                borders: { ...noBordersCell },
-                children: [],
-              }),
-              new TableCell({
-                width: {
-                  size: 3260,
-                  type: WidthType.DXA,
-                },
-                borders: { ...noBordersCell },
-                children: [],
-              }),
-              new TableCell({
-                width: {
-                  size: 3260,
-                  type: WidthType.DXA,
-                },
-                borders: { ...noBordersCell },
-                children: [],
-              }),
-            ],
-          }),
-          new TableRow({
-            children: [
-              new TableCell({
-                width: {
-                  size: 2500,
-                  type: WidthType.DXA,
-                },
-                borders: { ...noBordersCell },
-                children: [new Paragraph({
-                  children: []
-                })],
-              }),
-              new TableCell({
-                width: {
-                  size: 3260,
-                  type: WidthType.DXA,
-                },
-                borders: { ...noBordersCell },
-                children: [],
-              }),
-              new TableCell({
-                width: {
-                  size: 3260,
-                  type: WidthType.DXA,
-                },
-                borders: { ...noBordersCell },
-                children: [],
-              }),
-            ],
-          }),
-          new TableRow({
-            children: [
-              new TableCell({
-                width: {
-                  size: 2500,
-                  type: WidthType.DXA,
-                },
+                verticalAlign: VerticalAlign.BOTTOM,
+                columnSpan: 3,
                 borders: { ...noBordersCell },
                 children: [new Paragraph({
                   children: [new TextRun({ text: `${dimension.name} sub-dimensions score:`, font: "Calibri", bold: true, size: 28 })]
                 })],
-              }),
-              new TableCell({
-                width: {
-                  size: 3260,
-                  type: WidthType.DXA,
-                },
-                borders: { ...noBordersCell },
-                children: [new Paragraph({
-                  children: [new TextRun({ text: 'Risk Scores', font: "Calibri", bold: true, size: 28 })]
-                })],
-              }),
-              new TableCell({
-                width: {
-                  size: 3260,
-                  type: WidthType.DXA,
-                },
-                borders: { ...noBordersCell },
-                children: [new Paragraph({
-                  children: [new TextRun({ text: 'Mitigation Scores', font: "Calibri", bold: true, size: 28 })]
-                })],
-              }),
-            ],
-          }),
-          new TableRow({
-            children: [
-              new TableCell({
-                width: {
-                  size: 2500,
-                  type: WidthType.DXA,
-                },
-                borders: { ...noBordersCell },
-                children: [new Paragraph({
-                  children: []
-                })],
-              }),
-              new TableCell({
-                width: {
-                  size: 3260,
-                  type: WidthType.DXA,
-                },
-                borders: { ...noBordersCell },
-                children: [new Paragraph({ children: [new ImageRun({ data: image, transformation: { width: 200, height: 41 } })] })],
-              }),
-              new TableCell({
-                width: {
-                  size: 3260,
-                  type: WidthType.DXA,
-                },
-                borders: { ...noBordersCell },
-                children: [new Paragraph({ children: [new ImageRun({ data: image, transformation: { width: 200, height: 41 } })] })],
               }),
             ],
           }),
