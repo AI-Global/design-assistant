@@ -5,7 +5,7 @@ import { Table } from 'react-bootstrap';
 import { DimensionHead } from './DimensionHead'
 import { ScoreBar } from '../Components/ScoreBar';
 import TextField from '@material-ui/core/TextField';
-import Canvas from '../Components/Canvas';
+// import Canvas from '../Components/Canvas';
 
 const displayQuestion = (result, question) => {
   var choices;
@@ -117,7 +117,7 @@ export default function Certification({ dimension, results, questions, subDimens
   const subDimensionsToDisplay = subDimensions.filter(d => d.dimensionID === dimension.dimensionID);
   return (
     <>
-      <Canvas width="500" height="100" />
+      {/* <Canvas width="500" height="100" /> */}
       <DimensionHead dimension={dimension} questions={questions} results={results} />
       <div className="certification mt-3">
         <Table

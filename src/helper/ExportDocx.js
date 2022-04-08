@@ -8,79 +8,12 @@ import {
   TableCell,
   TableRow,
   WidthType,
-  BorderStyle
+  BorderStyle,
+  ImageRun
 } from "docx";
 import { saveAs } from 'file-saver';
 
-const riskLegend = `
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns:dc="http://purl.org/dc/elements/1.1/" version="1.1" xmlns:xl="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" viewBox="367 305 389 80" width="389" height="80">
-  <defs/>
-  <g id="Canvas_1" fill-opacity="1" stroke-opacity="1" stroke-dasharray="none" fill="none" stroke="none">
-    <title>Risk</title>
-    <g id="Canvas_1_Risk">
-      <title>Risk</title>
-      <g id="Graphic_44">
-        <rect x="367" y="335.8" width="77.64" height="20.166234" fill="#70d49e"/>
-      </g>
-      <g id="Graphic_43">
-        <rect x="444.64" y="335.8" width="77.64" height="20.166234" fill="#b2e988"/>
-      </g>
-      <g id="Graphic_42">
-        <rect x="522.28" y="335.8" width="77.64" height="20.166234" fill="#e5eb99"/>
-      </g>
-      <g id="Graphic_41">
-        <rect x="599.92" y="335.8" width="77.64" height="20.166234" fill="#e7ce8d"/>
-      </g>
-      <g id="Graphic_40">
-        <rect x="677.56" y="335.8" width="77.64" height="20.166234" fill="#ee999a"/>
-      </g>
-      <g id="Graphic_39">
-        <text transform="translate(372 312.352)" fill="black">
-          <tspan font-family="Helvetica Neue" font-size="16" fill="black" x="0" y="15">Low</tspan>
-        </text>
-      </g>
-      <g id="Graphic_38">
-        <text transform="translate(532.044 312.352)" fill="black">
-          <tspan font-family="Helvetica Neue" font-size="16" fill="black" x="4973799e-19" y="15">Medium</tspan>
-        </text>
-      </g>
-      <g id="Graphic_37">
-        <text transform="translate(717.016 312.352)" fill="black">
-          <tspan font-family="Helvetica Neue" font-size="16" fill="black" x="11084467e-19" y="15">High</tspan>
-        </text>
-      </g>
-      <g id="Graphic_36">
-        <text transform="translate(389.364 360.96623)" fill="black">
-          <tspan font-family="Helvetica Neue" font-size="16" fill="black" x="1278977e-19" y="15">0-19</tspan>
-        </text>
-      </g>
-      <g id="Graphic_35">
-        <text transform="translate(462.556 360.96623)" fill="black">
-          <tspan font-family="Helvetica Neue" font-size="16" fill="black" x="4476419e-19" y="15">20-39</tspan>
-        </text>
-      </g>
-      <g id="Graphic_34">
-        <text transform="translate(537.396 360.96623)" fill="black">
-          <tspan font-family="Helvetica Neue" font-size="16" fill="black" x="4476419e-19" y="15">40-59</tspan>
-        </text>
-      </g>
-      <g id="Graphic_33">
-        <text transform="translate(617.836 360.96623)" fill="black">
-          <tspan font-family="Helvetica Neue" font-size="16" fill="black" x="4476419e-19" y="15">60-79</tspan>
-        </text>
-      </g>
-      <g id="Graphic_32">
-        <text transform="translate(691.028 360.96623)" fill="black">
-          <tspan font-family="Helvetica Neue" font-size="16" fill="black" x="7673862e-19" y="15">80-100</tspan>
-        </text>
-      </g>
-    </g>
-  </g>
-</svg>
-`
-
+import { legendRisk } from "./LegendRisk";
 
 
 const noBorders = {
@@ -110,6 +43,7 @@ const noBordersCell = {
 };
 
 const makeDimensions = (dimensions, subdimensions) => {
+  const image = legendRisk(200, 41);
   const dmap = dimensions.map(dimension => {
     const currentDimensionSubDimensions = subdimensions.filter(s => s.dimensionID === dimension.dimensionID);
     const subDimensionRows = currentDimensionSubDimensions.map(sb => [
@@ -536,7 +470,7 @@ const makeDimensions = (dimensions, subdimensions) => {
                   type: WidthType.DXA,
                 },
                 borders: { ...noBordersCell },
-                children: [],
+                children: [new Paragraph({ children: [new ImageRun({ data: image, transformation: { width: 200, height: 41 } })] })],
               }),
               new TableCell({
                 width: {
@@ -544,7 +478,7 @@ const makeDimensions = (dimensions, subdimensions) => {
                   type: WidthType.DXA,
                 },
                 borders: { ...noBordersCell },
-                children: [],
+                children: [new Paragraph({ children: [new ImageRun({ data: image, transformation: { width: 200, height: 41 } })] })],
               }),
             ],
           }),
@@ -564,6 +498,7 @@ export const createCertificationDocx = (
   riskLevel,
   dimensions,
   subdimensions) => {
+
   const document = new Document({
     sections: [{
       properties: {},
@@ -581,6 +516,8 @@ export const createCertificationDocx = (
     // saveAs from FileSaver will download the file
     saveAs(blob, "Certification.docx");
   });
+
+
   return file;
 }
 

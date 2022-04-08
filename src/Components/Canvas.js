@@ -85,7 +85,6 @@ const Canvas = props => {
     image = canvas.toDataURL('image/png');
     imgRef.current.src = image;
   }, [])
-
   return (
     <div>
       <p>Here is the canvas:</p>
