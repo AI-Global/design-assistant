@@ -78,13 +78,10 @@ const Canvas = props => {
     const context = canvas.getContext('2d')
     let v = Canvg.fromString(context, testSVG)
     v.start();
-  }, [])
-
-  useEffect(() => {
-    const canvas = canvasRef.current
     image = canvas.toDataURL('image/png');
     imgRef.current.src = image;
   }, [])
+
   return (
     <div>
       <p>Here is the canvas:</p>

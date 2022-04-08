@@ -1,5 +1,3 @@
-
-
 import DOMParser from 'xmldom';
 import * as canvas from 'canvas';
 import { Canvg, presets } from 'canvg'
