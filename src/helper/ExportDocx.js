@@ -17,6 +17,7 @@ import {
 import { saveAs } from 'file-saver';
 
 import { legendRisk } from "./LegendRisk";
+import { RiskBar } from './RiskBar'
 
 
 const noBorders = {
@@ -73,9 +74,7 @@ const makeDimensions = (dimensions, subdimensions) => {
               type: WidthType.DXA,
             },
             borders: { ...noBordersCell },
-            children: [new Paragraph({
-              children: [new TextRun({ text: '33', font: "Calibri" })]
-            })]
+            children: [new Paragraph({ children: [new ImageRun({ data: RiskBar(200, 41, Math.floor(Math.random() * 101), 'risk'), transformation: { width: 200, height: 41 } })] })],
           }),
           new TableCell({
             width: {
@@ -83,9 +82,7 @@ const makeDimensions = (dimensions, subdimensions) => {
               type: WidthType.DXA,
             },
             borders: { ...noBordersCell },
-            children: [new Paragraph({
-              children: [new TextRun({ text: '66', font: "Calibri" })]
-            })]
+            children: [new Paragraph({ children: [new ImageRun({ data: RiskBar(200, 41, Math.floor(Math.random() * 101), 'mitigation'), transformation: { width: 200, height: 41 } })] })],
           }),
         ],
       }),
