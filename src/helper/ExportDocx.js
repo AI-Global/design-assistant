@@ -17,6 +17,7 @@ import {
 import { saveAs } from 'file-saver';
 
 import { legendRisk } from "./LegendRisk";
+import { mitigation } from "./Mitigation";
 import { RiskBar } from './RiskBar'
 
 
@@ -47,7 +48,9 @@ const noBordersCell = {
 };
 
 const makeDimensions = (dimensions, subdimensions) => {
-  const image = legendRisk(200, 41);
+  const riskImage = legendRisk(200, 41);
+  const mitigationImage = mitigation(200, 41);
+
   const dmap = dimensions.map(dimension => {
     const currentDimensionSubDimensions = subdimensions.filter(s => s.dimensionID === dimension.dimensionID);
     const subDimensionRows = currentDimensionSubDimensions.map(sb => [
@@ -145,7 +148,7 @@ const makeDimensions = (dimensions, subdimensions) => {
                   type: WidthType.DXA,
                 },
                 borders: { ...noBordersCell },
-                children: [new Paragraph({ children: [new ImageRun({ data: image, transformation: { width: 200, height: 41 } })] })],
+                children: [new Paragraph({ children: [new ImageRun({ data: riskImage, transformation: { width: 200, height: 41 } })] })],
               }),
               new TableCell({
                 width: {
@@ -153,7 +156,7 @@ const makeDimensions = (dimensions, subdimensions) => {
                   type: WidthType.DXA,
                 },
                 borders: { ...noBordersCell },
-                children: [new Paragraph({ children: [new ImageRun({ data: image, transformation: { width: 200, height: 41 } })] })],
+                children: [new Paragraph({ children: [new ImageRun({ data: mitigationImage, transformation: { width: 200, height: 41 } })] })],
               }),
             ],
           }),

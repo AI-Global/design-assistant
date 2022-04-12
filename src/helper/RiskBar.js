@@ -51,12 +51,9 @@ export const RiskBar = (width, height, score = 0, palette = "risk") => {
   </svg>
 `;
   const canvas = preset.createCanvas(200, 41)
-  console.log('Blank canvas: ', canvas);
   const ctx = canvas.getContext('2d');
   const v = Canvg.fromString(ctx, svg);
   v.render();
-  console.log('Filled canvas:', canvas)
   const image = canvas.toDataURL('image/png');
-  console.log('Image: ', image);
   return image;
 }
