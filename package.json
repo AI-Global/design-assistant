@@ -27,9 +27,12 @@
     "axios": "^0.20.0",
     "bootstrap": "^4.5.2",
     "bootstrap-slider": "^11.0.2",
+    "canvas": "^2.9.1",
+    "canvg": "^4.0.0",
     "chai": "^4.2.0",
     "console": "^0.7.2",
     "css-loader": "^4.3.0",
+    "docx": "^7.3.0",
     "express": "^4.17.1",
     "express-jwt": "^6.0.0",
     "file-saver": "^2.0.5",
@@ -67,7 +70,8 @@
     "style-loader": "^2.0.0",
     "supertest": "^5.0.0",
     "survey-react": "^1.8.7",
-    "surveyjs-widgets": "^1.8.13"
+    "surveyjs-widgets": "^1.8.13",
+    "xmldom": "^0.6.0"
   },
   "browserslist": {
     "production": [

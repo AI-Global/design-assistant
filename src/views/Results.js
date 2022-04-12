@@ -9,9 +9,9 @@ import '../css/results.css';
 import { ResponsiveRadar } from '@nivo/radar';
 import exportReport from '../helper/ExportReport';
 import ReportCard from './ReportCard';
+import { createCertificationDocx } from '../helper/ExportDocx';
 import DimensionScore from './DimensionScore';
 import Certification from './Certification'
-import TrustedAIProviders from './TrustedAIProviders';
 import TrustedAIResources from './TrustedAIResources';
 import ReactGa from 'react-ga';
 import Login from './Login';
@@ -218,7 +218,7 @@ export default class Results extends Component {
     this.addRiskToSubmission(riskWeight);
 
     var titleQuestion = allQuestions.find(
-      (question) => question.title.default === 'Project Name'
+      (question) => question.title.default === 'Title of project'
     );
     var descriptionQuestion = allQuestions.find(
       (question) => question.title.default === 'Project Description'
@@ -285,6 +285,23 @@ export default class Results extends Component {
                 Export as PDF
               </button>
               <button
+                id="exportDocx"
+                type="button"
+                className="btn btn-save mr-2 btn btn-primary export-button-docx"
+                onClick={() => {
+                  createCertificationDocx(
+                    projectTitle,
+                    projectDescription,
+                    projectIndustry,
+                    projectRegion,
+                    riskLevel[riskWeight ?? 1],
+                    this.state.Dimensions,
+                    this.state.SubDimensions)
+                }}
+              >
+                Export as MS Word
+              </button>
+              {/* <button
                 id="exportButtonCSV"
                 type="button"
                 className="btn btn-save mr-2 btn btn-primary export-button-csv"
@@ -293,7 +310,7 @@ export default class Results extends Component {
                 }}
               >
                 Export as CSV
-              </button>
+              </button> */}
               <Tabs defaultActiveKey="score">
                 <Tab eventKey="score" title="Score">
                   <div className="table-responsive mt-3">
