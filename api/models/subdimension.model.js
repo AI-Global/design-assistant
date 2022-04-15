@@ -32,6 +32,9 @@ const SubDimensionSchema = mongoose.Schema({
     required: true,
   },
 
+  weight: {
+    type: Number,
+  },
 });
 
 module.exports = mongoose.model('SubDimension', SubDimensionSchema);

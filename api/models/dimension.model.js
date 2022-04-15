@@ -28,8 +28,11 @@ const DimensionSchema = mongoose.Schema({
   description: {
     type: String,
     required: false,
-  }
+  },
 
+  weight: {
+    type: Number,
+  },
 });
 
 module.exports = mongoose.model('Dimension', DimensionSchema);

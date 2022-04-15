@@ -62,6 +62,7 @@ export default class Dimensions extends Component {
       name: form.name.value,
       description: form.description.value,
       dimensionID: form.dimensionID.value,
+      weight: form.weight.value,
     };
     api
       .put(
@@ -172,6 +173,18 @@ export default class Dimensions extends Component {
                 <Form.Control.Feedback type="invalid">
                   {this.state.source?.message}
                 </Form.Control.Feedback>
+              </Form.Group>
+              <Form.Group controlId="weight">
+                <Form.Label className="edit-trusted-form-label">
+                  Weight
+                </Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Weight"
+                  autoComplete="text"
+                  aria-label="Weight"
+                  defaultValue={dimensions[currentIndex]?.weight || 0.5}
+                />
               </Form.Group>
             </Modal.Body>
             <Modal.Footer>

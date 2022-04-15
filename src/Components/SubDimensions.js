@@ -73,6 +73,7 @@ export default class SubDimensions extends Component {
       name: form.name.value,
       description: form.description.value,
       dimensionID: form.dimensionID.value,
+      weight: form.weight.value,
     };
     if (currentIndex == -1) {
       api
@@ -200,6 +201,18 @@ export default class SubDimensions extends Component {
                     </option>
                   ))}
                 </Form.Control>
+              </Form.Group>
+              <Form.Group controlId="weight">
+                <Form.Label className="edit-trusted-form-label">
+                  Weight
+                </Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Weight"
+                  autoComplete="text"
+                  aria-label="Weight"
+                  defaultValue={subDimensions[currentIndex]?.weight || 0.5}
+                />
               </Form.Group>
             </Modal.Body>
             <Modal.Footer>
