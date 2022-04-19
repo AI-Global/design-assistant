@@ -124,7 +124,8 @@ class UserSubmissions extends Component {
 
   handleSignupShow = () => this.setState({ showSignupModal: true });
 
-  deleteSurvey() {
+  deleteSurvey(index) {
+    this.setState({ currentSubmissionIdx: index });
     let currentSubmissionIdx = this.state.currentSubmissionIdx;
     let submissions = this.state.submissions;
     let submission = submissions[currentSubmissionIdx];
