@@ -266,7 +266,7 @@ form .btn:not(.btn-call-to-action) {
   border-top: 1px solid #ddd;
 }
 
-@media screen and (min-width: 1200px) {
+@media screen and (min-width: 800px) {
   .dimensionNav {
     position: absolute;
     left: 1em;
