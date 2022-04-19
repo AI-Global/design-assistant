@@ -51,6 +51,25 @@ router.put('/:id', async (req, res) => {
   }
 });
 
+// Add new sub-dimension
+// TASK-TODO: Secure endpoint.
+router.post('/', async (req, res) => {
+  const dimension = new Dimension({
+    name: req.body.name,
+    description: req.body.description,
+    dimensionID: req.body.dimensionID,
+    weight: req.body.weight,
+    label: 'C',
+  });
+
+  try {
+    const savedDimension = await dimension.save();
+    res.json(savedDimension);
+  } catch (err) {
+    res.status(400).json({ message: err });
+  }
+});
+
 // delete a dimension
 // TASK-TODO: Secure endpoint.
 router.delete('/:id', async (req, res) => {

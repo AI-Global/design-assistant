@@ -84,6 +84,37 @@ export default class Dimensions extends Component {
       });
   }
 
+  createDimension(event) {
+    event.preventDefault();
+    let form = event.target.elements;
+    let dimensions = this.state.dimensions;
+    let currentIndex = this.state.currentIndex;
+    let body = {
+      name: form.name.value,
+      description: form.description.value,
+      dimensionID: form.dimensionID.value,
+      weight: form.weight.value,
+    };
+    api
+      .post(
+        'dimensions/',
+        body
+      )
+      .then((response) => {
+        let newDimensions = response.data;
+        if (dimensions[currentIndex]?._id) {
+          dimensions[currentIndex] = newDimensions;
+        } else {
+          dimensions.unshift(newDimensions);
+        }
+        this.setState({ dimensions: dimensions });
+        this.setState({ showEditModal: false });
+      })
+      .catch((err) => {
+        this.setState(err.response.data);
+      });
+  }
+
   render() {
     var dimensions = this.state.dimensions;
     var currentIndex = this.state.currentIndex;
@@ -130,7 +161,7 @@ export default class Dimensions extends Component {
           <Modal.Header closeButton>
             <Modal.Title>Dimension</Modal.Title>
           </Modal.Header>
-          <Form onSubmit={(e) => this.saveDimension(e)}>
+          <Form onSubmit={(e) => dimensions[currentIndex]?._id ? this.saveDimension(e) : this.createDimension(e)}>
             <Modal.Body className="p-4">
               <Form.Group controlId="name">
                 <Form.Label className="edit-trusted-form-label">

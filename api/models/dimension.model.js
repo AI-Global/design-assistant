@@ -22,7 +22,7 @@ const DimensionSchema = mongoose.Schema({
   },
   label: {
     type: String,
-    enum: ['T', 'O', 'A', 'D', 'F', 'I', 'R'],
+    enum: ['T', 'O', 'A', 'D', 'F', 'I', 'R', 'C'],
     required: true,
   },
   description: {
