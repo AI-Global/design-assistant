@@ -66,9 +66,9 @@ class AccessToCareAssessment extends Component {
       currentPageIndex: null,
       userQuestionAnswered: !!this?.props?.location?.state?.userType,
       userAnswer: this?.props?.location?.state?.userType,
-      systemAnswer: this?.props?.location?.state?.system,
+      systemAnswer: this?.props?.location?.state?.system ?? [],
       regionAnswer: this?.props?.location?.state?.region || [],
-      domainAnswer: this?.props?.location?.state?.domain || [],
+      domainAnswer: this?.props?.location?.state?.domain,
     };
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
@@ -101,7 +101,7 @@ class AccessToCareAssessment extends Component {
       this.setState({ domainAnswer: this?.props?.location?.state?.domain });
     }
 
-    this.setState({ systemAnswer: this?.props?.location?.state?.system });
+    this.setState({ systemAnswer: this?.props?.location?.state?.system ?? [] });
     if (this?.props?.location?.state?.userType) {
       this.getQuestions();
     }
@@ -127,7 +127,17 @@ class AccessToCareAssessment extends Component {
   }
 
   updateSystemAnswer(value) {
-    this.setState({ systemAnswer: value });
+    let sel = this.state.systemAnswer
+    let find = sel.indexOf(value)
+    if (find > -1) {
+      sel.splice(find, 1)
+    } else {
+      sel.push(value)
+    }
+
+    this.setState({
+      systemAnswer: sel,
+    })
   }
 
   updateRegionAnswer(value) {
@@ -145,16 +155,8 @@ class AccessToCareAssessment extends Component {
   }
 
   updateDomainAnswer(value) {
-    let sel = this.state.domainAnswer
-    let find = sel.indexOf(value)
-    if (find > -1) {
-      sel.splice(find, 1)
-    } else {
-      sel.push(value)
-    }
-
     this.setState({
-      domainAnswer: sel,
+      domainAnswer: value,
     })
   }
 
@@ -568,282 +570,301 @@ class AccessToCareAssessment extends Component {
           <Login />
         </div>
         {!this.state.userQuestionAnswered ? (
-          <div style={{ padding: '40px' }}>
-            <p style={{ paddingTop: '20px' }}>
-              What is your system task?
-            </p>
-            <fieldset id="systemQuestion">
-              <div>
-                <input
-                  type="radio"
-                  value="Recognition"
-                  name="systemQuestion"
-                  checked={this.state?.systemAnswer === "Recognition"}
-                  onChange={(event) =>
-                    this.updateSystemAnswer(event.target.value)
-                  }
-                />
-                <label for="Recognition" style={{ paddingLeft: '10px' }}>
-                  Recognition
+          <div style={{
+            padding: '40px',
+          }}>
+            <div style={{
+              display: 'flex',
+              flexDirection: 'row',
+            }}>
+              <div style={{ flex: 1 }}>
+                <p style={{ paddingTop: '20px' }}>
+                  What is your system task?
+              </p>
+                <fieldset id="systemQuestion">
+                  <div>
+                    <input
+                      type="checkbox"
+                      value="Recognition"
+                      name="systemQuestion"
+                      checked={this.state?.systemAnswer?.includes("Recognition")}
+                      onChange={(event) =>
+                        this.updateSystemAnswer(event.target.value)
+                      }
+                    />
+                    <label for="Recognition" style={{ paddingLeft: '10px' }}>
+                      Recognition
                 </label>
-              </div>
-              <div>
-                <input
-                  type="radio"
-                  value="Follow up, emotion recognition"
-                  name="systemQuestion"
-                  checked={this.state?.systemAnswer === "Follow up, emotion recognition"}
-                  onChange={(event) =>
-                    this.updateSystemAnswer(event.target.value)
-                  }
-                />
-                <label for="Follow up, emotion recognition" style={{ paddingLeft: '10px' }}>
-                  Follow up, emotion recognition
+                  </div>
+                  <div>
+                    <input
+                      type="checkbox"
+                      value="Follow up, emotion recognition"
+                      name="systemQuestion"
+                      checked={this.state?.systemAnswer?.includes("Follow up, emotion recognition")}
+                      onChange={(event) =>
+                        this.updateSystemAnswer(event.target.value)
+                      }
+                    />
+                    <label for="Follow up, emotion recognition" style={{ paddingLeft: '10px' }}>
+                      Follow up, emotion recognition
                 </label>
-              </div>
-              <div>
-                <input
-                  type="radio"
-                  value="Event detection"
-                  name="systemQuestion"
-                  checked={this.state?.systemAnswer === "Event detection"}
-                  onChange={(event) =>
-                    this.updateSystemAnswer(event.target.value)
-                  }
-                />
-                <label for="Event detection" style={{ paddingLeft: '10px' }}>
-                  Event detection
+                  </div>
+                  <div>
+                    <input
+                      type="checkbox"
+                      value="Event detection"
+                      name="systemQuestion"
+                      checked={this.state?.systemAnswer?.includes("Event detection")}
+                      onChange={(event) =>
+                        this.updateSystemAnswer(event.target.value)
+                      }
+                    />
+                    <label for="Event detection" style={{ paddingLeft: '10px' }}>
+                      Event detection
                 </label>
-              </div>
-              <div>
-                <input
-                  type="radio"
-                  value="Forecasting"
-                  name="systemQuestion"
-                  checked={this.state?.systemAnswer === "Forecasting"}
-                  onChange={(event) =>
-                    this.updateSystemAnswer(event.target.value)
-                  }
-                />
-                <label for="Forecasting" style={{ paddingLeft: '10px' }}>
-                  Forecasting
+                  </div>
+                  <div>
+                    <input
+                      type="checkbox"
+                      value="Forecasting"
+                      name="systemQuestion"
+                      checked={this.state?.systemAnswer?.includes("Forecasting")}
+                      onChange={(event) =>
+                        this.updateSystemAnswer(event.target.value)
+                      }
+                    />
+                    <label for="Forecasting" style={{ paddingLeft: '10px' }}>
+                      Forecasting
                 </label>
-              </div>
-              <div>
-                <input
-                  type="radio"
-                  value="Personalization"
-                  name="systemQuestion"
-                  checked={this.state?.systemAnswer === "Personalization"}
-                  onChange={(event) =>
-                    this.updateSystemAnswer(event.target.value)
-                  }
-                />
-                <label for="Personalization" style={{ paddingLeft: '10px' }}>
-                  Personalization
+                  </div>
+                  <div>
+                    <input
+                      type="checkbox"
+                      value="Personalization"
+                      name="systemQuestion"
+                      checked={this.state?.systemAnswer?.includes("Personalization")}
+                      onChange={(event) =>
+                        this.updateSystemAnswer(event.target.value)
+                      }
+                    />
+                    <label for="Personalization" style={{ paddingLeft: '10px' }}>
+                      Personalization
                 </label>
-              </div>
-              <div>
-                <input
-                  type="radio"
-                  value="Interaction support"
-                  name="systemQuestion"
-                  checked={this.state?.systemAnswer === "Interaction support"}
-                  onChange={(event) =>
-                    this.updateSystemAnswer(event.target.value)
-                  }
-                />
-                <label for="Interaction support" style={{ paddingLeft: '10px' }}>
-                  Interaction support
+                  </div>
+                  <div>
+                    <input
+                      type="checkbox"
+                      value="Interaction support"
+                      name="systemQuestion"
+                      checked={this.state?.systemAnswer?.includes("Interaction support")}
+                      onChange={(event) =>
+                        this.updateSystemAnswer(event.target.value)
+                      }
+                    />
+                    <label for="Interaction support" style={{ paddingLeft: '10px' }}>
+                      Interaction support
                 </label>
-              </div>
-              <div>
-                <input
-                  type="radio"
-                  value="Goal-driven optimization"
-                  name="systemQuestion"
-                  checked={this.state?.systemAnswer === "Goal-driven optimization"}
-                  onChange={(event) =>
-                    this.updateSystemAnswer(event.target.value)
-                  }
-                />
-                <label for="Goal-driven optimization" style={{ paddingLeft: '10px' }}>
-                  Goal-driven optimization
+                  </div>
+                  <div>
+                    <input
+                      type="checkbox"
+                      value="Goal-driven optimization"
+                      name="systemQuestion"
+                      checked={this.state?.systemAnswer?.includes("Goal-driven optimization")}
+                      onChange={(event) =>
+                        this.updateSystemAnswer(event.target.value)
+                      }
+                    />
+                    <label for="Goal-driven optimization" style={{ paddingLeft: '10px' }}>
+                      Goal-driven optimization
                 </label>
-              </div>
-              <div>
-                <input
-                  type="radio"
-                  value="Reasoning with knowledge structures"
-                  name="systemQuestion"
-                  checked={this.state?.systemAnswer === "Reasoning with knowledge structures"}
-                  onChange={(event) =>
-                    this.updateSystemAnswer(event.target.value)
-                  }
-                />
-                <label for="Reasoning with knowledge structures" style={{ paddingLeft: '10px' }}>
-                  Reasoning with knowledge structures
+                  </div>
+                  <div>
+                    <input
+                      type="checkbox"
+                      value="Reasoning with knowledge structures"
+                      name="systemQuestion"
+                      checked={this.state?.systemAnswer?.includes("Reasoning with knowledge structures")}
+                      onChange={(event) =>
+                        this.updateSystemAnswer(event.target.value)
+                      }
+                    />
+                    <label for="Reasoning with knowledge structures" style={{ paddingLeft: '10px' }}>
+                      Reasoning with knowledge structures
                 </label>
+                  </div>
+                </fieldset>
               </div>
-            </fieldset>
-            <p style={{ paddingTop: '20px' }}>
-              What region is it operating in?
-            </p>
-            <fieldset id="regionQuestion">
-              <div>
-                <input
-                  type="checkbox"
-                  value="US"
-                  name="regionQuestion"
-                  checked={this.state?.regionAnswer?.includes('US')}
-                  onChange={(event) =>
-                    this.updateRegionAnswer(event.target.value)
-                  }
-                />
-                <label for="US" style={{ paddingLeft: '10px' }}>
-                  US
-                </label>
+              <div style={{ flex: 1 }}>
+                <p style={{ paddingTop: '20px' }}>
+                  What region is it operating in?
+              </p>
+                <fieldset id="regionQuestion">
+                  <div>
+                    <input
+                      type="checkbox"
+                      value="US"
+                      name="regionQuestion"
+                      checked={this.state?.regionAnswer?.includes('US')}
+                      onChange={(event) =>
+                        this.updateRegionAnswer(event.target.value)
+                      }
+                    />
+                    <label for="US" style={{ paddingLeft: '10px' }}>
+                      US
+                  </label>
+                  </div>
+                  <div>
+                    <input
+                      type="checkbox"
+                      value="UK"
+                      name="regionQuestion"
+                      checked={this.state?.regionAnswer?.includes('UK')}
+                      onChange={(event) =>
+                        this.updateRegionAnswer(event.target.value)
+                      }
+                    />
+                    <label for="UK" style={{ paddingLeft: '10px' }}>
+                      UK
+                  </label>
+                  </div>
+                  <div>
+                    <input
+                      type="checkbox"
+                      value="EU"
+                      name="regionQuestion"
+                      checked={this.state?.regionAnswer?.includes('EU')}
+                      onChange={(event) =>
+                        this.updateRegionAnswer(event.target.value)
+                      }
+                    />
+                    <label for="EU" style={{ paddingLeft: '10px' }}>
+                      EU
+                  </label>
+                  </div>
+                  <div>
+                    <input
+                      type="checkbox"
+                      value="Canada"
+                      name="regionQuestion"
+                      checked={this.state?.regionAnswer?.includes('Canada')}
+                      onChange={(event) =>
+                        this.updateRegionAnswer(event.target.value)
+                      }
+                    />
+                    <label for="Canada" style={{ paddingLeft: '10px' }}>
+                      Canada
+                  </label>
+                  </div>
+                  <div>
+                    <input
+                      type="checkbox"
+                      value="Other"
+                      name="regionQuestion"
+                      checked={this.state?.regionAnswer?.includes('Other')}
+                      onChange={(event) =>
+                        this.updateRegionAnswer(event.target.value)
+                      }
+                    />
+                    <label for="Other" style={{ paddingLeft: '10px' }}>
+                      Other
+                  </label>
+                  </div>
+                </fieldset>
               </div>
-              <div>
-                <input
-                  type="checkbox"
-                  value="UK"
-                  name="regionQuestion"
-                  checked={this.state?.regionAnswer?.includes('UK')}
-                  onChange={(event) =>
-                    this.updateRegionAnswer(event.target.value)
-                  }
-                />
-                <label for="UK" style={{ paddingLeft: '10px' }}>
-                  UK
-                </label>
+              <div style={{ flex: 1 }}>
+                <p style={{ paddingTop: '20px' }}>
+                  Which domain is the application for?
+              </p>
+                <fieldset id="domainQuestion">
+                  <div>
+                    <input
+                      type="radio"
+                      value="HR"
+                      name="domainQuestion"
+                      checked={this.state?.domainAnswer === 'HR'}
+                      onChange={(event) =>
+                        this.updateDomainAnswer(event.target.value)
+                      }
+                    />
+                    <label for="HR" style={{ paddingLeft: '10px' }}>
+                      HR
+                  </label>
+                  </div>
+                  <div>
+                    <input
+                      type="radio"
+                      value="Finance"
+                      name="domainQuestion"
+                      checked={this.state?.domainAnswer === 'Finance'}
+                      onChange={(event) =>
+                        this.updateDomainAnswer(event.target.value)
+                      }
+                    />
+                    <label for="Finance" style={{ paddingLeft: '10px' }}>
+                      Finance
+                  </label>
+                  </div>
+                  <div>
+                    <input
+                      type="radio"
+                      value="Procurement"
+                      name="domainQuestion"
+                      checked={this.state?.domainAnswer === 'Procurement'}
+                      onChange={(event) =>
+                        this.updateDomainAnswer(event.target.value)
+                      }
+                    />
+                    <label for="Procurement" style={{ paddingLeft: '10px' }}>
+                      Procurement
+                  </label>
+                  </div>
+                  <div>
+                    <input
+                      type="radio"
+                      value="Health"
+                      name="domainQuestion"
+                      checked={this.state?.domainAnswer === 'Health'}
+                      onChange={(event) =>
+                        this.updateDomainAnswer(event.target.value)
+                      }
+                    />
+                    <label for="Health" style={{ paddingLeft: '10px' }}>
+                      Health
+                  </label>
+                  </div>
+                  <div>
+                    <input
+                      type="radio"
+                      value="Other"
+                      name="domainQuestion"
+                      checked={this.state?.domainAnswer === 'Other'}
+                      onChange={(event) =>
+                        this.updateDomainAnswer(event.target.value)
+                      }
+                    />
+                    <label for="Other" style={{ paddingLeft: '10px' }}>
+                      Other
+                  </label>
+                  </div>
+                </fieldset>
               </div>
-              <div>
-                <input
-                  type="checkbox"
-                  value="EU"
-                  name="regionQuestion"
-                  checked={this.state?.regionAnswer?.includes('EU')}
-                  onChange={(event) =>
-                    this.updateRegionAnswer(event.target.value)
-                  }
-                />
-                <label for="EU" style={{ paddingLeft: '10px' }}>
-                  EU
-                </label>
-              </div>
-              <div>
-                <input
-                  type="checkbox"
-                  value="Canada"
-                  name="regionQuestion"
-                  checked={this.state?.regionAnswer?.includes('Canada')}
-                  onChange={(event) =>
-                    this.updateRegionAnswer(event.target.value)
-                  }
-                />
-                <label for="Canada" style={{ paddingLeft: '10px' }}>
-                  Canada
-                </label>
-              </div>
-              <div>
-                <input
-                  type="checkbox"
-                  value="Other"
-                  name="regionQuestion"
-                  checked={this.state?.regionAnswer?.includes('Other')}
-                  onChange={(event) =>
-                    this.updateRegionAnswer(event.target.value)
-                  }
-                />
-                <label for="Other" style={{ paddingLeft: '10px' }}>
-                  Other
-                </label>
-              </div>
-            </fieldset>
-            <p style={{ paddingTop: '20px' }}>
-              Which domain are you working in?
-            </p>
-            <fieldset id="domainQuestion">
-              <div>
-                <input
-                  type="checkbox"
-                  value="HR"
-                  name="domainQuestion"
-                  checked={this.state?.domainAnswer?.includes('HR')}
-                  onChange={(event) =>
-                    this.updateDomainAnswer(event.target.value)
-                  }
-                />
-                <label for="HR" style={{ paddingLeft: '10px' }}>
-                  HR
-                </label>
-              </div>
-              <div>
-                <input
-                  type="checkbox"
-                  value="Finance"
-                  name="domainQuestion"
-                  checked={this.state?.domainAnswer?.includes('Finance')}
-                  onChange={(event) =>
-                    this.updateDomainAnswer(event.target.value)
-                  }
-                />
-                <label for="Finance" style={{ paddingLeft: '10px' }}>
-                  Finance
-                </label>
-              </div>
-              <div>
-                <input
-                  type="checkbox"
-                  value="Procurement"
-                  name="domainQuestion"
-                  checked={this.state?.domainAnswer?.includes('Procurement')}
-                  onChange={(event) =>
-                    this.updateDomainAnswer(event.target.value)
-                  }
-                />
-                <label for="Procurement" style={{ paddingLeft: '10px' }}>
-                  Procurement
-                </label>
-              </div>
-              <div>
-                <input
-                  type="checkbox"
-                  value="Health"
-                  name="domainQuestion"
-                  checked={this.state?.domainAnswer?.includes('Health')}
-                  onChange={(event) =>
-                    this.updateDomainAnswer(event.target.value)
-                  }
-                />
-                <label for="Health" style={{ paddingLeft: '10px' }}>
-                  Health
-                </label>
-              </div>
-              <div>
-                <input
-                  type="checkbox"
-                  value="Other"
-                  name="domainQuestion"
-                  checked={this.state?.domainAnswer?.includes('Other')}
-                  onChange={(event) =>
-                    this.updateDomainAnswer(event.target.value)
-                  }
-                />
-                <label for="Other" style={{ paddingLeft: '10px' }}>
-                  Other
-                </label>
-              </div>
-            </fieldset>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => this.submitUserQuestion()}
-              style={{ marginTop: '20px' }}
-            >
-              Start Survey
-            </Button>
+            </div>
+            <div>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => this.submitUserQuestion()}
+                style={{ marginTop: '20px' }}
+                disabled={
+                  !this.state.domainAnswer
+                  || this.state.systemAnswer.length === 0
+                  || this.state.regionAnswer.length === 0}
+              >
+                Start Survey
+              </Button>
+            </div>
           </div>
         ) : (
           <div>
