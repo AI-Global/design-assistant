@@ -218,7 +218,7 @@ export default class Results extends Component {
     this.addRiskToSubmission(riskWeight);
 
     var titleQuestion = allQuestions.find(
-      (question) => question.title.default === 'Title of project'
+      (question) => question.title.default === 'Title of project' || question.title.default === 'Project Name'
     );
     var descriptionQuestion = allQuestions.find(
       (question) => question.title.default === 'Project Description'
