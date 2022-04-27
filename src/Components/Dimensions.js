@@ -193,13 +193,13 @@ export default class Dimensions extends Component {
                   Dimension ID
                 </Form.Label>
                 <Form.Control
-                  type="text"
+                  type="number"
                   placeholder="Dimension ID"
                   required="required"
                   autoComplete="text"
                   isInvalid={this.state.source?.isInvalid}
                   aria-label="DimensionID"
-                  defaultValue={dimensions[currentIndex]?.dimensionID}
+                  defaultValue={dimensions[currentIndex]?.dimensionID ?? dimensions.length + 1}
                 />
                 <Form.Control.Feedback type="invalid">
                   {this.state.source?.message}
