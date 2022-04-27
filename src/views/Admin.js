@@ -745,12 +745,6 @@ export default class AdminPanel extends Component {
                 </Table>
               </div>
             </Tab>
-            <Tab eventKey="trustedAIProviders" title="Trusted AI Providers">
-              <AdminProviders />
-            </Tab>
-            <Tab eventKey="trustedAIResources" title="Trusted AI Resources">
-              <AdminResources />
-            </Tab>
             <Tab eventKey="dimensions" title="Dimensions">
               <Dimensions />
             </Tab>
