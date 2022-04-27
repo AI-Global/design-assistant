@@ -11,7 +11,7 @@ const SubmissionSchema = mongoose.Schema({
   },
 
   system: {
-    type: String,
+    type: [String],
   },
 
   date: {
