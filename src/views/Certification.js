@@ -5,6 +5,8 @@ import { Table } from 'react-bootstrap';
 import { DimensionHead } from './DimensionHead'
 import { ScoreBar } from '../Components/ScoreBar';
 import TextField from '@material-ui/core/TextField';
+import { Typography, Accordion, AccordionSummary, AccordionDetails } from '@material-ui/core';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 // import Canvas from '../Components/Canvas';
 
 const displayQuestion = (result, question) => {
@@ -115,10 +117,32 @@ export default function Certification({ dimension, results, questions, subDimens
     console.log('saving this...', strengths, improvements)
   };
   const subDimensionsToDisplay = subDimensions.filter(d => d.dimensionID === dimension.dimensionID);
+  console.log(subDimensionsToDisplay)
   return (
     <>
       {/* <Canvas width="500" height="100" /> */}
       <DimensionHead dimension={dimension} questions={questions} results={results} />
+      {subDimensionsToDisplay.length > 0 && subDimensionsToDisplay.map((sd, index) => (
+        <Accordion key={index}>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+          >
+            <Typography style={{ fontSize: '16px', fontWeight: 'bold' }}>{sd.name}</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <Typography style={{ fontSize: '12px', fontWeight: 'bold', width: '100%' }}>
+                Description
+              </Typography>
+              <Typography style={{ fontSize: '12px', fontWeight: '300' }}>
+                {sd.description}
+              </Typography>
+            </div>
+          </AccordionDetails>
+        </Accordion>
+      ))}
       <div className="certification mt-3">
         <Table
           id={'certification-' + dimension}

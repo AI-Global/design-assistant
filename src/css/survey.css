@@ -39,10 +39,6 @@
   border-color: #dcdee1 !important;
 }
 
-p {
-  margin: 0 0 25px !important;
-}
-
 .sv_q_radiogroup_control_label p {
   margin-left: 3px !important;
 }
@@ -84,10 +80,10 @@ body {
 }
 
 h4 {
-  border-bottom: 1px solid #1a92ce;
+  border-bottom: 1px solid #000000;
   border-bottom-width: 1px;
   border-bottom-style: solid;
-  border-bottom-color: #1a92ce;
+  border-bottom-color: #000000;
   margin-bottom: 1em;
   margin-top: 1em;
   padding-bottom: 0.2em;
