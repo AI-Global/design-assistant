@@ -18,9 +18,6 @@ const displayQuestion = (result, question) => {
   } else {
     choices = question?.choices?.filter((choice) => result === choice?.value);
   }
-  console.log('question', question)
-  console.log('result', result)
-  console.log('choices', choices)
 
   return (
     <tr key={question?.name}>
@@ -74,6 +71,7 @@ const displayQuestion = (result, question) => {
 export default function Certification({ dimension, results, questions, subDimensions, submission }) {
   const [strengthsEditMode, setStrengthsEditMode] = useState(false);
   const [recommendationsEditMode, setRecommendationsEditMode] = useState(false);
+  const [questionsData, serQuestionsData] = useState(null);
   const [strengths, setStrengths] = useState('No recommendations yet.');
   const [improvements, setImprovements] = useState('No recommendations yet.');
 
@@ -88,6 +86,9 @@ export default function Certification({ dimension, results, questions, subDimens
           setImprovements(currentRecommendations?.improvements?.length > 0 ? currentRecommendations?.improvements : 'No recommendations yet.');
         }
       });
+    api.get('questions/all').then((res) => {
+      serQuestionsData(res.data.questions)
+    });
   }, []);
 
   const saveRecommendations = () => {
@@ -117,131 +118,108 @@ export default function Certification({ dimension, results, questions, subDimens
     console.log('saving this...', strengths, improvements)
   };
   const subDimensionsToDisplay = subDimensions.filter(d => d.dimensionID === dimension.dimensionID);
-  console.log(subDimensionsToDisplay)
   return (
     <>
-      {/* <Canvas width="500" height="100" /> */}
       <DimensionHead dimension={dimension} questions={questions} results={results} />
-      {subDimensionsToDisplay.length > 0 && subDimensionsToDisplay.map((sd, index) => (
-        <Accordion key={index}>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-          >
-            <Typography style={{ fontSize: '16px', fontWeight: 'bold' }}>{sd.name}</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography style={{ fontSize: '12px', fontWeight: 'bold', width: '100%' }}>
-                Description
-              </Typography>
-              <Typography style={{ fontSize: '12px', fontWeight: '300' }}>
-                {sd.description}
-              </Typography>
-            </div>
-          </AccordionDetails>
-        </Accordion>
-      ))}
-      <div className="certification mt-3">
-        <Table
-          id={'certification-' + dimension}
-          borderless
-          responsive
-          className="certification-table"
-        >
-          <thead>
-            <tr role="row">
-              <th
-                role="columnheader"
-                scope="col"
-                className="certification-headers"
+      {subDimensionsToDisplay.length > 0 && subDimensionsToDisplay.map((sd, index) => {
+        const questionsToDisplay = [];
+        const sdQuestions = questionsData?.filter(q => q.subDimension === sd.subDimensionID);
+        sdQuestions?.map(sdq => {
+          const answer = results[sdq._id];
+          if (answer) {
+            if (typeof answer === 'string' && answer.match(/^[0-9a-fA-F]{24}$/)) {
+              const [parsedAnswer] = sdq.responses.filter(r => r._id === answer);
+              questionsToDisplay.push({
+                question: sdq,
+                answer: parsedAnswer.indicator,
+              });
+            } else if (Array.isArray(answer)) {
+              const parsedAnswers = sdq.responses.filter(r => answer.includes(r._id)).map(pa => pa.indicator);
+              questionsToDisplay.push({
+                question: sdq,
+                answer: parsedAnswers.join(', '),
+              });
+            } else {
+              questionsToDisplay.push({
+                question: sdq,
+                answer
+              });
+            }
+          }
+        });
+        return (
+          <Accordion key={index}>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <Typography style={{ fontSize: '16px', fontWeight: 'bold' }}>{sd.name}</Typography>
+            </AccordionSummary>
+            <AccordionDetails style={{ flexDirection: 'column' }}>
+              <div>
+                <Typography style={{ fontSize: '12px', fontWeight: 'bold', width: '100%' }}>
+                  Description
+                </Typography>
+                <Typography style={{ fontSize: '12px', fontWeight: '300' }}>
+                  {sd.description}
+                </Typography>
+              </div>
+              <Table
+                id={'certification-' + dimension}
+                borderless
+                responsive
+                className="certification-table"
               >
-                {dimension?.name} sub-dimension scores:
-              </th>
-              <th
-                role="columnheader"
-                scope="col"
-                className="certification-headers"
-              >
-                Risk Scores
-              </th>
-              <th
-                role="columnheader"
-                scope="col"
-                className="certification-headers"
-              >
-                Mitigation Scores
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {/* {questions.map((question) => {
-              return displayQuestion(results[question?.name], question);
-            })} */}
-            {subDimensionsToDisplay.length > 0 && subDimensionsToDisplay.map((sd, index) => (
-              <tr key={index}>
-                <td>
-                  <strong>{sd.name}</strong>
-                  <p>{sd.description}</p>
-                </td>
-                <td><ScoreBar score={Math.floor(Math.random() * 101)} palette="risk" /></td>
-                <td><ScoreBar score={Math.floor(Math.random() * 101)} palette="mitigation" /></td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-        <Table id={'recommendation-' + dimension}
-          borderless
-          responsive
-          className="recommendation-table">
-          <thead>
-            <tr role="row">
-              <th>Areas of strength:</th>
-              <th>Opportunities for improvement:</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                {strengthsEditMode ? (
-                  <TextField
-                    id="strengths"
-                    label="Areas of strength"
-                    variant="outlined"
-                    minRows={3}
-                    multiline
-                    value={strengths}
-                    onChange={(e) => setStrengths(e.target.value === '' ? 'No recommendations yet.' : e.target.value)}
-                    fullWidth
-                    onBlur={() => saveRecommendations()}
-                    autoFocus
-                    style={{ minWidth: "25vw" }}
-                  />
-                ) : (<p style={strengths === 'No recommendations yet.' ? { color: "#8C8C8C" } : {}} onClick={() => setStrengthsEditMode(true)}>{strengths}</p>)}
-              </td>
-              <td>
-                {recommendationsEditMode ? (
-                  <TextField
-                    id="improvements"
-                    label="Opportunities for improvement"
-                    variant="outlined"
-                    minRows={3}
-                    multiline
-                    value={improvements}
-                    onChange={(e) => setImprovements(e.target.value === '' ? 'No recommendations yet.' : e.target.value)}
-                    fullWidth
-                    onBlur={() => saveRecommendations()}
-                    autoFocus
-                    style={{ minWidth: "25vw" }}
-
-                  />
-                ) : (<p style={improvements === 'No recommendations yet.' ? { color: "#8C8C8C" } : {}} onClick={() => setRecommendationsEditMode(true)}>{improvements}</p>)}
-              </td>
-            </tr>
-          </tbody>
-        </Table>
-      </div>
+                <tbody>
+                  {questionsToDisplay.length > 0 ? questionsToDisplay.map((qa, index) => (
+                    <tr key={index}>
+                      <td>
+                        <Typography style={{ fontSize: '12px', fontWeight: 'bold', width: '100%' }}>
+                          Question {qa.question.questionNumber}
+                        </Typography>
+                        <Typography style={{ fontSize: '12px', fontWeight: '300' }}>
+                          {qa.question.question}
+                        </Typography>
+                      </td>
+                      <td>
+                        <Typography style={{ fontSize: '12px', fontWeight: 'bold', width: '100%' }}>
+                          Your answer
+                        </Typography>
+                        <Typography style={{ fontSize: '12px', fontWeight: '300' }}>
+                          {qa.answer}
+                        </Typography>
+                      </td>
+                      <td>
+                        <Typography style={{ fontSize: '12px', fontWeight: 'bold', width: '100%' }}>
+                          Recommendation
+                        </Typography>
+                        <Typography style={{ fontSize: '12px', fontWeight: '300' }}>
+                          --
+                        </Typography>
+                      </td>
+                      <td>
+                        <Typography style={{ fontSize: '12px', fontWeight: 'bold', width: '100%' }}>
+                          Recommendation Links
+                        </Typography>
+                        <Typography style={{ fontSize: '12px', fontWeight: '300' }}>
+                          --
+                        </Typography>
+                      </td>
+                    </tr>
+                  )) : (
+                    <div>
+                      <Typography style={{ fontSize: '12px', fontWeight: 'bold', width: '100%' }}>
+                        No data to display
+                      </Typography>
+                    </div>
+                  )}
+                </tbody>
+              </Table>
+            </AccordionDetails>
+          </Accordion>
+        )
+      })}
     </>
   );
 }
