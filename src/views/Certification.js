@@ -129,20 +129,23 @@ export default function Certification({ dimension, results, questions, subDimens
           if (answer) {
             if (typeof answer === 'string' && answer.match(/^[0-9a-fA-F]{24}$/)) {
               const [parsedAnswer] = sdq.responses.filter(r => r._id === answer);
+              const maxScore = sdq.responses.reduce((max, r) => Math.max(max, r.score), 0);
               questionsToDisplay.push({
                 question: sdq,
-                answer: parsedAnswer.indicator,
+                answer: { value: parsedAnswer.indicator, maxScore: maxScore, answerScore: parsedAnswer.score },
               });
             } else if (Array.isArray(answer)) {
               const parsedAnswers = sdq.responses.filter(r => answer.includes(r._id)).map(pa => pa.indicator);
+              const maxScore = sdq.responses.reduce((max, r) => Math.max(max, r.score), 0);
+              const answerScore = parsedAnswers.reduce((sum, pa) => sum + (pa.score || 0), 0);
               questionsToDisplay.push({
                 question: sdq,
-                answer: parsedAnswers.join(', '),
+                answer: { value: parsedAnswers.join(', '), maxScore, answerScore },
               });
             } else {
               questionsToDisplay.push({
                 question: sdq,
-                answer
+                answer: { value: answer }
               });
             }
           }
@@ -172,47 +175,60 @@ export default function Certification({ dimension, results, questions, subDimens
                 className="certification-table"
               >
                 <tbody>
-                  {questionsToDisplay.length > 0 ? questionsToDisplay.map((qa, index) => (
-                    <tr key={index}>
+                  {questionsToDisplay.length > 0 ? questionsToDisplay.map((qa, index) => {
+                    console.log('qa', qa);
+                    return (
+                      <tr key={index}>
+                        <td>
+                          <Typography style={{ fontSize: '12px', fontWeight: 'bold', width: '100%' }}>
+                            Question {qa.question.questionNumber}
+                          </Typography>
+                          <Typography style={{ fontSize: '12px', fontWeight: '300' }}>
+                            {qa.question.question}
+                          </Typography>
+                        </td>
+                        <td>
+                          <Typography style={{ fontSize: '12px', fontWeight: 'bold', width: '100%' }}>
+                            Your answer
+                          </Typography>
+                          <Typography style={{ fontSize: '12px', fontWeight: '300' }}>
+                            {qa?.answer.value}
+                          </Typography>
+                        </td>
+                        <td>
+                          <Typography style={{ fontSize: '12px', fontWeight: 'bold', width: '100%' }}>
+                            Score
+                          </Typography>
+                          <Typography style={{ fontSize: '12px', fontWeight: '300' }}>
+                            {qa?.answer.answerScore}/{qa?.answer.maxScore}
+                          </Typography>
+                        </td>
+                        <td>
+                          <Typography style={{ fontSize: '12px', fontWeight: 'bold', width: '100%' }}>
+                            Recommendation
+                          </Typography>
+                          <Typography style={{ fontSize: '12px', fontWeight: '300' }}>
+                            --
+                          </Typography>
+                        </td>
+                        <td>
+                          <Typography style={{ fontSize: '12px', fontWeight: 'bold', width: '100%' }}>
+                            Recommendation Links
+                          </Typography>
+                          <Typography style={{ fontSize: '12px', fontWeight: '300' }}>
+                            --
+                          </Typography>
+                        </td>
+                      </tr>
+                    )
+                  }) : (
+                    <tr>
                       <td>
                         <Typography style={{ fontSize: '12px', fontWeight: 'bold', width: '100%' }}>
-                          Question {qa.question.questionNumber}
-                        </Typography>
-                        <Typography style={{ fontSize: '12px', fontWeight: '300' }}>
-                          {qa.question.question}
-                        </Typography>
-                      </td>
-                      <td>
-                        <Typography style={{ fontSize: '12px', fontWeight: 'bold', width: '100%' }}>
-                          Your answer
-                        </Typography>
-                        <Typography style={{ fontSize: '12px', fontWeight: '300' }}>
-                          {qa.answer}
-                        </Typography>
-                      </td>
-                      <td>
-                        <Typography style={{ fontSize: '12px', fontWeight: 'bold', width: '100%' }}>
-                          Recommendation
-                        </Typography>
-                        <Typography style={{ fontSize: '12px', fontWeight: '300' }}>
-                          --
-                        </Typography>
-                      </td>
-                      <td>
-                        <Typography style={{ fontSize: '12px', fontWeight: 'bold', width: '100%' }}>
-                          Recommendation Links
-                        </Typography>
-                        <Typography style={{ fontSize: '12px', fontWeight: '300' }}>
-                          --
+                          No data to display
                         </Typography>
                       </td>
                     </tr>
-                  )) : (
-                    <div>
-                      <Typography style={{ fontSize: '12px', fontWeight: 'bold', width: '100%' }}>
-                        No data to display
-                      </Typography>
-                    </div>
                   )}
                 </tbody>
               </Table>
