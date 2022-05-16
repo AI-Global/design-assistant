@@ -3,8 +3,6 @@ import api from '../api';
 import PropTypes from 'prop-types'
 import { Table } from 'react-bootstrap';
 import { DimensionHead } from './DimensionHead'
-import { ScoreBar } from '../Components/ScoreBar';
-import TextField from '@material-ui/core/TextField';
 import { Typography, Accordion, AccordionSummary, AccordionDetails } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 // import Canvas from '../Components/Canvas';
@@ -181,7 +179,7 @@ export default function Certification({ dimension, results, questions, subDimens
                       <tr key={index}>
                         <td>
                           <Typography style={{ fontSize: '12px', fontWeight: 'bold', width: '100%' }}>
-                            Question {qa.question.questionNumber}
+                            {qa.question.questionNumber} <a href="#">Learn more</a>
                           </Typography>
                           <Typography style={{ fontSize: '12px', fontWeight: '300' }}>
                             {qa.question.question}
@@ -197,7 +195,7 @@ export default function Certification({ dimension, results, questions, subDimens
                         </td>
                         <td>
                           <Typography style={{ fontSize: '12px', fontWeight: 'bold', width: '100%' }}>
-                            Score
+                            Points Earned
                           </Typography>
                           <Typography style={{ fontSize: '12px', fontWeight: '300' }}>
                             {qa?.answer.answerScore}/{qa?.answer.maxScore}

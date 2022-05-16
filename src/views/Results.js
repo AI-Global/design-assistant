@@ -17,6 +17,10 @@ import ReactGa from 'react-ga';
 import Login from './Login';
 import calculateQuestionScore from '../helper/QuestionScore';
 
+// material-ui components
+import { Grid } from '@material-ui/core';
+
+
 ReactGa.initialize(process.env.REACT_APP_GAID, {
   testMode: process.env.NODE_ENV !== 'production',
 });
@@ -301,218 +305,31 @@ export default class Results extends Component {
               >
                 Export as MS Word
               </button>
-              {/* <button
-                id="exportButtonCSV"
-                type="button"
-                className="btn btn-save mr-2 btn btn-primary export-button-csv"
-                onClick={() => {
-                  this.downloadCSV(surveyResults, questions);
-                }}
-              >
-                Export as CSV
-              </button> */}
-              <Tabs defaultActiveKey="score">
-                <Tab eventKey="score" title="Score">
-                  <div className="table-responsive mt-3">
-                    <Table
-                      id="score"
-                      bordered
-                      hover
-                      responsive
-                      className="report-card-table"
-                    >
-                      <thead>
-                        <tr>
-                          <th className="score-card-dheader">Dimensions</th>
-                          <th className="score-card-headers">Low</th>
-                          <th className="score-card-headers">Medium</th>
-                          <th className="score-card-headers">High</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {this.state.Dimensions.map((dimension, idx) => {
-                          if (
-                            dimension.label !== 'T' &&
-                            dimension.label !== 'RK'
-                          ) {
-                            return (
-                              <DimensionScore
-                                key={idx}
-                                radarChartData={radarChartData}
-                                dimensionName={dimension.name}
-                                riskWeight={riskWeight}
-                                results={surveyResults}
-                                questions={allQuestions.filter(
-                                  (x) => x.score?.dimension === dimension.label
-                                )}
-                              />
-                            );
-                          }
-                          return null;
-                        })}
-                      </tbody>
-                    </Table>
-                  </div>
-                </Tab>
-                <Tab eventKey="report-card" title="Report Card">
-                  <Tab.Container
-                    id="left-tabs-example"
-                    defaultActiveKey={this.state?.Dimensions[2]?.label}
-                  >
-                    <Tab.Content>
-                      {this.state.Dimensions.map((dimension, idx) => {
-                        if (dimension.label !== 'T') {
-                          return (
-                            <Tab.Pane key={idx} eventKey={dimension.label}>
-                              <ReportCard
-                                dimension={dimension.label}
-                                results={surveyResults}
-                                questions={questions.filter(
-                                  (x) => x.score?.dimension === dimension.label
-                                )}
-                              />
-                            </Tab.Pane>
-                          );
-                        }
-                        return null;
-                      })}
-                    </Tab.Content>
-                    <Nav
-                      variant="tabs"
-                      className="report-card-nav"
-                      defaultActiveKey="accountability"
-                    >
-                      {this.state.Dimensions.map((dimension, idx) => {
-                        if (dimension.label !== 'T') {
-                          return (
-                            <Nav.Item key={idx}>
-                              <Nav.Link eventKey={dimension.label}>
-                                {dimension.name}
-                              </Nav.Link>
-                            </Nav.Item>
-                          );
-                        }
-                        return null;
-                      })}
-                    </Nav>
-                  </Tab.Container>
-                </Tab>
-                <Tab eventKey="certification" title="Certification">
-                  <Tab.Container
-                    id="left-tabs-example"
-                    defaultActiveKey={this.state?.Dimensions[2]?.label}
-                  >
-                    <Tab.Content>
-                      {this.state.Dimensions.map((dimension, idx) => {
-                        if (dimension.label !== 'T') {
-                          return (
-                            <Tab.Pane key={idx} eventKey={dimension.label}>
-                              <Certification
-                                dimension={dimension}
-                                results={surveyResults}
-                                questions={questions.filter(
-                                  (x) => x.score?.dimension === dimension.label
-                                )}
-                                subDimensions={this.state.SubDimensions}
-                                submission={this.state.submission}
-                              />
-                            </Tab.Pane>
-                          );
-                        }
-                        return null;
-                      })}
-                    </Tab.Content>
-                    <Nav
-                      variant="tabs"
-                      className="report-card-nav"
-                      defaultActiveKey="accountability"
-                    >
-                      {this.state.Dimensions.map((dimension, idx) => {
-                        if (dimension.label !== 'T') {
-                          return (
-                            <Nav.Item key={idx}>
-                              <Nav.Link eventKey={dimension.label}>
-                                {dimension.name}
-                              </Nav.Link>
-                            </Nav.Item>
-                          );
-                        }
-                        return null;
-                      })}
-                    </Nav>
-                  </Tab.Container>
-                </Tab>
-                {/* <Tab eventKey="ai-providers" title="Trusted AI Providers">
-              <Tab.Container
-                id="left-tabs-example"
-                defaultActiveKey={this.state.Dimensions[0].label}
-              >
-                <TrustedAIProviders />
-              </Tab.Container>
-            </Tab> */}
-                <Tab eventKey="ai-resources" title="Trusted AI Resources">
-                  <Tab.Container
-                    id="left-tabs-example"
-                    defaultActiveKey={this.state.Dimensions[0].label}
-                  >
-                    <TrustedAIResources />
-                  </Tab.Container>
-                </Tab>
-              </Tabs>
+              <Grid container>
+                <Grid item xs={12}>
+                  <Tabs
+                    className="report-card-nav"
+                    defaultActiveKey="A"                  >
+                    {this.state.Dimensions.map((dimension, idx) => (
+                      <Tab eventKey={dimension.label} title={`${dimension.name} (${dimension.label})`}>
+                        <Tab.Pane key={idx} eventKey={dimension.label}>
+                          <Certification
+                            dimension={dimension}
+                            results={surveyResults}
+                            questions={questions.filter(
+                              (x) => x.score?.dimension === dimension.label
+                            )}
+                            subDimensions={this.state.SubDimensions}
+                            submission={this.state.submission}
+                          />
+                        </Tab.Pane>
+                      </Tab>
+                    ))}
+                  </Tabs>
+                </Grid>
+              </Grid>
             </div>
           )}
-          <div
-            className="dimension-chart"
-            style={{ marginBottom: '80px', marginTop: '40px' }}
-          >
-            <h4>Risk Level: {riskLevel[riskWeight ?? 1]}</h4>
-            <ResponsiveRadar
-              data={radarChartData}
-              keys={['score']}
-              indexBy="dimension"
-              maxValue={100}
-              margin={{ top: 70, right: 80, bottom: 40, left: 80 }}
-              curve="linearClosed"
-              borderWidth={2}
-              gridLevels={5}
-              gridShape="circular"
-              colors="rgb(31, 119, 180)"
-              isInteractive={true}
-              dotSize={8}
-            />
-          </div>
-          <p>
-            As‌ ‌AI‌ ‌continues‌ ‌to‌ ‌evolve‌ ‌so‌ ‌will‌ ‌the‌ ‌Design‌
-            ‌Assistant.‌ ‌ We‌ ‌are‌ ‌working‌ ‌now‌ ‌to‌ ‌add‌ questions‌
-            ‌that‌ ‌are‌ ‌more‌ ‌industry‌ ‌specific‌ ‌and‌ ‌tailored‌ ‌for‌
-            ‌your‌ ‌location.‌ ‌To‌ ‌do‌ ‌this,‌ ‌we‌ can‌ ‌use‌ ‌your‌ ‌help!‌
-            ‌Share‌ ‌with‌ ‌us‌ ‌the‌ ‌results‌ ‌of‌ ‌your‌ ‌report.‌ ‌Let‌ ‌us‌
-            ‌know‌ ‌where‌ ‌you‌ ‌need‌ more‌ ‌clarification,‌ ‌and‌ ‌where‌
-            ‌more‌ ‌guidance‌ ‌might‌ ‌be‌ ‌needed.‌ If‌ ‌you‌ ‌weren’t‌ ‌ready‌
-            ‌to‌ ‌answer‌ ‌all‌ ‌of‌ ‌the‌ ‌questions‌ ‌today,‌ ‌that’s‌ ‌ok,‌
-            ‌save‌ ‌your‌ ‌report,‌ ‌and‌ you‌ ‌can‌ ‌reload‌ ‌it‌ ‌the‌ ‌next‌
-            ‌time‌ ‌you‌ ‌return.‌
-          </p>
-          <p>
-            As‌ ‌an‌ ‌open‌ ‌source‌ ‌tool,‌ ‌we‌ ‌will‌ ‌continue‌ ‌to‌
-            ‌adjust‌ ‌quickly‌ ‌based‌ ‌on‌ ‌our‌ ‌communities‌ needs.‌ ‌Please‌
-            ‌let‌ ‌us‌ ‌know‌ ‌if‌ ‌you‌ ‌find‌ ‌any‌ ‌issues‌ ‌and‌ ‌we‌ ‌will‌
-            ‌be‌ ‌happy‌ ‌to‌ ‌update!‌
-          </p>
-          <p>
-            If‌ ‌you‌ ‌are‌ ‌wondering‌ ‌what‌ ‌to‌ ‌do‌ ‌with‌ ‌your‌
-            ‌results,‌ ‌and‌ ‌how‌ ‌you‌ ‌can‌ ‌improve,‌ ‌check‌ ‌out‌ the
-            Responsible AI Design Assistant Guide ‌that‌ ‌includes‌
-            ‌definitions‌ ‌and‌ ‌lots‌ ‌of‌ additional‌ ‌information.‌ ‌ If‌
-            ‌you‌ ‌are‌ ‌in‌ ‌need‌ ‌of‌ ‌additional‌ ‌support,‌ ‌contact‌ ‌us,‌
-            ‌and‌ ‌we‌ ‌can‌ put‌ ‌you‌ ‌in‌ ‌touch‌ ‌with‌ ‌a‌ ‌trusted‌
-            ‌service‌ ‌provider.‌
-          </p>
-          <p>
-            Since‌ ‌we‌ ‌want‌ ‌you‌ ‌to‌ ‌use‌ ‌the‌ ‌Design‌ ‌Assistant‌
-            ‌early‌ ‌and‌ ‌often,‌ ‌you‌ ‌can‌ ‌click‌ ‌the‌ ‌button‌ below‌
-            ‌to‌ ‌start‌ ‌over‌ ‌again!‌
-          </p>
           <Link to="/">
             <Button
               id="restartButton"
