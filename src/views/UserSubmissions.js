@@ -111,7 +111,10 @@ class UserSubmissions extends Component {
             region: submission.region,
             lifecycle: submission.lifecycle,
           },
-          userType: submission.userType,
+          userType: submission.system.length > 0,
+          system: submission.system,
+          region: submission.regionData,
+          domain: submission.domainData
         },
       });
     }

@@ -78,7 +78,8 @@ export default class Login extends Component {
         }
       })
       .catch((err) => {
-        let result = err.response.data;
+        console.error(err);
+        let result = err?.response?.data;
         this.setState(result);
       });
   }
