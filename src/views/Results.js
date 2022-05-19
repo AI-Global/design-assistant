@@ -14,6 +14,7 @@ import DimensionScore from './DimensionScore';
 import Certification from './Certification'
 import TrustedAIResources from './TrustedAIResources';
 import ReactGa from 'react-ga';
+import Summary from './Summary';
 import Login from './Login';
 import calculateQuestionScore from '../helper/QuestionScore';
 
@@ -309,7 +310,18 @@ export default class Results extends Component {
                 <Grid item xs={12}>
                   <Tabs
                     className="report-card-nav"
-                    defaultActiveKey="A"                  >
+                    defaultActiveKey="A">
+                    <Tab eventKey='summary' title='Summary'>
+                      <Tab.Pane eventKey='summary'>
+                        <Summary
+                          dimensions={this.state.Dimensions.filter(dimension => dimension.label !== 'T')}
+                          results={surveyResults}
+                          questions={questions}
+                          subDimensions={this.state.SubDimensions}
+                          submission={this.state.submission}
+                        />
+                      </Tab.Pane>
+                    </Tab>
                     {this.state.Dimensions.map((dimension, idx) => (
                       <Tab eventKey={dimension.label} title={`${dimension.name} (${dimension.label})`}>
                         <Tab.Pane key={idx} eventKey={dimension.label}>
