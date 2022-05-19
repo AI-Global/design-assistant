@@ -174,7 +174,6 @@ export default function Certification({ dimension, results, questions, subDimens
               >
                 <tbody>
                   {questionsToDisplay.length > 0 ? questionsToDisplay.map((qa, index) => {
-                    console.log('qa', qa);
                     return (
                       <tr key={index}>
                         <td>
