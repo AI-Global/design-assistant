@@ -12,6 +12,7 @@ import ReportCard from './ReportCard';
 import { createCertificationDocx } from '../helper/ExportDocx';
 import DimensionScore from './DimensionScore';
 import Certification from './Certification'
+import Summary from './Summary';
 import TrustedAIResources from './TrustedAIResources';
 import ReactGa from 'react-ga';
 import Login from './Login';
@@ -402,7 +403,39 @@ export default class Results extends Component {
                     id="left-tabs-example"
                     defaultActiveKey={this.state?.Dimensions[2]?.label}
                   >
+                    <Nav
+                      variant="tabs"
+                      className="report-card-nav"
+                      defaultActiveKey="accountability"
+                    >
+                      <Nav.Item>
+                        <Nav.Link eventKey='summary'>
+                          Summary
+                          </Nav.Link>
+                      </Nav.Item>
+                      {this.state.Dimensions.map((dimension, idx) => {
+                        if (dimension.label !== 'T') {
+                          return (
+                            <Nav.Item key={idx}>
+                              <Nav.Link eventKey={dimension.label}>
+                                {dimension.name}
+                              </Nav.Link>
+                            </Nav.Item>
+                          );
+                        }
+                        return null;
+                      })}
+                    </Nav>
                     <Tab.Content>
+                      <Tab.Pane eventKey='summary'>
+                        <Summary
+                          dimensions={this.state.Dimensions.filter(dimension => dimension.label !== 'T')}
+                          results={surveyResults}
+                          questions={questions}
+                          subDimensions={this.state.SubDimensions}
+                          submission={this.state.submission}
+                        />
+                      </Tab.Pane>
                       {this.state.Dimensions.map((dimension, idx) => {
                         if (dimension.label !== 'T') {
                           return (
@@ -422,24 +455,6 @@ export default class Results extends Component {
                         return null;
                       })}
                     </Tab.Content>
-                    <Nav
-                      variant="tabs"
-                      className="report-card-nav"
-                      defaultActiveKey="accountability"
-                    >
-                      {this.state.Dimensions.map((dimension, idx) => {
-                        if (dimension.label !== 'T') {
-                          return (
-                            <Nav.Item key={idx}>
-                              <Nav.Link eventKey={dimension.label}>
-                                {dimension.name}
-                              </Nav.Link>
-                            </Nav.Item>
-                          );
-                        }
-                        return null;
-                      })}
-                    </Nav>
                   </Tab.Container>
                 </Tab>
                 {/* <Tab eventKey="ai-providers" title="Trusted AI Providers">
