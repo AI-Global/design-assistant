@@ -69,6 +69,7 @@ export default class QuestionTable extends Component {
 
   async onDragEnd(result) {
     // dropped outside the list
+    console.log(` DragEnd:`, result);
     if (!result.destination) {
       return;
     }
@@ -93,12 +94,7 @@ export default class QuestionTable extends Component {
       await api
         .put('questions/' + (result.source.index + 1).toString() + '/1')
         .then(() => {
-          console.log(
-            'Question: ' +
-            result.source.index.toString() +
-            'is now question: ' +
-            result.destination.index.toString()
-          );
+          console.log(`Question ${result.source.index + 1} is now question ${result.destination.index + 1}`);
           this.setState({
             questions,
           });

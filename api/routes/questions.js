@@ -605,7 +605,7 @@ router.put('/:questionId', async (req, res) => {
 router.put('/:startNumber/:endNumber', async (req, res) => {
   let startNum = parseInt(req.params.startNumber);
   let endNum = parseInt(req.params.endNumber);
-
+  console.log(`Moving question from ${startNum} to ${endNum}`);
   try {
     const session = await mongoose.startSession();
     session.withTransaction(async () => {
@@ -617,18 +617,22 @@ router.put('/:startNumber/:endNumber', async (req, res) => {
 
       // shift questions down
       if (startNum < endNum) {
+        console.log(`Shifting questions down from ${startNum + 1} to ${endNum}`);
         for (let i = startNum + 1; i <= endNum; i++) {
           await Question.findOneAndUpdate(
             { questionNumber: i },
             { questionNumber: i - 1 }
           );
+          console.log('Moved question ${i} to ${i-1}');
         }
       } else {
+        console.log(`Shifting questions up from ${startNum - 1} to ${endNum}`);
         for (let i = startNum - 1; i >= endNum; i--) {
           await Question.findOneAndUpdate(
             { questionNumber: i },
             { questionNumber: i + 1 }
           );
+          console.log('Moved question ${i} to ${i+1}');
         }
       }
       startQuestion.questionNumber = endNum;
