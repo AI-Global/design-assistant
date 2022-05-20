@@ -623,7 +623,7 @@ router.put('/:startNumber/:endNumber', async (req, res) => {
             { questionNumber: i },
             { questionNumber: i - 1 }
           );
-          console.log('Moved question ${i} to ${i-1}');
+          console.log(`Moved question ${i} to ${i - 1}`);
         }
       } else {
         console.log(`Shifting questions up from ${startNum - 1} to ${endNum}`);
@@ -632,7 +632,7 @@ router.put('/:startNumber/:endNumber', async (req, res) => {
             { questionNumber: i },
             { questionNumber: i + 1 }
           );
-          console.log('Moved question ${i} to ${i+1}');
+          console.log(`Moved question ${i} to ${i + 1}`);
         }
       }
       startQuestion.questionNumber = endNum;
