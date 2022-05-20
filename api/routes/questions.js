@@ -640,8 +640,10 @@ router.put('/:startNumber/:endNumber', async (req, res) => {
     });
 
     // free up starting question number (unique)
+    console.log('Transaction complete');
     res.json({ message: 'Transaction Complete' });
   } catch (err) {
+    console.error(err)
     res.status(400).send(err);
   }
 });
