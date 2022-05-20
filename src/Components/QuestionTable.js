@@ -133,7 +133,7 @@ export default class QuestionTable extends Component {
         console.log(
           'Question: ' +
           this.state.previousNumber.toString() +
-          'is now question: ' +
+          ' is now question: ' +
           this.state.newNumber.toString()
         );
       });
@@ -280,10 +280,10 @@ export default class QuestionTable extends Component {
                   >
                     <Dropdown.Item onClick={() => this.export('json')}>
                       .json
-                </Dropdown.Item>
+                    </Dropdown.Item>
                     <Dropdown.Item onClick={() => this.export('csv')}>
                       .csv
-                </Dropdown.Item>
+                    </Dropdown.Item>
                   </DropdownButton>
                 </TableCell>
               </TableRow>
