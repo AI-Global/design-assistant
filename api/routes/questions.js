@@ -622,7 +622,7 @@ router.put('/:startNumber/:endNumber', async (req, res) => {
           await Question.findOneAndUpdate(
             { questionNumber: i },
             { questionNumber: i - 1 }
-          );
+          ).exec();
           console.log(`Moved question ${i} to ${i - 1}`);
         }
       } else {
@@ -631,7 +631,7 @@ router.put('/:startNumber/:endNumber', async (req, res) => {
           await Question.findOneAndUpdate(
             { questionNumber: i },
             { questionNumber: i + 1 }
-          );
+          ).exec();
           console.log(`Moved question ${i} to ${i + 1}`);
         }
       }
