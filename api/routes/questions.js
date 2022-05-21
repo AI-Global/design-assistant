@@ -608,7 +608,7 @@ router.put('/:startNumber/:endNumber', async (req, res) => {
   console.log(`Moving question from ${startNum} to ${endNum}`);
   try {
     const session = await mongoose.startSession();
-    session.withTransaction(async () => {
+    await session.withTransaction(async () => {
       startQuestion = await Question.findOne({
         questionNumber: startNum,
       }).exec();
