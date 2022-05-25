@@ -1,9 +1,32 @@
 import React, { useState, useEffect } from 'react'
 import api from '../api';
-import { Table, Container, Row, Col, ListGroup } from 'react-bootstrap';
+import { Container, Row, Col, ListGroup } from 'react-bootstrap';
+import NivoBullet from '../Components/NivoBullet';
+import { computeSubdimensionScore } from '../helper/ScoreHelper';
 
-export default function Summary({ dimensions, results, questions, subDimensions, submission }) {
-  const [questionsData, serQuestionsData] = useState(null);
+
+const getSubDimensionData = (subDimensions, questions, results) => {
+  let data = [];
+  subDimensions.forEach(subDimension => {
+    let subScore = computeSubdimensionScore(subDimension, questions, results);
+    // console.log(`Subdimension: ${subDimension.subDimensionID}`, 'Score: ', subScore);
+    let { earned, available } = subScore;
+    const benchmark = available / 2;
+    let subDimensionData = {
+      id: subDimension.name,
+      ranges: [available],
+      measures: [earned],
+      markers: [benchmark]
+    };
+    data.push(subDimensionData);
+  });
+  // console.log('Subdimension data: ', data);
+  return data;
+}
+
+
+export default function Summary({ dimensions, results, subDimensions, submission }) {
+  const [questions, setQuestions] = useState(null);
 
   useEffect(() => {
     api
@@ -12,11 +35,9 @@ export default function Summary({ dimensions, results, questions, subDimensions,
         const submissionFromAPI = res.data.submission;
       });
     api.get('questions/all').then((res) => {
-      serQuestionsData(res.data.questions)
+      setQuestions(res.data.questions)
     });
   }, []);
-  console.log(dimensions, subDimensions)
-
   return (
     <Container>
       <p style={{
@@ -29,14 +50,14 @@ export default function Summary({ dimensions, results, questions, subDimensions,
         <Col>
           <ListGroup style={{ marginBottom: '25px' }}>
             {dimensions.map(d => (
-              <ListGroup.Item style={{ borderWidth: '0px', padding: '0px' }}>{d.name}</ListGroup.Item>
+              <ListGroup.Item style={{ borderWidth: '0px', padding: '0px' }} key={d.dimensionID}>{d.name}</ListGroup.Item>
             ))}
           </ListGroup>
           <ListGroup style={{ marginBottom: '20px' }}>
             {dimensions.map(d => {
               const subDimensionsList = subDimensions.filter(sd => sd.dimensionID === d.dimensionID);
               return (
-                <ListGroup.Item style={{ borderWidth: '0px', paddingLeft: '0px' }}>
+                <ListGroup.Item style={{ borderWidth: '0px', paddingLeft: '0px' }} key={d.dimensionID}>
                   <p style={{
                     fontSize: '32px',
                     fontWeight: 700,
@@ -44,9 +65,9 @@ export default function Summary({ dimensions, results, questions, subDimensions,
                     {d.name}
                   </p>
                   <ListGroup>
-                    {subDimensionsList.map(sd => (
-                      <ListGroup.Item style={{ borderWidth: '0px', padding: '0px' }}>{sd.name}</ListGroup.Item>
-                    ))}
+                    <div style={{ height: '600px', width: '75vw' }} >
+                      {questions && <NivoBullet data={getSubDimensionData(subDimensionsList, questions, results)} />}
+                    </div>
                   </ListGroup>
                 </ListGroup.Item>
               )

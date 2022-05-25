@@ -109,7 +109,7 @@ export default class Results extends Component {
         .get(`submissions/submission/${this.state?.submissionId}`)
         .then((res) => {
           const submission = res.data.submission;
-          console.log(submission);
+          // console.log(submission);
           api.post('submissions/update/' + this.state?.submissionId, {
             ...submission,
             riskLevel: submissionRiskLevel,
@@ -216,6 +216,7 @@ export default class Results extends Component {
       return allQuestions;
     });
 
+
     var riskWeight = this.calculateRiskWeight(
       allQuestions.filter((x) => x.score?.dimension === 'RK'),
       surveyResults
@@ -311,7 +312,7 @@ export default class Results extends Component {
                   <Tabs
                     className="report-card-nav"
                     defaultActiveKey="A">
-                    <Tab eventKey='summary' title='Summary'>
+                    <Tab eventKey='summary' title='Summary' key='summary'>
                       <Tab.Pane eventKey='summary'>
                         <Summary
                           dimensions={this.state.Dimensions.filter(dimension => dimension.label !== 'T')}
@@ -323,7 +324,7 @@ export default class Results extends Component {
                       </Tab.Pane>
                     </Tab>
                     {this.state.Dimensions.map((dimension, idx) => (
-                      <Tab eventKey={dimension.label} title={`${dimension.name} (${dimension.label})`}>
+                      <Tab eventKey={dimension.label} key={dimension.label} title={`${dimension.name} (${dimension.label})`}>
                         <Tab.Pane key={idx} eventKey={dimension.label}>
                           <Certification
                             dimension={dimension}

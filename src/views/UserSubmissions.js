@@ -91,7 +91,7 @@ class UserSubmissions extends Component {
         stringified = stringified.replace(/\\\//g, '/');
         json = JSON.parse(stringified);
         //
-
+        console.log('Pushing questions to results state: ', json)
         this.props.history.push({
           pathname: '/Results',
           state: { questions: json, responses: submission.submission ?? {} },

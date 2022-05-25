@@ -172,6 +172,35 @@ export default function Certification({ dimension, results, questions, subDimens
                 responsive
                 className="certification-table"
               >
+                <thead>
+                  <tr>
+                    <th>
+                      <Typography style={{ fontSize: '12px', fontWeight: 'bold' }}>
+                        Question
+                      </Typography>
+                    </th>
+                    <th>
+                      <Typography style={{ fontSize: '12px', fontWeight: 'bold', width: '100%' }}>
+                        Your answer
+                      </Typography>
+                    </th>
+                    <th>
+                      <Typography style={{ fontSize: '12px', fontWeight: 'bold', width: '100%' }}>
+                        Points Earned
+                      </Typography>
+                    </th>
+                    <th>
+                      <Typography style={{ fontSize: '12px', fontWeight: 'bold', width: '100%' }}>
+                        Recommendation
+                      </Typography>
+                    </th>
+                    <th>
+                      <Typography style={{ fontSize: '12px', fontWeight: 'bold', width: '100%' }}>
+                        Recommendation Links
+                      </Typography>
+                    </th>
+                  </tr>
+                </thead>
                 <tbody>
                   {questionsToDisplay.length > 0 ? questionsToDisplay.map((qa, index) => {
                     return (
@@ -185,33 +214,23 @@ export default function Certification({ dimension, results, questions, subDimens
                           </Typography>
                         </td>
                         <td>
-                          <Typography style={{ fontSize: '12px', fontWeight: 'bold', width: '100%' }}>
-                            Your answer
-                          </Typography>
                           <Typography style={{ fontSize: '12px', fontWeight: '300' }}>
                             {qa?.answer.value}
                           </Typography>
                         </td>
                         <td>
-                          <Typography style={{ fontSize: '12px', fontWeight: 'bold', width: '100%' }}>
-                            Points Earned
-                          </Typography>
                           <Typography style={{ fontSize: '12px', fontWeight: '300' }}>
                             {qa?.answer.answerScore}/{qa?.answer.maxScore}
                           </Typography>
                         </td>
                         <td>
-                          <Typography style={{ fontSize: '12px', fontWeight: 'bold', width: '100%' }}>
-                            Recommendation
-                          </Typography>
+
                           <Typography style={{ fontSize: '12px', fontWeight: '300' }}>
                             --
                           </Typography>
                         </td>
                         <td>
-                          <Typography style={{ fontSize: '12px', fontWeight: 'bold', width: '100%' }}>
-                            Recommendation Links
-                          </Typography>
+
                           <Typography style={{ fontSize: '12px', fontWeight: '300' }}>
                             --
                           </Typography>
