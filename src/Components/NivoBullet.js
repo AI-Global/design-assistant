@@ -10,7 +10,7 @@ import { ResponsiveBullet } from '@nivo/bullet'
 const NivoBullet = ({ data /* see data tab */ }) => (
   <ResponsiveBullet
     data={data}
-    margin={{ top: 50, right: 90, bottom: 50, left: 200 }}
+    margin={{ top: 0, right: 90, bottom: 50, left: 200 }}
     spacing={45}
     titleAlign="start"
     titleOffsetX={-200}
@@ -18,7 +18,7 @@ const NivoBullet = ({ data /* see data tab */ }) => (
     maxValue={100}
     measureSize={0.8}
     rangeColors="blues"
-    measureColors="seq:blue_green"
+    measureColors="seq:blues"
     markerColors="seq:blue_green"
   />
 )

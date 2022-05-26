@@ -20,7 +20,7 @@ const getSubDimensionData = (subDimensions, questions, results) => {
     };
     data.push(subDimensionData);
   });
-  // console.log('Subdimension data: ', data);
+  console.log('Subdimension data for: ', data);
   return data;
 }
 
@@ -65,7 +65,7 @@ export default function Summary({ dimensions, results, subDimensions, submission
                     {d.name}
                   </p>
                   <ListGroup>
-                    <div style={{ height: '600px', width: '75vw' }} >
+                    <div style={{ height: `${subDimensionsList.length * 85}px`, width: '50vw' }} >
                       {questions && <NivoBullet data={getSubDimensionData(subDimensionsList, questions, results)} />}
                     </div>
                   </ListGroup>
