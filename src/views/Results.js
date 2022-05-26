@@ -311,7 +311,7 @@ export default class Results extends Component {
                 <Grid item xs={12}>
                   <Tabs
                     className="report-card-nav"
-                    defaultActiveKey="A">
+                    defaultActiveKey="summary">
                     <Tab eventKey='summary' title='Summary' key='summary'>
                       <Tab.Pane eventKey='summary'>
                         <Summary

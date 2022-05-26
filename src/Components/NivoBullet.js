@@ -15,7 +15,7 @@ const NivoBullet = ({ data /* see data tab */ }) => (
     titleAlign="start"
     titleOffsetX={-200}
     minValue={0}
-    maxValue={100}
+    // maxValue={100}
     measureSize={0.8}
     rangeColors="blues"
     measureColors="seq:blues"

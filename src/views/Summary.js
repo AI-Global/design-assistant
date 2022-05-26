@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import api from '../api';
 import { Container, Row, Col, ListGroup } from 'react-bootstrap';
 import NivoBullet from '../Components/NivoBullet';
+import NivoBar from '../Components/NivoBar';
+
 import { computeSubdimensionScore } from '../helper/ScoreHelper';
 
 
@@ -22,6 +24,34 @@ const getSubDimensionData = (subDimensions, questions, results) => {
   });
   console.log('Subdimension data for: ', data);
   return data;
+}
+
+const getSubDimensionBarData = (subDimensions, questions, results) => {
+  let data = [];
+  subDimensions.forEach(subDimension => {
+    let subScore = computeSubdimensionScore(subDimension, questions, results);
+    // console.log(`Subdimension: ${subDimension.subDimensionID}`, 'Score: ', subScore);
+    let { earned, available } = subScore;
+    const benchmark = available / 2;
+    let subDimensionData = {
+      dimension: subDimension.name,
+      earned: earned,
+      earnedColor: '#38bcb2',
+      available: available,
+      availableColor: '#eed312',
+      // benchmark: benchmark,
+    };
+    data.push(subDimensionData);
+  });
+  let maxScore = data.reduce((max, curr) => Math.max(max, curr.available), 0);
+  console.log('Subdimension data: ', data);
+  return { maxScore, data };
+}
+
+const WrappedBar = ({ subDimensions, questions, results }) => {
+  const { maxScore, data } = getSubDimensionBarData(subDimensions, questions, results);
+  console.log('Max Score ', maxScore, 'Data ', data);
+  return <NivoBar data={data} maxScore={maxScore} keys={['earned', 'available']} />;
 }
 
 
@@ -66,7 +96,7 @@ export default function Summary({ dimensions, results, subDimensions, submission
                   </p>
                   <ListGroup>
                     <div style={{ height: `${subDimensionsList.length * 85}px`, width: '50vw' }} >
-                      {questions && <NivoBullet data={getSubDimensionData(subDimensionsList, questions, results)} />}
+                      {questions && <WrappedBar subDimensions={subDimensionsList} questions={questions} results={results} />}
                     </div>
                   </ListGroup>
                 </ListGroup.Item>
