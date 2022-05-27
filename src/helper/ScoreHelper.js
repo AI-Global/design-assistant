@@ -3,11 +3,12 @@
 
 
 export const computeDimensionScores = (dimensions, subDimensions, questions, results) => {
+  console.log('Dimensions: ', dimensions, 'Subdimensions: ', subDimensions, 'Questions', questions, 'Results', results);
   const dimensionScores = dimensions.map(d => {
     const subDimensionsList = subDimensions.filter(sd => sd.dimensionID === d.dimensionID);
     const subDimensionScores = computeSubdimesionScores(subDimensionsList, questions, results);
     const dimensionScore = computeDimensionScore(subDimensionScores);
-    return dimensionScore;
+    return { dimension: d, ...dimensionScore };
   });
   return dimensionScores;
 }
@@ -35,7 +36,7 @@ export const computeSubdimensionScore = (subDimension, questions, results) => {
   const questionScores = computeQuestionScores(sdQuestions, results);
   // console.log('Question scores: ', questionScores);
   let acc = { earned: 0, available: 0 };
-  const subDimensionScore = questionScores.reduce((acc, curr) => {
+  const subDimensionScore = questionScores?.reduce((acc, curr) => {
     return { earned: acc.earned + curr.earned, available: acc.available + curr.available };
   }, acc);
   return subDimensionScore;

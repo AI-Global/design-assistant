@@ -16,8 +16,8 @@ const getSubDimensionApexData = (subDimensions, questions, results) => {
       y: earned,
       goals: [
         {
-          name: 'Available',
-          value: available === 0 ? 98 : available,
+          name: 'Benchmark',
+          value: benchmark,
           strokeWidth: 5,
           strokeHeight: 10,
           strokeColor: '#D9D4DE'
@@ -50,6 +50,7 @@ const getSubDimensionApexData = (subDimensions, questions, results) => {
       plotOptions: {
         bar: {
           horizontal: true,
+          barHeight: '80%',
         }
       },
       colors: ['#3F73FB'],
@@ -79,6 +80,25 @@ const getSubDimensionApexData = (subDimensions, questions, results) => {
       xaxis: {
         labels: {
           show: false
+        }
+      },
+      yaxis: {
+        show: true,
+        labels: {
+          show: true,
+          align: 'right',
+          minWidth: 0,
+          maxWidth: 160,
+          style: {
+            colors: [],
+            fontSize: '12px',
+            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif',
+            fontWeight: 400,
+            cssClass: 'apexcharts-yaxis-label',
+          },
+          offsetX: 0,
+          offsetY: 0,
+          rotate: 0,
         }
       },
       noData: {
@@ -102,109 +122,39 @@ const getSubDimensionApexData = (subDimensions, questions, results) => {
 const getDimensionApexData = (dimensions, subDimensions, questions, results) => {
   console.log(subDimensions, dimensions)
   const scores = computeDimensionScores(dimensions, subDimensions, questions, results);
-  console.log(scores);
+  console.log('Computed dimension scores: ', scores);
+  const earned = scores.map(score => {
+    return { x: score.dimension.name, y: score.earned, goals: [{ name: 'Benchmark', value: score.available / 2 }] }
+  });
+  const available = scores.map(score => {
+    return { x: score.dimension.name, y: score.available }
+  });
+  console.log('Earned: ', earned);
+  console.log('Available: ', available);
 
   return ({
 
     series: [
       {
         name: 'Earned',
-        data: [
-          {
-            x: '2011',
-            y: 12,
-            goals: [
-              {
-                name: 'Expected',
-                value: 14,
-                strokeWidth: 2,
-                strokeDashArray: 2,
-                strokeColor: '#775DD0'
-              }
-            ]
-          },
-          {
-            x: '2012',
-            y: 44,
-            goals: [
-              {
-                name: 'Expected',
-                value: 54,
-                strokeWidth: 5,
-                strokeHeight: 10,
-                strokeColor: '#775DD0'
-              }
-            ]
-          },
-          {
-            x: '2013',
-            y: 54,
-            goals: [
-              {
-                name: 'Expected',
-                value: 52,
-                strokeWidth: 10,
-                strokeHeight: 0,
-                strokeLineCap: 'round',
-                strokeColor: '#775DD0'
-              }
-            ]
-          },
-          {
-            x: '2014',
-            y: 66,
-            goals: [
-              {
-                name: 'Expected',
-                value: 61,
-                strokeWidth: 10,
-                strokeHeight: 0,
-                strokeLineCap: 'round',
-                strokeColor: '#775DD0'
-              }
-            ]
-          },
-          {
-            x: '2015',
-            y: 81,
-            goals: [
-              {
-                name: 'Expected',
-                value: 66,
-                strokeWidth: 10,
-                strokeHeight: 0,
-                strokeLineCap: 'round',
-                strokeColor: '#775DD0'
-              }
-            ]
-          },
-          {
-            x: '2016',
-            y: 67,
-            goals: [
-              {
-                name: 'Expected',
-                value: 70,
-                strokeWidth: 5,
-                strokeHeight: 10,
-                strokeColor: '#775DD0'
-              }
-            ]
-          }
-        ]
+        data: earned
+      },
+      {
+        name: 'Available',
+        data: available
       }
     ],
     options: {
       chart: {
         height: '20px',
         type: 'bar',
+        stacked: true,
         toolbar: {
           show: false,
           tools: {
             download: false,
           }
         },
-        fontFamily: 'Roboto',
       },
       plotOptions: {
         bar: {
@@ -225,7 +175,9 @@ const getDimensionApexData = (dimensions, subDimensions, questions, results) => 
         }
       },
       legend: {
-        show: false,
+        show: true,
+        position: 'top',
+        horizontalAlign: 'right',
         showForSingleSeries: true,
         customLegendItems: ['Earned', 'Available'],
         markers: {
@@ -240,20 +192,37 @@ const getDimensionApexData = (dimensions, subDimensions, questions, results) => 
           show: false
         }
       },
-      noData: {
-        text: 'No data',
-        align: 'center',
-        verticalAlign: 'middle',
-        offsetX: 0,
-        offsetY: 0,
-        style: {
-          color: '#000000',
-          fontSize: '14px',
+      yaxis: {
+        show: true,
+        labels: {
+          show: true,
+          align: 'right',
+          minWidth: 0,
+          maxWidth: 160,
+          style: {
+            colors: [],
+            fontSize: '12px',
+            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif',
+            fontWeight: 400,
+            cssClass: 'apexcharts-yaxis-label',
+          },
+          offsetX: 0,
+          offsetY: 0,
+          rotate: 0,
+        },
+        noData: {
+          text: 'No data',
+          align: 'center',
+          verticalAlign: 'middle',
+          offsetX: 0,
+          offsetY: 0,
+          style: {
+            color: '#000000',
+            fontSize: '14px',
+          }
         }
-      }
-    },
-
-
+      },
+    }
   }
   )
 }
@@ -264,7 +233,7 @@ const WrappedApex = ({ subDimensions, questions, results }) => {
 }
 
 const WrappedDimensionApex = ({ dimensions, subDimensions, questions, results }) => {
-  const { options, series, type, width } = getDimensionApexData(dimensions, subDimensions, questions, results);
+  const { options, series } = getDimensionApexData(dimensions, subDimensions, questions, results);
   return <ApexBar options={options} series={series} type={"bar"} width={400} />
 }
 
@@ -292,8 +261,8 @@ export default function Summary({ dimensions, results, subDimensions, submission
       </p>
       <Row>
         <Col>
-          <ListGroup style={{ marginBottom: '25px' }}>
-            {dimensions && <WrappedDimensionApex dimensions={dimensions} subDimensions={dimensions} questions={questions} results={results} />}
+          <ListGroup style={{ marginBottom: '25px', height: `${dimensions.length * 50}px` }}>
+            {dimensions && questions && subDimensions && results && <WrappedDimensionApex dimensions={dimensions} subDimensions={subDimensions} questions={questions} results={results} />}
           </ListGroup>
           <ListGroup style={{ marginBottom: '20px' }}>
             {dimensions.map(d => {
