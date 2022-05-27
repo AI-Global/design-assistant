@@ -6,7 +6,8 @@ const ApexBar = ({ options, series, type, width }) => {
     options={options}
     series={series}
     type={type}
-    width={width}
+    width={'100%'}
+    height={'100%'}
   />
 }
 

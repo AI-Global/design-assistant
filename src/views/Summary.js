@@ -1,76 +1,23 @@
 import React, { useState, useEffect } from 'react'
 import api from '../api';
 import { Container, Row, Col, ListGroup } from 'react-bootstrap';
-import NivoBullet from '../Components/NivoBullet';
-import NivoBar from '../Components/NivoBar';
 import ApexBar from '../Components/ApexBar';
 
-import { computeSubdimensionScore } from '../helper/ScoreHelper';
-
-
-const getSubDimensionData = (subDimensions, questions, results) => {
-  let data = [];
-  subDimensions.forEach(subDimension => {
-    let subScore = computeSubdimensionScore(subDimension, questions, results);
-    // console.log(`Subdimension: ${subDimension.subDimensionID}`, 'Score: ', subScore);
-    let { earned, available } = subScore;
-    const benchmark = available / 2;
-    let subDimensionData = {
-      id: subDimension.name,
-      ranges: [available],
-      measures: [earned],
-      markers: [benchmark]
-    };
-    data.push(subDimensionData);
-  });
-  console.log('Subdimension data for: ', data);
-  return data;
-}
-
-const getSubDimensionBarData = (subDimensions, questions, results) => {
-  let data = [];
-  subDimensions.forEach(subDimension => {
-    let subScore = computeSubdimensionScore(subDimension, questions, results);
-    // console.log(`Subdimension: ${subDimension.subDimensionID}`, 'Score: ', subScore);
-    let { earned, available } = subScore;
-    const benchmark = available / 2;
-    let subDimensionData = {
-      dimension: subDimension.name,
-      earned: earned,
-      earnedColor: '#38bcb2',
-      available: available,
-      availableColor: '#eed312',
-      // benchmark: benchmark,
-    };
-    data.push(subDimensionData);
-  });
-  let maxScore = data.reduce((max, curr) => Math.max(max, curr.available), 0);
-  console.log('Subdimension data: ', data);
-  return { maxScore, data };
-}
+import { computeSubdimensionScore, computeDimensionScores } from '../helper/ScoreHelper';
 
 const getSubDimensionApexData = (subDimensions, questions, results) => {
   let data = [];
   subDimensions.forEach(subDimension => {
     let subScore = computeSubdimensionScore(subDimension, questions, results);
-    // console.log(`Subdimension: ${subDimension.subDimensionID}`, 'Score: ', subScore);
     let { earned, available } = subScore;
     const benchmark = available / 2;
-    let subDimensionData = {
-      dimension: subDimension.name,
-      earned: earned,
-      earnedColor: '#38bcb2',
-      available: available,
-      availableColor: '#eed312',
-      benchmark: benchmark,
-    };
     let apexData = {
       x: subDimension.name,
       y: earned,
       goals: [
         {
           name: 'Available',
-          value: available,
+          value: available === 0 ? 98 : available,
           strokeWidth: 5,
           strokeHeight: 10,
           strokeColor: '#D9D4DE'
@@ -79,9 +26,6 @@ const getSubDimensionApexData = (subDimensions, questions, results) => {
     };
     data.push(apexData);
   });
-  let maxScore = data.reduce((max, curr) => Math.max(max, curr.available), 0);
-  console.log('Subdimension data: ', data);
-  // return { maxScore, data };
 
   return ({
 
@@ -94,13 +38,14 @@ const getSubDimensionApexData = (subDimensions, questions, results) => {
     options: {
       chart: {
         height: '20px',
-        type: 'bar'
-      },
-      toolbar: {
-        show: false,
-        tools: {
-          download: false,
-        }
+        type: 'bar',
+        toolbar: {
+          show: false,
+          tools: {
+            download: false,
+          }
+        },
+        fontFamily: 'Roboto',
       },
       plotOptions: {
         bar: {
@@ -121,11 +66,19 @@ const getSubDimensionApexData = (subDimensions, questions, results) => {
         }
       },
       legend: {
-        show: true,
+        show: false,
         showForSingleSeries: true,
         customLegendItems: ['Earned', 'Available'],
         markers: {
           fillColors: ['#3F73FB', '#D9D4DE']
+        }
+      },
+      grid: {
+        show: false,
+      },
+      xaxis: {
+        labels: {
+          show: false
         }
       },
       noData: {
@@ -146,14 +99,172 @@ const getSubDimensionApexData = (subDimensions, questions, results) => {
   )
 }
 
-const WrappedBar = ({ subDimensions, questions, results }) => {
-  const { maxScore, data } = getSubDimensionBarData(subDimensions, questions, results);
-  console.log('Max Score ', maxScore, 'Data ', data);
-  return <NivoBar data={data} maxScore={maxScore} keys={['earned', 'available']} />;
+const getDimensionApexData = (dimensions, subDimensions, questions, results) => {
+  console.log(subDimensions, dimensions)
+  const scores = computeDimensionScores(dimensions, subDimensions, questions, results);
+  console.log(scores);
+
+  return ({
+
+    series: [
+      {
+        name: 'Earned',
+        data: [
+          {
+            x: '2011',
+            y: 12,
+            goals: [
+              {
+                name: 'Expected',
+                value: 14,
+                strokeWidth: 2,
+                strokeDashArray: 2,
+                strokeColor: '#775DD0'
+              }
+            ]
+          },
+          {
+            x: '2012',
+            y: 44,
+            goals: [
+              {
+                name: 'Expected',
+                value: 54,
+                strokeWidth: 5,
+                strokeHeight: 10,
+                strokeColor: '#775DD0'
+              }
+            ]
+          },
+          {
+            x: '2013',
+            y: 54,
+            goals: [
+              {
+                name: 'Expected',
+                value: 52,
+                strokeWidth: 10,
+                strokeHeight: 0,
+                strokeLineCap: 'round',
+                strokeColor: '#775DD0'
+              }
+            ]
+          },
+          {
+            x: '2014',
+            y: 66,
+            goals: [
+              {
+                name: 'Expected',
+                value: 61,
+                strokeWidth: 10,
+                strokeHeight: 0,
+                strokeLineCap: 'round',
+                strokeColor: '#775DD0'
+              }
+            ]
+          },
+          {
+            x: '2015',
+            y: 81,
+            goals: [
+              {
+                name: 'Expected',
+                value: 66,
+                strokeWidth: 10,
+                strokeHeight: 0,
+                strokeLineCap: 'round',
+                strokeColor: '#775DD0'
+              }
+            ]
+          },
+          {
+            x: '2016',
+            y: 67,
+            goals: [
+              {
+                name: 'Expected',
+                value: 70,
+                strokeWidth: 5,
+                strokeHeight: 10,
+                strokeColor: '#775DD0'
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    options: {
+      chart: {
+        height: '20px',
+        type: 'bar',
+        toolbar: {
+          show: false,
+          tools: {
+            download: false,
+          }
+        },
+        fontFamily: 'Roboto',
+      },
+      plotOptions: {
+        bar: {
+          horizontal: true,
+        }
+      },
+      colors: ['#3F73FB'],
+      dataLabels: {
+        formatter: function (val, opt) {
+          const goals =
+            opt.w.config.series[opt.seriesIndex].data[opt.dataPointIndex]
+              .goals
+
+          if (goals && goals.length) {
+            return `${val} / ${goals[0].value}`
+          }
+          return val
+        }
+      },
+      legend: {
+        show: false,
+        showForSingleSeries: true,
+        customLegendItems: ['Earned', 'Available'],
+        markers: {
+          fillColors: ['#3F73FB', '#D9D4DE']
+        }
+      },
+      grid: {
+        show: false,
+      },
+      xaxis: {
+        labels: {
+          show: false
+        }
+      },
+      noData: {
+        text: 'No data',
+        align: 'center',
+        verticalAlign: 'middle',
+        offsetX: 0,
+        offsetY: 0,
+        style: {
+          color: '#000000',
+          fontSize: '14px',
+        }
+      }
+    },
+
+
+  }
+  )
 }
 
 const WrappedApex = ({ subDimensions, questions, results }) => {
   const { options, series, type, width } = getSubDimensionApexData(subDimensions, questions, results);
+  return <ApexBar options={options} series={series} type={"bar"} width={400} />
+}
+
+const WrappedDimensionApex = ({ dimensions, subDimensions, questions, results }) => {
+  const { options, series, type, width } = getDimensionApexData(dimensions, subDimensions, questions, results);
   return <ApexBar options={options} series={series} type={"bar"} width={400} />
 }
 
@@ -182,9 +293,7 @@ export default function Summary({ dimensions, results, subDimensions, submission
       <Row>
         <Col>
           <ListGroup style={{ marginBottom: '25px' }}>
-            {dimensions.map(d => (
-              <ListGroup.Item style={{ borderWidth: '0px', padding: '0px' }} key={d.dimensionID}>{d.name}</ListGroup.Item>
-            ))}
+            {dimensions && <WrappedDimensionApex dimensions={dimensions} subDimensions={dimensions} questions={questions} results={results} />}
           </ListGroup>
           <ListGroup style={{ marginBottom: '20px' }}>
             {dimensions.map(d => {
@@ -198,7 +307,7 @@ export default function Summary({ dimensions, results, subDimensions, submission
                     {d.name}
                   </p>
                   <ListGroup>
-                    <div>
+                    <div style={{ height: `${subDimensionsList.length * 50}px` }}>
                       {/* {questions && <WrappedBar subDimensions={subDimensionsList} questions={questions} results={results} />} */}
                       {questions && <WrappedApex subDimensions={subDimensionsList} questions={questions} results={results} />}
                     </div>
