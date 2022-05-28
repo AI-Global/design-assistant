@@ -161,7 +161,7 @@ const getDimensionApexData = (dimensions, subDimensions, questions, results) => 
           horizontal: true,
         }
       },
-      colors: ['#3F73FB'],
+      colors: ['#3F73FB', '#D9D4DE'],
       dataLabels: {
         formatter: function (val, opt) {
           const goals =
