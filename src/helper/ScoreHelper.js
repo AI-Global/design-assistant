@@ -3,7 +3,6 @@
 
 
 export const computeDimensionScores = (dimensions, subDimensions, questions, results) => {
-  console.log('Dimensions: ', dimensions, 'Subdimensions: ', subDimensions, 'Questions', questions, 'Results', results);
   const dimensionScores = dimensions.map(d => {
     const subDimensionsList = subDimensions.filter(sd => sd.dimensionID === d.dimensionID);
     const subDimensionScores = computeSubdimesionScores(subDimensionsList, questions, results);
@@ -34,7 +33,6 @@ export const computeSubdimensionScore = (subDimension, questions, results) => {
     return (q.subDimension === subDimension.subDimensionID)
   });
   const questionScores = computeQuestionScores(sdQuestions, results);
-  // console.log('Question scores: ', questionScores);
   let acc = { earned: 0, available: 0 };
   const subDimensionScore = questionScores?.reduce((acc, curr) => {
     return { earned: acc.earned + curr.earned, available: acc.available + curr.available };
@@ -53,7 +51,6 @@ export const computeQuestionScores = (questions, results) => {
 /** Compute question Score from the question responses */
 export const computeQuestionScore = (question, answer) => {
   let retval = { available: 0, earned: 0 };
-  // console.log('Computing score for question: ', question, ' with Answer: ', answer);
   if (answer) {
     // Answer is a reference to a single response (dropdown)
     if (typeof answer === 'string' && answer.match(/^[0-9a-fA-F]{24}$/)) {
@@ -70,7 +67,6 @@ export const computeQuestionScore = (question, answer) => {
       retval = { available: 0, earned: 0 }
     }
   }
-  // console.log('Question score: ', retval);
   return retval;
 };
 

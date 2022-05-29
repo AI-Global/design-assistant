@@ -7,6 +7,7 @@ import { computeSubdimensionScore, computeDimensionScores } from '../helper/Scor
 
 const getSubDimensionApexData = (subDimensions, questions, results) => {
   let data = [];
+  let availableData = [];
   subDimensions.forEach(subDimension => {
     let subScore = computeSubdimensionScore(subDimension, questions, results);
     let { earned, available } = subScore;
@@ -24,36 +25,43 @@ const getSubDimensionApexData = (subDimensions, questions, results) => {
         }
       ]
     };
+    let aData = {
+      x: subDimension.name,
+      y: available
+    };
     data.push(apexData);
+    availableData.push(aData)
   });
 
   return ({
-
     series: [
       {
         name: 'Earned',
         data
+      },
+      {
+        name: 'Available',
+        data: availableData
       }
     ],
     options: {
       chart: {
         height: '20px',
         type: 'bar',
+        stacked: true,
         toolbar: {
           show: false,
           tools: {
             download: false,
           }
         },
-        fontFamily: 'Roboto',
       },
       plotOptions: {
         bar: {
           horizontal: true,
-          barHeight: '80%',
         }
       },
-      colors: ['#3F73FB'],
+      colors: ['#3F73FB', '#D9D4DE'],
       dataLabels: {
         formatter: function (val, opt) {
           const goals =
@@ -67,7 +75,9 @@ const getSubDimensionApexData = (subDimensions, questions, results) => {
         }
       },
       legend: {
-        show: false,
+        show: true,
+        position: 'top',
+        horizontalAlign: 'right',
         showForSingleSeries: true,
         customLegendItems: ['Earned', 'Available'],
         markers: {
@@ -99,38 +109,32 @@ const getSubDimensionApexData = (subDimensions, questions, results) => {
           offsetX: 0,
           offsetY: 0,
           rotate: 0,
+        },
+        noData: {
+          text: 'No data',
+          align: 'center',
+          verticalAlign: 'middle',
+          offsetX: 0,
+          offsetY: 0,
+          style: {
+            color: '#000000',
+            fontSize: '14px',
+          }
         }
       },
-      noData: {
-        text: 'No data',
-        align: 'center',
-        verticalAlign: 'middle',
-        offsetX: 0,
-        offsetY: 0,
-        style: {
-          color: '#000000',
-          fontSize: '14px',
-        }
-      }
-    },
-
-
+    }
   }
   )
 }
 
 const getDimensionApexData = (dimensions, subDimensions, questions, results) => {
-  console.log(subDimensions, dimensions)
   const scores = computeDimensionScores(dimensions, subDimensions, questions, results);
-  console.log('Computed dimension scores: ', scores);
   const earned = scores.map(score => {
     return { x: score.dimension.name, y: score.earned, goals: [{ name: 'Benchmark', value: score.available / 2 }] }
   });
   const available = scores.map(score => {
     return { x: score.dimension.name, y: score.available }
   });
-  console.log('Earned: ', earned);
-  console.log('Available: ', available);
 
   return ({
 
