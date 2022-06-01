@@ -15,15 +15,6 @@ const getSubDimensionApexData = (subDimensions, questions, results) => {
     let apexData = {
       x: subDimension.name,
       y: earned,
-      goals: [
-        {
-          name: 'Benchmark',
-          value: benchmark,
-          strokeWidth: 5,
-          strokeHeight: 10,
-          strokeColor: '#D9D4DE'
-        }
-      ]
     };
     let aData = {
       x: subDimension.name,
@@ -127,13 +118,28 @@ const getSubDimensionApexData = (subDimensions, questions, results) => {
   )
 }
 
+// TODO: Update the "goals" feature so that it behaves like the example chart in 
+// https://apexcharts.com/javascript-chart-demos/bar-charts/bar-with-markers/
+// This is not working for some reason.  
 const getDimensionApexData = (dimensions, subDimensions, questions, results) => {
   const scores = computeDimensionScores(dimensions, subDimensions, questions, results);
   const earned = scores.map(score => {
-    return { x: score.dimension.name, y: score.earned, goals: [{ name: 'Benchmark', value: score.available / 2 }] }
+    return {
+      x: score.dimension.name, y: score.earned, goals: [
+        {
+          name: 'Benchmark',
+          value: score.available / 2,
+          strokeWidth: 5,
+          strokeHeight: 10,
+          strokeColor: '#D9D4DE'
+        }
+      ]
+    }
   });
+  // 'Y' is the available score minus the earned score so that the total width of 
+  // earned + available = available.  
   const available = scores.map(score => {
-    return { x: score.dimension.name, y: score.available }
+    return { x: score.dimension.name, y: score.available - score.earned }
   });
 
   return ({
