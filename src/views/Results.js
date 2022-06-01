@@ -337,7 +337,7 @@ export default class Results extends Component {
                         />
                       </Tab.Pane>
                     </Tab>
-                    {this.state.Dimensions.map((dimension, idx) => (
+                    {this.state.Dimensions.filter(dimension => dimension.name !== 'Project Details').map((dimension, idx) => (
                       <Tab eventKey={dimension.name} key={dimension.name} title={dimension.name}>
                         <Tab.Pane key={idx} eventKey={dimension.label}>
                           <Certification
