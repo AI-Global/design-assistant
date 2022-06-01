@@ -112,7 +112,7 @@ export const DimensionHead = ({ dimension, questions, results, riskWeight = 1 })
             lineHeight: '24px',
             color: '#00C1B4',
           }}>
-            <SystemUpdateAltOutlinedIcon /> Report Summary
+            <SystemUpdateAltOutlinedIcon /> Download report
           </p>
           <p style={{
             fontSize: '16px',
@@ -120,15 +120,7 @@ export const DimensionHead = ({ dimension, questions, results, riskWeight = 1 })
             lineHeight: '24px',
             color: '#00C1B4',
           }}>
-            <SystemUpdateAltOutlinedIcon /> Full Report
-          </p>
-          <p style={{
-            fontSize: '16px',
-            fontWeight: 400,
-            lineHeight: '24px',
-            color: '#00C1B4',
-          }}>
-            <CallMadeOutlined /> Guide
+            <CallMadeOutlined /> Assessment guide
           </p>
         </div>
         <p style={{ fontWeight: 'bold', lineHeight: '16px' }}>
