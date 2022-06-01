@@ -64,9 +64,23 @@ export default class Results extends Component {
   }
 
   componentDidMount() {
+    const dimensionOrder = [
+      'System Operations',
+      'Explainability & Interpretability',
+      'Accountability',
+      'Consumer Protection',
+      'Bias & Fairness',
+      'Robustness'
+    ];
+    const getSortVal = (name) => dimensionOrder.includes(name) ? dimensionOrder.indexOf(name) : 20;
     ReactGa.pageview(window.location.pathname + window.location.search);
     api.get('dimensions').then((res) => {
-      this.setState({ Dimensions: res.data });
+      this.setState({
+        Dimensions: res.data.sort((a, b) =>
+          (getSortVal(a.name) > getSortVal(b.name))
+            ? 1 : ((getSortVal(b.name) > getSortVal(a.name))
+              ? -1 : 0))
+      });
     });
     api.get('subdimensions').then((res) => {
       this.setState({ SubDimensions: res.data });
@@ -324,7 +338,7 @@ export default class Results extends Component {
                       </Tab.Pane>
                     </Tab>
                     {this.state.Dimensions.map((dimension, idx) => (
-                      <Tab eventKey={dimension.label} key={dimension.label} title={`${dimension.name} (${dimension.label})`}>
+                      <Tab eventKey={dimension.name} key={dimension.name} title={dimension.name}>
                         <Tab.Pane key={idx} eventKey={dimension.label}>
                           <Certification
                             dimension={dimension}
