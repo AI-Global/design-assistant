@@ -52,6 +52,7 @@ const makeDimensions = (dimensions, subdimensions, results, questionsData) => {
   const mitigationImage = mitigation(200, 41);
 
   const dmap = dimensions.map(dimension => {
+    let questionsRows;
     const currentDimensionSubDimensions = subdimensions.filter(s => s.dimensionID === dimension.dimensionID);
     const subDimensionRows = currentDimensionSubDimensions.map(sb => {
       const questionsToDisplay = [];
@@ -81,6 +82,104 @@ const makeDimensions = (dimensions, subdimensions, results, questionsData) => {
             });
           }
         }
+        questionsRows = questionsToDisplay.map(question => {
+          return [
+            new TableRow({
+              children: [
+                new TableCell({
+                  width: {
+                    size: 1800,
+                    type: WidthType.DXA,
+                  },
+                  margins: {
+                    bottom: convertInchesToTwip(0.69),
+                  },
+                  verticalAlign: VerticalAlign.TOP,
+                  columnSpan: 3,
+                  borders: { ...noBordersCell },
+                  children: [new Paragraph({
+                    children: [
+                      new TextRun({ text: `${question.question.questionNumber} ${question.question.question}`, font: "Calibri", bold: false, size: 18 }),
+                    ],
+                  }),
+                  ],
+                }),
+                new TableCell({
+                  width: {
+                    size: 1800,
+                    type: WidthType.DXA,
+                  },
+                  margins: {
+                    bottom: convertInchesToTwip(0.69),
+                  },
+                  verticalAlign: VerticalAlign.TOP,
+                  columnSpan: 3,
+                  borders: { ...noBordersCell },
+                  children: [new Paragraph({
+                    children: [
+                      new TextRun({ text: `${question.answer.value}`, font: "Calibri", bold: false, size: 18 }),
+                    ],
+                  }),
+                  ],
+                }),
+                new TableCell({
+                  width: {
+                    size: 1800,
+                    type: WidthType.DXA,
+                  },
+                  margins: {
+                    bottom: convertInchesToTwip(0.69),
+                  },
+                  verticalAlign: VerticalAlign.TOP,
+                  columnSpan: 3,
+                  borders: { ...noBordersCell },
+                  children: [new Paragraph({
+                    children: [
+                      new TextRun({ text: `${question.answer.answerScore}/${question.answer.maxScore}`, font: "Calibri", bold: false, size: 18 }),
+                    ],
+                  }),
+                  ],
+                }),
+                new TableCell({
+                  width: {
+                    size: 1800,
+                    type: WidthType.DXA,
+                  },
+                  margins: {
+                    bottom: convertInchesToTwip(0.69),
+                  },
+                  verticalAlign: VerticalAlign.TOP,
+                  columnSpan: 3,
+                  borders: { ...noBordersCell },
+                  children: [new Paragraph({
+                    children: [
+                      new TextRun({ text: '--', font: "Calibri", bold: false, size: 18 }),
+                    ],
+                  }),
+                  ],
+                }),
+                new TableCell({
+                  width: {
+                    size: 1800,
+                    type: WidthType.DXA,
+                  },
+                  margins: {
+                    bottom: convertInchesToTwip(0.69),
+                  },
+                  verticalAlign: VerticalAlign.TOP,
+                  columnSpan: 3,
+                  borders: { ...noBordersCell },
+                  children: [new Paragraph({
+                    children: [
+                      new TextRun({ text: '--', font: "Calibri", bold: false, size: 18 }),
+                    ],
+                  }),
+                  ],
+                }),
+              ],
+            }),
+          ];
+        });
       });
       return [
         new TableRow({
@@ -110,7 +209,7 @@ const makeDimensions = (dimensions, subdimensions, results, questionsData) => {
                 type: WidthType.DXA,
               },
               margins: {
-                bottom: convertInchesToTwip(0.69),
+                bottom: convertInchesToTwip(0.20),
               },
               verticalAlign: VerticalAlign.TOP,
               columnSpan: 3,
@@ -128,7 +227,7 @@ const makeDimensions = (dimensions, subdimensions, results, questionsData) => {
                 type: WidthType.DXA,
               },
               margins: {
-                bottom: convertInchesToTwip(0.69),
+                bottom: convertInchesToTwip(0.20),
               },
               verticalAlign: VerticalAlign.TOP,
               columnSpan: 3,
@@ -146,7 +245,7 @@ const makeDimensions = (dimensions, subdimensions, results, questionsData) => {
                 type: WidthType.DXA,
               },
               margins: {
-                bottom: convertInchesToTwip(0.69),
+                bottom: convertInchesToTwip(0.20),
               },
               verticalAlign: VerticalAlign.TOP,
               columnSpan: 3,
@@ -164,7 +263,7 @@ const makeDimensions = (dimensions, subdimensions, results, questionsData) => {
                 type: WidthType.DXA,
               },
               margins: {
-                bottom: convertInchesToTwip(0.69),
+                bottom: convertInchesToTwip(0.20),
               },
               verticalAlign: VerticalAlign.TOP,
               columnSpan: 3,
@@ -182,7 +281,7 @@ const makeDimensions = (dimensions, subdimensions, results, questionsData) => {
                 type: WidthType.DXA,
               },
               margins: {
-                bottom: convertInchesToTwip(0.69),
+                bottom: convertInchesToTwip(0.20),
               },
               verticalAlign: VerticalAlign.TOP,
               columnSpan: 3,
@@ -196,6 +295,7 @@ const makeDimensions = (dimensions, subdimensions, results, questionsData) => {
             }),
           ],
         }),
+        ...questionsRows.flat(),
       ]
     });
     return [
@@ -269,7 +369,7 @@ export const createCertificationDocx = (
   dimensions,
   subdimensions,
   results,
-  questionData,
+  questionsData,
 ) => {
 
   const document = new Document({
