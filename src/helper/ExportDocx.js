@@ -47,7 +47,7 @@ const noBordersCell = {
   },
 };
 
-const makeDimensions = (dimensions, subdimensions) => {
+const makeDimensions = (dimensions, subdimensions, results, questionsData) => {
   const riskImage = legendRisk(200, 41);
   const mitigationImage = mitigation(200, 41);
 
@@ -267,7 +267,10 @@ export const createCertificationDocx = (
   projectRegion,
   riskLevel,
   dimensions,
-  subdimensions) => {
+  subdimensions,
+  results,
+  questionData,
+) => {
 
   const document = new Document({
     sections: [{
@@ -278,7 +281,7 @@ export const createCertificationDocx = (
         new Paragraph({ text: `Project Industry: ${projectIndustry}` }),
         new Paragraph({ text: `Project Region: ${projectRegion}` }),
         new Paragraph({ text: `Risk Level: ${riskLevel}` }),
-        ...makeDimensions(dimensions, subdimensions),
+        ...makeDimensions(dimensions, subdimensions, results, questionsData),
       ],
     }],
   });
