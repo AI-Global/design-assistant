@@ -61,6 +61,7 @@ export default class Results extends Component {
       submission: null,
       alternateReport: false,
       SubDimensions: [],
+      questionsData: null,
     };
     this.addRiskToSubmission = this.addRiskToSubmission.bind(this);
   }
@@ -91,6 +92,9 @@ export default class Results extends Component {
     this.setState({ submission: this?.props?.location?.state?.data });
     this.setState({
       alternateReport: this?.props?.location?.state?.alternateReport,
+    });
+    api.get('questions/all').then((res) => {
+      this.setState({ questionsData: res.data.questions });
     });
   }
 
@@ -296,7 +300,10 @@ export default class Results extends Component {
                   projectRegion,
                   riskLevel[riskWeight ?? 1],
                   this.state.Dimensions,
-                  this.state.SubDimensions)
+                  this.state.SubDimensions,
+                  surveyResults,
+                  this.state.questionsData,
+                )
               }}
             >
               <SystemUpdateAltOutlinedIcon /> Download report
