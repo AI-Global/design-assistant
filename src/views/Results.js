@@ -290,7 +290,7 @@ export default class Results extends Component {
                 fontSize: '16px',
                 fontWeight: 400,
                 lineHeight: '24px',
-                color: '#00C1B4',
+                color: '#007bff',
                 cursor: 'pointer'
               }}
               onClick={() => {
@@ -314,9 +314,10 @@ export default class Results extends Component {
               fontWeight: 400,
               lineHeight: '24px',
               color: '#00C1B4',
+              cursor: 'pointer'
             }}>
-              <CallMadeOutlined /> Assessment guide
-          </p>
+              <a href="" target="_blank"> <CallMadeOutlined /> Assessment guide </a>
+            </p>
           </h1>
           {this.state.alternateReport ? (
             <iframe

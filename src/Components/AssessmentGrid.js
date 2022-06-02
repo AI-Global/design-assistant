@@ -50,7 +50,6 @@ export default function AssessmentGrid(props) {
   const rowTitle = [
     'Project Name',
     'Product Owner',
-    'Risk Level',
     'Status',
     'Action',
   ];
@@ -101,15 +100,6 @@ export default function AssessmentGrid(props) {
                       : submission.projectName}
                   </StyledTableCell>
                   <StyledTableCell>{submission.users.username}</StyledTableCell>
-
-                  <StyledTableCell>
-                    {submission.riskLevel && (
-                      <Chip
-                        label={submission.riskLevel}
-                        className={handleChipColor(submission.riskLevel)}
-                      ></Chip>
-                    )}
-                  </StyledTableCell>
                   <StyledTableCell>
                     {submission.completed ? 'Completed' : 'In Progress'}
                     <CaptionTypography>

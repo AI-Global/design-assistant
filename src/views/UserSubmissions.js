@@ -230,25 +230,10 @@ class UserSubmissions extends Component {
                 width: '50%',
               }}
             >
-              With‌ ‌our‌ ‌esteemed‌ ‌community‌ ‌of‌ ‌subject‌ ‌matter‌
-              ‌experts‌ ‌ranging‌ ‌from‌ ‌engineers,‌ ‌to‌ ethicists,‌ ‌to‌
-              ‌policy‌ ‌makers,‌ ‌we‌ ‌have‌ ‌taken‌ ‌the‌ ‌most‌ ‌cited‌
-              ‌principles,‌ ‌whitepapers,‌ ‌and‌ policy‌ ‌documents‌ ‌published‌
-              ‌by‌ ‌academics,‌ ‌standards‌ ‌organizations,‌ ‌and‌ ‌companies‌
-              and‌ ‌translated‌ ‌them‌ ‌into‌ ‌comprehensive‌ ‌questions.‌
+              The SLA has more than 100 questions that evaluate an AI system’s residual risk along the Responsible AI Implementation Framework’s six dimensions and their subdimensions. The framework’s dimensions include: Systems Operations, Explainability & Interpretability, Accountability, Consumer Protection, Bias & Fairness, and Robustness.
               <Box mt={5} />
               <div>
-                Our‌ ‌hope‌ ‌is‌ ‌that‌ ‌you‌ ‌will‌ ‌work‌ ‌with‌ ‌your‌
-                ‌colleagues‌ ‌who‌ ‌are‌ ‌responsible‌ ‌for‌ ‌different‌
-                aspects‌ ‌of‌ ‌your‌ ‌business‌ ‌to‌ ‌fill‌ ‌out‌ ‌the‌ ‌Design‌
-                ‌Assistant.‌ ‌Whether‌ ‌you‌ ‌are‌ ‌just‌ ‌thinking‌ about‌
-                ‌how‌ ‌to‌ ‌integrate‌ ‌AI‌ ‌tools‌ ‌into‌ ‌your‌ ‌business,‌
-                ‌or‌ ‌you‌ ‌have‌ ‌already‌ ‌deployed‌ several‌ ‌models,‌ ‌this‌
-                ‌tool‌ ‌is‌ ‌for‌ ‌you.‌ ‌We‌ ‌do‌ ‌think‌ ‌that‌ ‌these‌
-                ‌questions‌ ‌are‌ ‌best‌ ‌to‌ ‌think‌ about‌ ‌at‌ ‌the‌ ‌start‌
-                ‌of‌ ‌your‌ ‌project,‌ ‌however,‌ ‌we‌ ‌do‌ ‌think‌ ‌that‌ ‌the‌
-                ‌Design‌ ‌Assistant‌ ‌can‌ ‌be‌ used‌ ‌throughout‌ ‌the‌
-                ‌lifecycle‌ ‌of‌ ‌your‌ ‌project!‌
+                RAII encourages SLA  use for continuous AI system improvement or to include it in your internal compliance or auditing processes. ‌Whether‌ ‌you‌ ‌are‌ ‌‌considering ‌how‌ ‌to‌ ‌integrate‌ ‌AI‌ ‌tools‌ ‌into‌ ‌your‌ ‌business ‌or‌‌ ‌have‌ ‌already‌ ‌deployed‌ several‌ AI ‌models,‌ ‌this‌ ‌tool‌ ‌can help your organization assess whether those efforts are responsible.‌ ‌We‌ ‌believe‌ ‌these‌ ‌questions‌ ‌are‌ ‌best‌ ‌to‌ ‌think‌ about‌ ‌at‌ ‌the‌ ‌start‌ ‌of‌ ‌your‌ ‌project,‌ ‌however,‌ ‌the‌ ‌SLA ‌can‌ ‌be‌ used‌ ‌throughout‌ ‌your‌ ‌project’s lifecycle!‌
               </div>
             </div>
           </div>
