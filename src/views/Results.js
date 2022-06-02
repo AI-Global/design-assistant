@@ -281,12 +281,24 @@ export default class Results extends Component {
         >
           <h1 className="section-header">
             Results
-             <p style={{
-              fontSize: '16px',
-              fontWeight: 400,
-              lineHeight: '24px',
-              color: '#00C1B4',
-            }}>
+             <p
+              style={{
+                fontSize: '16px',
+                fontWeight: 400,
+                lineHeight: '24px',
+                color: '#00C1B4',
+              }}
+              onClick={() => {
+                createCertificationDocx(
+                  projectTitle,
+                  projectDescription,
+                  projectIndustry,
+                  projectRegion,
+                  riskLevel[riskWeight ?? 1],
+                  this.state.Dimensions,
+                  this.state.SubDimensions)
+              }}
+            >
               <SystemUpdateAltOutlinedIcon /> Download report
           </p>
             <p style={{
