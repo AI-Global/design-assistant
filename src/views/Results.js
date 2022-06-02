@@ -17,6 +17,8 @@ import ReactGa from 'react-ga';
 import Summary from './Summary';
 import Login from './Login';
 import calculateQuestionScore from '../helper/QuestionScore';
+import SystemUpdateAltOutlinedIcon from '@material-ui/icons/SystemUpdateAltOutlined';
+import { CallMadeOutlined } from '@material-ui/icons';
 
 // material-ui components
 import { Grid } from '@material-ui/core';
@@ -277,7 +279,25 @@ export default class Results extends Component {
           className="container"
           style={{ paddingBottom: '1rem', paddingTop: '5rem' }}
         >
-          <h1 className="section-header">Results</h1>
+          <h1 className="section-header">
+            Results
+             <p style={{
+              fontSize: '16px',
+              fontWeight: 400,
+              lineHeight: '24px',
+              color: '#00C1B4',
+            }}>
+              <SystemUpdateAltOutlinedIcon /> Download report
+          </p>
+            <p style={{
+              fontSize: '16px',
+              fontWeight: 400,
+              lineHeight: '24px',
+              color: '#00C1B4',
+            }}>
+              <CallMadeOutlined /> Assessment guide
+          </p>
+          </h1>
           {this.state.alternateReport ? (
             <iframe
               src="https://drive.google.com/file/d/1f6RorHTlDbl309FbgJpvYJpivGUB-454/preview"
@@ -287,7 +307,7 @@ export default class Results extends Component {
             ></iframe>
           ) : (
             <div>
-              <button
+              {/* <button
                 id="exportButton"
                 type="button"
                 className="btn btn-save mr-2 btn btn-primary export-button-pdf"
@@ -320,7 +340,7 @@ export default class Results extends Component {
                 }}
               >
                 Export as MS Word
-              </button>
+              </button> */}
               <Grid container>
                 <Grid item xs={12}>
                   <Tabs
@@ -337,7 +357,7 @@ export default class Results extends Component {
                         />
                       </Tab.Pane>
                     </Tab>
-                    {this.state.Dimensions.filter(dimension => dimension.name !== 'Project Details').map((dimension, idx) => (
+                    {this.state.Dimensions.map((dimension, idx) => (
                       <Tab eventKey={dimension.name} key={dimension.name} title={dimension.name}>
                         <Tab.Pane key={idx} eventKey={dimension.label}>
                           <Certification

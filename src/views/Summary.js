@@ -125,19 +125,12 @@ const getDimensionApexData = (dimensions, subDimensions, questions, results) => 
   const scores = computeDimensionScores(dimensions, subDimensions, questions, results);
   const earned = scores.map(score => {
     return {
-      x: score.dimension.name, y: score.earned, goals: [
-        {
-          name: 'Benchmark',
-          value: score.available / 2,
-          strokeWidth: 5,
-          strokeHeight: 10,
-          strokeColor: '#D9D4DE'
-        }
-      ]
+      x: score.dimension.name, y: score.earned
     }
   });
   // 'Y' is the available score minus the earned score so that the total width of 
   // earned + available = available.  
+  // TODO: display total next to the bar, remove transparency on hover
   const available = scores.map(score => {
     return { x: score.dimension.name, y: score.available - score.earned }
   });

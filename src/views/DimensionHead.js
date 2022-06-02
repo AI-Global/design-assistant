@@ -6,8 +6,6 @@ import calculateQuestionScore from '../helper/QuestionScore';
 import riskScoreLegend from '../assets/svg/risk-legend.svg';
 import { Typography } from '@material-ui/core';
 import mitigationScoreLegend from '../assets/svg/mitigation-legend.svg';
-import SystemUpdateAltOutlinedIcon from '@material-ui/icons/SystemUpdateAltOutlined';
-import { CallMadeOutlined } from '@material-ui/icons';
 
 const displayDimension = (result, question) => {
   var choices;
@@ -105,22 +103,6 @@ export const DimensionHead = ({ dimension, questions, results, riskWeight = 1 })
             fontWeight: 700,
           }}>
             {dimension?.name}
-          </p>
-          <p style={{
-            fontSize: '16px',
-            fontWeight: 400,
-            lineHeight: '24px',
-            color: '#00C1B4',
-          }}>
-            <SystemUpdateAltOutlinedIcon /> Download report
-          </p>
-          <p style={{
-            fontSize: '16px',
-            fontWeight: 400,
-            lineHeight: '24px',
-            color: '#00C1B4',
-          }}>
-            <CallMadeOutlined /> Assessment guide
           </p>
         </div>
         <p style={{ fontWeight: 'bold', lineHeight: '16px' }}>

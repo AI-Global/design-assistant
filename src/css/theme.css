@@ -123,6 +123,9 @@ html {
   margin-bottom: 1em;
   margin-top: 1em;
   padding-bottom: 0.2em;
+  display: flex;
+  gap: 30px;
+  align-items: self-end;
 }
 .section-header p {
   margin-bottom: 0 !important;
