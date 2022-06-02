@@ -47,6 +47,14 @@ const getSubDimensionApexData = (subDimensions, questions, results) => {
           }
         },
       },
+      states: {
+        hover: {
+          filter: {
+            type: 'none',
+            value: 0.15,
+          }
+        },
+      },
       plotOptions: {
         bar: {
           horizontal: true,
@@ -156,6 +164,14 @@ const getDimensionApexData = (dimensions, subDimensions, questions, results) => 
           show: false,
           tools: {
             download: false,
+          }
+        },
+      },
+      states: {
+        hover: {
+          filter: {
+            type: 'none',
+            value: 0.15,
           }
         },
       },
