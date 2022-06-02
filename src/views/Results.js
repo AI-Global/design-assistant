@@ -291,6 +291,7 @@ export default class Results extends Component {
                 fontWeight: 400,
                 lineHeight: '24px',
                 color: '#00C1B4',
+                cursor: 'pointer'
               }}
               onClick={() => {
                 createCertificationDocx(
