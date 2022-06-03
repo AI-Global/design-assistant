@@ -82,7 +82,6 @@ const makeDimensions = (dimensions, subdimensions, results, questionsData) => {
             });
           }
         }
-        console.log('defined: ', questionsRows)
         questionsRows = questionsToDisplay.map(question => {
           return [
             new TableRow({
@@ -182,7 +181,6 @@ const makeDimensions = (dimensions, subdimensions, results, questionsData) => {
           ];
         });
       });
-      console.log('usage: ', questionsRows)
       return [
         new TableRow({
           children: [
