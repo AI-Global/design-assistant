@@ -48,7 +48,7 @@ export default function AssessmentGrid(props) {
   }
 
   const rowTitle = [
-    'Project Name',
+    'System Name',
     'Product Owner',
     'Status',
     'Action',
