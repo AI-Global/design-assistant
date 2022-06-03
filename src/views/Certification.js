@@ -191,12 +191,12 @@ export default function Certification({ dimension, results, questions, subDimens
                     </th>
                     <th>
                       <Typography style={{ fontSize: '12px', fontWeight: 'bold', width: '100%' }}>
-                        Recommendation
+                        Supporting Documentation
                       </Typography>
                     </th>
                     <th>
                       <Typography style={{ fontSize: '12px', fontWeight: 'bold', width: '100%' }}>
-                        Recommendation Links
+                        Supporting Links
                       </Typography>
                     </th>
                   </tr>
@@ -226,7 +226,7 @@ export default function Certification({ dimension, results, questions, subDimens
                         <td>
 
                           <Typography style={{ fontSize: '12px', fontWeight: '300' }}>
-                            --
+                            {qa.answer.reference || '--'}
                           </Typography>
                         </td>
                         <td>
