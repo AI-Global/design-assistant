@@ -20,11 +20,7 @@ export default function Assessment(props) {
     <div>
       <div className={classes.outerContainer}>
         <Box mt={20} />
-        <div className={classes.assessmentTitle}>
-          {expandButton ? <div></div> : <div>What do Assessments Cover?</div>}
-        </div>
-
-        <div className={classes.expandButtonEnd}>
+        {/* <div className={classes.expandButtonEnd}>
           <ExpandButton onClick={handleExpandButton}>
             {expandButton ? (
               <div>
@@ -38,7 +34,7 @@ export default function Assessment(props) {
               </div>
             )}
           </ExpandButton>
-        </div>
+        </div> */}
       </div>
       {expandButton && <AssessmentSlider expandButton={false} />}
     </div>

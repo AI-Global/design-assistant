@@ -15,6 +15,7 @@ const LandingButton = withStyles(() => ({
     borderRadius: '8px',
     border: '1px solid',
     backgroundColor: '#FFFFFF',
+    fontFamily: 'Roboto',
     borderColor: '#386EDA',
     color: '#386EDA',
     '&:hover': {
@@ -230,7 +231,13 @@ class UserSubmissions extends Component {
                 width: '50%',
               }}
             >
-              The SLA has more than 100 questions that evaluate an AI system’s residual risk along the Responsible AI Implementation Framework’s six dimensions and their subdimensions. The framework’s dimensions include: Systems Operations, Explainability & Interpretability, Accountability, Consumer Protection, Bias & Fairness, and Robustness.
+              <div>
+                Welcome‌ ‌to‌ ‌the‌ ‌Responsible AI System-Level Assessment (SLA), a tool that RAII offers to help organizations design,‌ ‌develop,‌ ‌and‌ ‌implement ‌AI‌ ‌systems responsibly.‌ With‌ ‌our‌ ‌esteemed‌ ‌community‌ ‌of‌ ‌subject‌ ‌matter‌ ‌experts‌ ‌ranging‌ ‌from‌ ‌engineers,‌ ‌to‌ ethicists,‌ ‌to‌ ‌policy‌ ‌makers,‌ ‌we‌ ‌have‌ ‌taken‌ ‌examined various ‌principles,‌ ‌whitepapers,‌ ‌and‌ policy‌ ‌documents‌ ‌published‌ ‌by‌ ‌academics,‌ ‌standards‌ ‌organizations,‌ ‌and‌ ‌companies‌ and‌ ‌translated‌ ‌them‌ ‌into‌ ‌a comprehensive‌ ‌and easy to use assessment.
+              </div>
+              <Box mt={5} />
+              <div>
+                The SLA has more than 100 questions that evaluate an AI system’s residual risk along the Responsible AI Implementation Framework’s six dimensions and their subdimensions. The framework’s dimensions include: Systems Operations, Explainability & Interpretability, Accountability, Consumer Protection, Bias & Fairness, and Robustness.
+              </div>
               <Box mt={5} />
               <div>
                 RAII encourages SLA  use for continuous AI system improvement or to include it in your internal compliance or auditing processes. ‌Whether‌ ‌you‌ ‌are‌ ‌‌considering ‌how‌ ‌to‌ ‌integrate‌ ‌AI‌ ‌tools‌ ‌into‌ ‌your‌ ‌business ‌or‌‌ ‌have‌ ‌already‌ ‌deployed‌ several‌ AI ‌models,‌ ‌this‌ ‌tool‌ ‌can help your organization assess whether those efforts are responsible.‌ ‌We‌ ‌believe‌ ‌these‌ ‌questions‌ ‌are‌ ‌best‌ ‌to‌ ‌think‌ about‌ ‌at‌ ‌the‌ ‌start‌ ‌of‌ ‌your‌ ‌project,‌ ‌however,‌ ‌the‌ ‌SLA ‌can‌ ‌be‌ used‌ ‌throughout‌ ‌your‌ ‌project’s lifecycle!‌
@@ -277,8 +284,6 @@ class UserSubmissions extends Component {
               </div>
             </div>
             <Assessment></Assessment>
-            <Box mb={5} />
-            <Box mt={10} />
             <div
               style={{
                 display: 'flex',

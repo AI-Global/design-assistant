@@ -11,6 +11,7 @@ import {
   Paper,
   Chip,
   TablePagination,
+  Typography,
 } from '@material-ui/core';
 
 import {
@@ -76,6 +77,10 @@ export default function AssessmentGrid(props) {
 
   return (
     <div>
+      <Typography style={{ fontSize: '30px', fontWeight: 700 }}>
+        My Assessments
+      </Typography>
+      <Box mb={5} />
       <TableContainer
         className={classes.tableContainer}
         component={Paper}

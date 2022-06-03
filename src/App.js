@@ -66,14 +66,6 @@ function Hero() {
         >
           <h1>Responsible AI System Assessment</h1>
           <Box mt={2} />
-          <div
-            style={{
-              width: '55%',
-              textAlign: 'center',
-            }}
-          >
-            Welcome‌ ‌to‌ ‌the‌ ‌Responsible AI System-Level Assessment (SLA), a tool that RAII offers to help organizations design,‌ ‌develop,‌ ‌and‌ ‌implement ‌AI‌ ‌systems responsibly.‌ With‌ ‌our‌ ‌esteemed‌ ‌community‌ ‌of‌ ‌subject‌ ‌matter‌ ‌experts‌ ‌ranging‌ ‌from‌ ‌engineers,‌ ‌to‌ ethicists,‌ ‌to‌ ‌policy‌ ‌makers,‌ ‌we‌ ‌have‌ ‌taken‌ ‌examined various ‌principles,‌ ‌whitepapers,‌ ‌and‌ policy‌ ‌documents‌ ‌published‌ ‌by‌ ‌academics,‌ ‌standards‌ ‌organizations,‌ ‌and‌ ‌companies‌ and‌ ‌translated‌ ‌them‌ ‌into‌ ‌a comprehensive‌ ‌and easy to use assessment.
-          </div>
         </div>
       </div>
     </div>
