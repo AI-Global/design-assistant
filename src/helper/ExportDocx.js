@@ -52,7 +52,7 @@ const makeDimensions = (dimensions, subdimensions, results, questionsData) => {
   const mitigationImage = mitigation(200, 41);
 
   const dmap = dimensions.map(dimension => {
-    let questionsRows;
+    let questionsRows = [];
     const currentDimensionSubDimensions = subdimensions.filter(s => s.dimensionID === dimension.dimensionID);
     const subDimensionRows = currentDimensionSubDimensions.map(sb => {
       const questionsToDisplay = [];
@@ -82,6 +82,7 @@ const makeDimensions = (dimensions, subdimensions, results, questionsData) => {
             });
           }
         }
+        console.log('defined', questionsRows)
         questionsRows = questionsToDisplay.map(question => {
           return [
             new TableRow({
@@ -181,6 +182,7 @@ const makeDimensions = (dimensions, subdimensions, results, questionsData) => {
           ];
         });
       });
+      console.log('usage', questionsRows)
       return [
         new TableRow({
           children: [
