@@ -437,3 +437,7 @@ input[type='number'] {
   margin-right: 10em;
   padding-top: 2em;
 }
+
+.apexcharts-yaxis-lab {
+  background-color: #dc3545;
+}

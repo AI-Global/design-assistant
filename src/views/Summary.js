@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import api from '../api';
 import { Container, Row, Col, ListGroup } from 'react-bootstrap';
 import ApexBar from '../Components/ApexBar';
+import '../css/theme.css';
 
 import { computeSubdimensionScore, computeDimensionScores } from '../helper/ScoreHelper';
 
@@ -46,6 +47,9 @@ const getSubDimensionApexData = (subDimensions, questions, results) => {
             download: false,
           }
         },
+        yaxis: {
+          show: false,
+        }
       },
       states: {
         hover: {
@@ -58,7 +62,8 @@ const getSubDimensionApexData = (subDimensions, questions, results) => {
       plotOptions: {
         bar: {
           horizontal: true,
-        }
+        },
+        barHeight: '100%',
       },
       colors: ['#3F73FB', '#D9D4DE'],
       dataLabels: {
@@ -85,6 +90,11 @@ const getSubDimensionApexData = (subDimensions, questions, results) => {
       },
       grid: {
         show: false,
+        yaxis: {
+          lines: {
+            show: false
+          }
+        },
       },
       xaxis: {
         labels: {
@@ -95,19 +105,22 @@ const getSubDimensionApexData = (subDimensions, questions, results) => {
         show: true,
         labels: {
           show: true,
-          align: 'right',
-          minWidth: 0,
-          maxWidth: 160,
+          align: 'left',
+          minWidth: 300,
+          maxWidth: 550,
           style: {
             colors: [],
             fontSize: '12px',
             fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif',
-            fontWeight: 400,
-            cssClass: 'apexcharts-yaxis-label',
+            fontWeight: 700,
+            cssClass: 'apexcharts-yaxis-lab',
           },
-          offsetX: 0,
+          offsetX: 10,
           offsetY: 0,
           rotate: 0,
+        },
+        crosshairs: {
+          show: false,
         },
         noData: {
           text: 'No data',
@@ -215,17 +228,17 @@ const getDimensionApexData = (dimensions, subDimensions, questions, results) => 
         show: true,
         labels: {
           show: true,
-          align: 'right',
-          minWidth: 0,
-          maxWidth: 160,
+          align: 'left',
+          minWidth: 180,
+          maxWidth: 550,
           style: {
             colors: [],
             fontSize: '12px',
             fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif',
-            fontWeight: 400,
+            fontWeight: 700,
             cssClass: 'apexcharts-yaxis-label',
           },
-          offsetX: 0,
+          offsetX: 10,
           offsetY: 0,
           rotate: 0,
         },
@@ -295,7 +308,7 @@ export default function Summary({ dimensions, results, subDimensions, submission
                     {d.name}
                   </p>
                   <ListGroup>
-                    <div style={{ height: `${subDimensionsList.length * 50}px` }}>
+                    <div style={{ height: `${subDimensionsList.length * 62}px` }}>
                       {/* {questions && <WrappedBar subDimensions={subDimensionsList} questions={questions} results={results} />} */}
                       {questions && <WrappedApex subDimensions={subDimensionsList} questions={questions} results={results} />}
                     </div>
