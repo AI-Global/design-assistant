@@ -229,7 +229,7 @@ const getDimensionApexData = (dimensions, subDimensions, questions, results) => 
         labels: {
           show: true,
           align: 'left',
-          minWidth: 180,
+          minWidth: 300,
           maxWidth: 550,
           style: {
             colors: [],
