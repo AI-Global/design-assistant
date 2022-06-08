@@ -398,7 +398,7 @@ export default class Results extends Component {
               </Grid>
             </div>
           )}
-          <Link to="/">
+          {/* <Link to="/">
             <Button
               id="restartButton"
               onClick={StartAgainHandler}
@@ -424,7 +424,7 @@ export default class Results extends Component {
             }}
           >
             Export as PDF
-          </button>
+          </button> */}
           <Login />
         </main>
       );
