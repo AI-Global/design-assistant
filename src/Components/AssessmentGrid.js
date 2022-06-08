@@ -77,7 +77,11 @@ export default function AssessmentGrid(props) {
 
   return (
     <div>
-      <Typography style={{ fontSize: '30px', fontWeight: 700 }}>
+      <Typography style={{
+        fontSize: '30px',
+        fontWeight: 700,
+        fontFamily: 'helvetica'
+      }}>
         My Assessments
       </Typography>
       <Box mb={5} />

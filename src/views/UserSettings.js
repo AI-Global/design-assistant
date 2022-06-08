@@ -274,22 +274,24 @@ class UserSettings extends Component {
           style={{
             display: 'flex',
             flexDirection: 'row',
+            fontFamily: 'helvetica',
             width: '100%',
             justifyContent: 'space-between',
           }}
         >
-          <Button variant="text" onClick={() => this.navHome()}>
+          <Button style={{ fontFamily: 'helvetica' }} variant="text" onClick={() => this.navHome()}>
             Home
           </Button>
           {this.state.user ? (
             this.state.user.role === 'admin' ||
-            this.state.user.role === 'superadmin' ? (
-              <Button variant="text" onClick={() => this.navAdmin()}>
+              this.state.user.role === 'superadmin' ? (
+              <Button style={{ fontFamily: 'helvetica' }} variant="text" onClick={() => this.navAdmin()}>
                 Admin Panel
               </Button>
             ) : null
           ) : null}
           <Button
+            style={{ fontFamily: 'helvetica' }}
             variant="text"
             onClick={() =>
               (window.location = 'https://portal.ai-global.org/settings')
@@ -297,7 +299,7 @@ class UserSettings extends Component {
           >
             Edit Account in AI Portal
           </Button>
-          <Button variant="text" onClick={() => this.handleLogout()}>
+          <Button style={{ fontFamily: 'helvetica' }} variant="text" onClick={() => this.handleLogout()}>
             Log Out
           </Button>
         </div>

@@ -95,7 +95,7 @@ export default class Login extends Component {
       return (
         <Box className="user-status">
           <UserSettings />
-          <Box>
+          <Box style={{ fontFamily: 'helvetica' }} >
             Logged in as:{' '}
             <strong className="anthem-blue">{user.username}</strong> &nbsp;
           </Box>
