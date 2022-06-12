@@ -27,7 +27,7 @@ function Hero() {
         style={{
           backgroundImage: `url(${backgroundImage})`,
           width: '99.6vw',
-          height: '40vh',
+          height: '320px',
           backgroundSize: 'cover',
         }}
       >
@@ -39,7 +39,8 @@ function Hero() {
                   <img
                     src="/img/responsible-rai-logo.png"
                     alt="Responsible rai Logo"
-                    className="logo"
+                    width="282px"
+                    height='63px'
                   />
                 </a>
               </div>
@@ -51,21 +52,28 @@ function Hero() {
                 /> */}
               </div>
             </div>
-            <div>
-              <Login />
-            </div>
           </div>
         </div>
         <div
           style={{
-            paddingTop: '5rem',
+            width: '100%',
             display: 'flex',
+            justifyContent: 'center',
             flexDirection: 'column',
             alignItems: 'center',
+            marginTop: '125px'
           }}
         >
-          <h1>Responsible AI System Assessment</h1>
-          <Box mt={2} />
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              width: '596px',
+              marginLeft: '-350px'
+            }}
+          >
+            <h1>Responsible AI System Assessment</h1>
+          </div>
         </div>
       </div>
     </div>

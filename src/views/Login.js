@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Modal, Form } from 'react-bootstrap';
-import { Button } from '@material-ui/core';
+import { Button, Typography } from '@material-ui/core';
 import { Box } from '@material-ui/core';
 
 import '../css/login.css';
@@ -110,9 +110,18 @@ export default class Login extends Component {
           }}
           style={{
             fontFamily: 'Roboto',
+            borderColor: '#386EDA',
+            borderRadius: '20px',
+            color: '#386EDA',
+            '&:hover': {
+              backgroundColor: '#386EDA',
+              borderColor: '#386EDA',
+              color: '#FFFFFF',
+            },
           }}
+          variant="outlined"
         >
-          Log in
+          <div style={{ padding: '0px 25px' }}>Log in</div>
         </Button>
       );
     }

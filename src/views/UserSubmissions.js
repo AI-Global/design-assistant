@@ -5,6 +5,8 @@ import { withStyles } from '@material-ui/core/styles';
 import AssessmentGrid from '../Components/AssessmentGrid';
 import Assessment from '../Components/Assessment';
 import Signup from './../views/Signup';
+import Login from './../views/Login';
+
 
 import api from '../api';
 import ReactGa from 'react-ga';
@@ -188,34 +190,7 @@ class UserSubmissions extends Component {
     if (!this.state.isLoggedIn) {
       return (
         <div>
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              width: '100%',
-              marginTop: '2rem',
-            }}
-          >
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-around',
-                width: '50%',
-              }}
-            >
-              <Signup signedOut={true} admin={true} />
-              <LandingButton
-                variant="outlined"
-                type="button"
-                href={guidancePath}
-              >
-                GUIDE LINK
-              </LandingButton>
-            </div>
-            <Box mt={1} />
-          </div>
-          <Box mt={10} />
+          <Box mt={5} />
           <div
             style={{
               display: 'flex',
@@ -228,20 +203,26 @@ class UserSubmissions extends Component {
               style={{
                 display: 'flex',
                 flexDirection: 'column',
-                width: '50%',
+                width: '40%',
               }}
             >
-              <div>
+              <div style={{ width: '596px' }}>
                 Welcome‌ ‌to‌ ‌the‌ ‌Responsible AI System-Level Assessment (SLA), a tool that RAII offers to help organizations design,‌ ‌develop,‌ ‌and‌ ‌implement ‌AI‌ ‌systems responsibly.‌ With‌ ‌our‌ ‌esteemed‌ ‌community‌ ‌of‌ ‌subject‌ ‌matter‌ ‌experts‌ ‌ranging‌ ‌from‌ ‌engineers,‌ ‌to‌ ethicists,‌ ‌to‌ ‌policy‌ ‌makers,‌ ‌we‌ ‌have‌ ‌taken‌ ‌examined various ‌principles,‌ ‌whitepapers,‌ ‌and‌ policy‌ ‌documents‌ ‌published‌ ‌by‌ ‌academics,‌ ‌standards‌ ‌organizations,‌ ‌and‌ ‌companies‌ and‌ ‌translated‌ ‌them‌ ‌into‌ ‌a comprehensive‌ ‌and easy to use assessment.
               </div>
               <Box mt={5} />
-              <div>
+              <div style={{ width: '596px' }}>
                 The SLA has more than 100 questions that evaluate an AI system’s residual risk along the Responsible AI Implementation Framework’s six dimensions and their subdimensions. The framework’s dimensions include: Systems Operations, Explainability & Interpretability, Accountability, Consumer Protection, Bias & Fairness, and Robustness.
               </div>
               <Box mt={5} />
-              <div>
+              <div style={{ width: '596px' }}>
                 RAII encourages SLA  use for continuous AI system improvement or to include it in your internal compliance or auditing processes. ‌Whether‌ ‌you‌ ‌are‌ ‌‌considering ‌how‌ ‌to‌ ‌integrate‌ ‌AI‌ ‌tools‌ ‌into‌ ‌your‌ ‌business ‌or‌‌ ‌have‌ ‌already‌ ‌deployed‌ several‌ AI ‌models,‌ ‌this‌ ‌tool‌ ‌can help your organization assess whether those efforts are responsible.‌ ‌We‌ ‌believe‌ ‌these‌ ‌questions‌ ‌are‌ ‌best‌ ‌to‌ ‌think‌ about‌ ‌at‌ ‌the‌ ‌start‌ ‌of‌ ‌your‌ ‌project,‌ ‌however,‌ ‌the‌ ‌SLA ‌can‌ ‌be‌ used‌ ‌throughout‌ ‌your‌ ‌project’s lifecycle!‌
               </div>
+            </div>
+            <div>
+              <div style={{ marginBottom: '10px' }}>
+                <Login />
+              </div>
+              <Signup signedOut={true} admin={true} />
             </div>
           </div>
         </div>

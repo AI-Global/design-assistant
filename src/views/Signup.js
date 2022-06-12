@@ -18,6 +18,7 @@ const LandingButton = withStyles(() => ({
     backgroundColor: '#FFFFFF',
     fontFamily: 'Roboto',
     borderColor: '#386EDA',
+    borderRadius: '20px',
     color: '#386EDA',
     '&:hover': {
       backgroundColor: '#386EDA',
@@ -195,7 +196,7 @@ export default class Signup extends Component {
               CreateAccHandler();
             }}
           >
-            Sign Up
+            <div style={{ padding: '0px 25px' }}>Sign Up </div>
           </LandingButton>
         )}
         {this.props.onLanding && (
