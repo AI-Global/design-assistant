@@ -39,8 +39,7 @@ function Hero() {
                   <img
                     src="/img/responsible-rai-logo.png"
                     alt="Responsible rai Logo"
-                    width="282px"
-                    height='63px'
+                    className="logo"
                   />
                 </a>
               </div>
@@ -51,6 +50,9 @@ function Hero() {
                   className="logo"
                 /> */}
               </div>
+            </div>
+            <div>
+              <Login />
             </div>
           </div>
         </div>
