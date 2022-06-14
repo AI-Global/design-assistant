@@ -196,7 +196,7 @@ export default class Signup extends Component {
               CreateAccHandler();
             }}
           >
-            <div style={{ padding: '0px 25px' }}>Sign Up </div>
+            Sign Up
           </LandingButton>
         )}
         {this.props.onLanding && (

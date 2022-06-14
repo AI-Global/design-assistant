@@ -3,7 +3,7 @@ import './css/theme.css';
 import './css/survey.css';
 import ReactGa from 'react-ga';
 import Login from './views/Login';
-import Box from '@material-ui/core/Box';
+import { Container, Grid } from '@material-ui/core';
 import UserSubmissions from './views/UserSubmissions';
 import React, { useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
@@ -20,67 +20,46 @@ ReactGa.initialize(process.env.REACT_APP_GAID, {
 const img = new Image();
 const backgroundImage = (img.src = '../img/landing-background.png');
 
+
+
+
+
 function Hero() {
   return (
-    <div>
-      <div
-        style={{
-          backgroundImage: `url(${backgroundImage})`,
-          width: '99.6vw',
-          height: '320px',
-          backgroundSize: 'cover',
-        }}
-      >
-        <div>
-          <div className="banner">
-            <div style={{ display: 'flex' }}>
-              <div className="logo-index">
-                <a href="/">
-                  <img
-                    src="/img/responsible-rai-logo.png"
-                    alt="Responsible rai Logo"
-                    className="logo"
-                  />
-                </a>
-              </div>
-              <div className="logo-index">
-                {/* <img
-                  src="/img/anthem-logo.png"
-                  alt="Anthem logo"
-                  className="logo"
-                /> */}
-              </div>
-            </div>
-            <div>
-              <Login />
-            </div>
-          </div>
-        </div>
-        <div
-          style={{
-            width: '100%',
-            display: 'flex',
-            justifyContent: 'center',
-            flexDirection: 'column',
-            alignItems: 'center',
-            marginTop: '125px'
-          }}
-        >
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              width: '596px',
-              marginLeft: '-350px'
-            }}
-          >
-            <h1>Responsible AI System Assessment</h1>
-          </div>
-        </div>
-      </div>
-    </div>
+    <Grid container direction="column" justifyContent='space-between'
+      style={{
+        height: '320px',
+        backgroundSize: 'cover',
+        backgroundImage: `url(${backgroundImage})`,
+      }}>
+      <Grid item>
+        <Grid container direction="row" justifyContent='space-between' style={{ padding: '20px' }}>
+          < Grid item >
+            <a href="/">
+              <img
+                src="/img/responsible-rai-logo.png"
+                alt="Responsible rai Logo"
+                className="logo"
+              />
+            </a>
+          </Grid >
+          <Grid item>
+            <Login />
+          </Grid>
+        </Grid>
+      </Grid>
+
+      <Grid container direction="row">
+        <Grid item md />
+        <Grid item md={8}>
+          <h1>Responsible AI System Assessment</h1>
+        </Grid>
+        <Grid item md />
+      </Grid>
+    </Grid>
   );
 }
+
 
 let queryParamsFromProps = (props) => {
   let queryString = props.location.search;
@@ -138,11 +117,10 @@ function HomePage(props) {
     }
   }, [code]);
   return (
-    <div>
+    <Container maxWidth="lg">
       <Hero />
-      <UserSubmissions />
-      <Box mt={5} />
-    </div>
+      <UserSubmissions mb={5} />
+    </Container>
   );
 }
 

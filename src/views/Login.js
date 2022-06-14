@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Modal, Form } from 'react-bootstrap';
-import { Button, Typography } from '@material-ui/core';
-import { Box } from '@material-ui/core';
+import { Button, Box, Grid } from '@material-ui/core';
 
 import '../css/login.css';
 import Signup from './Signup';
@@ -95,7 +94,7 @@ export default class Login extends Component {
       return (
         <Box className="user-status">
           <UserSettings />
-          <Box style={{ fontFamily: 'helvetica' }} >
+          <Box>
             Logged in as:{' '}
             <strong className="anthem-blue">{user.username}</strong> &nbsp;
           </Box>
@@ -103,6 +102,7 @@ export default class Login extends Component {
       );
     } else {
       return (
+
         <Button
           onClick={() => {
             handleShow();
@@ -113,6 +113,7 @@ export default class Login extends Component {
             borderColor: '#386EDA',
             borderRadius: '20px',
             color: '#386EDA',
+            padding: '10px 25px',
             '&:hover': {
               backgroundColor: '#386EDA',
               borderColor: '#386EDA',
@@ -121,7 +122,7 @@ export default class Login extends Component {
           }}
           variant="outlined"
         >
-          <div style={{ padding: '0px 25px' }}>Log in</div>
+          Log in
         </Button>
       );
     }
