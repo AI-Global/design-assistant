@@ -8,6 +8,8 @@ import IconButton from '@material-ui/core/IconButton';
 import Add from '@material-ui/icons/Add';
 import { Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const owasp = require('owasp-password-strength-test');
 
@@ -99,6 +101,7 @@ export default class Signup extends Component {
    * and added to the DB.
    */
   handleSignupSubmit(event) {
+    event.preventDefault();
     this.setState({
       email: { isInvalid: false, message: '' },
       username: { isInvalid: false, message: '' },
@@ -149,7 +152,10 @@ export default class Signup extends Component {
             AccCreatedHandler();
             expireAuthToken();
             sessionStorage.setItem('authToken', result['token']);
-            window.location.reload();
+            toast('Account created', {
+              toastId: 'created',
+            });
+            setTimeout(window.location.reload(), 2500);
           }
         })
         .catch((err) => {
@@ -343,6 +349,18 @@ export default class Signup extends Component {
             </Form>
           </Modal.Body>
         </Modal>
+        <ToastContainer
+          position="bottom-right"
+          autoClose={2500}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick={false}
+          rtl={false}
+          pauseOnFocusLoss={false}
+          draggable={false}
+          pauseOnHover={false}
+          closeButton={false}
+        />
       </div>
     );
   }
