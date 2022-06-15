@@ -20,10 +20,6 @@ ReactGa.initialize(process.env.REACT_APP_GAID, {
 const img = new Image();
 const backgroundImage = (img.src = '../img/landing-background.png');
 
-
-
-
-
 function Hero() {
   return (
     <Grid container direction="column" justifyContent='space-between'
