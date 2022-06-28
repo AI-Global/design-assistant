@@ -19,7 +19,7 @@ const getSubDimensionApexData = (subDimensions, questions, results) => {
     };
     let aData = {
       x: subDimension.name,
-      y: available
+      y: available - earned,
     };
     data.push(apexData);
     availableData.push(aData)

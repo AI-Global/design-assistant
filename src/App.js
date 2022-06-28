@@ -3,6 +3,7 @@ import './css/theme.css';
 import './css/survey.css';
 import ReactGa from 'react-ga';
 import Login from './views/Login';
+import Signup from './views/Signup';
 import { Container, Grid } from '@material-ui/core';
 import UserSubmissions from './views/UserSubmissions';
 import React, { useEffect } from 'react';
@@ -39,7 +40,8 @@ function Hero() {
               />
             </a>
           </Grid >
-          <Grid item>
+          <Grid item style={{ display: 'flex', gap: '10px' }}>
+            <Signup signedOut={true} admin={true} />
             <Login />
           </Grid>
         </Grid>
