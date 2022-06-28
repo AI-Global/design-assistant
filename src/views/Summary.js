@@ -19,7 +19,7 @@ const getSubDimensionApexData = (subDimensions, questions, results) => {
     };
     let aData = {
       x: subDimension.name,
-      y: available
+      y: available - earned,
     };
     data.push(apexData);
     availableData.push(aData)
@@ -65,7 +65,7 @@ const getSubDimensionApexData = (subDimensions, questions, results) => {
         },
         barHeight: '100%',
       },
-      colors: ['#3F73FB', '#D9D4DE'],
+      colors: ['#0066ff', '#D9D4DE'],
       dataLabels: {
         formatter: function (val, opt) {
           const goals =
@@ -85,7 +85,7 @@ const getSubDimensionApexData = (subDimensions, questions, results) => {
         showForSingleSeries: true,
         customLegendItems: ['Earned', 'Available'],
         markers: {
-          fillColors: ['#3F73FB', '#D9D4DE']
+          fillColors: ['#0066ff', '#D9D4DE']
         }
       },
       grid: {
@@ -193,7 +193,7 @@ const getDimensionApexData = (dimensions, subDimensions, questions, results) => 
           horizontal: true,
         }
       },
-      colors: ['#3F73FB', '#D9D4DE'],
+      colors: ['#0066ff', '#D9D4DE'],
       dataLabels: {
         formatter: function (val, opt) {
           const goals =
@@ -213,7 +213,7 @@ const getDimensionApexData = (dimensions, subDimensions, questions, results) => 
         showForSingleSeries: true,
         customLegendItems: ['Earned', 'Available'],
         markers: {
-          fillColors: ['#3F73FB', '#D9D4DE']
+          fillColors: ['#0066ff', '#D9D4DE']
         }
       },
       grid: {

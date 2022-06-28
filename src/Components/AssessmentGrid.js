@@ -103,7 +103,11 @@ export default function AssessmentGrid(props) {
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((submission, i) => (
                 <StyledTableRow key={i}>
-                  <StyledTableCell className={classes.anthemBlue}>
+                  <StyledTableCell
+                    className={classes.anthemBlue}
+                    onClick={() => {
+                      handleResume(i);
+                    }}>
                     {submission.projectName === ''
                       ? `Unnamed Project (${submission._id})`
                       : submission.projectName}
