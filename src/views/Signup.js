@@ -21,6 +21,7 @@ const LandingButton = withStyles(() => ({
     fontFamily: 'Roboto',
     borderColor: '#386EDA',
     borderRadius: '20px',
+    padding: '11px',
     color: '#386EDA',
     '&:hover': {
       backgroundColor: '#386EDA',
