@@ -191,7 +191,7 @@ class UserSubmissions extends Component {
           <Grid item xs={10} md={7}>
             <Grid container>
               <Grid item xs={12}>
-                <p>Welcome‌ ‌to‌ ‌the‌ NEtlify ‌Responsible AI System-Level Assessment (SLA), a tool that RAII offers to help
+                <p>Welcome‌ ‌to‌ ‌the‌ ‌Responsible AI System-Level Assessment (SLA), a tool that RAII offers to help
                 organizations design,‌ ‌develop,‌ ‌and‌ ‌implement ‌AI‌ ‌systems responsibly.‌ With‌ ‌our‌ ‌esteemed‌ ‌community‌ ‌of‌
                 ‌subject‌ ‌matter‌ ‌experts‌ ‌ranging‌ ‌from‌ ‌engineers,‌ ‌to‌ ethicists,‌ ‌to‌ ‌policy‌ ‌makers,‌ ‌we‌ ‌have‌ ‌taken‌ ‌examined
                 various ‌principles,‌ ‌whitepapers,‌ ‌and‌ policy‌ ‌documents‌ ‌published‌ ‌by‌ ‌academics,‌ ‌standards‌ ‌organizations,‌ ‌
