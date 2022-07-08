@@ -55,32 +55,39 @@ export default class Login extends Component {
     let username = form.loginUsername.value;
     let password = form.loginPassword.value;
     let remember = form.loginRemember.checked;
-    api
-      .post('users/auth', {
+    fetch('/api/fetch', {
+      method: 'POST',
+      body: JSON.stringify({
         username: username?.toLowerCase(),
         password: password,
       })
-      .then((response) => {
-        const result = response.data;
-        if (result.errors) {
-          console.log(result.errors);
-        } else {
-          expireAuthToken();
-          if (remember) {
-            localStorage.setItem('authToken', result['token']);
-          } else {
-            sessionStorage.setItem('authToken', result['token']);
-          }
-          this.setState({ user: result['user'] });
-          this.setState({ showLoginModal: false });
-          window.location.reload();
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        let result = err?.response?.data;
-        this.setState(result);
-      });
+    });
+    // api
+    //   .post('users/auth', {
+    //     username: username?.toLowerCase(),
+    //     password: password,
+    //   })
+    //   .then((response) => {
+    //     const result = response.data;
+    //     if (result.errors) {
+    //       console.log(result.errors);
+    //     } else {
+    //       expireAuthToken();
+    //       if (remember) {
+    //         localStorage.setItem('authToken', result['token']);
+    //       } else {
+    //         sessionStorage.setItem('authToken', result['token']);
+    //       }
+    //       this.setState({ user: result['user'] });
+    //       this.setState({ showLoginModal: false });
+    //       window.location.reload();
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     console.error(err);
+    //     let result = err?.response?.data;
+    //     this.setState(result);
+    //   });
   }
 
   /**
