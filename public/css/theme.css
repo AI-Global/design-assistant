@@ -48,6 +48,7 @@ html {
 .copyright-footer {
   width: 100%;
   z-index: 4;
+  margin-top: 200px;
 }
 
 .copyright {
