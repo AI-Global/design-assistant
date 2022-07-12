@@ -210,10 +210,16 @@ noUi-value-large[style*='left: 0%']::after {
   .tooltip .tooltip-inner {
     max-width: 400px;
   }
+  .accordionFilter {
+    width: 182px;
+  }
 }
 @media screen and (min-width: 600px) {
   .tooltip .tooltip-inner {
     max-width: 600px;
+  }
+  .accordionFilter {
+    width: 210px;
   }
 }
 
@@ -277,6 +283,9 @@ form .btn:not(.btn-call-to-action) {
     z-index: 5;
     max-width: 20em;
     min-width: 19em;
+  }
+  .accordionFilter {
+    width: 250px;
   }
 
   .questionFilter {
