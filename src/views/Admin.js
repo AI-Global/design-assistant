@@ -186,7 +186,7 @@ export default class AdminPanel extends Component {
   }
   enterSurvey(submission) {
     this.props.history.push({
-      pathname: '/AccessToCareAssessment',
+      pathname: '/SystemAssessment',
       state: {
         prevResponses: submission.submission,
         submission_id: submission._id,
