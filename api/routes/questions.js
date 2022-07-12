@@ -88,7 +88,7 @@ function formatQuestion(q, Dimensions, Triggers = null) {
   question.name = q.id;
   question.type = q.responseType;
 
-  if (question.name.includes('other')) {
+  if (question.name.includes('notes')) {
     question.hideNumber = true;
   }
 
@@ -128,10 +128,10 @@ function formatQuestion(q, Dimensions, Triggers = null) {
   }
 
   if (question.type == 'dropdown') {
-    question.hasOther = true;
+    question.hasNotes = true;
     question.choice = [];
     question.choiceOrder = 'asc';
-    question.otherText = { default: 'Other', fr: '' };
+    question.notesText = { default: 'Notes', fr: '' };
     question.choices = [];
     for (let c of q.responses) {
       var choice = {};
@@ -404,11 +404,11 @@ async function createPages(q, filters) {
   dimQuestions = await applyFilters(dimQuestions, filters);
 
 
-  // Add Other question to tombstone and create page
+  // Add Notes question to tombstone and create page
   dimQuestions[1].push({
     responseType: 'comment',
-    id: 'otherTombstone',
-    question: 'Other:',
+    id: 'notesTombstone',
+    question: 'Notes:',
     alt_text:
       'If possible, support the feedback with specific recommendations / suggestions to improve the tool. Feedback can include:\n - Refinement to existing questions, like suggestions on how questions can be simplified or clarified further\n - Additions of new questions for specific scenarios that may be missed\n - Feedback on whether the listed AI risk domains are fulsome and complete\n - What types of response indicators should be included for your context?',
   });
@@ -434,8 +434,8 @@ async function createPages(q, filters) {
       questions.push(question);
       questions.push({
         responseType: 'comment',
-        id: 'other' + question.id,
-        question: 'Other:',
+        id: 'notes' + question.id,
+        question: 'Notes:',
         alt_text:
           'If possible, support the feedback with specific recommendations / suggestions to improve the tool. Feedback can include:\n - Refinement to existing questions, like suggestions on how questions can be simplified or clarified further\n - Additions of new questions for specific scenarios that may be missed\n - Feedback on whether the listed AI risk domains are fulsome and complete\n - What types of response indicators should be included for your context?',
       });
