@@ -289,12 +289,11 @@ form .btn:not(.btn-call-to-action) {
   }
 
   .questionFilter {
-    margin-top: 5em;
+    margin-top: 1em;
     position: relative;
     z-index: 5;
     max-width: 18em;
     min-width: 18em;
-    min-height: 30em;
     margin-left: auto;
     margin-right: auto;
   }
