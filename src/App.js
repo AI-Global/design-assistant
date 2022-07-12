@@ -6,9 +6,9 @@ import Login from './views/Login';
 import Signup from './views/Signup';
 import { Container, Grid } from '@material-ui/core';
 import UserSubmissions from './views/UserSubmissions';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
-import { expireAuthToken } from './helper/AuthHelper';
+import { getLoggedInUser, expireAuthToken } from './helper/AuthHelper';
 import api from './api';
 
 import 'nouislider/distribute/nouislider.min.css';
@@ -22,6 +22,12 @@ const img = new Image();
 const backgroundImage = (img.src = '../img/landing-background.png');
 
 function Hero() {
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    getLoggedInUser().then((user) => {
+      setUser(user);
+    });
+  }, []);
   return (
     <Grid container direction="column" justifyContent='space-between'
       style={{
@@ -41,7 +47,7 @@ function Hero() {
             </a>
           </Grid >
           <Grid item style={{ display: 'flex', gap: '10px' }}>
-            <Signup signedOut={true} admin={true} />
+            {!user && <Signup signedOut={true} admin={true} />}
             <Login />
           </Grid>
         </Grid>
