@@ -83,8 +83,8 @@ test('User can start a new survey without logging in', async () => {
   await driver
     .findElement(By.xpath("//*[contains(text(), 'Start New Survey')]"))
     .click();
-  await driver.wait(until.urlContains('AccessToCareAssessment'));
+  await driver.wait(until.urlContains('SystemAssessment'));
   let currentUrl = await driver.getCurrentUrl();
-  expect(currentUrl).toContain('AccessToCareAssessment');
+  expect(currentUrl).toContain('SystemAssessment');
   driver.close();
 });

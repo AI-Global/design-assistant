@@ -4,7 +4,7 @@ import Admin from './views/Admin.js';
 import Results from './views/Results.js';
 import PrivateRoute from './PrivateRoute';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import AccessToCareAssessment from './views/AccessToCareAssessment.js';
+import SystemAssessment from './views/SystemAssessment.js';
 import ViewSubmissions from './views/ViewSubmissions';
 import { ThemeProvider, createTheme } from '@material-ui/core/styles';
 
@@ -23,8 +23,8 @@ export default function Router() {
             <Route exact path="/" component={App} />
             <Route
               exact
-              path="/AccessToCareAssessment"
-              component={AccessToCareAssessment}
+              path="/SystemAssessment"
+              component={SystemAssessment}
             />
             <Route path="/Results" component={Results} />
             <PrivateRoute path="/Admin" component={Admin} />

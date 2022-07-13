@@ -8,7 +8,7 @@ The is the home page of the App and renders the Welcome text, the Login button, 
 #### Admin.js
 Renders the administration panel for users with valid admin credentials. It renders the ```QuestionTable.js``` component for the Survey Management functionality, displays all of the registered users in the ```Users``` table, all unregister submissions in the ```Submissions``` table, renders a list of Trusted AI Providers from the ```AdminProviders.js``` component, a list of Trusted AI resources from the ```AdminResources.js``` component, and basic site analytics from the ```AnalyticsDashboard.js``` component.
 
-#### AccessToCareAssessment.js
+#### SystemAssessment.js
 This is the actual survey component of the App. It leverages the [SurveyJS](https://surveyjs.io/) library to render the questions stored in the mongo database. The component gets the questions json from the backend through the ```/questions``` get request, and loads them into the SurveyJS ```model```. If the user is logged in and continues an existing survey, the previous responses are loaded into the model by setting ```model.data``` to the previous submissions JSON. 
 
 When a logged in user clicks the _Save_ button, the component makes a post request to the ```/submissions``` endpoint, which stores the submissions JSON (```this.model.data```) into the database.
@@ -42,7 +42,7 @@ Upon login of a user, renders a ```Dropdown``` for various user settings such as
 #### UserSubmissions.js
 This renders a table of a logged in users previously completed/saved survey submissions. If a user is logged in, the component makes a get request to ```/submissions/user/:user_id``` to get a JSON file from the database of all of that user's submissions.
 
-If a submission is not completed, the user can click the _Resume Survey_ button, which passes that submission JSON into the ```AccessToCareAssessment.js``` component, which will render the survey and load their previous answers into it. 
+If a submission is not completed, the user can click the _Resume Survey_ button, which passes that submission JSON into the ```SystemAssessment.js``` component, which will render the survey and load their previous answers into it. 
 
 Submissions in the list can be deleted by clicking the _Trash Icon_, which sends a delete request to ```/submissions/delete/:submission_id``` to remove it from the database. 
 

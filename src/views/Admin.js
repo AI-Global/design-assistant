@@ -4,9 +4,6 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
 import { red } from '@material-ui/core/colors';
 import QuestionTable from '../Components/QuestionTable';
-// import AnalyticsDashboard from '../Components/AnalyticsDashboard';
-import AdminProviders from '../Components/AdminProviders';
-import AdminResources from '../Components/AdminResources';
 import Dimensions from '../Components/Dimensions';
 import SubDimensions from '../Components/SubDimensions';
 import {
@@ -189,7 +186,7 @@ export default class AdminPanel extends Component {
   }
   enterSurvey(submission) {
     this.props.history.push({
-      pathname: '/AccessToCareAssessment',
+      pathname: '/SystemAssessment',
       state: {
         prevResponses: submission.submission,
         submission_id: submission._id,
@@ -567,7 +564,7 @@ export default class AdminPanel extends Component {
             </Accordion>
           )}
           {!this.state.showSubmissionsFilter ? null : (
-            <Accordion>
+            <Accordion className="accordionFilter">
               <Card>
                 <Accordion.Toggle as={Card.Header} eventKey="1">
                   Filters

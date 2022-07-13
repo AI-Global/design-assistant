@@ -48,7 +48,7 @@ localizedStrs.progressText = '';
 
 // array of dimension names used to create navigation cards
 
-class AccessToCareAssessment extends Component {
+class SystemAssessment extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -1148,4 +1148,4 @@ class AccessToCareAssessment extends Component {
   }
 }
 
-export default withRouter(AccessToCareAssessment);
+export default withRouter(SystemAssessment);

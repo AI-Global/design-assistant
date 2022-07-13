@@ -67,16 +67,13 @@ const getSubDimensionApexData = (subDimensions, questions, results) => {
       },
       colors: ['#0066ff', '#D9D4DE'],
       dataLabels: {
-        formatter: function (val, opt) {
-          const goals =
-            opt.w.config.series[opt.seriesIndex].data[opt.dataPointIndex]
-              .goals
-
-          if (goals && goals.length) {
-            return `${val} / ${goals[0].value}`
-          }
-          return val
+        enabledOnSeries: [0],
+        formatter: function (val, opts) {
+          return `${val} / ${val + opts?.w?.globals?.series[1][opts.dataPointIndex]}`
         }
+      },
+      tooltip: {
+        enabledOnSeries: [0],
       },
       legend: {
         show: true,
@@ -195,16 +192,13 @@ const getDimensionApexData = (dimensions, subDimensions, questions, results) => 
       },
       colors: ['#0066ff', '#D9D4DE'],
       dataLabels: {
-        formatter: function (val, opt) {
-          const goals =
-            opt.w.config.series[opt.seriesIndex].data[opt.dataPointIndex]
-              .goals
-
-          if (goals && goals.length) {
-            return `${val} / ${goals[0].value}`
-          }
-          return val
+        enabledOnSeries: [0],
+        formatter: function (val, opts) {
+          return `${val} / ${val + opts?.w?.globals?.series[1][opts.dataPointIndex]}`
         }
+      },
+      tooltip: {
+        enabledOnSeries: [0],
       },
       legend: {
         show: true,
