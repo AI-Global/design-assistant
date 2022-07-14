@@ -13,6 +13,7 @@ import ReactGa from 'react-ga';
 import { withRouter } from 'react-router-dom';
 
 const LogoutHandler = () => {
+  console.log('LogoutHandler');
   ReactGa.event({
     category: 'Button',
     action: 'User Logged Out',
