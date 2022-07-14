@@ -60,7 +60,7 @@ class UserSubmissions extends Component {
           .then((res) => {
             var submissions = res?.data;
             if (submissions) {
-              this.setState({ submissions: submissions });
+              this.setState(submissions);
             }
           });
       }
