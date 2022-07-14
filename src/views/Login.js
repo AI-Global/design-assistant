@@ -186,7 +186,7 @@ export default class Login extends Component {
               />
             </Form>
             <Box className="create-account">
-              <p className="disabled">Not a member yet?&nbsp;</p>
+              {/* <p className="disabled">Not a member yet?&nbsp;</p> */}
               <Signup onLanding={true} signedOut={false} admin={true} />
             </Box>
           </Modal.Body>
