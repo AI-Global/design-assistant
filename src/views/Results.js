@@ -316,7 +316,7 @@ export default class Results extends Component {
               color: '#00C1B4',
               cursor: 'pointer'
             }}>
-              <a href="" target="_blank"> <CallMadeOutlined /> Assessment guide </a>
+              <a href="https://drive.google.com/file/d/18SnZxv5tSHcGhLfqaEIafD1WFYKLnE9g/view" target="_blank"> <CallMadeOutlined /> Assessment guide </a>
             </p>
           </h1>
           {this.state.alternateReport ? (
