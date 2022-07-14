@@ -90,6 +90,7 @@ export default class Login extends Component {
   renderUser() {
     const handleShow = () => this.setState({ showLoginModal: true });
     let user = this.state.user;
+    console.log('Logged in user: ', user);
     if (user) {
       return (
         <Box className="user-status">
