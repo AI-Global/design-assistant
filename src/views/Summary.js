@@ -67,8 +67,15 @@ const getSubDimensionApexData = (subDimensions, questions, results) => {
       },
       colors: ['#0066ff', '#D9D4DE'],
       dataLabels: {
-        enabledOnSeries: [0],
+        enabledOnSeries: [0, 1],
         formatter: function (val, opts) {
+          const isEmpty = opts?.w?.globals?.series[0][opts.dataPointIndex] === 0;
+          if (opts.seriesIndex === 1 && isEmpty) {
+            return `0 / ${val}`
+          }
+          if (opts.seriesIndex === 1) {
+            return '';
+          }
           return `${val} / ${val + opts?.w?.globals?.series[1][opts.dataPointIndex]}`
         }
       },
@@ -192,8 +199,15 @@ const getDimensionApexData = (dimensions, subDimensions, questions, results) => 
       },
       colors: ['#0066ff', '#D9D4DE'],
       dataLabels: {
-        enabledOnSeries: [0],
+        enabledOnSeries: [0, 1],
         formatter: function (val, opts) {
+          const isEmpty = opts?.w?.globals?.series[0][opts.dataPointIndex] === 0;
+          if (opts.seriesIndex === 1 && isEmpty) {
+            return `0 / ${val}`
+          }
+          if (opts.seriesIndex === 1) {
+            return '';
+          }
           return `${val} / ${val + opts?.w?.globals?.series[1][opts.dataPointIndex]}`
         }
       },
