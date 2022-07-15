@@ -2,6 +2,7 @@ import api from '../api';
 const key = 'authToken';
 
 export function expireAuthToken() {
+  console.log('expireAuthToken');
   localStorage.removeItem(key);
   sessionStorage.removeItem(key);
 }
@@ -53,4 +54,4 @@ export function getAuthToken() {
   return authToken;
 }
 
-export function setAuthToken() {}
+export function setAuthToken() { }

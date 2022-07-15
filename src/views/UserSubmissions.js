@@ -58,8 +58,10 @@ class UserSubmissions extends Component {
           .get('submissions/' + this.state.collabRole)
 
           .then((res) => {
-            var submissions = res.data;
-            this.setState(submissions);
+            var submissions = res?.data;
+            if (submissions) {
+              this.setState(submissions);
+            }
           });
       }
     });
@@ -192,22 +194,22 @@ class UserSubmissions extends Component {
             <Grid container>
               <Grid item xs={12}>
                 <p>Welcome‌ ‌to‌ ‌the‌ ‌Responsible AI System-Level Assessment (SLA), a tool that RAII offers to help
-                organizations design,‌ ‌develop,‌ ‌and‌ ‌implement ‌AI‌ ‌systems responsibly.‌ With‌ ‌our‌ ‌esteemed‌ ‌community‌ ‌of‌
-                ‌subject‌ ‌matter‌ ‌experts‌ ‌ranging‌ ‌from‌ ‌engineers,‌ ‌to‌ ethicists,‌ ‌to‌ ‌policy‌ ‌makers,‌ ‌we‌ ‌have‌ ‌taken‌ ‌examined
-                various ‌principles,‌ ‌whitepapers,‌ ‌and‌ policy‌ ‌documents‌ ‌published‌ ‌by‌ ‌academics,‌ ‌standards‌ ‌organizations,‌ ‌
+                  organizations design,‌ ‌develop,‌ ‌and‌ ‌implement ‌AI‌ ‌systems responsibly.‌ With‌ ‌our‌ ‌esteemed‌ ‌community‌ ‌of‌
+                  ‌subject‌ ‌matter‌ ‌experts‌ ‌ranging‌ ‌from‌ ‌engineers,‌ ‌to‌ ethicists,‌ ‌to‌ ‌policy‌ ‌makers,‌ ‌we‌ ‌have‌ ‌taken‌ ‌examined
+                  various ‌principles,‌ ‌whitepapers,‌ ‌and‌ policy‌ ‌documents‌ ‌published‌ ‌by‌ ‌academics,‌ ‌standards‌ ‌organizations,‌ ‌
                   and‌ ‌companies‌ and‌ ‌translated‌ ‌them‌ ‌into‌ ‌a comprehensive‌ ‌and easy to use assessment.</p>
               </Grid>
               <Grid item xs={12}>
                 <p>The SLA has more than 100 questions that evaluate an AI system’s residual risk along the
-                Responsible AI Implementation Framework’s six dimensions and their subdimensions. The framework’s
-                dimensions include: Systems Operations, Explainability & Interpretability, Accountability, Consumer
+                  Responsible AI Implementation Framework’s six dimensions and their subdimensions. The framework’s
+                  dimensions include: Systems Operations, Explainability & Interpretability, Accountability, Consumer
                   Protection, Bias & Fairness, and Robustness.</p>
               </Grid>
               <Grid item xs={12}>
                 <p>RAII encourages SLA  use for continuous AI system improvement or to include it in your internal
-                compliance or auditing processes. ‌Whether‌ ‌you‌ ‌are‌ ‌‌considering ‌how‌ ‌to‌ ‌integrate‌ ‌AI‌ ‌tools‌ ‌into‌ ‌your‌ ‌
-                business ‌or‌‌ ‌have‌ ‌already‌ ‌deployed‌ several‌ AI ‌models,‌ ‌this‌ ‌tool‌ ‌can help your organization assess
-                whether those efforts are responsible.‌ ‌We‌ ‌believe‌ ‌these‌ ‌questions‌ ‌are‌ ‌best‌ ‌to‌ ‌think‌ about‌ ‌at‌ ‌the‌ ‌
+                  compliance or auditing processes. ‌Whether‌ ‌you‌ ‌are‌ ‌‌considering ‌how‌ ‌to‌ ‌integrate‌ ‌AI‌ ‌tools‌ ‌into‌ ‌your‌ ‌
+                  business ‌or‌‌ ‌have‌ ‌already‌ ‌deployed‌ several‌ AI ‌models,‌ ‌this‌ ‌tool‌ ‌can help your organization assess
+                  whether those efforts are responsible.‌ ‌We‌ ‌believe‌ ‌these‌ ‌questions‌ ‌are‌ ‌best‌ ‌to‌ ‌think‌ about‌ ‌at‌ ‌the‌ ‌
                   start‌ ‌of‌ ‌your‌ ‌project,‌ ‌however,‌ ‌the‌ ‌SLA ‌can‌ ‌be‌ used‌ ‌throughout‌ ‌your‌ ‌project’s lifecycle!‌</p>
               </Grid>
             </Grid>
