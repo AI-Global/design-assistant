@@ -24,10 +24,12 @@ export const AssessmentStepper = ({ dimArray, onStepClick, pages, model }) => {
     //calculate overall progress by comparing all questions against answered (stored in model.data from parent state)
     let answeredCount = 0;
     const questionCount = pages?.reduce((acc, page) => {
-      acc += page.elements.length;
       page.elements.map((question, index) => {
-        if (model.data[question.name]) {
-          answeredCount++;
+        if (question.type !== 'comment' && shouldDisplayNav(question)) {
+          acc++;
+          if (model.data[question.name]) {
+            answeredCount++;
+          }
         }
       });
       return acc;
@@ -51,6 +53,33 @@ export const AssessmentStepper = ({ dimArray, onStepClick, pages, model }) => {
     onStepClick(pageIndex);
   };
 
+  /**
+ * Returns true if a child's trigger is included in the answers
+ */
+  const shouldDisplayNav = (child) => {
+    let visibleIfArray = child?.visibleIf?.split('or ');
+    if (!visibleIfArray) {
+      return true;
+    }
+    let show = false;
+    visibleIfArray.forEach((visibleIf) => {
+      var parId = visibleIf.split('{')[1].split('}')[0];
+      var resId = visibleIf.split("'")[1].split("'")[0];
+
+      if (model?.data[parId]) {
+        if (Array.isArray(model.data[parId])) {
+          if (model.data[parId].includes(resId)) {
+            show = true;
+          }
+        } else {
+          if (model.data[parId] === resId) {
+            show = true;
+          }
+        }
+      }
+    });
+    return show;
+  }
   //calculate individual dimension progress by finding only questions for that dimension
   const dimensionProgress = (dimension) => {
     let answeredCount = 0;
@@ -60,10 +89,12 @@ export const AssessmentStepper = ({ dimArray, onStepClick, pages, model }) => {
           .toLowerCase()
           .includes(dimension.substring(0, 4).toLowerCase())
       ) {
-        acc += page.elements.length;
         page.elements.map((question, index) => {
-          if (model.data[question.name]) {
-            answeredCount++;
+          if (question.type !== 'comment' && shouldDisplayNav(question)) {
+            acc++;
+            if (model.data[question.name]) {
+              answeredCount++;
+            }
           }
         });
       }

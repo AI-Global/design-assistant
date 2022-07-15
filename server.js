@@ -5,7 +5,7 @@ const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 5050;
-const MONGODB_URL = process.env.NODE_ENV == 'production' && process.env.MONGODB_URL || 'mongodb://localhost:27017/rai-local-dev';
+const MONGODB_URL = process.env.NODE_ENV == 'production' && process.env.MONGODB_URL || process.env.MONGODB_URL || 'mongodb+srv://OpromaAdmin:ZVyGDeCJSPXFC4o6@cluster0.krmr3.mongodb.net/rai-design-assistant-dev?retryWrites=true&w=majority';
 
 
 // Force HTTPS
