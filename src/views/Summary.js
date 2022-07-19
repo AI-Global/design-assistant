@@ -80,7 +80,26 @@ const getSubDimensionApexData = (subDimensions, questions, results) => {
         }
       },
       tooltip: {
-        enabledOnSeries: [0],
+        enabledOnSeries: [0, 1],
+        y: {
+          show: false,
+          formatter: (val, opts) => {
+            const isEmpty = opts?.w?.globals?.series[0][opts.dataPointIndex] === 0;
+            if (isEmpty) {
+              return 0
+            }
+            return val
+          },
+          title: {
+            formatter: (val, opts) => {
+              const isEmpty = opts?.w?.globals?.series[0][opts.dataPointIndex] === 0;
+              if (isEmpty) {
+                return 'Earned'
+              }
+              return val;
+            }
+          },
+        },
       },
       legend: {
         show: true,
@@ -212,7 +231,26 @@ const getDimensionApexData = (dimensions, subDimensions, questions, results) => 
         }
       },
       tooltip: {
-        enabledOnSeries: [0],
+        enabledOnSeries: [0, 1],
+        y: {
+          show: false,
+          formatter: (val, opts) => {
+            const isEmpty = opts?.w?.globals?.series[0][opts.dataPointIndex] === 0;
+            if (isEmpty) {
+              return 0
+            }
+            return val
+          },
+          title: {
+            formatter: (val, opts) => {
+              const isEmpty = opts?.w?.globals?.series[0][opts.dataPointIndex] === 0;
+              if (isEmpty) {
+                return 'Earned'
+              }
+              return val;
+            }
+          },
+        },
       },
       legend: {
         show: true,
