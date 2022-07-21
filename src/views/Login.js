@@ -120,6 +120,8 @@ export default class Login extends Component {
               borderColor: '#386EDA',
               color: '#FFFFFF',
             },
+            width: '110px',
+            height: '52px'
           }}
           variant="outlined"
         >
