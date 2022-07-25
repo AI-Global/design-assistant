@@ -29,6 +29,10 @@
   padding-left: 30px !important;
 }
 
+.checkbox-decorator {
+  margin-left: 10px;
+}
+
 .form-control {
   font-size: 1rem !important;
 }
