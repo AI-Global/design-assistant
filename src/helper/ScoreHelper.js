@@ -32,6 +32,7 @@ export const computeSubdimensionScore = (subDimension, questions, results) => {
   const sdQuestions = questions?.filter(q => {
     return (q.subDimension === subDimension.subDimensionID)
   });
+  console.log(subDimension.name, sdQuestions);
   const questionScores = computeQuestionScores(sdQuestions, results);
   let acc = { earned: 0, available: 0 };
   const subDimensionScore = questionScores?.reduce((acc, curr) => {
@@ -58,8 +59,8 @@ export const computeQuestionScore = (question, answer) => {
       const available = question.responses.reduce((max, r) => Math.max(max, r.score), 0);
       retval = { available: available || 0, earned: parsedAnswer.score | 0 }
     } else if (Array.isArray(answer)) {  // Answer is an array of responses (checkbox)
-      const parsedAnswers = question.responses.filter(r => answer.includes(r._id)).map(pa => pa.indicator);
-      const available = question.responses.reduce((max, r) => Math.max(max, r.score), 0);
+      const parsedAnswers = question.responses.filter(r => answer.includes(r._id));
+      const available = question.responses.reduce((max, r) => max + r.score, 0);
       const earned = parsedAnswers.reduce((sum, pa) => sum + (pa.score || 0), 0);
       retval = { available: available || 0, earned: earned || 0 }
     } else { // Answer is a number (slider)
