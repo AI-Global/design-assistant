@@ -46,6 +46,9 @@ function Hero() {
               />
             </a>
           </Grid >
+          <div onClick={() => window.location.assign("https://assessment.responsible.ai/")} class="alert alert-warning" role="alert">
+            Currently under repair
+          </div>
           <Grid item style={{ display: 'flex', gap: '10px' }}>
             {!user && <Signup signedOut={true} admin={true} />}
             <Login />
