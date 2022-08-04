@@ -68,12 +68,12 @@ const makeDimensions = (dimensions, subdimensions, results, questionsData) => {
               answer: { value: parsedAnswer.indicator, maxScore: maxScore, answerScore: parsedAnswer.score },
             });
           } else if (Array.isArray(answer)) {
-            const parsedAnswers = sdq.responses.filter(r => answer.includes(r._id)).map(pa => pa.indicator);
-            const maxScore = sdq.responses.reduce((max, r) => Math.max(max, r.score), 0);
+            const parsedAnswers = sdq.responses.filter(r => answer.includes(r._id));
+            const maxScore = sdq.responses.reduce((max, r) => max + r.score, 0);
             const answerScore = parsedAnswers.reduce((sum, pa) => sum + (pa.score || 0), 0);
             questionsToDisplay.push({
               question: sdq,
-              answer: { value: parsedAnswers.join(', '), maxScore, answerScore },
+              answer: { value: parsedAnswers.map(pa => pa.indicator).join(', '), maxScore, answerScore },
             });
           } else {
             questionsToDisplay.push({
