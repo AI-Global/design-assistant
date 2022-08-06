@@ -15,21 +15,24 @@ const owasp = require('owasp-password-strength-test');
 
 const LandingButton = withStyles(() => ({
   root: {
-    borderRadius: '8px',
-    border: '1px solid',
+    border: '1px solid #0066FF',
     backgroundColor: '#FFFFFF',
     fontFamily: 'Roboto',
-    borderColor: '#386EDA',
     borderRadius: '20px',
-    padding: '11px',
-    color: '#386EDA',
-    '&:hover': {
-      backgroundColor: '#386EDA',
-      borderColor: '#386EDA',
-      color: '#FFFFFF',
-    },
-    width: '110px',
-    height: '52px'
+    color: '#0066FF',
+    justifyContent: 'center',
+    display: 'flex',
+    margin: '10px',
+    textTransform: 'uppercase',
+    textAlign: 'center',
+    alignItems: 'center',
+    lineHeight: '28px',
+    fontSize: '15px',
+    fontWeight: '400',
+    fontStyle: 'normal',
+    boxSizing: 'border-box',
+    // width: '110px',
+    // height: '52px'
   },
 }))(Button);
 
