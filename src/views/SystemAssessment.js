@@ -580,7 +580,7 @@ class SystemAssessment extends Component {
               <div style={{ flex: 1 }}>
                 <p style={{ paddingTop: '20px' }}>
                   What is your system task?
-              </p>
+                </p>
                 <fieldset id="systemQuestion">
                   <div>
                     <input
@@ -594,7 +594,7 @@ class SystemAssessment extends Component {
                     />
                     <label for="Recognition" style={{ paddingLeft: '10px' }}>
                       Recognition
-                </label>
+                    </label>
                   </div>
                   <div>
                     <input
@@ -608,7 +608,7 @@ class SystemAssessment extends Component {
                     />
                     <label for="Follow up, emotion recognition" style={{ paddingLeft: '10px' }}>
                       Follow up, emotion recognition
-                </label>
+                    </label>
                   </div>
                   <div>
                     <input
@@ -622,7 +622,7 @@ class SystemAssessment extends Component {
                     />
                     <label for="Event detection" style={{ paddingLeft: '10px' }}>
                       Event detection
-                </label>
+                    </label>
                   </div>
                   <div>
                     <input
@@ -636,7 +636,7 @@ class SystemAssessment extends Component {
                     />
                     <label for="Forecasting" style={{ paddingLeft: '10px' }}>
                       Forecasting
-                </label>
+                    </label>
                   </div>
                   <div>
                     <input
@@ -650,7 +650,7 @@ class SystemAssessment extends Component {
                     />
                     <label for="Personalization" style={{ paddingLeft: '10px' }}>
                       Personalization
-                </label>
+                    </label>
                   </div>
                   <div>
                     <input
@@ -664,7 +664,7 @@ class SystemAssessment extends Component {
                     />
                     <label for="Interaction support" style={{ paddingLeft: '10px' }}>
                       Interaction support
-                </label>
+                    </label>
                   </div>
                   <div>
                     <input
@@ -678,7 +678,7 @@ class SystemAssessment extends Component {
                     />
                     <label for="Goal-driven optimization" style={{ paddingLeft: '10px' }}>
                       Goal-driven optimization
-                </label>
+                    </label>
                   </div>
                   <div>
                     <input
@@ -692,14 +692,14 @@ class SystemAssessment extends Component {
                     />
                     <label for="Reasoning with knowledge structures" style={{ paddingLeft: '10px' }}>
                       Reasoning with knowledge structures
-                </label>
+                    </label>
                   </div>
                 </fieldset>
               </div>
               <div style={{ flex: 1 }}>
                 <p style={{ paddingTop: '20px' }}>
                   What region is it operating in?
-              </p>
+                </p>
                 <fieldset id="regionQuestion">
                   <div>
                     <input
@@ -713,7 +713,7 @@ class SystemAssessment extends Component {
                     />
                     <label for="US" style={{ paddingLeft: '10px' }}>
                       US
-                  </label>
+                    </label>
                   </div>
                   <div>
                     <input
@@ -727,7 +727,7 @@ class SystemAssessment extends Component {
                     />
                     <label for="UK" style={{ paddingLeft: '10px' }}>
                       UK
-                  </label>
+                    </label>
                   </div>
                   <div>
                     <input
@@ -741,7 +741,7 @@ class SystemAssessment extends Component {
                     />
                     <label for="EU" style={{ paddingLeft: '10px' }}>
                       EU
-                  </label>
+                    </label>
                   </div>
                   <div>
                     <input
@@ -755,7 +755,7 @@ class SystemAssessment extends Component {
                     />
                     <label for="Canada" style={{ paddingLeft: '10px' }}>
                       Canada
-                  </label>
+                    </label>
                   </div>
                   <div>
                     <input
@@ -769,14 +769,14 @@ class SystemAssessment extends Component {
                     />
                     <label for="Other" style={{ paddingLeft: '10px' }}>
                       Other
-                  </label>
+                    </label>
                   </div>
                 </fieldset>
               </div>
               <div style={{ flex: 1 }}>
                 <p style={{ paddingTop: '20px' }}>
                   Which domain is the application for?
-              </p>
+                </p>
                 <fieldset id="domainQuestion">
                   <div>
                     <input
@@ -790,7 +790,7 @@ class SystemAssessment extends Component {
                     />
                     <label for="HR" style={{ paddingLeft: '10px' }}>
                       HR
-                  </label>
+                    </label>
                   </div>
                   <div>
                     <input
@@ -804,7 +804,7 @@ class SystemAssessment extends Component {
                     />
                     <label for="Finance" style={{ paddingLeft: '10px' }}>
                       Finance
-                  </label>
+                    </label>
                   </div>
                   <div>
                     <input
@@ -818,7 +818,7 @@ class SystemAssessment extends Component {
                     />
                     <label for="Procurement" style={{ paddingLeft: '10px' }}>
                       Procurement
-                  </label>
+                    </label>
                   </div>
                   <div>
                     <input
@@ -832,7 +832,7 @@ class SystemAssessment extends Component {
                     />
                     <label for="Health" style={{ paddingLeft: '10px' }}>
                       Health
-                  </label>
+                    </label>
                   </div>
                   <div>
                     <input
@@ -846,7 +846,7 @@ class SystemAssessment extends Component {
                     />
                     <label for="Other" style={{ paddingLeft: '10px' }}>
                       Other
-                  </label>
+                    </label>
                   </div>
                 </fieldset>
               </div>
