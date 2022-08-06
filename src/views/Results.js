@@ -67,22 +67,10 @@ export default class Results extends Component {
   }
 
   componentDidMount() {
-    const dimensionOrder = [
-      'System Operations',
-      'Explainability & Interpretability',
-      'Accountability',
-      'Consumer Protection',
-      'Bias & Fairness',
-      'Robustness'
-    ];
-    const getSortVal = (name) => dimensionOrder.includes(name) ? dimensionOrder.indexOf(name) : 20;
     ReactGa.pageview(window.location.pathname + window.location.search);
     api.get('dimensions').then((res) => {
       this.setState({
-        Dimensions: res.data.sort((a, b) =>
-          (getSortVal(a.name) > getSortVal(b.name))
-            ? 1 : ((getSortVal(b.name) > getSortVal(a.name))
-              ? -1 : 0))
+        Dimensions: res.data
       });
     });
     api.get('subdimensions').then((res) => {
@@ -285,7 +273,7 @@ export default class Results extends Component {
         >
           <h1 className="section-header">
             Results
-             <p
+            <p
               style={{
                 fontSize: '16px',
                 fontWeight: 400,
@@ -308,7 +296,7 @@ export default class Results extends Component {
               }}
             >
               <SystemUpdateAltOutlinedIcon /> Download report
-          </p>
+            </p>
             <p style={{
               fontSize: '16px',
               fontWeight: 400,
