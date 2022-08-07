@@ -291,7 +291,7 @@ class UserSettings extends Component {
               </Button>
             ) : null
           ) : null}
-          <Button
+          {/* <Button
             style={{ fontFamily: 'helvetica' }}
             variant="text"
             onClick={() =>
@@ -299,7 +299,7 @@ class UserSettings extends Component {
             }
           >
             Edit Account in AI Portal
-          </Button>
+          </Button> */}
           <Button style={{ fontFamily: 'helvetica' }} variant="text" onClick={() => this.handleLogout()}>
             Log Out
           </Button>

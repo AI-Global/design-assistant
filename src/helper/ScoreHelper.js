@@ -32,7 +32,6 @@ export const computeSubdimensionScore = (subDimension, questions, results) => {
   const sdQuestions = questions?.filter(q => {
     return (q.subDimension === subDimension.subDimensionID)
   });
-  console.log(subDimension.name, sdQuestions);
   const questionScores = computeQuestionScores(sdQuestions, results);
   let acc = { earned: 0, available: 0 };
   const subDimensionScore = questionScores?.reduce((acc, curr) => {

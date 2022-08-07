@@ -29,6 +29,11 @@
   padding-left: 30px !important;
 }
 
+.checkbox {
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
+}
+
 .checkbox-decorator {
   margin-left: 10px;
 }
@@ -44,7 +49,7 @@
 }
 
 .sv_q_radiogroup_control_label p {
-  margin-left: 3px !important;
+  margin-left: 8px !important;
 }
 
 .MuiToolbar-root p {
