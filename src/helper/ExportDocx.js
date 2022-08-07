@@ -13,6 +13,7 @@ import {
   HeightRule,
   convertInchesToTwip,
   VerticalAlign,
+  PageOrientation,
 } from "docx";
 import { saveAs } from 'file-saver';
 
@@ -374,7 +375,13 @@ export const createCertificationDocx = (
 
   const document = new Document({
     sections: [{
-      properties: {},
+      properties: {
+        page: {
+          size: {
+            orientation: PageOrientation.LANDSCAPE,
+          }
+        }
+      },
       children: [
         new Paragraph({ text: `Project Title: ${projectTitle}`, heading: HeadingLevel.HEADING_1 }),
         new Paragraph({ text: projectDescription }),
