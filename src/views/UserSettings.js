@@ -277,7 +277,7 @@ class UserSettings extends Component {
             flexDirection: 'row',
             fontFamily: 'helvetica',
             width: '100%',
-            justifyContent: 'space-between',
+            justifyContent: 'right',
           }}
         >
           <Button style={{ fontFamily: 'helvetica' }} variant="text" onClick={() => this.navHome()}>

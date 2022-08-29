@@ -33,7 +33,7 @@ const StartSurveyHandler = () => {
 };
 
 const guidancePath =
-  'https://docs.google.com/presentation/d/1EDPhyRhIsiOrujLcHQv_fezXfgOz4Rl7a8lyOM_guoA/edit#slide=id.p1';
+  'https://drive.google.com/file/d/18SnZxv5tSHcGhLfqaEIafD1WFYKLnE9g/view';
 class UserSubmissions extends Component {
   constructor(props) {
     super(props);
