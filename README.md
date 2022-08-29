@@ -1,4 +1,4 @@
-# Responsible AI Design Assistant
+# Responsible AI System Assessment
 
 #### [By AI Global](https://ai-global.org/)
 

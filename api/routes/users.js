@@ -39,7 +39,7 @@ router.post('/create', async (req, res) => {
   await user
     .save()
     .then((user) => {
-      let emailSubject = 'Responsible AI Design Assistant Account Creation';
+      let emailSubject = 'Responsible AI System Assessment Account Creation';
       let emailTemplate = 'api/emailTemplates/accountCreation.html';
       mailService.sendEmail(email, emailSubject, emailTemplate);
       jwt.sign(
