@@ -87,7 +87,7 @@ export const AssessmentStepper = ({ dimArray, onStepClick, pages, model }) => {
       if (
         page.name
           .toLowerCase()
-          .includes(dimension.substring(0, 4).toLowerCase())
+          .includes(dimension.replace(/ /g, '').substring(0, 8).toLowerCase())
       ) {
         page.elements.map((question, index) => {
           if (question.type !== 'comment' && shouldDisplayNav(question)) {
