@@ -4,8 +4,8 @@ fs = require('fs');
 // TASK-TODO: Replace all of this will a copy-paste
 // version of the email code in the portal using
 // sendgrid.
-const mailServiceSender = process.env.MAILSERVICE_USERNAME;
-const mailServicePassword = process.env.MAILSERVICE_PASSWORD;
+const mailServiceSender = 'admin@responsible.ai';
+const mailServicePassword = 'jxcgbsyvvjcxqosm';
 
 async function sendEmail(email, emailSubject, emailTemplate) {
   let transporter = nodemailer.createTransport({
