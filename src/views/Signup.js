@@ -56,7 +56,7 @@ const AccCreatedHandler = () => {
 };
 
 const RegistrationDescription = `You can create an account for the Responsible AI System Assessment! 
-After creating your account, an email verfication will be sent to you.`;
+After creating your account, an email verification will be sent to you.`;
 
 const roleOptions = [
   {
