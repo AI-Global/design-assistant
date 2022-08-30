@@ -86,7 +86,7 @@ router.post('/create', async (req, res) => {
           return res.status(409).json({
             email: {
               isInvalid: true,
-              message: 'This user already exist, try login in',
+              message: 'This username already exists.  Please sign in.',
             },
           });
         }
