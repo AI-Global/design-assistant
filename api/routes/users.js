@@ -64,6 +64,14 @@ router.post('/create', async (req, res) => {
       );
     })
     .catch((err) => {
+      if (err?.errors?.collabRole) {
+        return res.status(409).json({
+          email: {
+            isInvalid: true,
+            message: 'Role is required. Please select a role.',
+          },
+        });
+      }
       // user already exists
       if (err.name === 'MongoError' && err.code === 11000) {
         if (Object.keys(err.keyPattern).includes('username')) {
@@ -78,7 +86,7 @@ router.post('/create', async (req, res) => {
           return res.status(409).json({
             email: {
               isInvalid: true,
-              message: 'There was an issue with your request',
+              message: 'This user already exist, try login in',
             },
           });
         }
