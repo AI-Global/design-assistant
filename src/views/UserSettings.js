@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { Modal, Form } from 'react-bootstrap';
+import { Modal, Form, DropdownButton, Dropdown } from 'react-bootstrap';
 import Button from '@material-ui/core/Button';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUserCog } from '@fortawesome/free-solid-svg-icons';
 
 import {
   getLoggedInUser,
@@ -280,6 +282,34 @@ class UserSettings extends Component {
             justifyContent: 'right',
           }}
         >
+          <DropdownButton
+            className="usersettings-dropdown"
+            title={
+              <span>
+                <FontAwesomeIcon
+                  icon={faUserCog}
+                  size="lg"
+                  className="mr-2"
+                  cursor="pointer"
+                  aria-label="Settings Dropdown"
+                />
+              </span>
+            }
+          >
+            <Dropdown.Item onClick={() => this.changeEmailModal()}>
+              <i className="fa fa-envelope fa-fw"></i> Change Email
+            </Dropdown.Item>
+            <Dropdown.Item onClick={() => this.changeUsernameModal()}>
+              <i className="fa fa-user fa-fw"></i> Change Username
+            </Dropdown.Item>
+            <Dropdown.Item onClick={() => this.changePasswordModal()}>
+              <i className="fa fa-key fa-fw"></i> Change Password
+            </Dropdown.Item>
+            <Dropdown.Item onClick={() => this.changeOrganizationModal()}>
+              {' '}
+              <i className="fa fa-users fa-fw"></i> Change Organization
+            </Dropdown.Item>
+          </DropdownButton>
           <Button style={{ fontFamily: 'helvetica' }} variant="text" onClick={() => this.navHome()}>
             Home
           </Button>
