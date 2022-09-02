@@ -43,6 +43,7 @@ export const useStyles = makeStyles(() =>
     },
     anthemBlue: {
       color: '#386EDA',
+      cursor: 'pointer'
     },
     pagination: {
       marginTop: 20,

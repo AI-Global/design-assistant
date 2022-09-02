@@ -8,21 +8,31 @@ import IconButton from '@material-ui/core/IconButton';
 import Add from '@material-ui/icons/Add';
 import { Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const owasp = require('owasp-password-strength-test');
 
 const LandingButton = withStyles(() => ({
   root: {
-    borderRadius: '8px',
-    border: '1px solid',
+    border: '1px solid #0066FF',
     backgroundColor: '#FFFFFF',
-    borderColor: '#386EDA',
-    color: '#386EDA',
-    '&:hover': {
-      backgroundColor: '#386EDA',
-      borderColor: '#386EDA',
-      color: '#FFFFFF',
-    },
+    fontFamily: 'Roboto',
+    borderRadius: '20px',
+    color: '#0066FF',
+    justifyContent: 'center',
+    display: 'flex',
+    margin: '10px',
+    textTransform: 'uppercase',
+    textAlign: 'center',
+    alignItems: 'center',
+    lineHeight: '28px',
+    fontSize: '15px',
+    fontWeight: '400',
+    fontStyle: 'normal',
+    boxSizing: 'border-box',
+    // width: '110px',
+    // height: '52px'
   },
 }))(Button);
 
@@ -45,8 +55,8 @@ const AccCreatedHandler = () => {
   });
 };
 
-const RegistrationDescription = `You can create an account for the Responsible AI Design Assistant! 
-After creating your account, an email verfication will be sent to you.`;
+const RegistrationDescription = `You can create an account for the Responsible AI System Assessment! 
+After creating your account, an email verification will be sent to you.`;
 
 const roleOptions = [
   {
@@ -97,6 +107,7 @@ export default class Signup extends Component {
    * and added to the DB.
    */
   handleSignupSubmit(event) {
+    event.preventDefault();
     this.setState({
       email: { isInvalid: false, message: '' },
       username: { isInvalid: false, message: '' },
@@ -147,7 +158,10 @@ export default class Signup extends Component {
             AccCreatedHandler();
             expireAuthToken();
             sessionStorage.setItem('authToken', result['token']);
-            window.location.reload();
+            toast('Account created', {
+              toastId: 'created',
+            });
+            setTimeout(window.location.reload(), 2500);
           }
         })
         .catch((err) => {
@@ -341,6 +355,18 @@ export default class Signup extends Component {
             </Form>
           </Modal.Body>
         </Modal>
+        <ToastContainer
+          position="bottom-right"
+          autoClose={2500}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick={false}
+          rtl={false}
+          pauseOnFocusLoss={false}
+          draggable={false}
+          pauseOnHover={false}
+          closeButton={false}
+        />
       </div>
     );
   }

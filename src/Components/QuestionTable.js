@@ -69,6 +69,7 @@ export default class QuestionTable extends Component {
 
   async onDragEnd(result) {
     // dropped outside the list
+    console.log(` DragEnd:`, result);
     if (!result.destination) {
       return;
     }
@@ -93,12 +94,7 @@ export default class QuestionTable extends Component {
       await api
         .put('questions/' + (result.source.index + 1).toString() + '/1')
         .then(() => {
-          console.log(
-            'Question: ' +
-            result.source.index.toString() +
-            'is now question: ' +
-            result.destination.index.toString()
-          );
+          console.log(`Question ${result.source.index + 1} is now question ${result.destination.index + 1}`);
           this.setState({
             questions,
           });
@@ -133,7 +129,7 @@ export default class QuestionTable extends Component {
         console.log(
           'Question: ' +
           this.state.previousNumber.toString() +
-          'is now question: ' +
+          ' is now question: ' +
           this.state.newNumber.toString()
         );
       });
@@ -280,10 +276,10 @@ export default class QuestionTable extends Component {
                   >
                     <Dropdown.Item onClick={() => this.export('json')}>
                       .json
-                </Dropdown.Item>
+                    </Dropdown.Item>
                     <Dropdown.Item onClick={() => this.export('csv')}>
                       .csv
-                </Dropdown.Item>
+                    </Dropdown.Item>
                   </DropdownButton>
                 </TableCell>
               </TableRow>

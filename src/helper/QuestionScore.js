@@ -3,6 +3,8 @@ const QuestionTypes = {
   radiogroup: 'radiogroup',
   slider: 'nouislider',
 };
+
+
 /**
  * Function calculates the score and max score of a question.
  */
@@ -52,7 +54,7 @@ function calculateQuestionScore(question, selectedChoices, riskWeight) {
   // Multiple each questions score by their risk
   return {
     score: questionScore * riskWeight,
-    maxScore: maxQuestionScore * riskWeight,
+    available: maxQuestionScore * riskWeight,
   };
 }
 

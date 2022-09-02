@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { getLoggedInUser } from '../helper/AuthHelper';
-import { Button, Box, CircularProgress } from '@material-ui/core';
+import { Button, Box, Grid } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import AssessmentGrid from '../Components/AssessmentGrid';
 import Assessment from '../Components/Assessment';
-import Signup from './../views/Signup';
 
 import api from '../api';
 import ReactGa from 'react-ga';
@@ -15,6 +14,7 @@ const LandingButton = withStyles(() => ({
     borderRadius: '8px',
     border: '1px solid',
     backgroundColor: '#FFFFFF',
+    fontFamily: 'Roboto',
     borderColor: '#386EDA',
     color: '#386EDA',
     '&:hover': {
@@ -33,7 +33,7 @@ const StartSurveyHandler = () => {
 };
 
 const guidancePath =
-  'https://docs.google.com/presentation/d/1EDPhyRhIsiOrujLcHQv_fezXfgOz4Rl7a8lyOM_guoA/edit#slide=id.p1';
+  'https://drive.google.com/file/d/18SnZxv5tSHcGhLfqaEIafD1WFYKLnE9g/view';
 class UserSubmissions extends Component {
   constructor(props) {
     super(props);
@@ -58,8 +58,10 @@ class UserSubmissions extends Component {
           .get('submissions/' + this.state.collabRole)
 
           .then((res) => {
-            var submissions = res.data;
-            this.setState(submissions);
+            var submissions = res?.data;
+            if (submissions) {
+              this.setState(submissions);
+            }
           });
       }
     });
@@ -67,7 +69,7 @@ class UserSubmissions extends Component {
 
   startSurvey() {
     this.props.history.push({
-      pathname: '/AccessToCareAssessment',
+      pathname: '/SystemAssessment',
       state: { user_id: this.state?.user?._id },
     });
   }
@@ -91,7 +93,7 @@ class UserSubmissions extends Component {
         stringified = stringified.replace(/\\\//g, '/');
         json = JSON.parse(stringified);
         //
-
+        console.log('Pushing questions to results state: ', json)
         this.props.history.push({
           pathname: '/Results',
           state: { questions: json, responses: submission.submission ?? {} },
@@ -101,7 +103,7 @@ class UserSubmissions extends Component {
       // If survey is not completed, pass previous submissions so SruveyJS can load them into the model
       // so user can continue
       this.props.history.push({
-        pathname: '/AccessToCareAssessment',
+        pathname: '/SystemAssessment',
         state: {
           prevResponses: submission.submission,
           submission_id: submission._id,
@@ -111,7 +113,10 @@ class UserSubmissions extends Component {
             region: submission.region,
             lifecycle: submission.lifecycle,
           },
-          userType: submission.userType,
+          userType: submission.system.length > 0,
+          system: submission.system,
+          region: submission.regionData,
+          domain: submission.domainData
         },
       });
     }
@@ -170,7 +175,7 @@ class UserSubmissions extends Component {
     this.setState({ currentSubmissionIdx: index });
     let submission = this.state.submissions[index];
     this.props.history.push({
-      pathname: '/AccessToCareAssessment',
+      pathname: '/SystemAssessment',
       state: {
         prevResponses: submission.submission,
         submission_id: submission._id,
@@ -183,73 +188,38 @@ class UserSubmissions extends Component {
 
     if (!this.state.isLoggedIn) {
       return (
-        <div>
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              width: '100%',
-              marginTop: '2rem',
-            }}
-          >
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-around',
-                width: '50%',
-              }}
-            >
-              <Signup signedOut={true} admin={true} />
-              <LandingButton
-                variant="outlined"
-                type="button"
-                href={guidancePath}
-              >
-                GUIDE LINK
-              </LandingButton>
-            </div>
-            <Box mt={1} />
-          </div>
-          <Box mt={10} />
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              width: '100%',
-              height: '400px',
-            }}
-          >
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                width: '50%',
-              }}
-            >
-              With‌ ‌our‌ ‌esteemed‌ ‌community‌ ‌of‌ ‌subject‌ ‌matter‌
-              ‌experts‌ ‌ranging‌ ‌from‌ ‌engineers,‌ ‌to‌ ethicists,‌ ‌to‌
-              ‌policy‌ ‌makers,‌ ‌we‌ ‌have‌ ‌taken‌ ‌the‌ ‌most‌ ‌cited‌
-              ‌principles,‌ ‌whitepapers,‌ ‌and‌ policy‌ ‌documents‌ ‌published‌
-              ‌by‌ ‌academics,‌ ‌standards‌ ‌organizations,‌ ‌and‌ ‌companies‌
-              and‌ ‌translated‌ ‌them‌ ‌into‌ ‌comprehensive‌ ‌questions.‌
-              <Box mt={5} />
-              <div>
-                Our‌ ‌hope‌ ‌is‌ ‌that‌ ‌you‌ ‌will‌ ‌work‌ ‌with‌ ‌your‌
-                ‌colleagues‌ ‌who‌ ‌are‌ ‌responsible‌ ‌for‌ ‌different‌
-                aspects‌ ‌of‌ ‌your‌ ‌business‌ ‌to‌ ‌fill‌ ‌out‌ ‌the‌ ‌Design‌
-                ‌Assistant.‌ ‌Whether‌ ‌you‌ ‌are‌ ‌just‌ ‌thinking‌ about‌
-                ‌how‌ ‌to‌ ‌integrate‌ ‌AI‌ ‌tools‌ ‌into‌ ‌your‌ ‌business,‌
-                ‌or‌ ‌you‌ ‌have‌ ‌already‌ ‌deployed‌ several‌ ‌models,‌ ‌this‌
-                ‌tool‌ ‌is‌ ‌for‌ ‌you.‌ ‌We‌ ‌do‌ ‌think‌ ‌that‌ ‌these‌
-                ‌questions‌ ‌are‌ ‌best‌ ‌to‌ ‌think‌ about‌ ‌at‌ ‌the‌ ‌start‌
-                ‌of‌ ‌your‌ ‌project,‌ ‌however,‌ ‌we‌ ‌do‌ ‌think‌ ‌that‌ ‌the‌
-                ‌Design‌ ‌Assistant‌ ‌can‌ ‌be‌ used‌ ‌throughout‌ ‌the‌
-                ‌lifecycle‌ ‌of‌ ‌your‌ ‌project!‌
-              </div>
-            </div>
-          </div>
-        </div>
+        <Grid container style={{ marginTop: '100px' }}>
+          <Grid item md />
+          <Grid item xs={10} md={7}>
+            <Grid container>
+              <Grid item xs={12}>
+                <p>
+                  Welcome‌ ‌to‌ ‌the‌ ‌Responsible AI System-Level Assessment (SLA), a tool that RAII offers to help
+                  organizations design,‌ ‌develop,‌ ‌and‌ ‌implement ‌AI‌ ‌systems responsibly.‌ With‌ ‌our‌ ‌‌community‌ ‌of‌ ‌
+                  subject‌ ‌matter‌ ‌experts‌ ‌ranging‌ ‌from‌ ‌engineers,‌ ‌to‌ ethicists,‌ ‌to‌ ‌policy‌ ‌makers,‌ ‌we‌ ‌have‌ examined
+                  various ‌principles,‌ ‌whitepapers,‌ ‌and‌ policy‌ ‌documents‌ ‌published‌ ‌by‌ ‌academics,‌ ‌standards‌ ‌organizations,‌
+                  and‌ ‌companies‌ and‌ ‌translated‌ ‌them‌ ‌into‌ ‌a comprehensive‌ ‌and easy-to-use assessment.
+                </p>
+              </Grid>
+              <Grid item xs={12}>
+                <p>
+                  The SLA has more than 100 questions that evaluate an AI system’s residual risk along the Responsible AI
+                  Implementation Framework’s six dimensions and their subdimensions. The framework’s dimensions include:
+                  Systems Operations, Explainability & Interpretability, Accountability, Consumer Protection, Bias &
+                  Fairness, and Robustness. The SLA can be used as an assessment and can also inform internal processes,
+                  including those for development and deployment, compliance, and audit. ‌Whether‌ ‌you‌ ‌are‌ ‌‌considering ‌how‌ ‌
+                  to‌ ‌integrate‌ ‌AI‌ ‌tools‌ ‌into‌ ‌your‌ ‌ business ‌or‌‌ ‌have‌ ‌already‌ ‌deployed‌ several‌ AI ‌models,‌ ‌this‌ ‌tool‌ ‌can help
+                  your organization assess whether those efforts align with best practices.‌ ‌The ‌SLA ‌can‌ ‌be‌ used‌ during
+                  design, before deployment, or during a system’s operation.
+                </p>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={2} md={3}>
+            <Grid item md />
+          </Grid>
+
+        </Grid>
       );
     } else {
       return (
@@ -289,8 +259,6 @@ class UserSubmissions extends Component {
               </div>
             </div>
             <Assessment></Assessment>
-            <Box mb={5} />
-            <Box mt={10} />
             <div
               style={{
                 display: 'flex',

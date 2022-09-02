@@ -34,7 +34,7 @@ const SubmissionSchema = mongoose.Schema({
   },
 
   domainData: {
-    type: [String],
+    type: String,
   },
 
   regionData: {

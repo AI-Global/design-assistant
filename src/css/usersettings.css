@@ -60,9 +60,9 @@
   -webkit-box-pack: center;
   -ms-flex-pack: center;
   justify-content: center;
-  width: 100%;
 }
 
 .usersettings-dropdown .btn {
-  padding: 10px !important;
+  padding: 5px !important;
+  margin-top: 5px;
 }

@@ -20,7 +20,7 @@ async function setUpDriver() {
   await driver
     .findElement(By.xpath("//*[contains(text(), 'Start New Survey')]"))
     .click();
-  await driver.wait(until.urlContains('AccessToCareAssessment'));
+  await driver.wait(until.urlContains('SystemAssessment'));
   return driver;
 }
 

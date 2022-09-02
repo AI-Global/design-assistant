@@ -58,7 +58,7 @@ router.post('/', async (req, res) => {
     dimensionID: req.body.dimensionID,
     maxRisk: 999,
     maxMitigation: 999,
-    subDimensionID: number + 2
+    subDimensionID: number + 6
   });
 
   try {

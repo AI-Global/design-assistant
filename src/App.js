@@ -3,11 +3,12 @@ import './css/theme.css';
 import './css/survey.css';
 import ReactGa from 'react-ga';
 import Login from './views/Login';
-import Box from '@material-ui/core/Box';
+import Signup from './views/Signup';
+import { Container, Grid } from '@material-ui/core';
 import UserSubmissions from './views/UserSubmissions';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
-import { expireAuthToken } from './helper/AuthHelper';
+import { getLoggedInUser, expireAuthToken } from './helper/AuthHelper';
 import api from './api';
 
 import 'nouislider/distribute/nouislider.min.css';
@@ -21,70 +22,51 @@ const img = new Image();
 const backgroundImage = (img.src = '../img/landing-background.png');
 
 function Hero() {
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    getLoggedInUser().then((user) => {
+      setUser(user);
+    });
+  }, []);
   return (
-    <div>
-      <div
-        style={{
-          backgroundImage: `url(${backgroundImage})`,
-          width: '99.6vw',
-          height: '40vh',
-          backgroundSize: 'cover',
-        }}
-      >
-        <div>
-          <div className="banner">
-            <div style={{ display: 'flex' }}>
-              <div className="logo-index">
-                <a href="/">
-                  <img
-                    src="/img/responsible-rai-logo.png"
-                    alt="Responsible rai Logo"
-                    className="logo"
-                  />
-                </a>
-              </div>
-              <div className="logo-index">
-                {/* <img
-                  src="/img/anthem-logo.png"
-                  alt="Anthem logo"
-                  className="logo"
-                /> */}
-              </div>
-            </div>
-            <div>
-              <Login />
-            </div>
-          </div>
-        </div>
-        <div
-          style={{
-            paddingTop: '5rem',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <h1>RAI Design Assessment</h1>
-          <Box mt={2} />
-          <div
-            style={{
-              width: '55%',
-              textAlign: 'center',
-            }}
-          >
-            Welcome‌ ‌to‌ ‌the‌ ‌RAIL Certification Beta.‌ ‌This‌ ‌is‌ ‌a‌
-            ‌virtual‌ ‌guide‌ ‌to‌ ‌help‌ ‌those‌ designing,‌ ‌developing,‌
-            ‌and‌ ‌implementing‌ ‌AI‌ ‌systems‌ ‌do‌ ‌so‌ ‌in‌ ‌a‌ ‌responsible‌
-            ‌way.‌ Committed‌ ‌to‌ ‌making‌ ‌responsible‌ ‌AI‌ ‌systems,‌
-            ‌we’ve‌ ‌done‌ ‌the‌ ‌hard‌ ‌work‌ ‌of‌ ‌deciphering‌ the‌ ‌best‌
-            ‌practices,‌ ‌policies,‌ ‌and‌ ‌principles‌ ‌and‌ ‌put‌ ‌them‌
-            ‌into‌ ‌a‌ ‌simple‌ ‌online‌ ‌survey.‌
-          </div>
-        </div>
-      </div>
-    </div>
+    <Grid container direction="column" justifyContent='space-between'
+      style={{
+        height: '320px',
+        backgroundSize: 'cover',
+        backgroundImage: `url(${backgroundImage})`,
+      }}>
+      <Grid item>
+        <Grid container direction="row" justifyContent='space-between' style={{ padding: '20px' }}>
+          < Grid item >
+            <a href="/">
+              <img
+                src="/img/responsible-rai-logo.png"
+                alt="Responsible rai Logo"
+                className="logo"
+              />
+            </a>
+          </Grid >
+          {/* <div onClick={() => window.location.assign("https://assessment.responsible.ai/")} class="alert alert-warning" role="alert">
+            Currently under repair
+          </div> */}
+          <Grid item style={{ display: 'flex', gap: '10px' }}>
+            {!user && <Signup signedOut={true} admin={true} />}
+            <Login />
+          </Grid>
+        </Grid>
+      </Grid>
+
+      <Grid container direction="row">
+        <Grid item md />
+        <Grid item md={8}>
+          <h1>Responsible AI System Assessment</h1>
+        </Grid>
+        <Grid item md />
+      </Grid>
+    </Grid>
   );
 }
+
 
 let queryParamsFromProps = (props) => {
   let queryString = props.location.search;
@@ -142,11 +124,10 @@ function HomePage(props) {
     }
   }, [code]);
   return (
-    <div>
+    <Container maxWidth="lg">
       <Hero />
-      <UserSubmissions />
-      <Box mt={5} />
-    </div>
+      <UserSubmissions mb={5} />
+    </Container>
   );
 }
 

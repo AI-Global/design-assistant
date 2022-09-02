@@ -13,6 +13,7 @@ import {
   HeightRule,
   convertInchesToTwip,
   VerticalAlign,
+  PageOrientation,
 } from "docx";
 import { saveAs } from 'file-saver';
 
@@ -47,59 +48,267 @@ const noBordersCell = {
   },
 };
 
-const makeDimensions = (dimensions, subdimensions) => {
+const makeDimensions = (dimensions, subdimensions, results, questionsData) => {
   const riskImage = legendRisk(200, 41);
   const mitigationImage = mitigation(200, 41);
 
   const dmap = dimensions.map(dimension => {
+    let questionsRows = [];
     const currentDimensionSubDimensions = subdimensions.filter(s => s.dimensionID === dimension.dimensionID);
-    const subDimensionRows = currentDimensionSubDimensions.map(sb => [
-      new TableRow({
-        children: [
-          new TableCell({
-            width: {
-              size: 2500,
-              type: WidthType.DXA,
-            },
-            borders: { ...noBordersCell },
-            children: [new Paragraph({
+    const subDimensionRows = currentDimensionSubDimensions.map(sb => {
+      const questionsToDisplay = [];
+      const sdQuestions = questionsData?.filter(q => q.subDimension === sb.subDimensionID);
+      sdQuestions?.map(sdq => {
+        const answer = results[sdq._id];
+        if (answer) {
+          if (typeof answer === 'string' && answer.match(/^[0-9a-fA-F]{24}$/)) {
+            const [parsedAnswer] = sdq.responses.filter(r => r._id === answer);
+            const maxScore = sdq.responses.reduce((max, r) => Math.max(max, r.score), 0);
+            questionsToDisplay.push({
+              question: sdq,
+              answer: { value: parsedAnswer.indicator, maxScore: maxScore, answerScore: parsedAnswer.score },
+            });
+          } else if (Array.isArray(answer)) {
+            const parsedAnswers = sdq.responses.filter(r => answer.includes(r._id));
+            const maxScore = sdq.responses.reduce((max, r) => max + r.score, 0);
+            const answerScore = parsedAnswers.reduce((sum, pa) => sum + (pa.score || 0), 0);
+            questionsToDisplay.push({
+              question: sdq,
+              answer: { value: parsedAnswers.map(pa => pa.indicator).join(', '), maxScore, answerScore },
+            });
+          } else {
+            questionsToDisplay.push({
+              question: sdq,
+              answer: { value: answer }
+            });
+          }
+        }
+        questionsRows = questionsToDisplay.map(question => {
+          return [
+            new TableRow({
               children: [
-                new TextRun({ text: sb?.name, font: "Calibri", bold: true, size: 28 }),
+                new TableCell({
+                  width: {
+                    size: 1800,
+                    type: WidthType.DXA,
+                  },
+                  margins: {
+                    bottom: convertInchesToTwip(0.69),
+                  },
+                  verticalAlign: VerticalAlign.TOP,
+                  columnSpan: 3,
+                  borders: { ...noBordersCell },
+                  children: [new Paragraph({
+                    children: [
+                      new TextRun({ text: `${question.question.questionNumber} ${question.question.question}`, font: "Calibri", bold: false, size: 18 }),
+                    ],
+                  }),
+                  ],
+                }),
+                new TableCell({
+                  width: {
+                    size: 1800,
+                    type: WidthType.DXA,
+                  },
+                  margins: {
+                    bottom: convertInchesToTwip(0.69),
+                  },
+                  verticalAlign: VerticalAlign.TOP,
+                  columnSpan: 3,
+                  borders: { ...noBordersCell },
+                  children: [new Paragraph({
+                    children: [
+                      new TextRun({ text: `${question.answer.value}`, font: "Calibri", bold: false, size: 18 }),
+                    ],
+                  }),
+                  ],
+                }),
+                new TableCell({
+                  width: {
+                    size: 1800,
+                    type: WidthType.DXA,
+                  },
+                  margins: {
+                    bottom: convertInchesToTwip(0.69),
+                  },
+                  verticalAlign: VerticalAlign.TOP,
+                  columnSpan: 3,
+                  borders: { ...noBordersCell },
+                  children: [new Paragraph({
+                    children: [
+                      new TextRun({ text: `${question.answer.answerScore}/${question.answer.maxScore}`, font: "Calibri", bold: false, size: 18 }),
+                    ],
+                  }),
+                  ],
+                }),
+                new TableCell({
+                  width: {
+                    size: 1800,
+                    type: WidthType.DXA,
+                  },
+                  margins: {
+                    bottom: convertInchesToTwip(0.69),
+                  },
+                  verticalAlign: VerticalAlign.TOP,
+                  columnSpan: 3,
+                  borders: { ...noBordersCell },
+                  children: [new Paragraph({
+                    children: [
+                      new TextRun({ text: '--', font: "Calibri", bold: false, size: 18 }),
+                    ],
+                  }),
+                  ],
+                }),
+                new TableCell({
+                  width: {
+                    size: 1800,
+                    type: WidthType.DXA,
+                  },
+                  margins: {
+                    bottom: convertInchesToTwip(0.69),
+                  },
+                  verticalAlign: VerticalAlign.TOP,
+                  columnSpan: 3,
+                  borders: { ...noBordersCell },
+                  children: [new Paragraph({
+                    children: [
+                      new TextRun({ text: '--', font: "Calibri", bold: false, size: 18 }),
+                    ],
+                  }),
+                  ],
+                }),
               ],
             }),
-            new Paragraph({
-              children: [new TextRun({ text: sb?.description, font: "Calibri", size: 24 })]
-            })],
-          }),
-          new TableCell({
-            width: {
-              size: 3260,
-              type: WidthType.DXA,
-            },
-            borders: { ...noBordersCell },
-            children: [new Paragraph({ children: [new ImageRun({ data: RiskBar(200, 41, Math.floor(Math.random() * 101), 'risk'), transformation: { width: 200, height: 41 } })] })],
-          }),
-          new TableCell({
-            width: {
-              size: 3260,
-              type: WidthType.DXA,
-            },
-            borders: { ...noBordersCell },
-            children: [new Paragraph({ children: [new ImageRun({ data: RiskBar(200, 41, Math.floor(Math.random() * 101), 'mitigation'), transformation: { width: 200, height: 41 } })] })],
-          }),
-        ],
-      }),
-    ]);
+          ];
+        });
+      });
+      return [
+        new TableRow({
+          children: [
+            new TableCell({
+              width: {
+                size: 8500,
+                type: WidthType.DXA,
+              },
+              borders: { ...noBordersCell },
+              children: [new Paragraph({
+                children: [
+                  new TextRun({ text: sb?.name, font: "Calibri", bold: true, size: 28 }),
+                ],
+              }),
+              new Paragraph({
+                children: [new TextRun({ text: sb?.description, font: "Calibri", size: 24 })]
+              })],
+            }),
+          ],
+        }),
+        new TableRow({
+          children: [
+            new TableCell({
+              width: {
+                size: 1800,
+                type: WidthType.DXA,
+              },
+              margins: {
+                bottom: convertInchesToTwip(0.20),
+              },
+              verticalAlign: VerticalAlign.TOP,
+              columnSpan: 3,
+              borders: { ...noBordersCell },
+              children: [new Paragraph({
+                children: [
+                  new TextRun({ text: 'Questions', font: "Calibri", bold: true, size: 18 }),
+                ],
+              }),
+              ],
+            }),
+            new TableCell({
+              width: {
+                size: 1800,
+                type: WidthType.DXA,
+              },
+              margins: {
+                bottom: convertInchesToTwip(0.20),
+              },
+              verticalAlign: VerticalAlign.TOP,
+              columnSpan: 3,
+              borders: { ...noBordersCell },
+              children: [new Paragraph({
+                children: [
+                  new TextRun({ text: 'Your answer', font: "Calibri", bold: true, size: 18 }),
+                ],
+              }),
+              ],
+            }),
+            new TableCell({
+              width: {
+                size: 1800,
+                type: WidthType.DXA,
+              },
+              margins: {
+                bottom: convertInchesToTwip(0.20),
+              },
+              verticalAlign: VerticalAlign.TOP,
+              columnSpan: 3,
+              borders: { ...noBordersCell },
+              children: [new Paragraph({
+                children: [
+                  new TextRun({ text: 'Points Earned', font: "Calibri", bold: true, size: 18 }),
+                ],
+              }),
+              ],
+            }),
+            new TableCell({
+              width: {
+                size: 1800,
+                type: WidthType.DXA,
+              },
+              margins: {
+                bottom: convertInchesToTwip(0.20),
+              },
+              verticalAlign: VerticalAlign.TOP,
+              columnSpan: 3,
+              borders: { ...noBordersCell },
+              children: [new Paragraph({
+                children: [
+                  new TextRun({ text: 'Recommendations', font: "Calibri", bold: true, size: 18 }),
+                ],
+              }),
+              ],
+            }),
+            new TableCell({
+              width: {
+                size: 1800,
+                type: WidthType.DXA,
+              },
+              margins: {
+                bottom: convertInchesToTwip(0.20),
+              },
+              verticalAlign: VerticalAlign.TOP,
+              columnSpan: 3,
+              borders: { ...noBordersCell },
+              children: [new Paragraph({
+                children: [
+                  new TextRun({ text: 'Useful Links', font: "Calibri", bold: true, size: 18 }),
+                ],
+              }),
+              ],
+            }),
+          ],
+        }),
+        ...questionsRows.flat(),
+      ]
+    });
     return [
       new Table({
-        columnWidths: [2500, 3260, 3260],
+        columnWidths: [1800, 1800, 1800, 1800, 1800,],
         borders: { ...noBorders },
         rows: [
           new TableRow({
             children: [
               new TableCell({
                 width: {
-                  size: 2500,
+                  size: 8500,
                   type: WidthType.DXA,
                 },
                 borders: { ...noBordersCell },
@@ -108,87 +317,19 @@ const makeDimensions = (dimensions, subdimensions) => {
                   pageBreakBefore: true,
                 })],
               }),
-              new TableCell({
-                width: {
-                  size: 3260,
-                  type: WidthType.DXA,
-                },
-                borders: { ...noBordersCell },
-                children: [new Paragraph({
-                  children: [new TextRun({ text: 'Risk Scores', font: "Calibri", bold: true, size: 28 })]
-                })],
-              }),
-              new TableCell({
-                width: {
-                  size: 3260,
-                  type: WidthType.DXA,
-                },
-                borders: { ...noBordersCell },
-                children: [new Paragraph({
-                  children: [new TextRun({ text: 'Mitigation Scores', font: "Calibri", bold: true, size: 28 })]
-                })],
-              }),
             ],
           }),
           new TableRow({
             children: [
               new TableCell({
                 width: {
-                  size: 2500,
+                  size: 8500,
                   type: WidthType.DXA,
                 },
                 borders: { ...noBordersCell },
                 children: [new Paragraph({
                   children: [new TextRun({ text: dimension.description, font: "Calibri", size: 24 })]
                 })],
-              }),
-              new TableCell({
-                width: {
-                  size: 3260,
-                  type: WidthType.DXA,
-                },
-                borders: { ...noBordersCell },
-                children: [new Paragraph({ children: [new ImageRun({ data: riskImage, transformation: { width: 200, height: 41 } })] })],
-              }),
-              new TableCell({
-                width: {
-                  size: 3260,
-                  type: WidthType.DXA,
-                },
-                borders: { ...noBordersCell },
-                children: [new Paragraph({ children: [new ImageRun({ data: mitigationImage, transformation: { width: 200, height: 41 } })] })],
-              }),
-            ],
-          }),
-          new TableRow({
-            children: [
-              new TableCell({
-                width: {
-                  size: 2500,
-                  type: WidthType.DXA,
-                },
-                borders: { ...noBordersCell },
-                children: [new Paragraph({
-                  children: [new TextRun({
-                    text: 'Total Score', font: "Calibri", bold: true, size: 28
-                  })]
-                })],
-              }),
-              new TableCell({
-                width: {
-                  size: 3260,
-                  type: WidthType.DXA,
-                },
-                borders: { ...noBordersCell },
-                children: [],
-              }),
-              new TableCell({
-                width: {
-                  size: 3260,
-                  type: WidthType.DXA,
-                },
-                borders: { ...noBordersCell },
-                children: [],
               }),
             ],
           }),
@@ -207,7 +348,7 @@ const makeDimensions = (dimensions, subdimensions) => {
                 columnSpan: 3,
                 borders: { ...noBordersCell },
                 children: [new Paragraph({
-                  children: [new TextRun({ text: `${dimension.name} sub-dimensions score:`, font: "Calibri", bold: true, size: 28 })]
+                  children: [new TextRun({ text: `${dimension.name} sub-dimensions:`, font: "Calibri", bold: true, size: 28 })]
                 })],
               }),
             ],
@@ -227,18 +368,27 @@ export const createCertificationDocx = (
   projectRegion,
   riskLevel,
   dimensions,
-  subdimensions) => {
+  subdimensions,
+  results,
+  questionsData,
+) => {
 
   const document = new Document({
     sections: [{
-      properties: {},
+      properties: {
+        page: {
+          size: {
+            orientation: PageOrientation.LANDSCAPE,
+          }
+        }
+      },
       children: [
         new Paragraph({ text: `Project Title: ${projectTitle}`, heading: HeadingLevel.HEADING_1 }),
         new Paragraph({ text: projectDescription }),
         new Paragraph({ text: `Project Industry: ${projectIndustry}` }),
         new Paragraph({ text: `Project Region: ${projectRegion}` }),
         new Paragraph({ text: `Risk Level: ${riskLevel}` }),
-        ...makeDimensions(dimensions, subdimensions),
+        ...makeDimensions(dimensions, subdimensions, results, questionsData),
       ],
     }],
   });

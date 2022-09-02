@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { Modal, Form } from 'react-bootstrap';
+import { Modal, Form, DropdownButton, Dropdown } from 'react-bootstrap';
 import Button from '@material-ui/core/Button';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUserCog } from '@fortawesome/free-solid-svg-icons';
 
 import {
   getLoggedInUser,
@@ -13,6 +15,7 @@ import ReactGa from 'react-ga';
 import { withRouter } from 'react-router-dom';
 
 const LogoutHandler = () => {
+  console.log('LogoutHandler');
   ReactGa.event({
     category: 'Button',
     action: 'User Logged Out',
@@ -274,30 +277,60 @@ class UserSettings extends Component {
           style={{
             display: 'flex',
             flexDirection: 'row',
+            fontFamily: 'helvetica',
             width: '100%',
-            justifyContent: 'space-between',
+            justifyContent: 'right',
           }}
         >
-          <Button variant="text" onClick={() => this.navHome()}>
+          <DropdownButton
+            className="usersettings-dropdown"
+            title={
+              <span>
+                <FontAwesomeIcon
+                  icon={faUserCog}
+                  size="lg"
+                  className="mr-2"
+                  cursor="pointer"
+                  aria-label="Settings Dropdown"
+                />
+              </span>
+            }
+          >
+            <Dropdown.Item onClick={() => this.changeEmailModal()}>
+              <i className="fa fa-envelope fa-fw"></i> Change Email
+            </Dropdown.Item>
+            <Dropdown.Item onClick={() => this.changeUsernameModal()}>
+              <i className="fa fa-user fa-fw"></i> Change Username
+            </Dropdown.Item>
+            <Dropdown.Item onClick={() => this.changePasswordModal()}>
+              <i className="fa fa-key fa-fw"></i> Change Password
+            </Dropdown.Item>
+            <Dropdown.Item onClick={() => this.changeOrganizationModal()}>
+              {' '}
+              <i className="fa fa-users fa-fw"></i> Change Organization
+            </Dropdown.Item>
+          </DropdownButton>
+          <Button style={{ fontFamily: 'helvetica' }} variant="text" onClick={() => this.navHome()}>
             Home
           </Button>
           {this.state.user ? (
             this.state.user.role === 'admin' ||
-            this.state.user.role === 'superadmin' ? (
-              <Button variant="text" onClick={() => this.navAdmin()}>
+              this.state.user.role === 'superadmin' ? (
+              <Button style={{ fontFamily: 'helvetica' }} variant="text" onClick={() => this.navAdmin()}>
                 Admin Panel
               </Button>
             ) : null
           ) : null}
-          <Button
+          {/* <Button
+            style={{ fontFamily: 'helvetica' }}
             variant="text"
             onClick={() =>
               (window.location = 'https://portal.ai-global.org/settings')
             }
           >
             Edit Account in AI Portal
-          </Button>
-          <Button variant="text" onClick={() => this.handleLogout()}>
+          </Button> */}
+          <Button style={{ fontFamily: 'helvetica' }} variant="text" onClick={() => this.handleLogout()}>
             Log Out
           </Button>
         </div>

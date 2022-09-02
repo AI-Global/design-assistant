@@ -11,6 +11,7 @@ import {
   Paper,
   Chip,
   TablePagination,
+  Typography,
 } from '@material-ui/core';
 
 import {
@@ -48,9 +49,8 @@ export default function AssessmentGrid(props) {
   }
 
   const rowTitle = [
-    'Project Name',
+    'System Name',
     'Product Owner',
-    'Risk Level',
     'Status',
     'Action',
   ];
@@ -77,6 +77,14 @@ export default function AssessmentGrid(props) {
 
   return (
     <div>
+      <Typography style={{
+        fontSize: '30px',
+        fontWeight: 700,
+        fontFamily: 'helvetica'
+      }}>
+        My Assessments
+      </Typography>
+      <Box mb={5} />
       <TableContainer
         className={classes.tableContainer}
         component={Paper}
@@ -95,21 +103,16 @@ export default function AssessmentGrid(props) {
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((submission, i) => (
                 <StyledTableRow key={i}>
-                  <StyledTableCell className={classes.anthemBlue}>
+                  <StyledTableCell
+                    className={classes.anthemBlue}
+                    onClick={() => {
+                      handleResume(i);
+                    }}>
                     {submission.projectName === ''
                       ? `Unnamed Project (${submission._id})`
                       : submission.projectName}
                   </StyledTableCell>
                   <StyledTableCell>{submission.users.username}</StyledTableCell>
-
-                  <StyledTableCell>
-                    {submission.riskLevel && (
-                      <Chip
-                        label={submission.riskLevel}
-                        className={handleChipColor(submission.riskLevel)}
-                      ></Chip>
-                    )}
-                  </StyledTableCell>
                   <StyledTableCell>
                     {submission.completed ? 'Completed' : 'In Progress'}
                     <CaptionTypography>

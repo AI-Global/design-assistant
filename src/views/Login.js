@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Modal, Form } from 'react-bootstrap';
-import { Button } from '@material-ui/core';
-import { Box } from '@material-ui/core';
+import { Button, Box, Grid } from '@material-ui/core';
 
 import '../css/login.css';
 import Signup from './Signup';
@@ -91,7 +90,8 @@ export default class Login extends Component {
   renderUser() {
     const handleShow = () => this.setState({ showLoginModal: true });
     let user = this.state.user;
-    if (user) {
+    console.log('Logged in user: ', user);
+    if (user && user.username) {
       return (
         <Box className="user-status">
           <UserSettings />
@@ -103,11 +103,33 @@ export default class Login extends Component {
       );
     } else {
       return (
+
         <Button
           onClick={() => {
             handleShow();
             LoginHandler();
           }}
+          style={{
+            border: '1px solid #0066FF',
+            backgroundColor: '#FFFFFF',
+            fontFamily: 'Roboto',
+            borderRadius: '20px',
+            color: '#0066FF',
+            justifyContent: 'center',
+            display: 'flex',
+            margin: '10px',
+            textTransform: 'uppercase',
+            textAlign: 'center',
+            alignItems: 'center',
+            lineHeight: '28px',
+            fontSize: '15px',
+            fontWeight: '400',
+            fontStyle: 'normal',
+            boxSizing: 'border-box',
+            // width: '110px',
+            // height: '52px'
+          }}
+          variant="outlined"
         >
           Log in
         </Button>
@@ -173,7 +195,7 @@ export default class Login extends Component {
               />
             </Form>
             <Box className="create-account">
-              <p className="disabled">Not a member yet?&nbsp;</p>
+              {/* <p className="disabled">Not a member yet?&nbsp;</p> */}
               <Signup onLanding={true} signedOut={false} admin={true} />
             </Box>
           </Modal.Body>

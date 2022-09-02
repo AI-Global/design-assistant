@@ -14,8 +14,15 @@ import DimensionScore from './DimensionScore';
 import Certification from './Certification'
 import TrustedAIResources from './TrustedAIResources';
 import ReactGa from 'react-ga';
+import Summary from './Summary';
 import Login from './Login';
 import calculateQuestionScore from '../helper/QuestionScore';
+import SystemUpdateAltOutlinedIcon from '@material-ui/icons/SystemUpdateAltOutlined';
+import { CallMadeOutlined } from '@material-ui/icons';
+
+// material-ui components
+import { Grid } from '@material-ui/core';
+
 
 ReactGa.initialize(process.env.REACT_APP_GAID, {
   testMode: process.env.NODE_ENV !== 'production',
@@ -54,6 +61,7 @@ export default class Results extends Component {
       submission: null,
       alternateReport: false,
       SubDimensions: [],
+      questionsData: null,
     };
     this.addRiskToSubmission = this.addRiskToSubmission.bind(this);
   }
@@ -61,7 +69,9 @@ export default class Results extends Component {
   componentDidMount() {
     ReactGa.pageview(window.location.pathname + window.location.search);
     api.get('dimensions').then((res) => {
-      this.setState({ Dimensions: res.data });
+      this.setState({
+        Dimensions: res.data
+      });
     });
     api.get('subdimensions').then((res) => {
       this.setState({ SubDimensions: res.data });
@@ -70,6 +80,9 @@ export default class Results extends Component {
     this.setState({ submission: this?.props?.location?.state?.data });
     this.setState({
       alternateReport: this?.props?.location?.state?.alternateReport,
+    });
+    api.get('questions/all').then((res) => {
+      this.setState({ questionsData: res.data.questions });
     });
   }
 
@@ -104,7 +117,7 @@ export default class Results extends Component {
         .get(`submissions/submission/${this.state?.submissionId}`)
         .then((res) => {
           const submission = res.data.submission;
-          console.log(submission);
+          // console.log(submission);
           api.post('submissions/update/' + this.state?.submissionId, {
             ...submission,
             riskLevel: submissionRiskLevel,
@@ -196,7 +209,7 @@ export default class Results extends Component {
     // // edit a survey that has already been completed
     // const editSurvey = () => {
     //   this.props.history.push({
-    //     pathname: '/AccessToCareAssessment',
+    //     pathname: '/SystemAssessment',
     //     state: {
     //       prevResponses: submission.submission,
     //       submission_id: submission._id,
@@ -211,6 +224,7 @@ export default class Results extends Component {
       return allQuestions;
     });
 
+
     var riskWeight = this.calculateRiskWeight(
       allQuestions.filter((x) => x.score?.dimension === 'RK'),
       surveyResults
@@ -218,7 +232,7 @@ export default class Results extends Component {
     this.addRiskToSubmission(riskWeight);
 
     var titleQuestion = allQuestions.find(
-      (question) => question.title.default === 'Title of project' || question.title.default === 'Project Name'
+      (question) => question.title.default === 'Name of AI System' || question.title.default === 'Project Name'
     );
     var descriptionQuestion = allQuestions.find(
       (question) => question.title.default === 'Project Description'
@@ -257,7 +271,42 @@ export default class Results extends Component {
           className="container"
           style={{ paddingBottom: '1rem', paddingTop: '5rem' }}
         >
-          <h1 className="section-header">Results</h1>
+          <h1 className="section-header">
+            Results
+            <p
+              style={{
+                fontSize: '16px',
+                fontWeight: 400,
+                lineHeight: '24px',
+                color: '#007bff',
+                cursor: 'pointer'
+              }}
+              onClick={() => {
+                createCertificationDocx(
+                  projectTitle,
+                  projectDescription,
+                  projectIndustry,
+                  projectRegion,
+                  riskLevel[riskWeight ?? 1],
+                  this.state.Dimensions,
+                  this.state.SubDimensions,
+                  surveyResults,
+                  this.state.questionsData,
+                )
+              }}
+            >
+              <SystemUpdateAltOutlinedIcon /> Download report
+            </p>
+            <p style={{
+              fontSize: '16px',
+              fontWeight: 400,
+              lineHeight: '24px',
+              color: '#00C1B4',
+              cursor: 'pointer'
+            }}>
+              <a href="https://drive.google.com/file/d/18SnZxv5tSHcGhLfqaEIafD1WFYKLnE9g/view" target="_blank"> <CallMadeOutlined /> Assessment guide </a>
+            </p>
+          </h1>
           {this.state.alternateReport ? (
             <iframe
               src="https://drive.google.com/file/d/1f6RorHTlDbl309FbgJpvYJpivGUB-454/preview"
@@ -267,7 +316,7 @@ export default class Results extends Component {
             ></iframe>
           ) : (
             <div>
-              <button
+              {/* <button
                 id="exportButton"
                 type="button"
                 className="btn btn-save mr-2 btn btn-primary export-button-pdf"
@@ -300,220 +349,44 @@ export default class Results extends Component {
                 }}
               >
                 Export as MS Word
-              </button>
-              {/* <button
-                id="exportButtonCSV"
-                type="button"
-                className="btn btn-save mr-2 btn btn-primary export-button-csv"
-                onClick={() => {
-                  this.downloadCSV(surveyResults, questions);
-                }}
-              >
-                Export as CSV
               </button> */}
-              <Tabs defaultActiveKey="score">
-                <Tab eventKey="score" title="Score">
-                  <div className="table-responsive mt-3">
-                    <Table
-                      id="score"
-                      bordered
-                      hover
-                      responsive
-                      className="report-card-table"
-                    >
-                      <thead>
-                        <tr>
-                          <th className="score-card-dheader">Dimensions</th>
-                          <th className="score-card-headers">Low</th>
-                          <th className="score-card-headers">Medium</th>
-                          <th className="score-card-headers">High</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {this.state.Dimensions.map((dimension, idx) => {
-                          if (
-                            dimension.label !== 'T' &&
-                            dimension.label !== 'RK'
-                          ) {
-                            return (
-                              <DimensionScore
-                                key={idx}
-                                radarChartData={radarChartData}
-                                dimensionName={dimension.name}
-                                riskWeight={riskWeight}
-                                results={surveyResults}
-                                questions={allQuestions.filter(
-                                  (x) => x.score?.dimension === dimension.label
-                                )}
-                              />
-                            );
-                          }
-                          return null;
-                        })}
-                      </tbody>
-                    </Table>
-                  </div>
-                </Tab>
-                <Tab eventKey="report-card" title="Report Card">
-                  <Tab.Container
-                    id="left-tabs-example"
-                    defaultActiveKey={this.state?.Dimensions[2]?.label}
-                  >
-                    <Tab.Content>
-                      {this.state.Dimensions.map((dimension, idx) => {
-                        if (dimension.label !== 'T') {
-                          return (
-                            <Tab.Pane key={idx} eventKey={dimension.label}>
-                              <ReportCard
-                                dimension={dimension.label}
-                                results={surveyResults}
-                                questions={questions.filter(
-                                  (x) => x.score?.dimension === dimension.label
-                                )}
-                              />
-                            </Tab.Pane>
-                          );
-                        }
-                        return null;
-                      })}
-                    </Tab.Content>
-                    <Nav
-                      variant="tabs"
-                      className="report-card-nav"
-                      defaultActiveKey="accountability"
-                    >
-                      {this.state.Dimensions.map((dimension, idx) => {
-                        if (dimension.label !== 'T') {
-                          return (
-                            <Nav.Item key={idx}>
-                              <Nav.Link eventKey={dimension.label}>
-                                {dimension.name}
-                              </Nav.Link>
-                            </Nav.Item>
-                          );
-                        }
-                        return null;
-                      })}
-                    </Nav>
-                  </Tab.Container>
-                </Tab>
-                <Tab eventKey="certification" title="Certification">
-                  <Tab.Container
-                    id="left-tabs-example"
-                    defaultActiveKey={this.state?.Dimensions[2]?.label}
-                  >
-                    <Tab.Content>
-                      {this.state.Dimensions.map((dimension, idx) => {
-                        if (dimension.label !== 'T') {
-                          return (
-                            <Tab.Pane key={idx} eventKey={dimension.label}>
-                              <Certification
-                                dimension={dimension}
-                                results={surveyResults}
-                                questions={questions.filter(
-                                  (x) => x.score?.dimension === dimension.label
-                                )}
-                                subDimensions={this.state.SubDimensions}
-                                submission={this.state.submission}
-                              />
-                            </Tab.Pane>
-                          );
-                        }
-                        return null;
-                      })}
-                    </Tab.Content>
-                    <Nav
-                      variant="tabs"
-                      className="report-card-nav"
-                      defaultActiveKey="accountability"
-                    >
-                      {this.state.Dimensions.map((dimension, idx) => {
-                        if (dimension.label !== 'T') {
-                          return (
-                            <Nav.Item key={idx}>
-                              <Nav.Link eventKey={dimension.label}>
-                                {dimension.name}
-                              </Nav.Link>
-                            </Nav.Item>
-                          );
-                        }
-                        return null;
-                      })}
-                    </Nav>
-                  </Tab.Container>
-                </Tab>
-                {/* <Tab eventKey="ai-providers" title="Trusted AI Providers">
-              <Tab.Container
-                id="left-tabs-example"
-                defaultActiveKey={this.state.Dimensions[0].label}
-              >
-                <TrustedAIProviders />
-              </Tab.Container>
-            </Tab> */}
-                <Tab eventKey="ai-resources" title="Trusted AI Resources">
-                  <Tab.Container
-                    id="left-tabs-example"
-                    defaultActiveKey={this.state.Dimensions[0].label}
-                  >
-                    <TrustedAIResources />
-                  </Tab.Container>
-                </Tab>
-              </Tabs>
+              <Grid container>
+                <Grid item xs={12}>
+                  <Tabs
+                    className="report-card-nav"
+                    defaultActiveKey="summary">
+                    <Tab eventKey='summary' title='Summary' key='summary'>
+                      <Tab.Pane eventKey='summary'>
+                        <Summary
+                          dimensions={this.state.Dimensions.filter(dimension => dimension.label !== 'T')}
+                          results={surveyResults}
+                          questions={questions}
+                          subDimensions={this.state.SubDimensions}
+                          submission={this.state.submission}
+                        />
+                      </Tab.Pane>
+                    </Tab>
+                    {this.state.Dimensions.filter(d => d.name !== 'System Details').map((dimension, idx) => (
+                      <Tab eventKey={dimension.name} key={dimension.name} title={dimension.name}>
+                        <Tab.Pane key={idx} eventKey={dimension.label}>
+                          <Certification
+                            dimension={dimension}
+                            results={surveyResults}
+                            questions={questions.filter(
+                              (x) => x.score?.dimension === dimension.label
+                            )}
+                            subDimensions={this.state.SubDimensions}
+                            submission={this.state.submission}
+                          />
+                        </Tab.Pane>
+                      </Tab>
+                    ))}
+                  </Tabs>
+                </Grid>
+              </Grid>
             </div>
           )}
-          <div
-            className="dimension-chart"
-            style={{ marginBottom: '80px', marginTop: '40px' }}
-          >
-            <h4>Risk Level: {riskLevel[riskWeight ?? 1]}</h4>
-            <ResponsiveRadar
-              data={radarChartData}
-              keys={['score']}
-              indexBy="dimension"
-              maxValue={100}
-              margin={{ top: 70, right: 80, bottom: 40, left: 80 }}
-              curve="linearClosed"
-              borderWidth={2}
-              gridLevels={5}
-              gridShape="circular"
-              colors="rgb(31, 119, 180)"
-              isInteractive={true}
-              dotSize={8}
-            />
-          </div>
-          <p>
-            As‌ ‌AI‌ ‌continues‌ ‌to‌ ‌evolve‌ ‌so‌ ‌will‌ ‌the‌ ‌Design‌
-            ‌Assistant.‌ ‌ We‌ ‌are‌ ‌working‌ ‌now‌ ‌to‌ ‌add‌ questions‌
-            ‌that‌ ‌are‌ ‌more‌ ‌industry‌ ‌specific‌ ‌and‌ ‌tailored‌ ‌for‌
-            ‌your‌ ‌location.‌ ‌To‌ ‌do‌ ‌this,‌ ‌we‌ can‌ ‌use‌ ‌your‌ ‌help!‌
-            ‌Share‌ ‌with‌ ‌us‌ ‌the‌ ‌results‌ ‌of‌ ‌your‌ ‌report.‌ ‌Let‌ ‌us‌
-            ‌know‌ ‌where‌ ‌you‌ ‌need‌ more‌ ‌clarification,‌ ‌and‌ ‌where‌
-            ‌more‌ ‌guidance‌ ‌might‌ ‌be‌ ‌needed.‌ If‌ ‌you‌ ‌weren’t‌ ‌ready‌
-            ‌to‌ ‌answer‌ ‌all‌ ‌of‌ ‌the‌ ‌questions‌ ‌today,‌ ‌that’s‌ ‌ok,‌
-            ‌save‌ ‌your‌ ‌report,‌ ‌and‌ you‌ ‌can‌ ‌reload‌ ‌it‌ ‌the‌ ‌next‌
-            ‌time‌ ‌you‌ ‌return.‌
-          </p>
-          <p>
-            As‌ ‌an‌ ‌open‌ ‌source‌ ‌tool,‌ ‌we‌ ‌will‌ ‌continue‌ ‌to‌
-            ‌adjust‌ ‌quickly‌ ‌based‌ ‌on‌ ‌our‌ ‌communities‌ needs.‌ ‌Please‌
-            ‌let‌ ‌us‌ ‌know‌ ‌if‌ ‌you‌ ‌find‌ ‌any‌ ‌issues‌ ‌and‌ ‌we‌ ‌will‌
-            ‌be‌ ‌happy‌ ‌to‌ ‌update!‌
-          </p>
-          <p>
-            If‌ ‌you‌ ‌are‌ ‌wondering‌ ‌what‌ ‌to‌ ‌do‌ ‌with‌ ‌your‌
-            ‌results,‌ ‌and‌ ‌how‌ ‌you‌ ‌can‌ ‌improve,‌ ‌check‌ ‌out‌ the
-            Responsible AI Design Assistant Guide ‌that‌ ‌includes‌
-            ‌definitions‌ ‌and‌ ‌lots‌ ‌of‌ additional‌ ‌information.‌ ‌ If‌
-            ‌you‌ ‌are‌ ‌in‌ ‌need‌ ‌of‌ ‌additional‌ ‌support,‌ ‌contact‌ ‌us,‌
-            ‌and‌ ‌we‌ ‌can‌ put‌ ‌you‌ ‌in‌ ‌touch‌ ‌with‌ ‌a‌ ‌trusted‌
-            ‌service‌ ‌provider.‌
-          </p>
-          <p>
-            Since‌ ‌we‌ ‌want‌ ‌you‌ ‌to‌ ‌use‌ ‌the‌ ‌Design‌ ‌Assistant‌
-            ‌early‌ ‌and‌ ‌often,‌ ‌you‌ ‌can‌ ‌click‌ ‌the‌ ‌button‌ below‌
-            ‌to‌ ‌start‌ ‌over‌ ‌again!‌
-          </p>
-          <Link to="/">
+          {/* <Link to="/">
             <Button
               id="restartButton"
               onClick={StartAgainHandler}
@@ -539,7 +412,7 @@ export default class Results extends Component {
             }}
           >
             Export as PDF
-          </button>
+          </button> */}
           <Login />
         </main>
       );
