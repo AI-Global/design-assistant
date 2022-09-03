@@ -32,4 +32,32 @@ async function sendEmail(email, emailSubject, emailTemplate) {
   });
 }
 
+async function sendResetPasswordEmail(email, link) {
+  let transporter = nodemailer.createTransport({
+    service: 'gmail',
+    port: 465,
+    secure: true, // true for 465, false for other ports
+    auth: {
+      user: mailServiceSender,
+      pass: mailServicePassword,
+    },
+  });
+
+  let info = transporter.sendMail({
+    from: mailServiceSender, // sender address
+    to: email, // receiver
+    subject: 'Responsible AI System Assessment Reset Account Password', // Subject line
+    html: `
+          <p>
+            This is your <a href="${link}">link</a> to recover your account's password for The Responsible AI System Assessment!
+          </p>
+          <p>
+            If you did not request this action, please contact
+            <a href="admin@ai-global">admin@ai-global</a> immediately.
+          </p>
+        `,
+  });
+}
+
 exports.sendEmail = sendEmail;
+exports.sendResetPasswordEmail = sendResetPasswordEmail;
