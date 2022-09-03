@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Modal, Form } from 'react-bootstrap';
 import { Button, Box, Grid } from '@material-ui/core';
-
 import '../css/login.css';
 import Signup from './Signup';
 import api from '../api';
@@ -28,8 +27,13 @@ export default class Login extends Component {
     super(props);
     this.state = {
       showLoginModal: false,
+      showResetPassword: false,
+      showSetNewPassword: false,
       username: { isInvalid: false, message: '' },
       password: { isInvalid: false, message: '' },
+      email: { isInvalid: false, message: '' },
+      newPassword: { isInvalid: false, message: '' },
+      passwordConfirmation: { isInvalid: false, message: '' },
       user: undefined,
     };
   }
@@ -38,6 +42,13 @@ export default class Login extends Component {
     getLoggedInUser().then((user) => {
       this.setState({ user: user });
     });
+    const params = (new URL(document.location)).searchParams;
+    const token = params.get("token");
+    const tokenEmail = params.get("email");
+    console.log(token, tokenEmail);
+    if (token && tokenEmail) {
+      this.setState({ showSetNewPassword: true });
+    }
   }
 
   /**
@@ -81,6 +92,78 @@ export default class Login extends Component {
         let result = err?.response?.data;
         this.setState(result);
       });
+  }
+
+  resetValidations() {
+    this.setState({
+      password: { isInvalid: false, message: '' },
+      email: { isInvalid: false, message: '' },
+      username: { isInvalid: false, message: '' },
+      newPassword: { isInvalid: false, message: '' },
+      passwordConfirmation: { isInvalid: false, message: '' },
+    });
+  }
+
+  handleNewPasswordSubmit(event) {
+    event.preventDefault();
+    this.resetValidations();
+    const params = (new URL(document.location)).searchParams;
+    const token = params.get("token");
+    const email = params.get("email");
+    let form = event.target.elements;
+    let newPassword = form.newPassword.value;
+    let confirmPassword = form.confirmPassword.value;
+    if (confirmPassword !== newPassword) {
+      this.setState({
+        passwordConfirmation: {
+          isInvalid: true,
+          message: "Those passwords didn't match. Please try again.",
+        },
+      });
+      return;
+    }
+    return api
+      .post(
+        'users/resetPassword',
+        {
+          newPassword,
+          email,
+          token,
+        },
+      )
+      .then((response) => {
+        const result = response.data;
+        if (!result.errors) {
+
+          window.location.replace(window.location.origin);
+        }
+      })
+      .catch((err) => {
+        let result = err.response.data;
+        this.setState(result);
+      });
+  }
+
+  async handleResetPasswordSubmit(event) {
+    event.preventDefault();
+    this.resetValidations();
+    let form = event.target.elements;
+    let email = form.resetPassword.value;
+    try {
+      const response = await api
+        .post(
+          'users/sendResetPasswordLink',
+          {
+            email,
+          });
+      const result_1 = response.data;
+      if (!result_1.errors) {
+        window.location.reload();
+      }
+    } catch (err) {
+      let result_3 = err.response.data;
+      this.setState(result_3);
+    }
   }
 
   /**
@@ -139,7 +222,12 @@ export default class Login extends Component {
 
   render() {
     const showLogin = this.state.showLoginModal;
+    const showResetPassword = this.state.showResetPassword;
+    const showSetNewPassword = this.state.showSetNewPassword;
     const handleClose = () => this.setState({ showLoginModal: false });
+    const handlePasswordClose = () => this.setState({ showResetPassword: false });
+    const handleSetNewPasswordClose = () => this.setState({ showSetNewPassword: false });
+
 
     return (
       <Box>
@@ -197,6 +285,15 @@ export default class Login extends Component {
             <Box className="create-account">
               {/* <p className="disabled">Not a member yet?&nbsp;</p> */}
               <Signup onLanding={true} signedOut={false} admin={true} />
+              <a
+                href="#/"
+                onClick={() => {
+                  handleClose();
+                  this.setState({ showResetPassword: true });
+                }}
+              >
+                Forgot Password?
+              </a>
             </Box>
           </Modal.Body>
           <Modal.Footer>
@@ -210,6 +307,92 @@ export default class Login extends Component {
               Continue without an account
             </a>
           </Modal.Footer>
+        </Modal>
+
+        <Modal
+          show={showResetPassword}
+          onHide={handlePasswordClose}
+          backdrop="static"
+          keyboard={false}
+          dialogClassName="modal-login modal-dialog-centered"
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>Reset Password</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form onSubmit={(e) => this.handleResetPasswordSubmit(e)}>
+              <Form.Group controlId="resetPassword">
+                <i className="fa fa-envelope"></i>
+                <Form.Control
+                  type="email"
+                  placeholder="Account's Email"
+                  required="required"
+                  autoComplete="email"
+                  isInvalid={this.state.email?.isInvalid}
+                  aria-label="reset password"
+                />
+                <Form.Control.Feedback type="invalid">
+                  {this.state.email?.message}
+                </Form.Control.Feedback>
+              </Form.Group>
+              <Form.Group controlId="formSubmit"></Form.Group>
+              <input
+                type="submit"
+                className="btn btn-primary btn-block btn-lg"
+                value="Submit"
+              />
+            </Form>
+          </Modal.Body>
+        </Modal>
+
+        <Modal
+          show={showSetNewPassword}
+          onHide={handleSetNewPasswordClose}
+          backdrop="static"
+          keyboard={false}
+          dialogClassName="modal-login modal-dialog-centered"
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>Set New Password</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form onSubmit={(e) => this.handleNewPasswordSubmit(e)}>
+              <Form.Group controlId="newPassword">
+                <i className="fa fa-lock"></i>
+                <Form.Control
+                  type="password"
+                  placeholder="New Password"
+                  required="required"
+                  autoComplete="password"
+                  isInvalid={this.state.newPassword?.isInvalid}
+                  aria-label="new password"
+                />
+                <Form.Control.Feedback type="invalid">
+                  {this.state.newPassword?.message}
+                </Form.Control.Feedback>
+              </Form.Group>
+              <Form.Group controlId="confirmPassword">
+                <i className="fa fa-lock"></i>
+                <Form.Control
+                  type="password"
+                  placeholder="Confirm New Password"
+                  required="required"
+                  autoComplete="password"
+                  isInvalid={this.state.passwordConfirmation?.isInvalid}
+                  aria-label="confirm password"
+                />
+                <Form.Control.Feedback type="invalid">
+                  {this.state.passwordConfirmation?.message}
+                </Form.Control.Feedback>
+              </Form.Group>
+              <Form.Group controlId="formSubmit"></Form.Group>
+              <input
+                type="submit"
+                className="btn btn-primary btn-block btn-lg"
+                value="Submit"
+              />
+            </Form>
+          </Modal.Body>
         </Modal>
       </Box>
     );

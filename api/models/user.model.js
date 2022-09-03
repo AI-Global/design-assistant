@@ -45,6 +45,9 @@ const UserSchema = new mongoose.Schema({
   organization: {
     type: String,
   },
+  tokens: {
+    type: [String],
+  },
 });
 
 UserSchema.virtual('password')

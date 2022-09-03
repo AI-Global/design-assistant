@@ -67,6 +67,8 @@
   font-size: 13px;
   text-align: center;
   margin-top: 15px;
+  display: flex;
+  flex-direction: column;
 }
 
 .create-account .disabled {

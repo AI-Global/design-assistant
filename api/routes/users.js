@@ -331,6 +331,82 @@ router.post('/updatePassword', auth, (req, res) => {
     });
 });
 
+router.post('/resetPassword', (req, res) => {
+  let newPassword = req.body.newPassword;
+  let email = req.body.email;
+  let token = req.body.token;
+
+  let result = owasp.test(newPassword);
+  if (result.strong == false) {
+    return res.status(400).json({
+      newPassword: { isInvalid: true, message: result.errors.join('\n') },
+    });
+  }
+
+  User.find({ email })
+    .select()
+    .then((existingUser) => {
+      if (!existingUser)
+        return res.status(400).json({
+          newPassword: {
+            isInvalid: true,
+            message: 'User does not exist. Please create an account.',
+          },
+        });
+      const validToken = existingUser[0].tokens.find((t) => t === token);
+      if (!validToken)
+        return res.status(400).json({
+          newPassword: {
+            isInvalid: true,
+            message: 'Invalid token',
+          },
+        });
+
+      existingUser[0].password = newPassword;
+      User.findByIdAndUpdate(existingUser[0]._id, existingUser[0], { upsert: false }).then(
+        (user) => {
+          res.json(user);
+        }
+      );
+    })
+    .catch((err) => {
+      // unknown mongodb error
+      return res.status(400).json(err);
+    });
+});
+
+router.post('/sendResetPasswordLink', (req, res) => {
+  const email = req.body.email;
+  const rand = () => Math.random().toString(36).substr(2);
+  const token = function () {
+    return rand() + rand();
+  };
+  const passwordResetToken = token();
+  // TO DO: improve link construction
+  const link = req.protocol + '://' + req.get('host') + '/' + '?token=' + passwordResetToken + '&email=' + email;
+  User.find({ email })
+    .then((existingUser) => {
+      if (existingUser.length == 0)
+        return res.status(400).json({
+          email: {
+            isInvalid: true,
+            message: 'User does not exist. Please create an account.',
+          },
+        });
+
+      User.findOneAndUpdate({ email }, { $push: { tokens: passwordResetToken } }, { upsert: true }).then(
+        (user) => {
+          mailService.sendResetPasswordEmail(email, link);
+          res.json(user);
+        }
+      );
+    })
+    .catch((err) => {
+      // unknown mongodb error
+      return res.status(400).json(err);
+    });
+});
+
 // TASK-TODO: Secure endpoint.
 router.post('/updateOrganization', auth, (req, res) => {
   // error with authentication token
