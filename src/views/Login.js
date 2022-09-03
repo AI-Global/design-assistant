@@ -7,6 +7,8 @@ import api from '../api';
 import { getLoggedInUser, expireAuthToken } from '../helper/AuthHelper';
 import UserSettings from './UserSettings';
 import ReactGa from 'react-ga';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const LoginHandler = () => {
   ReactGa.event({
@@ -134,8 +136,11 @@ export default class Login extends Component {
       .then((response) => {
         const result = response.data;
         if (!result.errors) {
-
-          window.location.replace(window.location.origin);
+          toast('Password reseted succesfully', {
+            toastId: 'passwordReseted',
+          });
+          this.setState({ showSetNewPassword: false });
+          window.history.pushState({}, '', '/');
         }
       })
       .catch((err) => {
@@ -158,7 +163,10 @@ export default class Login extends Component {
           });
       const result_1 = response.data;
       if (!result_1.errors) {
-        window.location.reload();
+        toast('Reset password email sent', {
+          toastId: 'passwordResetEmail',
+        });
+        this.setState({ showResetPassword: false });
       }
     } catch (err) {
       let result_3 = err.response.data;
@@ -286,8 +294,9 @@ export default class Login extends Component {
               {/* <p className="disabled">Not a member yet?&nbsp;</p> */}
               <Signup onLanding={true} signedOut={false} admin={true} />
               <a
-                href="#/"
-                onClick={() => {
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
                   handleClose();
                   this.setState({ showResetPassword: true });
                 }}
@@ -394,6 +403,18 @@ export default class Login extends Component {
             </Form>
           </Modal.Body>
         </Modal>
+        <ToastContainer
+          position="bottom-right"
+          autoClose={2500}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick={false}
+          rtl={false}
+          pauseOnFocusLoss={false}
+          draggable={false}
+          pauseOnHover={false}
+          closeButton={false}
+        />
       </Box>
     );
   }
