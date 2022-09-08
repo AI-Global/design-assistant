@@ -196,7 +196,7 @@ class UserSubmissions extends Component {
   render() {
     const handleClose = () => this.setState({ showDeleteWarning: false });
 
-    if (!this.state.isLoggedIn) {
+    if (!this.props.user?._id) {
       return (
         <Grid container style={{ marginTop: '100px' }}>
           <Grid item md />
