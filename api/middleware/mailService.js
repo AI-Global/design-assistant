@@ -53,7 +53,7 @@ async function sendResetPasswordEmail(email, link) {
           </p>
           <p>
             If you did not request this action, please contact
-            <a href="admin@ai-global">admin@ai-global</a> immediately.
+            <a href="admin@responsible.ai">admin@responsible.ai</a> immediately.
           </p>
         `,
   });
