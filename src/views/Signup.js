@@ -213,6 +213,7 @@ export default class Signup extends Component {
         )}
         {this.props.onLanding && (
           <a
+            style={{ color: '#0066FF' }}
             onClick={() => {
               handleSignupShow();
               CreateAccHandler();

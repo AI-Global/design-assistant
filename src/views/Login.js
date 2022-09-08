@@ -286,6 +286,7 @@ export default class Login extends Component {
               <Form.Group controlId="formSubmit"></Form.Group>
               <input
                 type="submit"
+                style={{ backgroundColor: '#0066FF' }}
                 className="btn btn-primary btn-block btn-lg"
                 value="Login"
               />
@@ -294,6 +295,7 @@ export default class Login extends Component {
               {/* <p className="disabled">Not a member yet?&nbsp;</p> */}
               <Signup onLanding={true} signedOut={false} admin={true} />
               <a
+                style={{ color: '#0066FF' }}
                 href="#"
                 onClick={(e) => {
                   e.preventDefault();

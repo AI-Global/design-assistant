@@ -29,11 +29,11 @@ export const ExpandButton = withStyles(() => ({
   root: {
     borderRadius: '8px',
     border: '1px solid',
-    borderColor: '#386EDA',
-    color: '#386EDA',
+    borderColor: '#0066ff',
+    color: '#0066ff',
     '&:hover': {
-      backgroundColor: '#386EDA',
-      borderColor: '#386EDA',
+      backgroundColor: '#0066ff',
+      borderColor: '#0066ff',
       color: '#FFFFFF',
     },
   },

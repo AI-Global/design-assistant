@@ -42,7 +42,7 @@ export const useStyles = makeStyles(() =>
       minWidth: 650,
     },
     anthemBlue: {
-      color: '#386EDA',
+      color: '#0066ff',
       cursor: 'pointer'
     },
     pagination: {

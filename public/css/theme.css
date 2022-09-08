@@ -202,13 +202,13 @@ form .btn:not(.btn-call-to-action) {
   height: 40px;
   padding: 6px 12px;
   border: 1px solid;
-  border-color: #386eda;
+  border-color: #0066ff;
   line-height: 1.5;
   background-color: #ffffff;
 }
 
 .landing-button :hover {
-  background-color: #386eda;
+  background-color: #0066ff;
   border-color: #ffffff;
 }
 
@@ -218,7 +218,7 @@ form .btn:not(.btn-call-to-action) {
 }
 
 .anthem-blue {
-  color: #386eda;
+  color: #0066ff;
 }
 
 .anthem-footer-theme {

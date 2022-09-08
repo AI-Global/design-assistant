@@ -15,7 +15,7 @@ export const DimensionProgress = withStyles((theme) => ({
   },
   bar: {
     borderRadius: '20px',
-    backgroundColor: 'rgba(56, 110, 218, 1)',
+    backgroundColor: '#0066ff',
   },
 }))(LinearProgress);
 
@@ -29,7 +29,7 @@ export const OverallProgress = withStyles((theme) => ({
   },
   bar: {
     borderRadius: '20px',
-    backgroundColor: 'rgba(56, 110, 218, 1)',
+    backgroundColor: '#0066ff',
   },
 }))(LinearProgress);
 
@@ -41,7 +41,7 @@ export const DimensionProgressPercent = withStyles({
 
 export const Label = withStyles({
   root: {
-    color: '#386EDA',
+    color: '#0066ff',
     whiteSpace: 'nowrap',
   },
 })(Typography);
