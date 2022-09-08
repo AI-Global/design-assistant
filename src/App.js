@@ -84,7 +84,11 @@ let queryParamsFromProps = (props) => {
 
 function HomePage(props) {
   let { code } = queryParamsFromProps(props);
+  const [user, setUser] = useState(null);
   useEffect(() => {
+    getLoggedInUser().then((user) => {
+      setUser(user);
+    });
     if (code) {
       let appName = 'designassistant-dev';
       if (window.location.origin == 'http://localhost:3000') {
@@ -126,7 +130,7 @@ function HomePage(props) {
   return (
     <Container maxWidth="lg">
       <Hero />
-      <UserSubmissions mb={5} />
+      <UserSubmissions user={user} mb={5} />
     </Container>
   );
 }

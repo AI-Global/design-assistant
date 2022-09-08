@@ -35,7 +35,8 @@ import {
 } from './AssessmentGridStyle';
 
 export default function AssessmentGrid(props) {
-  const { submissions, handleDelete, collabRole, handleResume } = props;
+  const { handleDelete, collabRole, handleResume, user } = props;
+  const submissions = props.submissions.filter(s => s.userId === user._id);
   const classes = useStyles();
   const theme = useTheme();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -177,7 +178,7 @@ export default function AssessmentGrid(props) {
         <ModalHeader>
           <ModalTitle id="contained-modal-title-vcenter">
             Are you sure you want to delete this submission?
-            </ModalTitle>
+          </ModalTitle>
         </ModalHeader>
         <ModalBody>
           <p>
@@ -192,7 +193,7 @@ export default function AssessmentGrid(props) {
             onClick={() => setShowDeleteModal(false)}
           >
             Cancel
-            </Button>
+          </Button>
           <Button
             variant="contained"
             color="primary"
@@ -206,6 +207,6 @@ export default function AssessmentGrid(props) {
           </Button>
         </ModalFooter>
       </Modal>
-    </div>
+    </div >
   );
 }

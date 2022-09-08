@@ -286,6 +286,7 @@ class UserSubmissions extends Component {
                   collabRole={this.state?.user?.collabRole}
                   handleDelete={() => this.deleteSurvey()}
                   handleResume={(index) => this.resumeSurvey(index)}
+                  user={this.props.user}
                 ></AssessmentGrid>
                 <Box mt={4} />
               </div>
