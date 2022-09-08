@@ -564,6 +564,10 @@ class SystemAssessment extends Component {
 
   render() {
     var number = 1;
+    const disabled = !this.state.domainAnswer
+      || this.state.systemAnswer.length === 0
+      || this.state.regionAnswer.length === 0;
+
     return this.state.model || !this.state.userQuestionAnswered ? (
       <div className="surveyContainer">
         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -854,13 +858,13 @@ class SystemAssessment extends Component {
             <div>
               <Button
                 variant="contained"
-                color="primary"
                 onClick={() => this.submitUserQuestion()}
-                style={{ marginTop: '20px' }}
-                disabled={
-                  !this.state.domainAnswer
-                  || this.state.systemAnswer.length === 0
-                  || this.state.regionAnswer.length === 0}
+                style={{
+                  marginTop: '20px',
+                  backgroundColor: !disabled && '#0066ff',
+                  color: !disabled && 'white',
+                }}
+                disabled={disabled}
               >
                 Start Survey
               </Button>
@@ -1037,9 +1041,12 @@ class SystemAssessment extends Component {
                 <div className="d-flex justify-content-center col">
                   <Button
                     variant="contained"
-                    color="primary"
                     className="mr-2"
                     onClick={() => this.prevPage()}
+                    style={{
+                      backgroundColor: !this.state.model.isFirstPage && '#0066ff',
+                      color: !this.state.model.isFirstPage && 'white',
+                    }}
                     disabled={this.state.model.isFirstPage}
                   >
                     Prev
