@@ -839,10 +839,10 @@ export default function QuestionModal(props) {
                 <Row>
                   <Col xs={12} md={12}>
                     <Form.Group controlId="Reference">
-                      <Form.Label>Reference</Form.Label>
+                      <Form.Label>Supporting Documentation</Form.Label>
                       <Form.Control
                         as="textarea"
-                        placeholder="Reference"
+                        placeholder="Supporting Documentation"
                         value={questionRef || ''}
                         onChange={(event) => setRef(event.target.value)}
                       />
@@ -852,9 +852,9 @@ export default function QuestionModal(props) {
                 <Row>
                   <Col xs={12} md={12}>
                     <Form.Group controlId="Link">
-                      <Form.Label>Link</Form.Label>
+                      <Form.Label>Supporting Link</Form.Label>
                       <Form.Control
-                        placeholder="Link"
+                        placeholder="Supporting Link"
                         value={questionLink || ''}
                         onChange={(event) => setLink(event.target.value)}
                       />

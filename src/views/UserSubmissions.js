@@ -139,14 +139,12 @@ class UserSubmissions extends Component {
 
   handleSignupShow = () => this.setState({ showSignupModal: true });
 
-  deleteSurvey(index) {
-    this.setState({ currentSubmissionIdx: index });
-    let currentSubmissionIdx = this.state.currentSubmissionIdx;
+  deleteSurvey(submissionId) {
+    this.setState({ currentSubmissionIdx: submissionId });
     let submissions = this.state.submissions;
-    let submission = submissions[currentSubmissionIdx];
+    let submission = submissions.filter(s => s._id === submissionId)[0];
     api.delete('submissions/delete/' + submission._id).then((response) => {
-      submissions.splice(currentSubmissionIdx, 1);
-      this.setState({ submissions: submissions });
+      this.setState({ submissions: submissions.filter(s => s._id !== submissionId) });
     });
     this.setState({ showDeleteWarning: false });
   }
@@ -284,7 +282,7 @@ class UserSubmissions extends Component {
                   submissions={this.state.submissions}
                   userName={this.state?.user?.username}
                   collabRole={this.state?.user?.collabRole}
-                  handleDelete={() => this.deleteSurvey()}
+                  handleDelete={(submissionId) => this.deleteSurvey(submissionId)}
                   handleResume={(index) => this.resumeSurvey(index)}
                   user={this.props.user}
                 ></AssessmentGrid>
