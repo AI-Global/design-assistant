@@ -3,7 +3,7 @@ import api from '../api';
 import PropTypes from 'prop-types'
 import { Table } from 'react-bootstrap';
 import { DimensionHead } from './DimensionHead'
-import { Typography, Accordion, AccordionSummary, AccordionDetails } from '@material-ui/core';
+import { Typography, Accordion, AccordionSummary, AccordionDetails, Link } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 // import Canvas from '../Components/Canvas';
 
@@ -224,16 +224,14 @@ export default function Certification({ dimension, results, questions, subDimens
                           </Typography>
                         </td>
                         <td>
-
                           <Typography style={{ fontSize: '12px', fontWeight: '300' }}>
                             {qa.question.reference || '--'}
                           </Typography>
                         </td>
                         <td>
-
-                          <Typography style={{ fontSize: '12px', fontWeight: '300' }}>
-                            {qa.question.rec_links[0] || '--'}
-                          </Typography>
+                          <Link href={qa.question.rec_links[0]?.replace(/['"]+/g, '') || "#"} rel="noopener" target="_blank" underline="always">
+                            {qa.question.rec_links[0]?.replace(/['"]+/g, '') || '--'}
+                          </Link>
                         </td>
                       </tr>
                     )
