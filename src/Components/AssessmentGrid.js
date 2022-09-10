@@ -40,9 +40,9 @@ export default function AssessmentGrid(props) {
   const classes = useStyles();
   const theme = useTheme();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [submissionIndex, setSubmissionIndex] = useState(null);
+  const [submissionId, setSubmissionId] = useState(null);
 
-  const [page, setPage] = React.useState(Number(localStorage.getItem('page')) || 0);
+  const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   function createData(name, status, assessmentType, risk, date, action) {
@@ -51,7 +51,7 @@ export default function AssessmentGrid(props) {
 
   const rowTitle = [
     'System Name',
-    'Product Owner',
+    'User',
     'Status',
     'Action',
   ];
@@ -69,10 +69,10 @@ export default function AssessmentGrid(props) {
   };
 
   const handleChangePage = (event, newPage) => {
-    localStorage.setItem('page', newPage);
     setPage(newPage);
   };
   const handleChangeRows = (event) => {
+    setPage(0);
     setRowsPerPage(event.target.value);
   };
 
@@ -140,7 +140,7 @@ export default function AssessmentGrid(props) {
                             style={{ cursor: 'pointer' }}
                             onClick={() => {
                               setShowDeleteModal(true);
-                              setSubmissionIndex(i);
+                              setSubmissionId(submission._id);
                             }}
                           />
                         )}
@@ -198,9 +198,9 @@ export default function AssessmentGrid(props) {
             variant="contained"
             color="primary"
             onClick={() => {
-              handleDelete(submissionIndex);
+              handleDelete(submissionId);
               setShowDeleteModal(false);
-              setSubmissionIndex(null);
+              setSubmissionId(null);
             }}
           >
             Delete Forever

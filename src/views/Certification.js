@@ -226,13 +226,13 @@ export default function Certification({ dimension, results, questions, subDimens
                         <td>
 
                           <Typography style={{ fontSize: '12px', fontWeight: '300' }}>
-                            {qa.answer.reference || '--'}
+                            {qa.question.reference || '--'}
                           </Typography>
                         </td>
                         <td>
 
                           <Typography style={{ fontSize: '12px', fontWeight: '300' }}>
-                            --
+                            {qa.question.rec_links[0] || '--'}
                           </Typography>
                         </td>
                       </tr>

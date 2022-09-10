@@ -354,7 +354,11 @@ export default function Summary({ dimensions, results, subDimensions, submission
                     {d.name}
                   </p>
                   <ListGroup>
-                    <div style={{ height: `${(subDimensionsList.length > 0 ? 100 : 0) + (subDimensionsList.length * 30)}px` }}>
+                    <div style={{
+                      height: `${(subDimensionsList.length > 1 ? 100
+                        : subDimensionsList.length === 1 ? 83
+                          : 0) + (subDimensionsList.length * 30)}px`
+                    }}>
                       {/* {questions && <WrappedBar subDimensions={subDimensionsList} questions={questions} results={results} />} */}
                       {questions && <WrappedApex subDimensions={subDimensionsList} questions={questions} results={results} />}
                     </div>
