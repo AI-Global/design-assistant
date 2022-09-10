@@ -196,7 +196,7 @@ class UserSubmissions extends Component {
 
     if (!this.props.user?._id) {
       return (
-        <Grid container style={{ marginTop: '100px' }}>
+        <Grid container style={{ margin: '50px 0px' }}>
           <Grid item md />
           <Grid item xs={10} md={7}>
             <Grid container>
