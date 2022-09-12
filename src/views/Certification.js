@@ -229,9 +229,15 @@ export default function Certification({ dimension, results, questions, subDimens
                           </Typography>
                         </td>
                         <td>
-                          <Link href={qa.question.rec_links[0]?.replace(/['"]+/g, '') || "#"} rel="noopener" target="_blank" underline="always">
-                            {qa.question.rec_links[0]?.replace(/['"]+/g, '') || '--'}
-                          </Link>
+                          {qa.question.rec_links.length > 0 ? (
+                            <Link style={{ fontSize: '12px', fontWeight: '300' }} href={qa.question.rec_links[0]?.replace(/['"]+/g, '') || "#"} rel="noopener" target="_blank" underline="none">
+                              {qa.question.rec_links[0]?.replace(/['"]+/g, '') || '--'}
+                            </Link>
+                          ) : (
+                            <Typography style={{ fontSize: '12px', fontWeight: '300' }}>
+                              {'--'}
+                            </Typography>
+                          )}
                         </td>
                       </tr>
                     )
