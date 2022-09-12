@@ -154,7 +154,7 @@ const makeDimensions = (dimensions, subdimensions, results, questionsData) => {
                   borders: { ...noBordersCell },
                   children: [new Paragraph({
                     children: [
-                      new TextRun({ text: '--', font: "Calibri", bold: false, size: 18 }),
+                      new TextRun({ text: `${question.question.reference ?? '--'}`, font: "Calibri", bold: false, size: 18 }),
                     ],
                   }),
                   ],
@@ -172,7 +172,7 @@ const makeDimensions = (dimensions, subdimensions, results, questionsData) => {
                   borders: { ...noBordersCell },
                   children: [new Paragraph({
                     children: [
-                      new TextRun({ text: '--', font: "Calibri", bold: false, size: 18 }),
+                      new TextRun({ text: `${question.question.rec_links[0] ?? '--'}`, font: "Calibri", bold: false, size: 18 }),
                     ],
                   }),
                   ],
