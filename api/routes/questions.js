@@ -408,9 +408,8 @@ async function createPages(q, filters) {
   dimQuestions[1].push({
     responseType: 'comment',
     id: 'notesTombstone',
-    question: 'Notes:',
-    alt_text:
-      'If possible, support the feedback with specific recommendations / suggestions to improve the tool. Feedback can include:\n - Refinement to existing questions, like suggestions on how questions can be simplified or clarified further\n - Additions of new questions for specific scenarios that may be missed\n - Feedback on whether the listed AI risk domains are fulsome and complete\n - What types of response indicators should be included for your context?',
+    question: 'Notes and supporting documentation:',
+    alt_text: 'Provide notes explaining your answer (if necessary) and specify which documentation or evidence is available to support it.'
   });
   var projectDetails = createPage(
     dimQuestions[1],
@@ -435,9 +434,8 @@ async function createPages(q, filters) {
       questions.push({
         responseType: 'comment',
         id: 'notes' + question.id,
-        question: 'Notes:',
-        alt_text:
-          'If possible, support the feedback with specific recommendations / suggestions to improve the tool. Feedback can include:\n - Refinement to existing questions, like suggestions on how questions can be simplified or clarified further\n - Additions of new questions for specific scenarios that may be missed\n - Feedback on whether the listed AI risk domains are fulsome and complete\n - What types of response indicators should be included for your context?',
+        question: 'Notes and supporting documentation:',
+        alt_text: 'Provide notes explaining your answer (if necessary) and specify which documentation or evidence is available to support it.'
       });
       if (questions.length == 4) {
         var dimPage = createPage(

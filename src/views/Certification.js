@@ -130,7 +130,12 @@ export default function Certification({ dimension, results, questions, subDimens
               const maxScore = sdq.responses.reduce((max, r) => Math.max(max, r.score), 0);
               questionsToDisplay.push({
                 question: sdq,
-                answer: { value: parsedAnswer.indicator, maxScore: maxScore, answerScore: parsedAnswer.score },
+                answer: {
+                  value: parsedAnswer.indicator,
+                  maxScore: maxScore,
+                  answerScore: parsedAnswer.score,
+                  notes: results['notes' + sdq._id],
+                },
               });
             } else if (Array.isArray(answer)) {
               const parsedAnswers = sdq.responses.filter(r => answer.includes(r._id));
@@ -191,7 +196,7 @@ export default function Certification({ dimension, results, questions, subDimens
                     </th>
                     <th>
                       <Typography style={{ fontSize: '12px', fontWeight: 'bold', width: '100%' }}>
-                        Supporting Documentation
+                        Notes and supporting documentation
                       </Typography>
                     </th>
                     <th>
@@ -225,7 +230,7 @@ export default function Certification({ dimension, results, questions, subDimens
                         </td>
                         <td>
                           <Typography style={{ fontSize: '12px', fontWeight: '300' }}>
-                            {qa.question.reference || '--'}
+                            {qa.answer.notes || '--'}
                           </Typography>
                         </td>
                         <td>
