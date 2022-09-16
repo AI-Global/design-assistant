@@ -66,7 +66,12 @@ const makeDimensions = (dimensions, subdimensions, results, questionsData) => {
             const maxScore = sdq.responses.reduce((max, r) => Math.max(max, r.score), 0);
             questionsToDisplay.push({
               question: sdq,
-              answer: { value: parsedAnswer.indicator, maxScore: maxScore, answerScore: parsedAnswer.score },
+              answer: {
+                value: parsedAnswer.indicator,
+                maxScore: maxScore,
+                answerScore: parsedAnswer.score,
+                notes: results['notes' + sdq._id],
+              },
             });
           } else if (Array.isArray(answer)) {
             const parsedAnswers = sdq.responses.filter(r => answer.includes(r._id));
