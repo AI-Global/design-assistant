@@ -66,7 +66,7 @@ export default function QuestionModal(props) {
   );
   const [questionPrompt, setPrompt] = useState(props.question?.prompt);
 
-  // Hook for showing delete quesiton warning
+  // Hook for showing delete question warning
   const [warningShow, setWarningShow] = useState(false);
 
   // validation for question field
@@ -117,7 +117,7 @@ export default function QuestionModal(props) {
   }
 
   function revertIndicators(r) {
-    // if the quesiton is closed and edits aren't save we need to loop through all repsonse
+    // if the question is closed and edits aren't save we need to loop through all repsonse
     // indicators and reset them to the previous state
     for (var i in r) {
       r[i].responseNumber = parseInt(i);
@@ -163,7 +163,7 @@ export default function QuestionModal(props) {
   }
 
   function Validate(event) {
-    // validates the form: quesiton filed must not be empty and if response type is slider, the low med high fields
+    // validates the form: question filed must not be empty and if response type is slider, the low med high fields
     // must be numbers, and ordered low < med< high
     event.preventDefault();
     if (responseType === 'slider') {
@@ -389,7 +389,7 @@ export default function QuestionModal(props) {
           <Modal.Title id="contained-modal-title-vcenter">Warning!</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Are you sure you would like to delete this quesiton?
+          Are you sure you would like to delete this question?
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={() => deleteQuestion()}>Yes</Button>
@@ -852,9 +852,9 @@ export default function QuestionModal(props) {
                 <Row>
                   <Col xs={12} md={12}>
                     <Form.Group controlId="Link">
-                      <Form.Label>Supporting Link</Form.Label>
+                      <Form.Label>References (use “,” to separate different URLs)</Form.Label>
                       <Form.Control
-                        placeholder="Supporting Link"
+                        placeholder="References"
                         value={questionLink || ''}
                         onChange={(event) => setLink(event.target.value)}
                       />

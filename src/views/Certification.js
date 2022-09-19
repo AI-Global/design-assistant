@@ -130,7 +130,12 @@ export default function Certification({ dimension, results, questions, subDimens
               const maxScore = sdq.responses.reduce((max, r) => Math.max(max, r.score), 0);
               questionsToDisplay.push({
                 question: sdq,
-                answer: { value: parsedAnswer.indicator, maxScore: maxScore, answerScore: parsedAnswer.score },
+                answer: {
+                  value: parsedAnswer.indicator,
+                  maxScore: maxScore,
+                  answerScore: parsedAnswer.score,
+                  notes: results['notes' + sdq._id],
+                },
               });
             } else if (Array.isArray(answer)) {
               const parsedAnswers = sdq.responses.filter(r => answer.includes(r._id));
@@ -191,12 +196,12 @@ export default function Certification({ dimension, results, questions, subDimens
                     </th>
                     <th>
                       <Typography style={{ fontSize: '12px', fontWeight: 'bold', width: '100%' }}>
-                        Supporting Documentation
+                        Notes and supporting documentation
                       </Typography>
                     </th>
                     <th>
                       <Typography style={{ fontSize: '12px', fontWeight: 'bold', width: '100%' }}>
-                        Supporting Links
+                        References
                       </Typography>
                     </th>
                   </tr>
@@ -225,14 +230,16 @@ export default function Certification({ dimension, results, questions, subDimens
                         </td>
                         <td>
                           <Typography style={{ fontSize: '12px', fontWeight: '300' }}>
-                            {qa.question.reference || '--'}
+                            {qa.answer.notes || '--'}
                           </Typography>
                         </td>
-                        <td>
+                        <td style={{ display: 'flex', flexDirection: 'column' }}>
                           {qa.question.rec_links.length > 0 ? (
-                            <Link style={{ fontSize: '12px', fontWeight: '300' }} href={qa.question.rec_links[0]?.replace(/['"]+/g, '') || "#"} rel="noopener" target="_blank" underline="none">
-                              {qa.question.rec_links[0]?.replace(/['"]+/g, '') || '--'}
-                            </Link>
+                            qa.question.rec_links.map((link) => (
+                              <Link style={{ fontSize: '12px', fontWeight: '300' }} href={link.replace(/['"]+/g, '')} rel="noopener" target="_blank" underline="none">
+                                {link.replace(/['"]+/g, '')}
+                              </Link>
+                            ))
                           ) : (
                             <Typography style={{ fontSize: '12px', fontWeight: '300' }}>
                               {'--'}

@@ -107,7 +107,7 @@ const mockMitigationQuestion = {
   parent: null,
   pointsAvailable: 1,
   prompt: null,
-  question: 'This is a mitigation quesiton.',
+  question: 'This is a mitigation question.',
   questionType: 'mitigation',
   reference: 'Should have a reference.',
   regionalApplicability: [],
@@ -419,7 +419,7 @@ test('Question Modal renders with survey Mitigation question', () => {
   expect(screen.getByText('3')).toBeTruthy();
 
   expect(screen.getByText('Question')).toBeTruthy();
-  expect(screen.getByText('This is a mitigation quesiton.')).toBeTruthy();
+  expect(screen.getByText('This is a mitigation question.')).toBeTruthy();
 
   expect(screen.getByText('Role')).toBeTruthy(); // This entire row renders together, so if 'Role' is not visible, neither are any of the sections
   expect(screen.getByText('Responses')).toBeTruthy();
