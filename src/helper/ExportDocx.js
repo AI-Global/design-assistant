@@ -294,7 +294,7 @@ const makeDimensions = (dimensions, subdimensions, results, questionsData) => {
               borders: { ...noBordersCell },
               children: [new Paragraph({
                 children: [
-                  new TextRun({ text: 'Useful Links', font: "Calibri", bold: true, size: 18 }),
+                  new TextRun({ text: 'References', font: "Calibri", bold: true, size: 18 }),
                 ],
               }),
               ],

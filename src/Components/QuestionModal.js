@@ -852,9 +852,9 @@ export default function QuestionModal(props) {
                 <Row>
                   <Col xs={12} md={12}>
                     <Form.Group controlId="Link">
-                      <Form.Label>Supporting Link</Form.Label>
+                      <Form.Label>References (use “,” to separate different URLs)</Form.Label>
                       <Form.Control
-                        placeholder="Supporting Link"
+                        placeholder="References"
                         value={questionLink || ''}
                         onChange={(event) => setLink(event.target.value)}
                       />

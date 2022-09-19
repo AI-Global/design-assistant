@@ -201,7 +201,7 @@ export default function Certification({ dimension, results, questions, subDimens
                     </th>
                     <th>
                       <Typography style={{ fontSize: '12px', fontWeight: 'bold', width: '100%' }}>
-                        Supporting Links
+                        References
                       </Typography>
                     </th>
                   </tr>
@@ -233,11 +233,13 @@ export default function Certification({ dimension, results, questions, subDimens
                             {qa.answer.notes || '--'}
                           </Typography>
                         </td>
-                        <td>
+                        <td style={{ display: 'flex', flexDirection: 'column' }}>
                           {qa.question.rec_links.length > 0 ? (
-                            <Link style={{ fontSize: '12px', fontWeight: '300' }} href={qa.question.rec_links[0]?.replace(/['"]+/g, '') || "#"} rel="noopener" target="_blank" underline="none">
-                              {qa.question.rec_links[0]?.replace(/['"]+/g, '') || '--'}
-                            </Link>
+                            qa.question.rec_links.map((link) => (
+                              <Link style={{ fontSize: '12px', fontWeight: '300' }} href={link.replace(/['"]+/g, '')} rel="noopener" target="_blank" underline="none">
+                                {link.replace(/['"]+/g, '')}
+                              </Link>
+                            ))
                           ) : (
                             <Typography style={{ fontSize: '12px', fontWeight: '300' }}>
                               {'--'}
