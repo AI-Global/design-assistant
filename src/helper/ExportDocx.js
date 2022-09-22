@@ -175,12 +175,14 @@ const makeDimensions = (dimensions, subdimensions, results, questionsData) => {
                   verticalAlign: VerticalAlign.TOP,
                   columnSpan: 3,
                   borders: { ...noBordersCell },
-                  children: [new Paragraph({
-                    children: [
-                      new TextRun({ text: `${question.question.rec_links[0] ?? '--'}`, font: "Calibri", bold: false, size: 18 }),
+                  children: question.question.rec_links.length > 0 ?
+                    question.question.rec_links.map(link => new Paragraph({
+                      bullet: { level: 0 }, children: [
+                        new TextRun({ text: `${link}`, font: "Calibri", bold: false, size: 18 }),
+                      ],
+                    })) : [
+                      new Paragraph({ text: '--', font: "Calibri", bold: false, size: 18 }),
                     ],
-                  }),
-                  ],
                 }),
               ],
             }),
