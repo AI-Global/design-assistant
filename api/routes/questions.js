@@ -22,6 +22,7 @@ async function getDimensions() {
       label: d.label,
       name: d.name,
       page: d.name.replace(/\s+/g, ''),
+      dimensionID: d.dimensionID,
     };
   }
   return Dimensions;
