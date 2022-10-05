@@ -464,7 +464,7 @@ export default function QuestionModal(props) {
                     {Object.values(dimensions).map((dimension, index) => (
                       <option
                         key={index + 1}
-                        value={index + 1}
+                        value={dimension.dimensionID}
                         data-testid={dimension.name}
                       >
                         {dimension.name}
@@ -487,15 +487,17 @@ export default function QuestionModal(props) {
                     >
                       {Object.values(subdimensions)
                         .filter(sdim => sdim.dimensionID === dimension)
-                        .map((subdimension, index) => (
-                          <option
-                            key={subdimension.subDimensionID}
-                            value={subdimension.subDimensionID}
-                            data-testid={subdimension.name}
-                          >
-                            {subdimension.name}
-                          </option>
-                        ))}
+                        .map((subdimension, index) => {
+                          return (
+                            <option
+                              key={index + 1}
+                              value={subdimension.subDimensionID}
+                              data-testid={subdimension.name}
+                            >
+                              {subdimension.name}
+                            </option>
+                          )
+                        })}
                     </Form.Control>
                   </Form.Group>
                 </Col>)}
