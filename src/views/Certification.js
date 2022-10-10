@@ -116,9 +116,94 @@ export default function Certification({ dimension, results, questions, subDimens
     console.log('saving this...', strengths, improvements)
   };
   const subDimensionsToDisplay = subDimensions.filter(d => d.dimensionID === dimension.dimensionID);
+  const systemQuestionsToDisplay = [];
+  const systemQuestions = questionsData?.filter(q => q.trustIndexDimension === 1);
+  systemQuestions?.map(sdq => {
+    const answer = results[sdq._id];
+    if (answer) {
+      if (typeof answer === 'string' && answer.match(/^[0-9a-fA-F]{24}$/)) {
+        const [parsedAnswer] = sdq.responses.filter(r => r._id === answer);
+        const maxScore = sdq.responses.reduce((max, r) => Math.max(max, r.score), 0);
+        systemQuestionsToDisplay.push({
+          question: sdq,
+          answer: {
+            value: parsedAnswer.indicator,
+            maxScore: maxScore,
+            answerScore: parsedAnswer.score,
+            notes: results['notes' + sdq._id],
+          },
+        });
+      } else if (Array.isArray(answer)) {
+        const parsedAnswers = sdq.responses.filter(r => answer.includes(r._id));
+        const maxScore = sdq.responses.reduce((max, r) => max + r.score, 0);
+        const answerScore = parsedAnswers.reduce((sum, pa) => sum + (pa.score || 0), 0);
+        systemQuestionsToDisplay.push({
+          question: sdq,
+          answer: { value: parsedAnswers.map(pa => pa.indicator).join(', '), maxScore, answerScore },
+        });
+      } else {
+        systemQuestionsToDisplay.push({
+          question: sdq,
+          answer: { value: answer }
+        });
+      }
+    }
+  });
   return (
     <>
       <DimensionHead dimension={dimension} questions={questions} results={results} />
+      {dimension.name === 'System Details' && (
+        <Table
+          id={'certification-' + dimension}
+          borderless
+          responsive
+          className="certification-table"
+        >
+          <thead>
+            <tr>
+              <th>
+                <Typography style={{ fontSize: '12px', fontWeight: 'bold' }}>
+                  Question
+                </Typography>
+              </th>
+              <th>
+                <Typography style={{ fontSize: '12px', fontWeight: 'bold', width: '100%' }}>
+                  Your answer
+                </Typography>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {systemQuestionsToDisplay?.length > 0 ? systemQuestionsToDisplay.sort((a, b) => a.question.questionNumber > b.question.questionNumber ? 1 : -1).map((qa, index) => {
+              return (
+                <tr key={index}>
+                  <td>
+                    <Typography style={{ fontSize: '12px', fontWeight: 'bold', width: '100%' }}>
+                      {qa.question.questionNumber} <a href="#">Learn more</a>
+                    </Typography>
+                    <Typography style={{ fontSize: '12px', fontWeight: '300' }}>
+                      {qa.question.question}
+                    </Typography>
+                  </td>
+                  <td>
+                    <Typography style={{ fontSize: '12px', fontWeight: '300' }}>
+                      {qa?.answer.value}
+                    </Typography>
+                  </td>
+                </tr>
+              )
+            }) : (
+              <tr>
+                <td>
+                  <Typography style={{ fontSize: '12px', fontWeight: 'bold', width: '100%' }}>
+                    No data to display
+                  </Typography>
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </Table>
+      )}
       {subDimensionsToDisplay.length > 0 && subDimensionsToDisplay.map((sd, index) => {
         const questionsToDisplay = [];
         const sdQuestions = questionsData?.filter(q => q.subDimension === sd.subDimensionID);

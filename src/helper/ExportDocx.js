@@ -54,6 +54,84 @@ const makeDimensions = (dimensions, subdimensions, results, questionsData) => {
 
   const dmap = dimensions.map(dimension => {
     let questionsRows = [];
+    let systemDetailsQuestionRows = [];
+    const systemQuestionsToDisplay = [];
+    const systemQuestions = questionsData?.filter(q => q.trustIndexDimension === 1);
+    systemQuestions?.map(sdq => {
+      const answer = results[sdq._id];
+      if (answer) {
+        if (typeof answer === 'string' && answer.match(/^[0-9a-fA-F]{24}$/)) {
+          const [parsedAnswer] = sdq.responses.filter(r => r._id === answer);
+          const maxScore = sdq.responses.reduce((max, r) => Math.max(max, r.score), 0);
+          systemQuestionsToDisplay.push({
+            question: sdq,
+            answer: {
+              value: parsedAnswer.indicator,
+              maxScore: maxScore,
+              answerScore: parsedAnswer.score,
+              notes: results['notes' + sdq._id],
+            },
+          });
+        } else if (Array.isArray(answer)) {
+          const parsedAnswers = sdq.responses.filter(r => answer.includes(r._id));
+          const maxScore = sdq.responses.reduce((max, r) => max + r.score, 0);
+          const answerScore = parsedAnswers.reduce((sum, pa) => sum + (pa.score || 0), 0);
+          systemQuestionsToDisplay.push({
+            question: sdq,
+            answer: { value: parsedAnswers.map(pa => pa.indicator).join(', '), maxScore, answerScore },
+          });
+        } else {
+          systemQuestionsToDisplay.push({
+            question: sdq,
+            answer: { value: answer }
+          });
+        }
+      }
+      systemDetailsQuestionRows = systemQuestionsToDisplay.sort((a, b) => a.question.questionNumber > b.question.questionNumber ? 1 : -1).map(question => {
+        return [
+          new TableRow({
+            children: [
+              new TableCell({
+                width: {
+                  size: 1800,
+                  type: WidthType.DXA,
+                },
+                margins: {
+                  bottom: convertInchesToTwip(0.69),
+                },
+                verticalAlign: VerticalAlign.TOP,
+                columnSpan: 3,
+                borders: { ...noBordersCell },
+                children: [new Paragraph({
+                  children: [
+                    new TextRun({ text: `${question.question.questionNumber} ${question.question.question}`, font: "Calibri", bold: false, size: 18 }),
+                  ],
+                }),
+                ],
+              }),
+              new TableCell({
+                width: {
+                  size: 1800,
+                  type: WidthType.DXA,
+                },
+                margins: {
+                  bottom: convertInchesToTwip(0.69),
+                },
+                verticalAlign: VerticalAlign.TOP,
+                columnSpan: 3,
+                borders: { ...noBordersCell },
+                children: [new Paragraph({
+                  children: [
+                    new TextRun({ text: `${question.answer.value}`, font: "Calibri", bold: false, size: 18 }),
+                  ],
+                }),
+                ],
+              }),
+            ],
+          }),
+        ];
+      });
+    });
     const currentDimensionSubDimensions = subdimensions.filter(s => s.dimensionID === dimension.dimensionID);
     const subDimensionRows = currentDimensionSubDimensions.map(sb => {
       const questionsToDisplay = [];
@@ -306,6 +384,50 @@ const makeDimensions = (dimensions, subdimensions, results, questionsData) => {
         ...questionsRows.flat(),
       ]
     });
+    const systemDetailsRows = [
+      new TableRow({
+        children: [
+          new TableCell({
+            width: {
+              size: 1800,
+              type: WidthType.DXA,
+            },
+            margins: {
+              bottom: convertInchesToTwip(0.20),
+            },
+            verticalAlign: VerticalAlign.TOP,
+            columnSpan: 3,
+            borders: { ...noBordersCell },
+            children: [new Paragraph({
+              children: [
+                new TextRun({ text: 'Questions', font: "Calibri", bold: true, size: 18 }),
+              ],
+            }),
+            ],
+          }),
+          new TableCell({
+            width: {
+              size: 1800,
+              type: WidthType.DXA,
+            },
+            margins: {
+              bottom: convertInchesToTwip(0.20),
+            },
+            verticalAlign: VerticalAlign.TOP,
+            columnSpan: 3,
+            borders: { ...noBordersCell },
+            children: [new Paragraph({
+              children: [
+                new TextRun({ text: 'Your answer', font: "Calibri", bold: true, size: 18 }),
+              ],
+            }),
+            ],
+          }),
+        ],
+      }),
+      ...systemDetailsQuestionRows.flat(),
+    ];
+    const dimensionContent = dimension?.name === 'System Details' ? systemDetailsRows : subDimensionRows;
     return [
       new Table({
         columnWidths: [1800, 1800, 1800, 1800, 1800,],
@@ -341,7 +463,7 @@ const makeDimensions = (dimensions, subdimensions, results, questionsData) => {
             ],
           }),
           new TableRow({
-            height: { value: convertInchesToTwip(1), rule: HeightRule.AT_LEAST },
+            height: { value: convertInchesToTwip(0.5), rule: HeightRule.AT_LEAST },
             children: [
               new TableCell({
                 width: {
@@ -349,18 +471,18 @@ const makeDimensions = (dimensions, subdimensions, results, questionsData) => {
                   type: WidthType.DXA,
                 },
                 margins: {
-                  bottom: convertInchesToTwip(0.69),
+                  bottom: dimension?.name === 'System Details' ? convertInchesToTwip(0) : convertInchesToTwip(0.5),
                 },
                 verticalAlign: VerticalAlign.BOTTOM,
                 columnSpan: 3,
                 borders: { ...noBordersCell },
                 children: [new Paragraph({
-                  children: [new TextRun({ text: `${dimension.name} sub-dimensions:`, font: "Calibri", bold: true, size: 28 })]
+                  children: [new TextRun({ text: `${dimension?.name === 'System Details' ? '' : `${dimension.name} sub-dimensions`}`, font: "Calibri", bold: true, size: 28 })]
                 })],
               }),
             ],
           }),
-          ...subDimensionRows.flat(),
+          ...dimensionContent.flat(),
         ],
       }),
     ]
@@ -392,9 +514,6 @@ export const createCertificationDocx = (
       children: [
         new Paragraph({ text: `Project Title: ${projectTitle}`, heading: HeadingLevel.HEADING_1 }),
         new Paragraph({ text: projectDescription }),
-        new Paragraph({ text: `Project Industry: ${projectIndustry}` }),
-        new Paragraph({ text: `Project Region: ${projectRegion}` }),
-        new Paragraph({ text: `Risk Level: ${riskLevel}` }),
         ...makeDimensions(dimensions, subdimensions, results, questionsData),
       ],
     }],

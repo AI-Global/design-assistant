@@ -109,14 +109,16 @@ export const DimensionHead = ({ dimension, questions, results, riskWeight = 1 })
           Description
         </p>
         <p>{dimension?.description}</p>
-        <p style={{
-          fontWeight: 'bold',
-          fontSize: '24px',
-          lineHeight: '32px',
-          marginTop: '18px',
-        }}>
-          Sub-Dimension
-        </p>
+        {dimension?.name !== 'System Details' && (
+          <p style={{
+            fontWeight: 'bold',
+            fontSize: '24px',
+            lineHeight: '32px',
+            marginTop: '18px',
+          }}>
+            Sub-Dimension
+          </p>
+        )}
       </div>
     </>
   )
